@@ -1,27 +1,26 @@
 {
-    "name": "slothsoft/farah",
-    "description": "Files and Resources and Hypertext: A content management system.",
-    "keywords": [],
-    "license": "WTFPL",
-    "authors": [
-        {
-            "name": "Daniel Schulz",
-            "email": "info.slothsoft@gmail.com"
-        }
-    ],
-    "type": "library",
-    "require": {
+	"name" : "slothsoft/farah",
+	"description" : "Files and Resources and Hypertext: A content management system.",
+	"license" : "WTFPL",
+	"authors" : [{
+			"name" : "Daniel Schulz",
+			"email" : "info.slothsoft@gmail.com"
+		}
+	],
+	"type" : "library",
+	"require" : {
 		"slothsoft/core" : "*",
 		"slothsoft/lang" : "*",
 		
-		"php": ">=7.0"
-    },
-	"require-dev": {
-		"phpunit/phpunit": ">=6.0"
-    },
-	"autoload": {
-        "psr-4": {
-            "Slothsoft\\Farah\\": "php/"
-        }
-    }
+		"matthiasmullie/minify" : "*",
+		"php" : ">=7.0"
+	},
+	"require-dev" : {
+		"phpunit/phpunit" : ">=6.0"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Slothsoft\\Farah\\" : "php/"
+		}
+	}
 }
