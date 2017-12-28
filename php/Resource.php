@@ -24,7 +24,7 @@ class Resource
 
     const CACHE_ACTIVE = false;
 
-    const FILE_MIME = 'mod/core/res/mimeTypes.xml';
+    const FILE_MIME = 'vendor/slothsoft/core/res/mimeTypes.xml';
 
     // protected static $mimeDoc; //DOMDocument
     // protected static $mimePath; //DOMXPath
