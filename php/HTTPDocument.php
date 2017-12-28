@@ -45,7 +45,7 @@ class HTTPDocument
     
     const NS_EM = 'http://www.mozilla.org/2004/em-rdf#';
 
-    const DIR_MODULES = 'mod/';
+    const DIR_MODULES = 'vendor/slothsoft/';
 
     const FILE_MODULE = 'module.xml';
 
