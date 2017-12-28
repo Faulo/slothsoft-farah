@@ -1,6 +1,6 @@
 {
     "name": "slothsoft/farah",
-    "description": "Boilerplate package for creating other packages.",
+    "description": "Files and Resources and Hypertext: A content management system.",
     "keywords": ["template", "composer", "package"],
     "license": "DBAD",
     "authors": [
