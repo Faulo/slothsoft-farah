@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\HTTPDocument;
 
 /**
@@ -10,7 +11,7 @@ use Slothsoft\Farah\HTTPDocument;
 *
 *  @author Daniel Schulz
 */
-class HTTPDocumentTest extends PHPUnit_Framework_TestCase{
+class HTTPDocumentTest extends TestCase{
 	
   /**
   * Just check if the YourClass has no syntax error 
