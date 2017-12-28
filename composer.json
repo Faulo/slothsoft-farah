@@ -1,8 +1,9 @@
 {
     "name": "slothsoft/farah",
+	"version" : "1.0.0",
     "description": "Files and Resources and Hypertext: A content management system.",
     "keywords": ["template", "composer", "package"],
-    "license": "DBAD",
+    "license": "WTFPL",
     "authors": [
         {
             "name": "Daniel Schulz",
