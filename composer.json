@@ -1,6 +1,5 @@
 {
     "name": "slothsoft/farah",
-	"version" : "1.0.0",
     "description": "Files and Resources and Hypertext: A content management system.",
     "keywords": ["template", "composer", "package"],
     "license": "WTFPL",
@@ -13,7 +12,7 @@
     "type": "library",
     "require": {
 		"php": ">=7.0",
-		"slothsoft/core" : "dev-master"
+		"slothsoft/core" : "*"
     },
 	"require-dev": {
 		"phpunit/phpunit": "5.2.*"
