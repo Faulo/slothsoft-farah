@@ -1,7 +1,7 @@
 {
     "name": "slothsoft/farah",
     "description": "Files and Resources and Hypertext: A content management system.",
-    "keywords": ["template", "composer", "package"],
+    "keywords": [],
     "license": "WTFPL",
     "authors": [
         {
@@ -21,11 +21,5 @@
         "psr-4": {
             "Slothsoft\\Farah\\": "php/"
         }
-    },
-	"repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/Faulo/slothsoft-core"
-        }
-    ]
+    }
 }
