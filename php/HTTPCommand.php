@@ -2,7 +2,7 @@
 namespace Slothsoft\Farah;
 
 use Closure;
-use InterExec;
+use Slothsoft\Core\InterExec;
 declare(ticks = 1000);
 
 class HTTPCommand

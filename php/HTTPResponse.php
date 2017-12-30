@@ -8,9 +8,9 @@
  ***********************************************************************/
 namespace Slothsoft\Farah;
 
-use Slothsoft\Core\FileSystem;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
+use Slothsoft\Core\FileSystem;
 use DOMDocument;
 use Exception;
 use UnexpectedValueException;
