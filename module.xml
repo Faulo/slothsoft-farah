@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://schema.slothsoft.net/farah/module">
+	<assets>
+		<resource-directory name="data" path="data" type="application/x-php"/>
+		<resource-directory name="css" path="stylesheet" type="text/css"/>
+		<resource-directory name="js" path="script" type="application/javascript"/>
+		<resource-directory name="xsl" path="template" type="application/xslt+xml"/>
+		
+		<directory name="schema">
+			<directory name="module">
+				<resource-directory name="latest" path="20171027" type="application/x-xsd+xml" />
+			</directory>
+		</directory>
+	</assets>
+</module>

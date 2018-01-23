@@ -16,7 +16,8 @@ class HTTPClosure
 {
 
     protected $options = [
-        'isThreaded' => false
+        'isThreaded' => false,
+        'isCachable' => false
     ];
 
     protected $task;
@@ -35,5 +36,9 @@ class HTTPClosure
     public function isThreaded()
     {
         return (bool) $this->options['isThreaded'];
+    }
+    public function isCachable()
+    {
+        return (bool) $this->options['isCachable'];
     }
 }

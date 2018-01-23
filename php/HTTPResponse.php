@@ -10,10 +10,12 @@ namespace Slothsoft\Farah;
 
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
+use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
 use DOMDocument;
 use Exception;
 use UnexpectedValueException;
+use Slothsoft\Core\MimeTypeDictionary;
 declare(ticks = 1000);
 
 class HTTPResponse
@@ -345,7 +347,7 @@ class HTTPResponse
     {
         $this->fileExt = $fileExt;
         if ($guessMime) {
-            $this->mime = Resource::getMime($this->fileExt);
+            $this->mime = MimeTypeDictionary::guessMime($this->fileExt);
         }
     }
 
@@ -531,6 +533,15 @@ NETWORK:
 EOT;
         return sprintf($manifest, $this->getMergedStyleFile($this->styleFiles), $this->getMergedScriptFile($this->scriptFiles));
     }
+    
+    public function addStyleFile(string $path) {
+        assert(is_file($path), "style file $path must exist");
+        $this->styleFiles[$path] = $path;
+    }
+    public function addScriptFile(string $path) {
+        assert(is_file($path), "style file $path must exist");
+        $this->scriptFiles[$path] = $path;
+    }
 
     protected function getMergedStyleFile(array $styleFiles)
     {
@@ -623,15 +634,15 @@ EOT;
         $ns = $doc->documentElement ? $doc->documentElement->namespaceURI : null;
         switch ($ns) {
             /*
-             * case HTTPDocument::NS_HTML:
+             * case DOMHelper::NS_HTML:
              * $this->mime = 'text/html';
              * $this->doctype = $doc->doctype;
              * if (!$this->doctype) {
              * $this->doctype = $doc->implementation->createDocumentType('html');
              * }
-             * if ($head = $doc->getElementsByTagNameNS(HTTPDocument::NS_HTML, 'head')->item(0)) {
+             * if ($head = $doc->getElementsByTagNameNS(DOMHelper::NS_HTML, 'head')->item(0)) {
              * foreach ($langLinks as $lang => $uri) {
-             * $node = $doc->createElementNS(HTTPDocument::NS_HTML, 'link');
+             * $node = $doc->createElementNS(DOMHelper::NS_HTML, 'link');
              * $node->setAttribute('hreflang', $lang);
              * $node->setAttribute('href', $uri);
              * $node->setAttribute('rel', 'alternate');
@@ -642,7 +653,7 @@ EOT;
              * }
              * foreach ($this->scriptFiles as $scriptFile) {
              * if ($scriptFile) {
-             * $node = $doc->createElementNS(HTTPDocument::NS_HTML, 'script');
+             * $node = $doc->createElementNS(DOMHelper::NS_HTML, 'script');
              * $node->setAttribute('src', $scriptFile);
              * $node->setAttribute('defer', 'defer');
              * $node->setAttribute('type', 'application/javascript');
@@ -652,15 +663,15 @@ EOT;
              * break;
              * //
              */
-            case HTTPDocument::NS_HTML:
+            case DOMHelper::NS_HTML:
                 $this->mime = 'application/xhtml+xml';
                 $this->doctype = $doc->doctype;
                 if (! $this->doctype) {
                     $this->doctype = $doc->implementation->createDocumentType('html');
                 }
-                if ($head = $doc->getElementsByTagNameNS(HTTPDocument::NS_HTML, 'head')->item(0)) {
+                if ($head = $doc->getElementsByTagNameNS(DOMHelper::NS_HTML, 'head')->item(0)) {
                     foreach ($langLinks as $lang => $uri) {
-                        $node = $doc->createElementNS(HTTPDocument::NS_HTML, 'link');
+                        $node = $doc->createElementNS(DOMHelper::NS_HTML, 'link');
                         $node->setAttribute('hreflang', $lang);
                         $node->setAttribute('href', $uri);
                         $node->setAttribute('rel', 'alternate');
@@ -671,7 +682,7 @@ EOT;
                 }
                 foreach ($this->scriptFiles as $scriptFile) {
                     if ($scriptFile) {
-                        $node = $doc->createElementNS(HTTPDocument::NS_HTML, 'script');
+                        $node = $doc->createElementNS(DOMHelper::NS_HTML, 'script');
                         $node->setAttribute('src', $scriptFile);
                         $node->setAttribute('defer', 'defer');
                         $node->setAttribute('type', 'application/javascript');
@@ -679,21 +690,21 @@ EOT;
                     }
                 }
                 break;
-            case HTTPDocument::NS_SVG:
+            case DOMHelper::NS_SVG:
                 $this->mime = 'image/svg+xml';
-                if ($head = $doc->getElementsByTagNameNS(HTTPDocument::NS_SVG, 'defs')->item(0)) {} else {
+                if ($head = $doc->getElementsByTagNameNS(DOMHelper::NS_SVG, 'defs')->item(0)) {} else {
                     $head = $doc->documentElement;
                 }
                 foreach ($this->scriptFiles as $scriptFile) {
                     if ($scriptFile) {
-                        $node = $doc->createElementNS(HTTPDocument::NS_SVG, 'script');
-                        $node->setAttributeNS(HTTPDocument::NS_XLINK, 'xlink:href', $scriptFile);
+                        $node = $doc->createElementNS(DOMHelper::NS_SVG, 'script');
+                        $node->setAttributeNS(DOMHelper::NS_XLINK, 'xlink:href', $scriptFile);
                         $head->appendChild($node);
                     }
                 }
                 // $this->doctype = $doc->implementation->createDocumentType('svg');
                 break;
-            case HTTPDocument::NS_XSL:
+            case DOMHelper::NS_XSL:
                 $this->mime = 'application/xslt+xml';
                 break;
             default:
@@ -708,7 +719,7 @@ EOT;
          * }
          * //
          */
-        if ($ext = Resource::getExtension($this->mime)) {
+        if ($ext = MimeTypeDictionary::guessExtension($this->mime)) {
             $this->setFileExt($ext, false);
         }
         $this->setStatus(self::STATUS_OK);
@@ -721,7 +732,7 @@ EOT;
         }
         if (self::$httpConfig['doc-timestamp']) {
             $this->setEtag(self::calcEtag($doc->saveXML()), false);
-            $doc->documentElement->insertBefore($doc->createComment(PHP_EOL . sprintf(HTTPDocument::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576) . PHP_EOL), $doc->documentElement->firstChild);
+            $doc->documentElement->insertBefore($doc->createComment(PHP_EOL . sprintf(Kernel::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576) . PHP_EOL), $doc->documentElement->firstChild);
             $this->setBody(trim($doc->saveXML()));
         } else {
             $this->setBody(trim($doc->saveXML()));
