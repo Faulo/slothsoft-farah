@@ -16,10 +16,27 @@ Llo
 -->
   <default-configuration/>
   <assets>
+    <resource-directory name="data" path="data" type="application/x-php"/>
+    <resource-directory name="css" path="stylesheet" type="text/css"/>
+    <resource-directory name="js" path="script" type="application/javascript"/>
+    <resource-directory name="xsl" path="template" type="application/xslt+xml"/>
+    <resource-directory name="dictionary" path="dictionary" type="application/xml"/>
+    <resource-directory name="pages" path="pages" type="application/xml"/>
     <directory name="schema">
-      <directory name="module"/>
-      <directory name="dictionary"/>
-      <directory name="sites"/>
+      <directory name="module">
+        <resource-directory name="20171027" path="20171027" type="application/x-xsd+xml"/>
+        <resource-directory name="latest" path="20171027" type="application/x-xsd+xml"/>
+      </directory>
+      <directory name="dictionary">
+        <resource-directory name="20171027" path="20171027" type="application/x-xsd+xml"/>
+        <resource-directory name="latest" path="20171027" type="application/x-xsd+xml"/>
+      </directory>
+      <directory name="sites">
+        <resource-directory name="20171027" path="20171027" type="application/x-xsd+xml"/>
+        <resource-directory name="latest" path="20171027" type="application/x-xsd+xml"/>
+      </directory>
     </directory>
+    <resource name="sites" type="application/x-php"/>
+    <resource name="request" type="application/x-php"/>
   </assets>
 </module>

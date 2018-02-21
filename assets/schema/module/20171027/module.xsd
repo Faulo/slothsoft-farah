@@ -29,7 +29,7 @@
 	</xsd:element>
 	
 	<xsd:complexType name="asset">
-		<xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
+		<xsd:attribute name="name" type="farahUrlPathSegment" use="required"/>
 		<xsd:attribute name="path" type="xsd:normalizedString" use="optional"/>
 		<xsd:attribute name="assetpath" type="xsd:normalizedString" use="optional"/>
 		<xsd:attribute name="realpath" type="xsd:normalizedString" use="optional"/>
@@ -120,7 +120,7 @@
 		<xsd:choice minOccurs="0" maxOccurs="unbounded">
 			<xsd:group ref="instructions"/>
 		</xsd:choice>
-		<xsd:attribute name="ref" type="xsd:normalizedString" use="required"/>
+		<xsd:attribute name="ref" type="farahUrl" use="required"/>
 		<xsd:attribute name="as" type="xsd:normalizedString" use="optional"/>
 	</xsd:complexType>
 	<xsd:element name="use-document" type="use"/>
@@ -130,7 +130,7 @@
 	<xsd:element name="use-dictionary" type="use"/>
 	
 	<xsd:complexType name="include">
-		<xsd:attribute name="ref" type="xsd:normalizedString"/>
+		<xsd:attribute name="ref" type="farahUrl"/>
 	</xsd:complexType>
 	<xsd:element name="include-fragment" type="include"/>
 	
@@ -139,6 +139,7 @@
 			<xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
 			<xsd:attribute name="value" type="xsd:normalizedString" use="optional"/>
 			<xsd:attribute name="scope" type="xsd:normalizedString" use="optional"/>
+			<xsd:attribute name="type" type="xsd:normalizedString" use="optional"/>
 		</xsd:complexType>
 	</xsd:element>
 	
@@ -153,4 +154,17 @@
 			<xsd:attribute name="href" type="xsd:anyURI" use="required"/>
 		</xsd:complexType>
 	</xsd:element>
+	
+	<xsd:simpleType name="farahUrl">
+		<xsd:restriction base="xsd:anyURI">
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="farahUrlPathSegment">
+		<xsd:restriction base="xsd:token">
+			<xsd:pattern value="\c+"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	
 </xsd:schema>

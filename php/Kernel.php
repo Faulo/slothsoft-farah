@@ -387,13 +387,13 @@ class Kernel implements EventTargetInterface
                 $this->addEventListener(Module::EVENT_USE_STYLESHEET, function (EventInterface $event) use (&$stylesheetList) {
                     if ($event instanceof UseAssetEvent) {
                         $stylesheetList[$event->getAsset()
-                            ->getId()] = null;
+                            ->getId()] = $event->getAsset();
                     }
                 });
                 $this->addEventListener(Module::EVENT_USE_SCRIPT, function (EventInterface $event) use (&$scriptList) {
                     if ($event instanceof UseAssetEvent) {
                         $scriptList[$event->getAsset()
-                            ->getId()] = null;
+                            ->getId()] = $event->getAsset();
                     }
                 });
                 
@@ -406,10 +406,17 @@ class Kernel implements EventTargetInterface
                 
                 $document = $asset->toDocument();
                 if ($stylesheetList or $scriptList) {
-                    $rootNode = null;
-                    $parentNode = $document->createDocumentFragment();
                     $ns = $document->documentElement->namespaceURI;
                     switch ($ns) {
+                        case DOMHelper::NS_FARAH_MODULE:
+                            $rootNode = $document->documentElement;
+                            foreach ($stylesheetList as $assetId => $asset) {
+                                $rootNode->appendChild($asset->toDefinitionElement($document));
+                            }
+                            foreach ($scriptList as $assetId => $asset) {
+                                $rootNode->appendChild($asset->toDefinitionElement($document));
+                            }
+                            break;
                         case DOMHelper::NS_HTML:
                             $rootNode = $document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'head')->item(0);
                             foreach ($stylesheetList as $assetId => $asset) {
@@ -418,7 +425,7 @@ class Kernel implements EventTargetInterface
                                 $node->setAttribute('href', $assetLink);
                                 $node->setAttribute('rel', 'stylesheet');
                                 $node->setAttribute('type', 'text/css');
-                                $parentNode->appendChild($node);
+                                $rootNode->appendChild($node);
                             }
                             foreach ($scriptList as $assetId => $asset) {
                                 $assetLink = str_replace('farah://', '/getAsset.php/', $assetId);
@@ -426,16 +433,12 @@ class Kernel implements EventTargetInterface
                                 $node->setAttribute('src', $assetLink);
                                 $node->setAttribute('defer', 'defer');
                                 $node->setAttribute('type', 'application/javascript');
-                                $parentNode->appendChild($node);
+                                $rootNode->appendChild($node);
                             }
                             break;
                         default:
                             throw new DomainException("This implementation does not support <sfm:use-stylesheet> and <sfm:use-script> for XML namespace '$ns'.");
                     }
-                    if (! $rootNode) {
-                        $rootNode = $document->documentElement;
-                    }
-                    $rootNode->appendChild($parentNode);
                 }
                 return $document;
                 break;
