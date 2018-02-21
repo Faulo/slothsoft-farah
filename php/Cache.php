@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /***********************************************************************
  * Slothsoft\Farah\Cache v1.00 19.10.2012 © Daniel Schulz
  * 

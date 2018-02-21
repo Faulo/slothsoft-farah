@@ -1,7 +1,5 @@
-<?php
+<?php declare(strict_types=1);
 namespace Slothsoft\Farah;
-
-declare(ticks = 1000);
 
 class HTTPEvent
 {

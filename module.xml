@@ -1,15 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module xmlns="http://schema.slothsoft.net/farah/module">
-	<assets>
-		<resource-directory name="data" path="data" type="application/x-php"/>
-		<resource-directory name="css" path="stylesheet" type="text/css"/>
-		<resource-directory name="js" path="script" type="application/javascript"/>
-		<resource-directory name="xsl" path="template" type="application/xslt+xml"/>
-		
-		<directory name="schema">
+<?xml version="1.0"?>
+<module xmlns="http://schema.slothsoft.net/farah/module" xmlns:sfm="http://schema.slothsoft.net/farah/module">
+  <!--
+Farah Module Manifest
+
+Module: farah
+Vendor: slothsoft
+Farah ID: farah://slothsoft@farah
+Composer ID: slothsoft/farah
+
+Homepage: http://farah.slothsoft.net/modules/farah
+Packagist: https://packagist.org/packages/slothsoft/farah
+GitHub: https://github.com/Faulo/slothsoft-farah
+
+Llo
+-->
+  <default-configuration/>
+  <assets>
+    <resource-directory name="data" path="data" type="application/x-php"/>
+    <resource-directory name="css" path="stylesheet" type="text/css"/>
+    <resource-directory name="js" path="script" type="application/javascript"/>
+    <resource-directory name="xsl" path="template" type="application/xslt+xml"/>
+    <resource-directory name="dictionary" path="dictionary" type="application/xml"/>
+    <resource-directory name="pages" path="pages" type="application/xml"/>
+    <directory name="schema">
 			<directory name="module">
-				<resource-directory name="latest" path="20171027" type="application/x-xsd+xml" />
+				<resource-directory name="20171027" path="20171027" type="application/x-xsd+xml"/>
+				<resource-directory name="latest" path="20171027" type="application/x-xsd+xml"/>
+			</directory>
+			<directory name="dictionary">
+				<resource-directory name="20171027" path="20171027" type="application/x-xsd+xml"/>
+				<resource-directory name="latest" path="20171027" type="application/x-xsd+xml"/>
+			</directory>
+			<directory name="sites">
+				<resource-directory name="20171027" path="20171027" type="application/x-xsd+xml"/>
+				<resource-directory name="latest" path="20171027" type="application/x-xsd+xml"/>
 			</directory>
 		</directory>
-	</assets>
+    <directory name="static">
+      <resource name="sites" type="application/x-php"/>
+      <resource name="request" type="application/x-php"/>
+    </directory>
+  </assets>
 </module>

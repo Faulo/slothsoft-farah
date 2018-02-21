@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 namespace Slothsoft\Farah\Module\PathResolvers;
 
-use Slothsoft\Farah\Module\AssetDefinitions\AssetDefinition;
+use Slothsoft\Farah\Module\AssetDefinitions\AssetDefinitionInterface;
 
 /**
  *
@@ -10,7 +10,9 @@ use Slothsoft\Farah\Module\AssetDefinitions\AssetDefinition;
  */
 interface PathResolverInterface
 {
-    public function resolvePath(string $path) : AssetDefinition;
-    public function getPathMap() : array;
+
+    public function resolvePath(string $path): AssetDefinitionInterface;
+
+    public function getPathMap(): array;
 }
 

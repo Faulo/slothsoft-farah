@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /***********************************************************************
  * Slothsoft\Farah\HTTPStream v1.00 28.05.2014 � Daniel Schulz
  * 
@@ -7,8 +7,6 @@
  *			initial release
  ***********************************************************************/
 namespace Slothsoft\Farah;
-
-declare(ticks = 1000);
 
 abstract class HTTPStream
 {
@@ -36,13 +34,17 @@ abstract class HTTPStream
     protected $sleepDuration = TIME_MILLISECOND;
 
     protected $heartbeatContent = null;
- // character to send after each heartbeatInterval is reached
+
+    // character to send after each heartbeatInterval is reached
     protected $heartbeatEOL = null;
- // character to send before new content, when heartbeatContent was sent
+
+    // character to send before new content, when heartbeatContent was sent
     protected $heartbeatInterval = TIME_SECOND;
- // time without actual content before heartbeatContent is sent
+
+    // time without actual content before heartbeatContent is sent
     protected $heartbeatTimeout = TIME_HOUR;
- // time without actual content before child is terminated
+
+    // time without actual content before child is terminated
     public function getMime()
     {
         return $this->mime;

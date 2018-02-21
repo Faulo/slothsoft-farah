@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /***********************************************************************
  * Slothsoft\Farah\HTTPClosure v1.00 21.06.2017 © Daniel Schulz
  * 
@@ -7,8 +7,6 @@
  *			initial release
  ***********************************************************************/
 namespace Slothsoft\Farah;
-
-declare(ticks = 1000);
 
 use Closure;
 
@@ -28,15 +26,16 @@ class HTTPClosure
         $this->task = $task;
     }
 
-    public function run()
+    public function run(...$args)
     {
-        return ($this->task)();
+        return ($this->task)(...$args);
     }
 
     public function isThreaded()
     {
         return (bool) $this->options['isThreaded'];
     }
+
     public function isCachable()
     {
         return (bool) $this->options['isCachable'];

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /***********************************************************************
  * Slothsoft\Farah\HTTPRequest v1.00 19.10.2012 © Daniel Schulz
  * 
@@ -8,12 +8,12 @@
  ***********************************************************************/
 namespace Slothsoft\Farah;
 
-use Slothsoft\Lang\Dictionary;
+use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
 use DOMDocument;
+use DOMElement;
 
-declare(ticks = 1000);
 
-class HTTPRequest
+class HTTPRequest implements DOMWriterInterface
 {
 
     protected static $allowedHostList = [
@@ -210,10 +210,9 @@ class HTTPRequest
         }
     }
 
-    public function getHeader($key)
+    public function getHeader(string $key, string $default = null)
     {
-        $key = strtolower($key);
-        return isset($this->headerList[$key]) ? $this->headerList[$key] : null;
+        return $this->headerList[$key] ?? $default;
     }
 
     public function setMode($mode)
@@ -242,7 +241,7 @@ class HTTPRequest
         $retNode->setAttribute('url', $this->getURL());
         $retNode->setAttribute('query', $this->getQuery());
         $retNode->setAttribute('lang', $this->dict->getLang());
-        $retNode->setAttribute('stamp', $this->time);
+        $retNode->setAttribute('stamp', (string) $this->time);
         $retNode->setAttribute('datetime', date(DATE_DATETIME, $this->time));
         $retNode->setAttribute('utc', date(DATE_UTC, $this->time));
         foreach ($this->input as $key => $val) {
@@ -254,5 +253,17 @@ class HTTPRequest
             }
         }
         return $retNode;
+    }
+
+    public function toElement(DOMDocument $targetDoc): DOMElement
+    {
+        return $this->asNode($targetDoc);
+    }
+
+    public function toDocument(): DOMDocument
+    {
+        $doc = new DOMDocument();
+        $doc->appendChild($this->toElement($doc));
+        return $doc;
     }
 }

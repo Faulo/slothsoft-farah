@@ -11,7 +11,9 @@ use Slothsoft\Farah\Module\PathResolvers\ResourceDirectoryPathResolver;
  */
 class ResourceDirectoryDefinition extends ContainerDefinition
 {
-    protected function loadPathResolver() : PathResolverInterface {
+
+    protected function loadPathResolver(): PathResolverInterface
+    {
         return new ResourceDirectoryPathResolver($this);
     }
 }

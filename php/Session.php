@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /***********************************************************************
  * Slothsoft\Farah\Session v1.00 16.12.2012 © Daniel Schulz
  * 
@@ -62,7 +62,7 @@ class Session
             'modify-time',
             'access-time'
         ];
-        $options = [            // 'engine' => 'MyISAM',
+        $options = [ // 'engine' => 'MyISAM',
         ];
         $this->dbmsTable->createTable($sqlCols, $sqlKeys, $options);
     }

@@ -11,6 +11,7 @@ use Psr\Cache\CacheItemInterface;
  */
 class AssetCache implements CacheItemPoolInterface
 {
+
     private $itemList;
 
     /**
@@ -24,7 +25,7 @@ class AssetCache implements CacheItemPoolInterface
      * @see \Psr\Cache\CacheItemPoolInterface::getItems()
      *
      */
-    public function getItems(array $keys = array())
+    public function getItems(array $keys = array()): array
     {
         $ret = [];
         foreach ($keys as $key) {
@@ -39,7 +40,7 @@ class AssetCache implements CacheItemPoolInterface
      * @see \Psr\Cache\CacheItemPoolInterface::deleteItem()
      *
      */
-    public function deleteItem($key)
+    public function deleteItem($key): bool
     {}
 
     /**
@@ -48,7 +49,7 @@ class AssetCache implements CacheItemPoolInterface
      * @see \Psr\Cache\CacheItemPoolInterface::hasItem()
      *
      */
-    public function hasItem($key)
+    public function hasItem($key): bool
     {}
 
     /**
@@ -57,7 +58,7 @@ class AssetCache implements CacheItemPoolInterface
      * @see \Psr\Cache\CacheItemPoolInterface::clear()
      *
      */
-    public function clear()
+    public function clear(): bool
     {}
 
     /**
@@ -66,8 +67,10 @@ class AssetCache implements CacheItemPoolInterface
      * @see \Psr\Cache\CacheItemPoolInterface::save()
      *
      */
-    public function save(CacheItemInterface $item)
-    {}
+    public function save(CacheItemInterface $item): bool
+    {
+        return true;
+    }
 
     /**
      * (non-PHPdoc)
@@ -75,7 +78,7 @@ class AssetCache implements CacheItemPoolInterface
      * @see \Psr\Cache\CacheItemPoolInterface::commit()
      *
      */
-    public function commit()
+    public function commit(): bool
     {}
 
     /**
@@ -84,12 +87,13 @@ class AssetCache implements CacheItemPoolInterface
      * @see \Psr\Cache\CacheItemPoolInterface::getItem()
      *
      */
-    public function getItem($uri)
+    public function getItem($url): CacheItemInterface
     {
-        assert($uri instanceof AssetUri);
-        $key = $uri->toString();
-        if (!isset($this->itemList[$key])) {
-            $this->itemList[$key] = new AssetCacheItem($this, $uri);
+        assert($url instanceof FarahUrl);
+        
+        $key = $url->toString();
+        if (! isset($this->itemList[$key])) {
+            $this->itemList[$key] = new AssetCacheItem($this, $url);
         }
         return $this->itemList[$key];
     }
@@ -100,7 +104,7 @@ class AssetCache implements CacheItemPoolInterface
      * @see \Psr\Cache\CacheItemPoolInterface::deleteItems()
      *
      */
-    public function deleteItems(array $keys)
+    public function deleteItems(array $keys): bool
     {}
 
     /**
@@ -109,7 +113,7 @@ class AssetCache implements CacheItemPoolInterface
      * @see \Psr\Cache\CacheItemPoolInterface::saveDeferred()
      *
      */
-    public function saveDeferred(CacheItemInterface $item)
+    public function saveDeferred(CacheItemInterface $item): bool
     {}
 }
 

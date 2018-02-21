@@ -10,16 +10,19 @@ use Psr\Cache\CacheItemInterface;
  */
 class AssetCacheItem implements CacheItemInterface
 {
+
     private $ownerPool;
-    private $uri;
+
+    private $url;
+
     private $value;
 
     /**
      */
-    public function __construct(AssetCache $ownerPool, AssetUri $uri)
+    public function __construct(AssetCache $ownerPool, FarahUrl $url)
     {
         $this->ownerPool = $ownerPool;
-        $this->uri = $uri;
+        $this->url = $url;
     }
 
     /**
@@ -30,7 +33,7 @@ class AssetCacheItem implements CacheItemInterface
      */
     public function getKey()
     {
-        return $this->uri->toString();
+        return $this->url->toString();
     }
 
     /**

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /***********************************************************************
  * Slothsoft\Farah\HTTPFile v1.00 28.05.2014 � Daniel Schulz
  * 
@@ -11,7 +11,7 @@ namespace Slothsoft\Farah;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\Storage;
 use DOMDocument;
-declare(ticks = 1000);
+
 
 class HTTPFile
 {
@@ -21,6 +21,7 @@ class HTTPFile
     const CURL_COMMAND = 'curl %s --output %s --header %s --connect-timeout 300 --retry 3 --http1.1 --silent --fail --insecure --location';
 
     /**
+     *
      * @return string
      */
     public static function getTempFile()
@@ -32,6 +33,7 @@ class HTTPFile
     }
 
     /**
+     *
      * @param string $filePath
      * @param string $fileName
      * @return \Slothsoft\Farah\HTTPFile
@@ -41,23 +43,29 @@ class HTTPFile
         return new HTTPFile($filePath, $fileName);
     }
 
+    public static function createFromTemp(string $fileName = '')
+    {
+        return self::createFromPath(self::getTempFile(), $fileName);
+    }
+
     /**
+     *
      * @param DOMDocument $doc
      * @param string $fileName
      * @return \Slothsoft\Farah\HTTPFile
      */
     public static function createFromDocument(DOMDocument $doc, string $fileName = '')
     {
-        $fileName = (string) $fileName;
         if ($fileName === '') {
             $fileName = 'index.xml';
         }
-        $filePath = self::getTempFile();
-        $doc->save($filePath);
-        return self::createFromPath($filePath, $fileName);
+        $file = self::createFromTemp($fileName);
+        $file->setDocument($doc);
+        return $file;
     }
 
     /**
+     *
      * @param string $content
      * @param string $fileName
      * @return \Slothsoft\Farah\HTTPFile
@@ -68,12 +76,32 @@ class HTTPFile
         if ($fileName === '') {
             $fileName = 'index.txt';
         }
-        $filePath = self::getTempFile();
-        file_put_contents($filePath, $content);
-        return self::createFromPath($filePath, $fileName);
+        $file = self::createFromTemp($fileName);
+        $file->setContents($content);
+        return $file;
     }
 
     /**
+     *
+     * @param array $content
+     * @param string $fileName
+     * @return \Slothsoft\Farah\HTTPFile
+     */
+    public static function createFromFileList(array $fileList, string $fileName = '')
+    {
+        $fileName = (string) $fileName;
+        if ($fileName === '') {
+            $fileName = 'index.txt';
+        }
+        $content = '';
+        foreach ($fileList as $file) {
+            $content .= $file->getContents();
+        }
+        return self::createFromString($content, $fileName);
+    }
+
+    /**
+     *
      * @param resource $resource
      * @param string $fileName
      * @return \Slothsoft\Farah\HTTPFile
@@ -84,12 +112,13 @@ class HTTPFile
         if ($fileName === '') {
             $fileName = 'index.txt';
         }
-        $filePath = self::getTempFile();
-        file_put_contents($filePath, $resource);
-        return self::createFromPath($filePath, $fileName);
+        $file = self::createFromTemp($fileName);
+        $file->setContents($content);
+        return $file;
     }
-    
+
     /**
+     *
      * @param mixed $object
      * @param string $fileName
      * @return \Slothsoft\Farah\HTTPFile
@@ -104,34 +133,33 @@ class HTTPFile
     }
 
     /**
+     *
      * @param string $phpCommand
      * @param string $fileName
      * @return NULL|\Slothsoft\Farah\HTTPFile
      */
     public static function createFromPHP(string $phpCommand, string $fileName = '')
     {
-        $fileName = (string) $fileName;
         if ($fileName === '') {
             $fileName = basename($phpCommand);
             if ($fileName === '') {
                 $fileName = 'data.bin';
             }
         }
-        $filePath = self::getTempFile();
-        $exec = sprintf('php %s > %s', $phpCommand, $filePath);
+        $file = self::createFromTemp($fileName);
+        $exec = sprintf('php %s > %s', escapeshellarg($phpCommand), escapeshellarg($file->getPath()));
         exec($exec);
-        
-        return file_exists($filePath) ? self::createFromPath($filePath, $fileName) : null;
+        return $file;
     }
 
     /**
+     *
      * @param string $url
      * @param string $fileName
      * @return NULL|\Slothsoft\Farah\HTTPFile
      */
     public static function createFromURL(string $url, string $fileName = '')
     {
-        $fileName = (string) $fileName;
         if ($fileName === '') {
             $fileName = basename($url);
             if ($fileName === '') {
@@ -158,6 +186,7 @@ class HTTPFile
     }
 
     /**
+     *
      * @param string $filePath
      * @param string $url
      * @param int $headerCache
@@ -175,6 +204,7 @@ class HTTPFile
     }
 
     /**
+     *
      * @param string $url
      * @param int $headerCache
      * @return boolean
@@ -195,6 +225,7 @@ class HTTPFile
     }
 
     /**
+     *
      * @param string $filePath
      * @param string $url
      * @param int $headerCache
@@ -222,9 +253,9 @@ class HTTPFile
 
     protected $name;
 
-    protected function __construct($filePath, $fileName = null)
+    protected function __construct(string $filePath, string $fileName = '')
     {
-        if ($fileName === null) {
+        if ($fileName === '') {
             $fileName = basename($filePath);
         }
         $this->path = $filePath;
@@ -240,20 +271,22 @@ class HTTPFile
     {
         return $this->name;
     }
-    
+
     public function getContents()
     {
         return file_get_contents($this->getPath());
     }
+
     public function setContents($content)
     {
         return file_put_contents($this->getPath(), $content);
     }
-    
+
     public function getDocument()
     {
         return DOMHelper::loadDocument($this->getPath());
     }
+
     public function setDocument(DOMDocument $content)
     {
         return $content->save($this->getPath());

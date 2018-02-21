@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<xsd:schema
+	targetNamespace="http://schema.slothsoft.net/farah/sites"
+	xmlns="http://schema.slothsoft.net/farah/sites"
+	xmlns:sfs="http://schema.slothsoft.net/farah/sites"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	
+	<xsd:element name="domain">
+		<xsd:complexType>
+			<xsd:sequence>
+				
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

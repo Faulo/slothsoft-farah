@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /***********************************************************************
  * Slothsoft\Farah\HTTPResponse v1.00 19.10.2012 © Daniel Schulz
  * 
@@ -12,11 +12,13 @@ use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
+use Slothsoft\Core\MimeTypeDictionary;
+use Slothsoft\Farah\Exception\ExceptionContext;
+use Slothsoft\Farah\Module\Assets\AssetInterface;
 use DOMDocument;
 use Exception;
 use UnexpectedValueException;
-use Slothsoft\Core\MimeTypeDictionary;
-declare(ticks = 1000);
+
 
 class HTTPResponse
 {
@@ -116,13 +118,17 @@ class HTTPResponse
     ];
 
     const BODY_STRING = 1;
- // body = output string
+
+    // body = output string
     const BODY_FILE = 2;
- // body = path to file
+
+    // body = path to file
     const BODY_STREAM = 3;
- // body = HTTPStream
+
+    // body = HTTPStream
     const BODY_COMMAND = 4;
- // body = HTTPCommand
+
+    // body = HTTPCommand
     public static function setHttpConfig(array $config)
     {
         foreach (self::$httpConfig as $key => &$val) {
@@ -232,10 +238,10 @@ class HTTPResponse
     public function setRequest(HTTPRequest $httpRequest)
     {
         $this->setMethod($httpRequest->method);
-        $this->setContentEncoding($httpRequest->getHeader('accept-encoding'));
-        $this->setRange($httpRequest->getHeader('range'));
-        $this->ifNoneMatch = $httpRequest->getHeader('if-none-match');
-        $this->ifModifiedSince = strtotime($httpRequest->getHeader('if-modified-since'));
+        $this->setContentEncoding($httpRequest->getHeader('accept-encoding', ''));
+        $this->setRange($httpRequest->getHeader('range', ''));
+        $this->ifNoneMatch = $httpRequest->getHeader('if-none-match', '');
+        $this->ifModifiedSince = strtotime($httpRequest->getHeader('if-modified-since', ''));
         $this->supportedNegotiations = [
             'accept-encoding'
         ];
@@ -367,16 +373,18 @@ class HTTPResponse
                 $this->includeBody = true;
                 $this->setBody(sprintf('%d %s', $this->status, self::$httpStatusCodes[$this->status]) . PHP_EOL . $message);
             }
-			if ($code === self::STATUS_REQUESTED_RANGE_NOT_SATISFIABLE) {
+            if ($code === self::STATUS_REQUESTED_RANGE_NOT_SATISFIABLE) {
                 $this->includeBody = false;
-			}
+            }
         }
     }
-	public function getStatus() {
-		return $this->status;
-	}
 
-    public function setRange($range)
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function setRange(string $range)
     {
         if (preg_match('/^bytes=(\d*)-(\d*)(.*)$/', $range, $match)) {
             if ($match[3]) {
@@ -533,14 +541,15 @@ NETWORK:
 EOT;
         return sprintf($manifest, $this->getMergedStyleFile($this->styleFiles), $this->getMergedScriptFile($this->scriptFiles));
     }
-    
-    public function addStyleFile(string $path) {
-        assert(is_file($path), "style file $path must exist");
-        $this->styleFiles[$path] = $path;
+
+    public function addStyleAsset(AssetInterface $asset)
+    {
+        $this->styleFiles[] = $asset;
     }
-    public function addScriptFile(string $path) {
-        assert(is_file($path), "style file $path must exist");
-        $this->scriptFiles[$path] = $path;
+
+    public function addScriptAsset(AssetInterface $asset)
+    {
+        $this->scriptFiles[] = $asset;
     }
 
     protected function getMergedStyleFile(array $styleFiles)
@@ -567,6 +576,12 @@ EOT;
         }
     }
 
+    public function setExceptionContext(ExceptionContext $exception)
+    {
+        $this->setDocument($exception->toDocument());
+        $this->status = self::STATUS_INTERNAL_SERVER_ERROR;
+    }
+
     public function setDocument(DOMDocument $doc)
     {
         if ($doc->documentURI and $fileName = basename($doc->documentURI)) {
@@ -576,7 +591,7 @@ EOT;
             if ($doc->documentElement->hasAttribute('xml:lang')) {
                 $this->setLanguage($doc->documentElement->getAttribute('xml:lang'));
             } elseif ($this->language) {
-                //$doc->documentElement->setAttribute('xml:lang', $this->language);
+                // $doc->documentElement->setAttribute('xml:lang', $this->language);
             }
         }
         if ($this->charset) {
@@ -584,51 +599,41 @@ EOT;
         }
         
         // CSS verlinken
+        $styleLinkList = [];
         if ($this->includeStyle and $this->styleFiles) {
             if (self::$httpConfig['merge-styleFiles']) {
-                $this->styleFiles = [
-                    $this->getMergedStyleFile($this->styleFiles)
-                ];
+                die('not implemented yet: merge-styleFiles');
             } else {
-                foreach ($this->styleFiles as $path => &$styleFile) {
-                    // $styleFile = '/getStyle.php/' . $path;
-                    $styleFile = $this->getMergedStyleFile([
-                        $styleFile
-                    ]);
+                foreach ($this->styleFiles as $asset) {
+                    $styleLinkList[] = $asset->getHref();
                 }
-                unset($styleFile);
-            }
-            
-            foreach ($this->styleFiles as $styleFile) {
-                $doc->insertBefore($doc->createProcessingInstruction('xml-stylesheet', sprintf('type="text/css" href="%s"', $styleFile)), $doc->firstChild);
             }
         }
         
+        $scriptLinkList = [];
         // Script-Datei erstellen
         if ($this->scriptFiles) {
             if (self::$httpConfig['merge-scriptFiles']) {
-                $this->scriptFiles = [
-                    $this->getMergedScriptFile($this->scriptFiles)
-                ];
+                die('not implemented yet: merge-scriptFiles');
             } else {
-                foreach ($this->scriptFiles as $path => &$scriptFile) {
-                    // $scriptFile = '/getScript.php/' . $path;
-                    $scriptFile = $this->getMergedScriptFile([
-                        $scriptFile
-                    ]);
+                foreach ($this->scriptFiles as $asset) {
+                    $scriptLinkList[] = $asset->getHref();
                 }
-                unset($scriptFile);
             }
         }
         
         // Sprach-Links erstellen
-        $langLinks = [];
+        $langLinkList = [];
         /*
          * foreach ($this->dict->getSupportedLang() as $lang) {
          * $langLinks[$lang] = $this->dict->createLink($this->requestedPage->getAttribute('url'), $lang);
          * }
          * //
          */
+        
+        foreach ($styleLinkList as $link) {
+            $doc->insertBefore($doc->createProcessingInstruction('xml-stylesheet', sprintf('type="text/css" href="%s"', $link)), $doc->firstChild);
+        }
         
         // Script-Datei und Sprach-Links Doctype-abhängig verlinken
         $ns = $doc->documentElement ? $doc->documentElement->namespaceURI : null;
@@ -670,7 +675,7 @@ EOT;
                     $this->doctype = $doc->implementation->createDocumentType('html');
                 }
                 if ($head = $doc->getElementsByTagNameNS(DOMHelper::NS_HTML, 'head')->item(0)) {
-                    foreach ($langLinks as $lang => $uri) {
+                    foreach ($langLinkList as $lang => $uri) {
                         $node = $doc->createElementNS(DOMHelper::NS_HTML, 'link');
                         $node->setAttribute('hreflang', $lang);
                         $node->setAttribute('href', $uri);
@@ -680,14 +685,12 @@ EOT;
                 } else {
                     $head = $doc->documentElement;
                 }
-                foreach ($this->scriptFiles as $scriptFile) {
-                    if ($scriptFile) {
-                        $node = $doc->createElementNS(DOMHelper::NS_HTML, 'script');
-                        $node->setAttribute('src', $scriptFile);
-                        $node->setAttribute('defer', 'defer');
-                        $node->setAttribute('type', 'application/javascript');
-                        $head->appendChild($node);
-                    }
+                foreach ($scriptLinkList as $link) {
+                    $node = $doc->createElementNS(DOMHelper::NS_HTML, 'script');
+                    $node->setAttribute('src', $link);
+                    $node->setAttribute('defer', 'defer');
+                    $node->setAttribute('type', 'application/javascript');
+                    $head->appendChild($node);
                 }
                 break;
             case DOMHelper::NS_SVG:
@@ -695,12 +698,10 @@ EOT;
                 if ($head = $doc->getElementsByTagNameNS(DOMHelper::NS_SVG, 'defs')->item(0)) {} else {
                     $head = $doc->documentElement;
                 }
-                foreach ($this->scriptFiles as $scriptFile) {
-                    if ($scriptFile) {
-                        $node = $doc->createElementNS(DOMHelper::NS_SVG, 'script');
-                        $node->setAttributeNS(DOMHelper::NS_XLINK, 'xlink:href', $scriptFile);
-                        $head->appendChild($node);
-                    }
+                foreach ($scriptLinkList as $link) {
+                    $node = $doc->createElementNS(DOMHelper::NS_SVG, 'script');
+                    $node->setAttributeNS(DOMHelper::NS_XLINK, 'xlink:href', $link);
+                    $head->appendChild($node);
                 }
                 // $this->doctype = $doc->implementation->createDocumentType('svg');
                 break;
@@ -731,6 +732,7 @@ EOT;
             $doc->insertBefore($this->doctype, $doc->documentElement);
         }
         if (self::$httpConfig['doc-timestamp']) {
+            printf(Kernel::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576);
             $this->setEtag(self::calcEtag($doc->saveXML()), false);
             $doc->documentElement->insertBefore($doc->createComment(PHP_EOL . sprintf(Kernel::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576) . PHP_EOL), $doc->documentElement->firstChild);
             $this->setBody(trim($doc->saveXML()));
@@ -786,9 +788,9 @@ EOT;
         $this->addHeader('last-modified', $date);
     }
 
-    public function setContentEncoding($contentEncoding)
+    public function setContentEncoding(string $contentEncoding)
     {
-        if ($contentEncodingList = explode(',', $contentEncoding)) {
+        if (strlen($contentEncoding) and $contentEncodingList = explode(',', $contentEncoding)) {
             foreach ($contentEncodingList as $contentEncoding) {
                 $contentEncoding = trim($contentEncoding);
                 if (in_array($contentEncoding, $this->supportedContentEncodings)) {
@@ -800,7 +802,7 @@ EOT;
 
     protected function sendHeaderList()
     {
-        //$this->addHeader('connection', 'Keep-Alive');
+        // $this->addHeader('connection', 'Keep-Alive');
         if ($this->rangeEnd !== null) {
             $this->addHeader('accept-ranges', 'bytes');
         }
@@ -817,9 +819,9 @@ EOT;
                 rawurlencode($file)
             ]);
             if ($this->rangeEnd !== null) {
-				if ($this->transferEncoding === self::TRANSFER_ENCODING_RAW) {
-					$this->addHeader('content-length', $this->rangeEnd - $this->rangeStart);
-				}
+                if ($this->transferEncoding === self::TRANSFER_ENCODING_RAW) {
+                    $this->addHeader('content-length', $this->rangeEnd - $this->rangeStart);
+                }
                 if ($this->status === self::STATUS_PARTIAL_CONTENT or $this->status === self::STATUS_REQUESTED_RANGE_NOT_SATISFIABLE) {
                     $this->addHeader('content-range', 'bytes %1$.0f-%2$.0f/%3$.0f', [
                         $this->rangeStart,

@@ -1,99 +1,104 @@
-<?php
+<?php declare(strict_types=1);
 namespace Slothsoft\Farah\Module\AssetDefinitions;
 
 use Slothsoft\Farah\HTTPClosure;
+use Slothsoft\Farah\Exception\ExceptionContext;
+use Slothsoft\Farah\Module\DefinitionFactory;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Assets\AssetInterface;
 use Slothsoft\Farah\Module\PathResolvers\MapPathResolver;
 use Slothsoft\Farah\Module\PathResolvers\NullPathResolver;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
+use BadFunctionCallException;
 use Closure;
 use DOMDocument;
-use UnexpectedValueException;
+use Slothsoft\Farah\Module\AssetRepository;
+use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class ExecutableDefinition extends AssetDefinition implements ClosurableDefinition
+class ExecutableDefinition extends GenericAssetDefinition implements ClosurableInterface
 {
-    /*
-    private $childMap;
-    public function traverseTo(string $path) : AssetDefinition {
-        if ($path === '/') {
-            return $this;
-        }
-        if ($this->childMap === null) {
-            $this->childMap = $this->loadChildMap();
-        }
-        if (!isset($this->childMap[$path])) {
-            throw new RuntimeException("Executable file {$this->getAssetPath()} did not provide a closure for $path!");
-        }
-        return $this->childMap[$path];
-    }
-    //*/
-    protected function loadPathResolver() : PathResolverInterface {
+
+    protected function loadPathResolver(): PathResolverInterface
+    {
         $res = $this->executePath();
         if ($res instanceof PathResolverInterface) {
-            //my work here is done
+            // my work here is done
             $ret = $res;
         } elseif ($res instanceof Closure) {
             $ret = new NullPathResolver($this->createClosure([], $res));
         } else {
-            //let's get $res into a PathResolverInterface somehow
+            // let's get $res into a PathResolverInterface somehow
             $ret = [];
-            if (!is_array($res)) {
-                $res = ['/' => $res];
+            if (! is_array($res)) {
+                $res = [
+                    '/' => $res
+                ];
             }
+            $offset = strlen($this->getAssetPath());
             foreach ($res as $path => $asset) {
                 switch (true) {
-                    case $asset instanceof AssetDefinition:
+                    case $asset instanceof AssetDefinitionInterface:
                         break;
                     case $asset instanceof Closure:
-                        $asset = $this->createClosure([], $asset);
+                        $asset = $this->createClosure(['path' => $path], $asset);
                         break;
-                    default: throw new UnexpectedValueException("{$this->getName()} must return closurable... stuff!");
+                    default:
+                        throw ExceptionContext::append(new BadFunctionCallException("ExecutableDefinition {$this->getId()} must return closurable... stuff!"), [
+                            'definition' => $this
+                        ]);
                 }
-                $ret[$path] = $asset;
+                $ret[substr($asset->getAssetPath(), $offset)] = $asset;
             }
-            
             $ret = new MapPathResolver($this, $ret);
         }
         return $ret;
     }
-    
-    public function createClosure(array $options, Closure $closure) : ClosureDefinition {
-        $definition = self::createFromArray($this->getOwnerModule(), Module::TAG_CLOSURE, [], $this);
+
+    public function createClosure(array $options, Closure $closure): ClosureDefinition
+    {
+        $attributes = [];
+        $attributes['realpath'] = $this->getRealPath() . ($options['path'] ?? '/');
+        $attributes['assetpath'] = $this->getAssetPath() . ($options['path'] ?? '/');
+        $definition = DefinitionFactory::createFromArray($this->getOwnerModule(), Module::TAG_CLOSURE, $attributes, $this);
         $definition->setClosure(new HTTPClosure($options, $closure));
         return $definition;
     }
-    
-    public function getClosure() : HTTPClosure {
+
+    public function getClosure(): HTTPClosure
+    {
         $childMap = $this->getPathResolver()->getPathMap();
-        if (isset($childMap['/']) and $childMap['/'] instanceof ClosurableDefinition) {
+        if (isset($childMap['/']) and $childMap['/'] instanceof ClosurableInterface) {
             return $childMap['/']->getClosure();
         }
         $options = [];
         $definition = $this;
-        return new HTTPClosure(
-            $options, 
-            function() use ($definition, $childMap) {
-                $resultDoc = new DOMDocument();
-                $resultDoc->appendChild($definition->toNode($resultDoc));
-                foreach ($childMap as $path => $childDefinition) {
-                    $childNode = $childDefinition->toNode($resultDoc);
-                    $childNode->setAttribute('uri', $path);
-                    $resultDoc->documentElement->appendChild($childNode);
+        return new HTTPClosure($options, function (AssetInterface $asset) use ($definition, $childMap) {
+            $resultDoc = new DOMDocument();
+            $resultDoc->appendChild($asset->toDefinitionElement($resultDoc));
+            $repository = AssetRepository::getInstance();
+            foreach ($childMap as $path => $childDefinition) {
+                $childAsset = $repository->lookupAssetByUrl($childDefinition->toUrl($asset->getArguments()));
+                if ($childAsset instanceof DOMWriterInterface) {
+                    $childNode = $childAsset->toElement($resultDoc);
+                } else {
+                    $childNode = $childAsset->toDefinitionElement($resultDoc);
                 }
-                return $resultDoc;
+                $resultDoc->documentElement->appendChild($childNode);
             }
-        );
+            return $resultDoc;
+        });
     }
-    
-    private function executePath() {
-        assert(is_file($this->getRealPath()), "not an executable file: {$this->getRealPath()}");
+
+    private function executePath()
+    {
+        assert(is_file($this->getRealPath()), "File {$this->getRealPath()} appears to be missing.");
         
-        return include($this->getRealPath());
+        return include ($this->getRealPath());
     }
 }
 
