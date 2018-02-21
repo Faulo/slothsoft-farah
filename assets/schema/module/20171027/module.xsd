@@ -80,6 +80,10 @@
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="asset">
+					<xsd:sequence>
+						<xsd:element ref="source" minOccurs="0"/>
+						<xsd:element ref="options" minOccurs="0"/>
+					</xsd:sequence>
 					<xsd:attribute name="type" type="xsd:normalizedString" use="required"/>
 				</xsd:extension>
 			</xsd:complexContent>
