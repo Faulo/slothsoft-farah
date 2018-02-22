@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Assets;
 
 use Slothsoft\Core\DOMHelper;
@@ -43,12 +45,12 @@ class GenericAsset implements AssetInterface
 
     public function getName(): string
     {
-        return $this->definition->getAttribute('name');
+        return $this->definition->getName();
     }
 
     public function getPath(): string
     {
-        return $this->definition->getAttribute('path');
+        return $this->definition->getPath();
     }
 
     public function getId(): string
@@ -63,12 +65,12 @@ class GenericAsset implements AssetInterface
 
     public function getRealPath(): string
     {
-        return $this->definition->getAttribute('realpath');
+        return $this->definition->getRealPath();
     }
 
     public function getAssetPath(): string
     {
-        return $this->definition->getAttribute('assetpath');
+        return $this->definition->getAssetPath();
     }
 
     public function getOwnerModule(): Module
@@ -78,10 +80,7 @@ class GenericAsset implements AssetInterface
 
     public function lookupAsset(string $ref, array $args = []): AssetInterface
     {
-        $repository = AssetRepository::getInstance();
-        $module = $this->getOwnerModule();
-        $url = FarahUrl::createFromReference($ref, $module, $args);
-        return $repository->lookupAssetByUrl($url);
+        return AssetRepository::getInstance()->lookupAssetByUrl(FarahUrl::createFromReference($ref, $this->getOwnerModule(), $args));
     }
 
     public function getArguments(): array
@@ -91,16 +90,21 @@ class GenericAsset implements AssetInterface
 
     public function toDefinitionElement(DOMDocument $targetDoc): DOMElement
     {
-        $node = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, $this->definition->getTag());
-        $node->setAttribute('name', $this->getName());
-        $node->setAttribute('url', $this->getId());
-        $node->setAttribute('href', $this->getHref());
+        $node = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, $this->definition->getElementTag());
+        $node->setAttribute(Module::ATTR_NAME, $this->getName());
+        $node->setAttribute(Module::ATTR_ID, $this->getId());
+        $node->setAttribute(Module::ATTR_HREF, $this->getHref());
         return $node;
     }
 
     public function __toString(): string
     {
         return get_class($this) . ' ' . $this->getId();
+    }
+
+    public function exists(): bool
+    {
+        return true; // optimistisch
     }
 }
 

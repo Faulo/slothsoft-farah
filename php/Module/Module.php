@@ -1,11 +1,15 @@
 <?php
+
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Event\EventTargetInterface;
 use Slothsoft\Farah\Event\EventTargetTrait;
 use Slothsoft\Farah\Module\Assets\AssetInterface;
 use DOMDocument;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -39,6 +43,8 @@ class Module implements EventTargetInterface
 
     const TAG_MODULE = 'module';
 
+    const TAG_CONFIGURATION_ROOT = 'default-configuration';
+
     const TAG_ASSET_ROOT = 'assets';
 
     const TAG_FRAGMENT = 'fragment';
@@ -71,6 +77,28 @@ class Module implements EventTargetInterface
 
     const TAG_USE_TEMPLATE = 'use-template';
 
+    const ATTR_NAME = 'name';
+
+    const ATTR_ID = 'url';
+
+    const ATTR_HREF = 'href';
+
+    const ATTR_ALIAS = 'as';
+
+    const ATTR_PATH = 'path';
+
+    const ATTR_TYPE = 'type';
+
+    const ATTR_REALPATH = 'realpath';
+
+    const ATTR_ASSETPATH = 'assetpath';
+
+    const ATTR_REFERENCE = 'ref';
+
+    const ATTR_PARAM_KEY = 'name';
+
+    const ATTR_PARAM_VAL = 'value';
+
     const EVENT_USE_DOCUMENT = 'use-document';
 
     const EVENT_USE_TEMPLATE = 'use-template';
@@ -87,7 +115,11 @@ class Module implements EventTargetInterface
 
     private $name;
 
+    private $definitionFactory;
+
     private $rootDirectory;
+
+    private $manifestFile;
 
     /**
      */
@@ -96,26 +128,49 @@ class Module implements EventTargetInterface
         $this->vendor = $vendor;
         $this->name = $name;
         
+        $this->definitionFactory = new DefinitionFactory($this);
+        
         // TODO: create a const or something for the SERVER_ROOT . 'vendor' part
         $this->rootDirectory = SERVER_ROOT . 'vendor' . DIRECTORY_SEPARATOR . $this->vendor . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR;
+        $this->manifestFile = $this->rootDirectory . 'module.xml';
     }
 
-    public function init()
+    public function getDefinitionFactory()
     {
-        $manifestFile = $this->getRootDirectory() . 'module.xml';
-        assert(is_file($manifestFile), "Module {$this->getId()} is missing its manifest at $manifestFile.");
+        return $this->definitionFactory;
+    }
+
+    public function getManifestFile()
+    {
+        return $this->manifestFile;
+    }
+
+    public function manifestFileExists()
+    {
+        return is_file($this->manifestFile);
+    }
+
+    public function loadManifestFile()
+    {
+        if (! $this->manifestFileExists()) {
+            throw new RuntimeException("Module {$this->getId()} is missing its manifest at $this->manifestFile.");
+        }
         
         $dom = new DOMHelper();
-        $moduleDoc = $dom->loadDocument($manifestFile);
-        $moduleXPath = $dom->loadXPath($moduleDoc, DOMHelper::XPATH_SLOTHSOFT);
+        $moduleElement = LeanElement::createTreeFromDOMDocument($dom->loadDocument($this->manifestFile));
         
-        $element = $moduleXPath->evaluate('/sfm:module/sfm:assets')->item(0);
-        
-        assert($element, "Module {$this->getId()}'s manifest does not contain <sfm:assets>.");
-        
+        $this->loadDefaultConfiguration($moduleElement->getChildByTag(self::TAG_CONFIGURATION_ROOT));
+        $this->loadAssets($moduleElement->getChildByTag(self::TAG_ASSET_ROOT));
+    }
+
+    private function loadDefaultConfiguration(LeanElement $element)
+    {}
+
+    private function loadAssets(LeanElement $element)
+    {
         $element->setAttribute('realpath', $this->getRootDirectory() . 'assets');
         $element->setAttribute('assetpath', '');
-        $this->assets = DefinitionFactory::createFromElement($this, $element);
+        $this->assets = $this->definitionFactory->createDefinition($element);
     }
 
     /**
@@ -154,9 +209,11 @@ class Module implements EventTargetInterface
     {
         return $this->assets->traverseTo($assetpath);
     }
+
     public function getAsset(string $assetpath, array $args = [])
     {
-        return AssetRepository::getInstance()->lookupAssetByUrl($this->assets->traverseTo($assetpath)->toUrl($args));
+        return AssetRepository::getInstance()->lookupAssetByUrl($this->assets->traverseTo($assetpath)
+            ->toUrl($args));
     }
 }
 

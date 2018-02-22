@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types = 1);
 // © 2012 Daniel Schulz
 namespace Slothsoft\Farah;
 
@@ -337,15 +339,17 @@ class Dictionary
             $language = $this->currentLang;
         }
         
-        $repository = AssetRepository::getInstance();
-        $module = $repository->lookupModule('slothsoft', 'core');
         $ref = "$namespace/dictionary/$language"; // TODO: make this less presumptive
         $url = FarahUrl::createFromReference($ref, $this->currentModule);
         $key = $url->toString();
         
         if (! isset($this->langPaths[$key])) {
-            $asset = $repository->lookupAssetByUrl($url);
-            $doc = $asset->toDocument();
+            $asset = AssetRepository::getInstance()->lookupAssetByUrl($url);
+            if ($asset->exists()) {
+                $doc = $asset->toDocument();
+            } else {
+                $doc = new DOMDocument();
+            }
             $this->langPaths[$key] = DOMHelper::loadXPath($doc, DOMHelper::XPATH_SLOTHSOFT | DOMHelper::XPATH_HTML);
         }
         return $this->langPaths[$key];

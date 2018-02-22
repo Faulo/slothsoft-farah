@@ -1,6 +1,8 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\AssetDefinitions;
 
+use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\ParameterFilters\AllowAllFilter;
@@ -18,9 +20,7 @@ class GenericAssetDefinition implements AssetDefinitionInterface
 
     private $ownerModule;
 
-    private $tag;
-
-    private $attributes;
+    private $element;
 
     private $children;
 
@@ -28,14 +28,11 @@ class GenericAssetDefinition implements AssetDefinitionInterface
 
     private $parameterFilter;
 
-    public function init(Module $ownerModule, string $tag, array $attributes)
+    public function init(Module $ownerModule, LeanElement $element, array $children)
     {
         $this->ownerModule = $ownerModule;
-        $this->tag = $tag;
-        $this->attributes = $attributes;
-        $this->children = [];
-        
-        // echo "loading definition {$this->getId()}" . PHP_EOL;
+        $this->element = $element;
+        $this->children = $children;
     }
 
     public function getOwnerModule(): Module
@@ -43,9 +40,34 @@ class GenericAssetDefinition implements AssetDefinitionInterface
         return $this->ownerModule;
     }
 
-    public function getTag(): string
+    public function getElement(): LeanElement
     {
-        return $this->tag;
+        return $this->element;
+    }
+
+    public function getElementTag(): string
+    {
+        return $this->element->getTag();
+    }
+
+    public function getElementAttribute(string $key, string $default = null): string
+    {
+        return $this->element->getAttribute($key, $default);
+    }
+
+    public function hasElementAttribute(string $key): bool
+    {
+        return $this->element->hasAttribute($key);
+    }
+
+    public function getChildren(): array
+    {
+        return $this->children;
+    }
+
+    public function createChildDefinition(LeanElement $element): AssetDefinitionInterface
+    {
+        return $this->ownerModule->getDefinitionFactory()->createDefinition($element, $this->element);
     }
 
     public function getId(): string
@@ -53,48 +75,24 @@ class GenericAssetDefinition implements AssetDefinitionInterface
         return $this->ownerModule->getId() . $this->getAssetPath();
     }
 
-    public function getAttributes(): array
-    {
-        return $this->attributes;
-    }
-
     public function getName(): string
     {
-        return $this->attributes['name'] ?? '';
+        return $this->getElementAttribute(Module::ATTR_NAME);
+    }
+
+    public function getPath(): string
+    {
+        return $this->getElementAttribute(Module::ATTR_PATH);
     }
 
     public function getRealPath(): string
     {
-        return $this->attributes['realpath'] ?? '';
+        return $this->getElementAttribute(Module::ATTR_REALPATH);
     }
 
     public function getAssetPath(): string
     {
-        return $this->attributes['assetpath'] ?? '';
-    }
-
-    public function getAttribute(string $key): string
-    {
-        return $this->attributes[$key] ?? '';
-    }
-
-    public function hasAttribute(string $key): bool
-    {
-        return isset($this->attributes[$key]);
-    }
-    
-    public function setAttribute(string $key, string $val) {
-        $this->attributes[$key] = $val;
-    }
-
-    public function appendChild(AssetDefinitionInterface $asset)
-    {
-        $this->children[] = $asset;
-    }
-
-    public function getChildren(): array
-    {
-        return $this->children;
+        return $this->getElementAttribute(Module::ATTR_ASSETPATH);
     }
 
     public function traverseTo(string $path): AssetDefinitionInterface

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Stream\Streams;
 
 use Slothsoft\Farah\Stream\InputStreamInterface;

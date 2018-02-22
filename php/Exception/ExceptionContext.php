@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Exception;
 
 use Slothsoft\Core\DOMHelper;
@@ -68,7 +70,7 @@ class ExceptionContext implements DOMWriterInterface
                 $name .= "[$constList[$code]]";
             }
         }
-    
+        
         $element = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, Module::TAG_ERROR);
         $element->setAttribute('name', $name);
         $element->setAttribute('code', (string) $this->ownerException->getCode());
@@ -96,6 +98,8 @@ class ExceptionContext implements DOMWriterInterface
 
     public function toDocument(): DOMDocument
     {
+        file_get_contents('farah://slothsoft@farah/xsl/error');
+        
         $targetDoc = new DOMDocument();
         $targetDoc->appendChild($targetDoc->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="/getAsset.php/slothsoft@farah/xsl/error"'));
         $targetDoc->appendChild($this->toElement($targetDoc));

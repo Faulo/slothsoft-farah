@@ -1,11 +1,15 @@
-<?php declare(strict_types=1);
-/***********************************************************************
+<?php
+
+declare(strict_types = 1);
+/**
+ * *********************************************************************
  * Slothsoft\Farah\HTTPStream v1.00 28.05.2014 � Daniel Schulz
- * 
- * 	Changelog:
- *		v1.00 28.05.2014
- *			initial release
- ***********************************************************************/
+ *
+ * Changelog:
+ * v1.00 28.05.2014
+ * initial release
+ * *********************************************************************
+ */
 namespace Slothsoft\Farah;
 
 abstract class HTTPStream

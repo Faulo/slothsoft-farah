@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Assets;
 
 use Slothsoft\Farah\HTTPFile;
@@ -20,6 +22,11 @@ class Resource extends GenericAsset implements FileWriterInterface
     public function toString(): string
     {
         return file_get_contents($this->getRealPath());
+    }
+
+    public function exists(): bool
+    {
+        return is_file($this->getRealPath());
     }
 }
 

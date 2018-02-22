@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Assets\Resources;
 
 use Slothsoft\Core\DOMHelper;
@@ -31,7 +33,7 @@ class ExecutableResource extends Resource implements DOMWriterInterface, FileWri
     {
         parent::init($definition, $url);
         
-        assert($definition instanceof ClosurableInterface, "ExecutableResource requires an AssetDefinition that implements ClosurableInterface.");
+        assert($definition instanceof ClosurableInterface, "ExecutableResource {$this->getId()} requires an AssetDefinition that implements ClosurableInterface.");
     }
 
     public function toElement(DOMDocument $targetDoc): DOMElement
@@ -44,7 +46,8 @@ class ExecutableResource extends Resource implements DOMWriterInterface, FileWri
                 $ret = $this->result->toElement($targetDoc);
                 break;
             case $this->result instanceof FileWriterInterface:
-                $ret = $targetDoc->importNode($this->result->toFile()->getDocument()->documentElement, true);
+                $ret = $targetDoc->importNode($this->result->toFile()
+                    ->getDocument()->documentElement, true);
                 break;
             case $this->result instanceof DOMDocument:
                 $ret = $targetDoc->importNode($this->result->documentElement, true);
@@ -60,10 +63,10 @@ class ExecutableResource extends Resource implements DOMWriterInterface, FileWri
                 $ret = $targetDoc->importNode($tmpDoc->documentElement, true);
                 break;
             case is_object($this->result):
-                throw new InvalidArgumentException("Closure return type ".get_class($this->result)." is not supported by this implementation.");
+                throw new InvalidArgumentException("Closure return type " . get_class($this->result) . " is not supported by this implementation.");
             default:
                 $definition = $this->getDefinition();
-                $ret = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, $definition->getTag());
+                $ret = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, $definition->getElementTag());
                 $ret->appendChild($targetDoc->createTextNode($this->result));
                 break;
         }
@@ -93,11 +96,11 @@ class ExecutableResource extends Resource implements DOMWriterInterface, FileWri
                 $ret = $this->result->getDocument();
                 break;
             case is_object($this->result):
-                throw new InvalidArgumentException("Closure return type ".get_class($this->result)." is not supported by this implementation.");
+                throw new InvalidArgumentException("Closure return type " . get_class($this->result) . " is not supported by this implementation.");
             default:
                 $definition = $this->getDefinition();
                 $ret = new DOMDocument();
-                $node = $ret->createElementNS(DOMHelper::NS_FARAH_MODULE, $definition->getTag());
+                $node = $ret->createElementNS(DOMHelper::NS_FARAH_MODULE, $definition->getElementTag());
                 $node->appendChild($ret->createTextNode($this->result));
                 $ret->appendChild($node);
                 break;
@@ -121,7 +124,7 @@ class ExecutableResource extends Resource implements DOMWriterInterface, FileWri
                 $ret = HTTPFile::createFromDocument($this->result);
                 break;
             case is_object($this->result):
-                throw new InvalidArgumentException("Closure return type ".get_class($this->result)." is not supported by this implementation.");
+                throw new InvalidArgumentException("Closure return type " . get_class($this->result) . " is not supported by this implementation.");
             default:
                 $ret = HTTPFile::createFromString($this->result, $this->getPath() . '.txt');
                 break;
@@ -139,9 +142,7 @@ class ExecutableResource extends Resource implements DOMWriterInterface, FileWri
                 $ret = $this->result->saveXML();
                 break;
             case is_object($this->result):
-                throw new InvalidArgumentException(
-                    sprintf('Closure return type "%s" is not supported by this implementation.', get_class($this->result))
-                );
+                throw new InvalidArgumentException(sprintf('Closure return type "%s" is not supported by this implementation.', get_class($this->result)));
             default:
                 $ret = $this->result;
                 break;

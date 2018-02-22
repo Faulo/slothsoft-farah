@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\AssetDefinitions;
 
 use Slothsoft\Farah\Module\ParameterFilters\DenyAllFilter;

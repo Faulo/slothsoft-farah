@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
 use Slothsoft\Farah\Event\EventTargetInterface;
@@ -39,11 +41,11 @@ class FragmentProcessor implements EventTargetInterface
 
     private function loadChildDefinition(AssetDefinitionInterface $assetDefinition, AssetInterface $contextAsset)
     {
-        $assetTag = $assetDefinition->getTag();
+        $assetTag = $assetDefinition->getElementTag();
         $event = null;
         switch ($assetTag) {
             case Module::TAG_INCLUDE_FRAGMENT:
-                $asset = $contextAsset->lookupAsset($assetDefinition->getAttribute('ref'));
+                $asset = $contextAsset->lookupAsset($assetDefinition->getElementAttribute(Module::ATTR_REFERENCE));
                 $element = $asset->getDefinition();
                 foreach ($element->getChildren() as $childNode) {
                     $this->loadChildDefinition($childNode, $asset);
@@ -53,7 +55,7 @@ class FragmentProcessor implements EventTargetInterface
                 foreach ($assetDefinition->getChildren() as $childNode) {
                     $this->loadChildDefinition($childNode, $this->context);
                 }
-                $asset = $contextAsset->lookupAsset($assetDefinition->getAttribute('ref'), $this->context->getArguments());
+                $asset = $contextAsset->lookupAsset($assetDefinition->getElementAttribute(Module::ATTR_REFERENCE), $this->context->getArguments());
                 assert($asset instanceof DOMWriterInterface, "To <sfm:use-document> asset {$asset->getId()}, it must be a DOMWriterInterface.");
                 
                 $event = new UseAssetEvent();
@@ -63,7 +65,7 @@ class FragmentProcessor implements EventTargetInterface
                 ]);
                 break;
             case Module::TAG_FRAGMENT:
-                $ref = $contextAsset->getAssetPath() . '/' . $assetDefinition->getAttribute('name');
+                $ref = $contextAsset->getAssetPath() . '/' . $assetDefinition->getName();
                 $asset = $contextAsset->lookupAsset($ref, $this->context->getArguments());
                 assert($asset instanceof DOMWriterInterface, "Asset reference $ref must be unique.");
                 
@@ -74,7 +76,7 @@ class FragmentProcessor implements EventTargetInterface
                 ]);
                 break;
             case Module::TAG_USE_TEMPLATE:
-                $asset = $contextAsset->lookupAsset($assetDefinition->getAttribute('ref'), $this->context->getArguments());
+                $asset = $contextAsset->lookupAsset($assetDefinition->getElementAttribute(Module::ATTR_REFERENCE), $this->context->getArguments());
                 assert($asset instanceof FileWriterInterface, "To <sfm:use-template> asset {$asset->getId()}, it must be a FileWriterInterface.");
                 
                 $event = new UseAssetEvent();
@@ -84,7 +86,7 @@ class FragmentProcessor implements EventTargetInterface
                 ]);
                 break;
             case Module::TAG_USE_STYLESHEET:
-                $asset = $contextAsset->lookupAsset($assetDefinition->getAttribute('ref'), $this->context->getArguments());
+                $asset = $contextAsset->lookupAsset($assetDefinition->getElementAttribute(Module::ATTR_REFERENCE), $this->context->getArguments());
                 assert($asset instanceof FileWriterInterface, "To <sfm:use-stylesheet> asset {$asset->getId()}, it must be a FileWriterInterface.");
                 
                 $event = new UseAssetEvent();
@@ -94,7 +96,7 @@ class FragmentProcessor implements EventTargetInterface
                 ]);
                 break;
             case Module::TAG_USE_SCRIPT:
-                $asset = $contextAsset->lookupAsset($assetDefinition->getAttribute('ref'), $this->context->getArguments());
+                $asset = $contextAsset->lookupAsset($assetDefinition->getElementAttribute(Module::ATTR_REFERENCE), $this->context->getArguments());
                 assert($asset instanceof FileWriterInterface, "To <sfm:use-script> asset {$asset->getId()}, it must be a FileWriterInterface.");
                 
                 $event = new UseAssetEvent();
@@ -107,8 +109,8 @@ class FragmentProcessor implements EventTargetInterface
                 // TODO: <param>
                 $event = new SetParameterEvent();
                 $event->initEvent(Module::EVENT_SET_PARAMETER, [
-                    'name' => $assetDefinition->getAttribute('name'),
-                    'value' => $assetDefinition->getAttribute('value')
+                    'name' => $assetDefinition->getElementAttribute(Module::ATTR_PARAM_KEY),
+                    'value' => $assetDefinition->getElementAttribute(Module::ATTR_PARAM_VAL)
                 ]);
                 break;
             default:

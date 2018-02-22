@@ -1,6 +1,8 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\AssetDefinitions;
 
+use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\ParameterFilters\ParameterFilterInterface;
@@ -14,31 +16,31 @@ use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
 interface AssetDefinitionInterface
 {
 
-    public function init(Module $ownerModule, string $tag, array $attributes);
+    public function init(Module $ownerModule, LeanElement $element, array $children);
 
     public function getOwnerModule(): Module;
 
-    public function getTag(): string;
+    public function getElement(): LeanElement;
+
+    public function getElementTag(): string;
+
+    public function getElementAttribute(string $key): string;
+
+    public function hasElementAttribute(string $key): bool;
+
+    public function getChildren(): array;
+
+    public function createChildDefinition(LeanElement $element): AssetDefinitionInterface;
 
     public function getId(): string;
 
     public function getName(): string;
 
+    public function getPath(): string;
+
     public function getRealPath(): string;
 
     public function getAssetPath(): string;
-
-    public function getAttribute(string $key): string;
-
-    public function hasAttribute(string $key): bool;
-    
-    public function setAttribute(string $key, string $val);
-
-    public function getAttributes(): array;
-
-    public function appendChild(AssetDefinitionInterface $asset);
-
-    public function getChildren(): array;
 
     public function traverseTo(string $path): AssetDefinitionInterface;
 

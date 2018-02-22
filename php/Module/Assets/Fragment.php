@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Assets;
 
 use Slothsoft\Core\DOMHelper;
@@ -38,8 +40,8 @@ class Fragment extends GenericAsset implements DOMWriterInterface, FileWriterInt
         if ($this->resultDoc === null) {
             $this->resultDoc = new DOMDocument();
             $dataNode = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, Module::TAG_FRAGMENT);
-            $dataNode->setAttribute('name', $this->getName());
-            $dataNode->setAttribute('url', $this->getId());
+            $dataNode->setAttribute(Module::ATTR_NAME, $this->getName());
+            $dataNode->setAttribute(Module::ATTR_ID, $this->getId());
             $this->resultDoc->appendChild($dataNode);
             
             $processor = $this->createProcessor();
@@ -108,9 +110,9 @@ class Fragment extends GenericAsset implements DOMWriterInterface, FileWriterInt
     private function createDocumentElement(AssetDefinitionInterface $definition, AssetInterface $asset): DOMElement
     {
         $element = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, Module::TAG_DOCUMENT);
-        $element->setAttribute('name', $definition->hasAttribute('as') ? $definition->getAttribute('as') : $asset->getName());
-        $element->setAttribute('url', $asset->getId());
-        $element->setAttribute('href', str_replace('farah://', '/getAsset.php/', $asset->getId()));
+        $element->setAttribute(Module::ATTR_NAME, $definition->getElementAttribute(Module::ATTR_ALIAS, $asset->getName()));
+        $element->setAttribute(Module::ATTR_ID, $asset->getId());
+        $element->setAttribute(Module::ATTR_HREF, str_replace('farah://', '/getAsset.php/', $asset->getId()));
         
         $element->appendChild($asset->toElement($element->ownerDocument));
         

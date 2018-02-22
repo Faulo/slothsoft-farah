@@ -1,7 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types = 1);
 
 use Slothsoft\Farah\Kernel;
 
-return function() {
+return function () {
     return Kernel::getInstance()->getRequest();
 };

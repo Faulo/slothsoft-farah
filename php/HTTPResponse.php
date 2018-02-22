@@ -1,11 +1,15 @@
-<?php declare(strict_types=1);
-/***********************************************************************
+<?php
+
+declare(strict_types = 1);
+/**
+ * *********************************************************************
  * Slothsoft\Farah\HTTPResponse v1.00 19.10.2012 © Daniel Schulz
- * 
- * 	Changelog:
- *		v1.00 19.10.2012
- *			initial release
- ***********************************************************************/
+ *
+ * Changelog:
+ * v1.00 19.10.2012
+ * initial release
+ * *********************************************************************
+ */
 namespace Slothsoft\Farah;
 
 use MatthiasMullie\Minify\CSS;
@@ -18,7 +22,6 @@ use Slothsoft\Farah\Module\Assets\AssetInterface;
 use DOMDocument;
 use Exception;
 use UnexpectedValueException;
-
 
 class HTTPResponse
 {

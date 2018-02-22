@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Assets;
 
 use Slothsoft\Farah\Module\FarahUrl;
@@ -43,5 +45,7 @@ interface AssetInterface extends EventTargetInterface
     public function getArguments(): array;
 
     public function toDefinitionElement(DOMDocument $targetDoc): DOMElement;
+
+    public function exists(): bool;
 }
 

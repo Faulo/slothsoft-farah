@@ -1,10 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\AssetDefinitions;
 
+use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\HTTPClosure;
 use Slothsoft\Farah\Exception\ExceptionContext;
-use Slothsoft\Farah\Module\DefinitionFactory;
+use Slothsoft\Farah\Module\AssetRepository;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
 use Slothsoft\Farah\Module\Assets\AssetInterface;
 use Slothsoft\Farah\Module\PathResolvers\MapPathResolver;
 use Slothsoft\Farah\Module\PathResolvers\NullPathResolver;
@@ -12,8 +15,6 @@ use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
 use BadFunctionCallException;
 use Closure;
 use DOMDocument;
-use Slothsoft\Farah\Module\AssetRepository;
-use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
 
 /**
  *
@@ -45,7 +46,9 @@ class ExecutableDefinition extends GenericAssetDefinition implements ClosurableI
                     case $asset instanceof AssetDefinitionInterface:
                         break;
                     case $asset instanceof Closure:
-                        $asset = $this->createClosure(['path' => $path], $asset);
+                        $asset = $this->createClosure([
+                            'path' => $path
+                        ], $asset);
                         break;
                     default:
                         throw ExceptionContext::append(new BadFunctionCallException("ExecutableDefinition {$this->getId()} must return closurable... stuff!"), [
@@ -64,7 +67,7 @@ class ExecutableDefinition extends GenericAssetDefinition implements ClosurableI
         $attributes = [];
         $attributes['realpath'] = $this->getRealPath() . ($options['path'] ?? '/');
         $attributes['assetpath'] = $this->getAssetPath() . ($options['path'] ?? '/');
-        $definition = DefinitionFactory::createFromArray($this->getOwnerModule(), Module::TAG_CLOSURE, $attributes, $this);
+        $definition = $this->createChildDefinition(LeanElement::createOneFromArray(Module::TAG_CLOSURE, $attributes));
         $definition->setClosure(new HTTPClosure($options, $closure));
         return $definition;
     }

@@ -1,7 +1,10 @@
 <?php
+
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
 use Slothsoft\Core\MimeTypeDictionary;
+use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\AssetDefinitions\AssetDefinitionInterface;
 use Slothsoft\Farah\Module\AssetDefinitions\ClosureDefinition;
 use Slothsoft\Farah\Module\AssetDefinitions\ContainerDefinition;
@@ -12,7 +15,7 @@ use Slothsoft\Farah\Module\AssetDefinitions\ResourceDefinition;
 use Slothsoft\Farah\Module\AssetDefinitions\ResourceDirectoryDefinition;
 use Slothsoft\Farah\Module\AssetDefinitions\UnknownDefinition;
 use Slothsoft\Farah\Module\AssetDefinitions\UseDefinition;
-use DOMElement;
+use RuntimeException;
 
 /**
  *
@@ -22,101 +25,116 @@ use DOMElement;
 class DefinitionFactory
 {
 
-    public static function createFromElement(Module $ownerModule, DOMElement $element, AssetDefinitionInterface $parent = null): AssetDefinitionInterface
+    private $ownerModule;
+
+    public function __construct(Module $ownerModule)
     {
-        $tag = $element->localName;
-        $attributes = [];
-        foreach ($element->attributes as $attr) {
-            $attributes[$attr->name] = $attr->value;
-        }
-        
-        $definition = self::createFromArray($ownerModule, $tag, $attributes, $parent);
-        
-        foreach ($element->childNodes as $child) {
-            if ($child instanceof DOMElement) {
-                $definition->appendChild(self::createFromElement($ownerModule, $child, $definition));
-            }
-        }
-        
+        $this->ownerModule = $ownerModule;
+    }
+
+    public function createDefinition(LeanElement $element, LeanElement $parent = null)
+    {
+        $this->normalizeElementAttributes($element, $parent);
+        $definition = $this->isResourceDefinition($element) ? $this->instantiateResourceDefinition($element->getAttribute('type')) : $this->instantiateDefinition($element->getTag());
+        $definition->init($this->ownerModule, $element, $this->createDefinitionList($element->getChildren(), $element));
         return $definition;
     }
 
-    public static function createFromArray(Module $ownerModule, string $tag, array $attributes, AssetDefinitionInterface $parent = null): AssetDefinitionInterface
+    public function createDefinitionList(array $elementList, LeanElement $parent = null)
     {
-        $ret = null;
+        $ret = [];
+        foreach ($elementList as $element) {
+            $ret[] = $this->createDefinition($element, $parent);
+        }
+        return $ret;
+    }
+
+    private function normalizeElementAttributes(LeanElement $element, LeanElement $parent = null)
+    {
+        if (! $element->hasAttribute(Module::ATTR_NAME)) {
+            $element->setAttribute(Module::ATTR_NAME, $this->inventElementName($element));
+        }
+        if (! $element->hasAttribute(Module::ATTR_PATH)) {
+            $element->setAttribute(Module::ATTR_PATH, $this->inventElementPath($element));
+        }
+        if (! $element->hasAttribute(Module::ATTR_REALPATH)) {
+            if (! $parent) {
+                throw new RuntimeException('AssetDefinition must be supplied with either parent definition or realpath+assetpath.');
+            }
+            $element->setAttribute(Module::ATTR_REALPATH, $this->inventElementRealPath($element, $parent));
+        }
+        if (! $element->hasAttribute(Module::ATTR_ASSETPATH)) {
+            if (! $parent) {
+                throw new RuntimeException('AssetDefinition must be supplied with either parent definition or realpath+assetpath.');
+            }
+            $element->setAttribute(Module::ATTR_ASSETPATH, $this->inventElementAssetPath($element, $parent));
+        }
+    }
+
+    private function inventElementName(LeanElement $element): string
+    {
+        return $element->getTag() . '_' . spl_object_hash($element);
+    }
+
+    private function inventElementPath(LeanElement $element): string
+    {
+        $path = $element->getAttribute(Module::ATTR_NAME);
+        if ($element->hasAttribute(Module::ATTR_TYPE)) {
+            if ($extension = MimeTypeDictionary::guessExtension($element->getAttribute(Module::ATTR_TYPE))) {
+                $path .= '.' . $extension;
+            }
+        }
+        return $path;
+    }
+
+    private function inventElementRealPath(LeanElement $element, LeanElement $parent): string
+    {
+        return $parent->getAttribute(Module::ATTR_REALPATH) . DIRECTORY_SEPARATOR . $element->getAttribute(Module::ATTR_PATH);
+    }
+
+    private function inventElementAssetPath(LeanElement $element, LeanElement $parent): string
+    {
+        return $parent->getAttribute(Module::ATTR_ASSETPATH) . '/' . $element->getAttribute(Module::ATTR_NAME);
+    }
+
+    private function isResourceDefinition(LeanElement $element)
+    {
+        return $element->getTag() === Module::TAG_RESOURCE;
+    }
+
+    private function instantiateDefinition(string $tag): AssetDefinitionInterface
+    {
         switch ($tag) {
             case Module::TAG_ASSET_ROOT:
             case Module::TAG_DIRECTORY:
             case Module::TAG_FRAGMENT:
-                $ret = new ContainerDefinition();
-                break;
-            case Module::TAG_RESOURCE:
-                assert(isset($attributes['type']), "Asset of type <resource> requires type attribute.");
-                
-                switch ($attributes['type']) {
-                    case 'application/x-php':
-                        $ret = new ExecutableDefinition();
-                        break;
-                    default:
-                        $ret = new ResourceDefinition();
-                        break;
-                }
-                break;
+                return new ContainerDefinition();
             case Module::TAG_RESOURCE_DIRECTORY:
-                $ret = new ResourceDirectoryDefinition();
-                break;
+                return new ResourceDirectoryDefinition();
             case Module::TAG_CLOSURE:
-                $ret = new ClosureDefinition();
-                break;
+                return new ClosureDefinition();
             case Module::TAG_USE_DOCUMENT:
             case Module::TAG_USE_TEMPLATE:
             case Module::TAG_USE_STYLESHEET:
             case Module::TAG_USE_SCRIPT:
-                $ret = new UseDefinition();
-                break;
+                return new UseDefinition();
             case Module::TAG_INCLUDE_FRAGMENT:
-                $ret = new IncludeDefinition();
-                break;
+                return new IncludeDefinition();
             case Module::TAG_PARAM:
-                $ret = new GenericAssetDefinition();
-                break;
+                return new GenericAssetDefinition();
             default:
-                /*
-                throw ExceptionContext::append(
-                    new DomainException("Module tag <sfm:$tag> is not supported by this implementation."),
-                    [
-                        'definition' => $parent,
-                    ]
-                );
-                //*/
-                $ret = new UnknownDefinition();
-                break;
+                return new UnknownDefinition();
         }
-        
-        if (! isset($attributes['name'])) {
-            $attributes['name'] = $tag . '_' . spl_object_hash($ret);
+    }
+
+    private function instantiateResourceDefinition(string $type): AssetDefinitionInterface
+    {
+        switch ($type) {
+            case 'application/x-php':
+                return new ExecutableDefinition();
+            default:
+                return new ResourceDefinition();
         }
-        if (! isset($attributes['path'])) {
-            $attributes['path'] = $attributes['name'];
-            if (isset($attributes['type'])) {
-                if ($extension = MimeTypeDictionary::guessExtension($attributes['type'])) {
-                    $attributes['path'] .= '.' . $extension;
-                }
-            }
-        }
-        if (! $parent) {
-            assert(isset($attributes['realpath'], $attributes['assetpath']), 'AssetDefinition must be supplied with either parent definition or realpath+assetpath.');
-        }
-        if (! isset($attributes['realpath'])) {
-            $attributes['realpath'] = $parent->getAttribute('realpath') . DIRECTORY_SEPARATOR . $attributes['path'];
-        }
-        if (! isset($attributes['assetpath'])) {
-            $attributes['assetpath'] = $parent->getAttribute('assetpath') . '/' . $attributes['name'];
-        }
-        
-        $ret->init($ownerModule, $tag, $attributes);
-        
-        return $ret;
     }
 }
 

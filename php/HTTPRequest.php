@@ -1,17 +1,20 @@
-<?php declare(strict_types=1);
-/***********************************************************************
+<?php
+
+declare(strict_types = 1);
+/**
+ * *********************************************************************
  * Slothsoft\Farah\HTTPRequest v1.00 19.10.2012 © Daniel Schulz
- * 
- * 	Changelog:
- *		v1.00 19.10.2012
- *			initial release
- ***********************************************************************/
+ *
+ * Changelog:
+ * v1.00 19.10.2012
+ * initial release
+ * *********************************************************************
+ */
 namespace Slothsoft\Farah;
 
 use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
 use DOMDocument;
 use DOMElement;
-
 
 class HTTPRequest implements DOMWriterInterface
 {

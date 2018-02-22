@@ -1,11 +1,15 @@
-<?php declare(strict_types=1);
-/***********************************************************************
+<?php
+
+declare(strict_types = 1);
+/**
+ * *********************************************************************
  * Slothsoft\Farah\Kernel v1.00 19.10.2012 © Daniel Schulz
- * 
- * 	Changelog:
- *		v1.00 19.10.2012
- *			initial release
- ***********************************************************************/
+ *
+ * Changelog:
+ * v1.00 19.10.2012
+ * initial release
+ * *********************************************************************
+ */
 namespace Slothsoft\Farah;
 
 use Slothsoft\Core\DOMHelper;
@@ -18,6 +22,7 @@ use Slothsoft\Farah\Exception\ExceptionContext;
 use Slothsoft\Farah\Module\AssetRepository;
 use Slothsoft\Farah\Module\FarahUrl;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\ModuleRepository;
 use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
 use Slothsoft\Farah\Module\AssetUses\FileWriterInterface;
 use Slothsoft\Farah\Module\Assets\AssetInterface;
@@ -28,7 +33,6 @@ use DOMDocument;
 use DomainException;
 use LogicException;
 use Throwable;
-
 
 class Kernel implements EventTargetInterface
 {
@@ -363,10 +367,9 @@ class Kernel implements EventTargetInterface
         $ref = $this->httpRequest->path;
         $args = $this->httpRequest->input;
         
-        $repository = AssetRepository::getInstance();
-        $module = $repository->lookupModule($this->getDefaultVendor(), $this->getDefaultModule());
+        $module = ModuleRepository::getInstance()->lookupModule($this->getDefaultVendor(), $this->getDefaultModule());
         $url = FarahUrl::createFromReference($ref, $module, $args);
-        $asset = $repository->lookupAssetByUrl($url);
+        $asset = AssetRepository::getInstance()->lookupAssetByUrl($url);
         
         try {
             return $this->loadAsset($asset);
