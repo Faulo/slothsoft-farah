@@ -23,7 +23,7 @@
 	},
 	"autoload" : {
 		"psr-4" : {
-			"Slothsoft\\Farah\\" : "php/"
+			"Slothsoft\\Farah\\": "src/Slothsoft/Farah/"
 		}
 	}
 }
