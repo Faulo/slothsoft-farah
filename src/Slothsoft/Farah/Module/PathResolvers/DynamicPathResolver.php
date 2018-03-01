@@ -7,7 +7,7 @@ use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\Assets\AssetInterface;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
 /**
  *

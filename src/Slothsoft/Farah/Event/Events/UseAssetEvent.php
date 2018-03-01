@@ -3,8 +3,8 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Event\Events;
 
-use Slothsoft\Farah\Module\Assets\AssetInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
 /**
  *

@@ -2,7 +2,7 @@
 namespace Slothsoft\Farah\Internal;
 
 use Slothsoft\Farah\Kernel;
-use Slothsoft\Farah\Module\Controllers\GenericController;
+use Slothsoft\Farah\Module\Controllers\ControllerImplementation;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverCatalog;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
@@ -14,7 +14,7 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  * @author Daniel Schulz
  *        
  */
-class RequestController extends GenericController
+class RequestController extends ControllerImplementation
 {
     public function createResult(FarahUrl $url) : ResultInterface{
         return new DOMWriterResult($url, Kernel::getInstance()->getRequest());

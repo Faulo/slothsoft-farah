@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\Module\FarahUrl;
 
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\ModuleRepository;
-use Slothsoft\Farah\Module\Assets\AssetInterface;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 
 /**

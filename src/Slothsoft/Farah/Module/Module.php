@@ -7,15 +7,15 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Event\EventTargetInterface;
 use Slothsoft\Farah\Event\EventTargetTrait;
-use Slothsoft\Farah\Module\Assets\AssetInterface;
-use Slothsoft\Farah\Module\Assets\ContainerAsset;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;
+use Slothsoft\Farah\Module\Node\ModuleNodeCreator;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Node\Asset\ContainerAsset;
 use RuntimeException;
 use Throwable;
-use Slothsoft\Farah\Module\Element\ModuleElementCreator;
 
 /**
  *
@@ -33,18 +33,23 @@ class Module implements EventTargetInterface
 
     //asset tags
     const TAG_FRAGMENT = 'fragment';
-    const TAG_DIRECTORY = 'directory';
-    const TAG_RESOURCE = 'resource';
-    const TAG_RESOURCE_DIRECTORY = 'resource-directory';    
-    const TAG_CALL_CONTROLLER = 'call-controller';
+    const TAG_CONTAINER = 'container'; 
+    const TAG_CONTROLLER = 'controller';
     const TAG_DOCUMENT = 'document';
     const TAG_ERROR = 'error';
     
+    //asset-with-file tags
+    const TAG_RESOURCE = 'resource';
+    const TAG_DIRECTORY = 'directory';
+    const TAG_RESOURCE_DIRECTORY = 'resource-directory';   
+    
     //meta tags
-    const TAG_INCLUDE_FRAGMENT = 'include-fragment';
     const TAG_SOURCE = 'source';
-    const TAG_OPTIONS = 'options';
-    const TAG_PARAM = 'param';    
+    const TAG_OPTIONS = 'options';    
+    const TAG_PARAM = 'param';
+    
+    //instruction tags
+    const TAG_IMPORT = 'import';
     const TAG_USE_DOCUMENT = 'use-document';
     const TAG_USE_STYLESHEET = 'use-stylesheet';
     const TAG_USE_SCRIPT = 'use-script';
@@ -198,7 +203,7 @@ class Module implements EventTargetInterface
     }
     
     public function createModuleElement(LeanElement $element, LeanElement $parent = null) {
-        return ModuleElementCreator::getInstance()->create($this, $element, $parent);
+        return ModuleNodeCreator::getInstance()->create($this, $element, $parent);
     }
 }
 

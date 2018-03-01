@@ -1,8 +1,8 @@
 <?php
 namespace Slothsoft\Farah\Module\Controllers;
 
-use Slothsoft\Farah\Module\Assets\AssetInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 

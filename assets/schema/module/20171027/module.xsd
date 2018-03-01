@@ -3,178 +3,208 @@
 	xmlns="http://schema.slothsoft.net/farah/module" xmlns:sfm="http://schema.slothsoft.net/farah/module"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
 	attributeFormDefault="unqualified">
-
-	<xsd:element name="module">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element ref="default-configuration" />
-				<xsd:element ref="assets" />
-			</xsd:sequence>
-		</xsd:complexType>
-	</xsd:element>
-
-	<xsd:element name="default-configuration">
-		<xsd:complexType>
-		</xsd:complexType>
-	</xsd:element>
-
-	<xsd:element name="assets">
-		<xsd:complexType>
-			<xsd:choice minOccurs="0" maxOccurs="unbounded">
-				<xsd:group ref="assets" />
-			</xsd:choice>
-		</xsd:complexType>
-	</xsd:element>
-
-	<xsd:complexType name="asset">
-		<xsd:attribute name="name" type="farahUrlPathSegment"
-			use="required" />
-		<xsd:attribute name="path" type="xsd:normalizedString"
-			use="optional" />
-		<xsd:attribute name="assetpath" type="xsd:normalizedString"
-			use="optional" />
-		<xsd:attribute name="realpath" type="xsd:normalizedString"
-			use="optional" />
-	</xsd:complexType>
-
-	<xsd:element name="directory">
-		<xsd:complexType>
-			<xsd:complexContent>
-				<xsd:extension base="asset">
-					<xsd:choice minOccurs="0" maxOccurs="unbounded">
-						<xsd:group ref="assets" />
-					</xsd:choice>
-				</xsd:extension>
-			</xsd:complexContent>
-		</xsd:complexType>
-	</xsd:element>
-
-
-	<xsd:element name="fragment">
-		<xsd:complexType>
-			<xsd:complexContent>
-				<xsd:extension base="asset">
-					<xsd:choice minOccurs="0" maxOccurs="unbounded">
-						<xsd:group ref="assets" />
-						<xsd:group ref="uses" />
-						<xsd:group ref="instructions" />
-					</xsd:choice>
-				</xsd:extension>
-			</xsd:complexContent>
-		</xsd:complexType>
-	</xsd:element>
-
-	<xsd:element name="resource">
-		<xsd:complexType>
-			<xsd:complexContent>
-				<xsd:extension base="asset">
-					<xsd:sequence>
-						<xsd:element ref="source" minOccurs="0" />
-						<xsd:element ref="options" minOccurs="0" />
-					</xsd:sequence>
-					<xsd:attribute name="type" type="xsd:normalizedString"
-						use="required" />
-				</xsd:extension>
-			</xsd:complexContent>
-		</xsd:complexType>
-	</xsd:element>
-
-	<xsd:element name="resource-directory">
-		<xsd:complexType>
-			<xsd:complexContent>
-				<xsd:extension base="asset">
-					<xsd:sequence>
-						<xsd:element ref="source" minOccurs="0" />
-						<xsd:element ref="options" minOccurs="0" />
-					</xsd:sequence>
-					<xsd:attribute name="type" type="xsd:normalizedString"
-						use="required" />
-				</xsd:extension>
-			</xsd:complexContent>
-		</xsd:complexType>
-	</xsd:element>
-
-	<xsd:element name="call-controller">
-		<xsd:complexType>
-			<xsd:complexContent>
-				<xsd:extension base="asset">
-					<xsd:attribute name="class" type="xsd:normalizedString"
-						use="required" />
-				</xsd:extension>
-			</xsd:complexContent>
-		</xsd:complexType>
-	</xsd:element>
-
-	<xsd:group name="assets">
-		<xsd:choice>
-			<xsd:element ref="fragment" />
-			<xsd:element ref="resource" />
-			<xsd:element ref="resource-directory" />
-			<xsd:element ref="directory" />
-			<xsd:element ref="call-controller" />
-		</xsd:choice>
-	</xsd:group>
-
-	<xsd:group name="uses">
-		<xsd:choice>
-			<xsd:element ref="use-document" />
-			<xsd:element ref="use-template" />
-			<xsd:element ref="use-stylesheet" />
-			<xsd:element ref="use-script" />
-			<xsd:element ref="use-dictionary" />
-		</xsd:choice>
-	</xsd:group>
-
-	<xsd:group name="instructions">
-		<xsd:choice>
-			<xsd:element ref="include-fragment" />
-			<xsd:element ref="param" />
-		</xsd:choice>
-	</xsd:group>
-
-	<xsd:complexType name="use">
-		<xsd:choice minOccurs="0" maxOccurs="unbounded">
-			<xsd:group ref="instructions" />
-		</xsd:choice>
-		<xsd:attribute name="ref" type="farahUrl" use="required" />
-		<xsd:attribute name="as" type="xsd:normalizedString"
-			use="optional" />
-	</xsd:complexType>
+	
+	<!-- elements -->
+	<xsd:element name="module" type="module"/>
+	<xsd:element name="default-configuration"/>
+	<xsd:element name="assets" type="assets"/>
+	
+	<xsd:element name="container" type="container"/>
+	<xsd:element name="fragment" type="fragment"/>
+	<xsd:element name="controller" type="controller" />
+	
+	<xsd:element name="resource" type="resource" />
+	<xsd:element name="resource-directory" type="resource-directory"/>
+	<xsd:element name="directory" type="directory"/>
+	
+	<xsd:element name="import" type="import" />
 	<xsd:element name="use-document" type="use" />
 	<xsd:element name="use-template" type="use" />
 	<xsd:element name="use-stylesheet" type="use" />
 	<xsd:element name="use-script" type="use" />
 	<xsd:element name="use-dictionary" type="use" />
+	<xsd:element name="param" type="param" />
+	
+	<xsd:element name="source" type="source" />
+	<xsd:element name="options" type="options" />
+	
+	<!-- groups -->
+	<xsd:group name="virtual-assets">
+		<xsd:choice>
+			<xsd:element ref="container" />
+			<xsd:element ref="fragment" />
+			<xsd:element ref="controller" />
+		</xsd:choice>
+	</xsd:group>
 
-	<xsd:complexType name="include">
-		<xsd:attribute name="ref" type="farahUrl" />
+	<xsd:group name="physical-assets">
+		<xsd:choice>
+			<xsd:element ref="resource" />
+			<xsd:element ref="resource-directory" />
+			<xsd:element ref="directory" />
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:group name="instructions">
+		<xsd:choice>
+			<xsd:element ref="import" />
+			<xsd:element ref="use-document" />
+			<xsd:element ref="use-template" />
+			<xsd:element ref="use-stylesheet" />
+			<xsd:element ref="use-script" />
+			<xsd:element ref="use-dictionary" />
+			<xsd:element ref="param" />
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:group name="meta">
+		<xsd:choice>
+			<xsd:element ref="source" />
+			<xsd:element ref="options" />
+		</xsd:choice>
+	</xsd:group>
+	
+	
+	<!-- types -->
+	<xsd:complexType name="module">
+		<xsd:sequence>
+			<xsd:element ref="default-configuration" />
+			<xsd:element ref="assets" />
+		</xsd:sequence>
 	</xsd:complexType>
-	<xsd:element name="include-fragment" type="include" />
 
-	<xsd:element name="param">
-		<xsd:complexType>
-			<xsd:attribute name="name" type="xsd:normalizedString"
-				use="required" />
-			<xsd:attribute name="value" type="xsd:normalizedString"
-				use="optional" />
-			<xsd:attribute name="scope" type="xsd:normalizedString"
-				use="optional" />
-			<xsd:attribute name="type" type="xsd:normalizedString"
-				use="optional" />
-		</xsd:complexType>
-	</xsd:element>
+	<xsd:complexType name="assets">
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:group ref="virtual-assets" />
+			<xsd:group ref="physical-assets" />
+			<xsd:group ref="instructions" />
+		</xsd:choice>
+	</xsd:complexType>
+	
+	
+	<!-- asset types -->
+	<xsd:complexType name="virtual-asset">
+		<xsd:attribute name="name" type="farahUrlPathSegment"
+			use="required" />
+		<xsd:attribute name="assetpath" type="xsd:normalizedString"
+			use="optional" />
+	</xsd:complexType>
 
-	<xsd:element name="options">
-		<xsd:complexType>
-			<xsd:anyAttribute processContents="lax" />
-		</xsd:complexType>
-	</xsd:element>
+	<xsd:complexType name="container">
+		<xsd:complexContent>
+			<xsd:extension base="virtual-asset">
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:group ref="virtual-assets" />
+					<xsd:group ref="instructions" />
+				</xsd:choice>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
-	<xsd:element name="source">
-		<xsd:complexType>
-			<xsd:attribute name="href" type="xsd:anyURI" use="required" />
-		</xsd:complexType>
-	</xsd:element>
+	<xsd:complexType name="fragment">
+		<xsd:complexContent>
+			<xsd:extension base="container"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="controller">
+		<xsd:complexContent>
+			<xsd:extension base="container">
+				<xsd:attribute name="class" type="xsd:normalizedString"
+						use="required" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	
+	<xsd:complexType name="physical-asset">
+		<xsd:complexContent>
+			<xsd:extension base="virtual-asset">
+				<xsd:attribute name="path" type="xsd:normalizedString" use="optional" />
+				<xsd:attribute name="realpath" type="xsd:normalizedString" use="optional" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+ 
+	<xsd:complexType name="directory">
+		<xsd:complexContent>
+			<xsd:extension base="physical-asset">
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:group ref="virtual-assets" />
+					<xsd:group ref="physical-assets" />
+					<xsd:group ref="instructions" />
+				</xsd:choice>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="resource">
+		<xsd:complexContent>
+			<xsd:extension base="physical-asset">
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:group ref="meta" />
+				</xsd:choice>
+				<xsd:attribute name="type" type="xsd:normalizedString"
+					use="required" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="resource-directory">
+		<xsd:complexContent>
+			<xsd:extension base="resource">
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:group ref="virtual-assets" />
+					<xsd:group ref="physical-assets" />
+					<xsd:group ref="instructions" />
+				</xsd:choice>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="import">
+		<xsd:attribute name="ref" type="farahUrl" use="required" />
+	</xsd:complexType>
+	
+	<xsd:complexType name="use">
+		<xsd:complexContent>
+			<xsd:extension base="import">
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:group ref="instructions" />
+				</xsd:choice>
+				<xsd:attribute name="as" type="xsd:normalizedString"
+					use="optional" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="param">
+		<xsd:attribute name="name" type="xsd:normalizedString"
+			use="required" />
+		<xsd:attribute name="value" type="xsd:normalizedString"
+			use="optional" />
+		<xsd:attribute name="scope" type="xsd:normalizedString"
+			use="optional" />
+		<xsd:attribute name="type" type="xsd:normalizedString"
+			use="optional" />
+	</xsd:complexType>
+
+	<xsd:complexType name="options">
+		<xsd:anyAttribute processContents="lax" />
+	</xsd:complexType>
+
+	<xsd:complexType name="source">
+		<xsd:attribute name="href" type="xsd:anyURI" use="required" />
+	</xsd:complexType>
+
+
+
+
+
+
+
+
+
 
 	<xsd:simpleType name="farahUrl">
 		<xsd:restriction base="xsd:anyURI">

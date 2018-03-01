@@ -14,13 +14,13 @@ use Slothsoft\Farah\Module\FragmentProcessor;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\AssetUses\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Module\AssetUses\FileWriterFromDOMTrait;
-use Slothsoft\Farah\Module\Assets\AssetInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use BadFunctionCallException;
 use DOMDocument;
 use DOMElement;
 use Throwable;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 
 /**
  *

@@ -5,7 +5,7 @@ use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\HTTPClosure;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\Controllers\GenericController;
+use Slothsoft\Farah\Module\Controllers\ControllerImplementation;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverCatalog;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
@@ -17,7 +17,7 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  * @author Daniel Schulz
  *        
  */
-class SitesController extends GenericController
+class SitesController extends ControllerImplementation
 {
     public function createResult(FarahUrl $url) : ResultInterface {
         return new DOMDocumentResult($url, Kernel::getInstance()->getSitesDocument());

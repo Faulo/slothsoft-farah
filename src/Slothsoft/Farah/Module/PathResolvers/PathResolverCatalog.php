@@ -1,7 +1,7 @@
 <?php
 namespace Slothsoft\Farah\Module\PathResolvers;
 
-use Slothsoft\Farah\Module\Assets\AssetInterface;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
 /**
  *

@@ -18,7 +18,7 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Exception\ExceptionContext;
-use Slothsoft\Farah\Module\Assets\AssetInterface;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use DOMDocument;
 use Exception;
 use UnexpectedValueException;
