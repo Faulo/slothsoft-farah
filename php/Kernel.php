@@ -12,26 +12,24 @@ declare(strict_types = 1);
  */
 namespace Slothsoft\Farah;
 
-use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Event\EventTargetInterface;
 use Slothsoft\Farah\Event\EventTargetTrait;
 use Slothsoft\Farah\Event\Events\EventInterface;
 use Slothsoft\Farah\Event\Events\SetParameterEvent;
 use Slothsoft\Farah\Event\Events\UseAssetEvent;
 use Slothsoft\Farah\Exception\ExceptionContext;
-use Slothsoft\Farah\Module\AssetRepository;
-use Slothsoft\Farah\Module\FarahUrl;
+use Slothsoft\Farah\LinkDecorator\DecoratorFactory;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\ModuleRepository;
-use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
-use Slothsoft\Farah\Module\AssetUses\FileWriterInterface;
-use Slothsoft\Farah\Module\Assets\AssetInterface;
-use Slothsoft\Farah\Module\Assets\Fragment;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
+use Slothsoft\Farah\Module\Results\FragmentResult;
+use Slothsoft\Farah\Module\Results\ResultInterface;
 use Slothsoft\Farah\Sites\Domain;
 use Slothsoft\Farah\Tracking\Manager;
 use DOMDocument;
 use DomainException;
-use LogicException;
 use Throwable;
 
 class Kernel implements EventTargetInterface
@@ -59,11 +57,11 @@ class Kernel implements EventTargetInterface
      */
     public static function getInstance(): Kernel
     {
-        static $singleton;
-        if (! $singleton) {
-            $singleton = new Kernel();
+        static $instance;
+        if ($instance === null) {
+            $instance = new Kernel();
         }
-        return $singleton;
+        return $instance;
     }
 
     public static function parseRequest($path, $mode, array $req = null, array $env = null)
@@ -147,6 +145,8 @@ class Kernel implements EventTargetInterface
     private $dict;
 
     private $now;
+    
+    private $linkedAssetCollector;
 
     private $progressStatus = self::STATUS_CONTINUE;
 
@@ -159,11 +159,20 @@ class Kernel implements EventTargetInterface
 
     private function __construct()
     {
+        $this->linkedAssetCollector = new LinkedAssetCollector();
         $this->addEventListener(Module::EVENT_USE_DOCUMENT, function (EventInterface $event) {
             if ($event instanceof UseAssetEvent) {
                 // echo "kernel: using asset " . $event->getAsset()->getId() . PHP_EOL;
             }
         });
+        $this->addEventListener(Module::EVENT_SET_PARAMETER, function (EventInterface $event) use (&$scriptList) {
+            if ($event instanceof SetParameterEvent) {
+                // echo "setting '{$event->getName()}' to '{$event->getValue()}'" . PHP_EOL;
+                $this->httpRequest->setInputValue($event->getName(), $event->getValue());
+            }
+        });
+        $this->addEventListener(Module::EVENT_USE_STYLESHEET, [$this->linkedAssetCollector, 'onStylesheet']);
+        $this->addEventListener(Module::EVENT_USE_STYLESHEET, [$this->linkedAssetCollector, 'onScript']);
     }
 
     public function init($siteMapPath)
@@ -294,10 +303,25 @@ class Kernel implements EventTargetInterface
                                 }
                                 if (! ($this->progressStatus & self::STATUS_RESPONSE_SET)) {
                                     switch (true) {
+                                        case $ret instanceof FragmentResult:
+                                            $ret = $ret->toDocument();
+                                            if ($ret->documentElement) {
+                                                $decorator = DecoratorFactory::createForNamespace((string) $ret->documentElement->namespaceURI);
+                                                $decorator->decorateDocument(
+                                                    $ret,
+                                                    $this->linkedAssetCollector->getStylesheetList(),
+                                                    $this->linkedAssetCollector->getScriptList()
+                                                );
+                                            }
+                                            $this->httpResponse->setDocument($ret);
+                                            $this->progressStatus |= self::STATUS_RESPONSE_SET;
+                                            break;
                                         case $ret instanceof DOMDocument:
                                             $this->httpResponse->setDocument($ret);
                                             $this->progressStatus |= self::STATUS_RESPONSE_SET;
                                             break;
+                                        case $ret instanceof ResultInterface:
+                                            $ret = $ret->toFile();
                                         case $ret instanceof HTTPFile:
                                             $this->httpResponse->setFile($ret->getPath(), $ret->getName());
                                             $this->progressStatus |= self::STATUS_RESPONSE_SET;
@@ -336,7 +360,7 @@ class Kernel implements EventTargetInterface
         return $this->httpResponse;
     }
 
-    private function lookupPage()
+    private function lookupPage() : ResultInterface
     {
         $pageNode = $this->domain->lookupPageNode($this->httpRequest->path);
         
@@ -347,111 +371,27 @@ class Kernel implements EventTargetInterface
                 $this->httpResponse->addHeader('content-location', $pageNode->getAttribute('url'));
                 
                 $url = $this->domain->lookupAssetUrl($pageNode);
-                $asset = AssetRepository::getInstance()->lookupAssetByUrl($url);
                 
-                // echo "loaded page {$asset->getId()}, processing..." . PHP_EOL;
-                try {
-                    return $this->loadAsset($asset);
-                } catch (Throwable $exception) {
-                    throw ExceptionContext::append($exception, [
-                        'asset' => $asset,
-                        'definition' => $asset->getDefinition()
-                    ]);
-                }
+                // echo "determined page url {$url}, processing..." . PHP_EOL;
+                
+                return FarahUrlResolver::resolveToResult($url);
             }
         }
     }
 
-    private function lookupAsset()
+    private function lookupAsset() : ResultInterface
     {
         $ref = $this->httpRequest->path;
         $args = $this->httpRequest->input;
         
-        $module = ModuleRepository::getInstance()->lookupModule($this->getDefaultVendor(), $this->getDefaultModule());
-        $url = FarahUrl::createFromReference($ref, $module, $args);
-        $asset = AssetRepository::getInstance()->lookupAssetByUrl($url);
-        
-        try {
-            return $this->loadAsset($asset);
-        } catch (Throwable $exception) {
-            throw ExceptionContext::append($exception, [
-                'asset' => $asset,
-                'definition' => $asset->getDefinition()
-            ]);
-        }
-    }
-
-    private function loadAsset(AssetInterface $asset)
-    {
-        switch (true) {
-            case $asset instanceof Fragment:
-                $stylesheetList = [];
-                $scriptList = [];
-                $this->addEventListener(Module::EVENT_USE_STYLESHEET, function (EventInterface $event) use (&$stylesheetList) {
-                    if ($event instanceof UseAssetEvent) {
-                        $stylesheetList[$event->getAsset()
-                            ->getId()] = $event->getAsset();
-                    }
-                });
-                $this->addEventListener(Module::EVENT_USE_SCRIPT, function (EventInterface $event) use (&$scriptList) {
-                    if ($event instanceof UseAssetEvent) {
-                        $scriptList[$event->getAsset()
-                            ->getId()] = $event->getAsset();
-                    }
-                });
-                
-                $this->addEventListener(Module::EVENT_SET_PARAMETER, function (EventInterface $event) use (&$scriptList) {
-                    if ($event instanceof SetParameterEvent) {
-                        // echo "setting '{$event->getName()}' to '{$event->getValue()}'" . PHP_EOL;
-                        $this->httpRequest->setInputValue($event->getName(), $event->getValue());
-                    }
-                });
-                
-                $document = $asset->toDocument();
-                if ($stylesheetList or $scriptList) {
-                    $ns = $document->documentElement->namespaceURI;
-                    switch ($ns) {
-                        case DOMHelper::NS_FARAH_MODULE:
-                            $rootNode = $document->documentElement;
-                            foreach ($stylesheetList as $assetId => $asset) {
-                                $rootNode->appendChild($asset->toDefinitionElement($document));
-                            }
-                            foreach ($scriptList as $assetId => $asset) {
-                                $rootNode->appendChild($asset->toDefinitionElement($document));
-                            }
-                            break;
-                        case DOMHelper::NS_HTML:
-                            $rootNode = $document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'head')->item(0);
-                            foreach ($stylesheetList as $assetId => $asset) {
-                                $assetLink = str_replace('farah://', '/getAsset.php/', $assetId);
-                                $node = $document->createElementNS(DOMHelper::NS_HTML, 'link');
-                                $node->setAttribute('href', $assetLink);
-                                $node->setAttribute('rel', 'stylesheet');
-                                $node->setAttribute('type', 'text/css');
-                                $rootNode->appendChild($node);
-                            }
-                            foreach ($scriptList as $assetId => $asset) {
-                                $assetLink = str_replace('farah://', '/getAsset.php/', $assetId);
-                                $node = $document->createElementNS(DOMHelper::NS_HTML, 'script');
-                                $node->setAttribute('src', $assetLink);
-                                $node->setAttribute('defer', 'defer');
-                                $node->setAttribute('type', 'application/javascript');
-                                $rootNode->appendChild($node);
-                            }
-                            break;
-                        default:
-                            throw new DomainException("This implementation does not support <sfm:use-stylesheet> and <sfm:use-script> for XML namespace '$ns'.");
-                    }
-                }
-                return $document;
-                break;
-            case $asset instanceof FileWriterInterface:
-                return $asset->toFile();
-            case $asset instanceof DOMWriterInterface:
-                return $asset->toDocument();
-            default:
-                throw new LogicException("To load asset {$asset->getId()}, it must implement a Writer-type thingamabob!");
-        }
+        $url = FarahUrl::createFromReference(
+            $ref,
+            FarahUrlAuthority::createFromVendorAndModule($this->getDefaultVendor(), $this->getDefaultModule()),
+            null,
+            FarahUrlArguments::createFromValueList($args)
+        );
+        // echo "determined asset url {$url}, processing..." . PHP_EOL;
+        return FarahUrlResolver::resolveToResult($url);
     }
 }
 

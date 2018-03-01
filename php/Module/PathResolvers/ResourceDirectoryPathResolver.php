@@ -7,7 +7,7 @@ use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\AssetDefinitions\AssetDefinitionInterface;
+use Slothsoft\Farah\Module\Assets\AssetInterface;
 
 /**
  *
@@ -17,17 +17,17 @@ use Slothsoft\Farah\Module\AssetDefinitions\AssetDefinitionInterface;
 class ResourceDirectoryPathResolver implements PathResolverInterface
 {
 
-    private $definition;
+    private $asset;
 
     private $pathMap = [];
 
-    public function __construct(AssetDefinitionInterface $definition)
+    public function __construct(AssetInterface $asset)
     {
-        $this->definition = $definition;
-        $this->pathMap['/'] = $this->definition;
+        $this->asset = $asset;
+        $this->pathMap['/'] = $this->asset;
     }
 
-    public function resolvePath(string $path): AssetDefinitionInterface
+    public function resolvePath(string $path): AssetInterface
     {
         if (! isset($this->pathMap[$path])) {
             $this->pathMap[$path] = $this->createChildResource($path);
@@ -35,7 +35,7 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
         return $this->pathMap[$path];
     }
 
-    private function createChildResource(string $path)
+    private function createChildResource(string $path) : AssetInterface
     {
         assert(preg_match('~^/([^/]+)~', $path, $match), "Invalid asset path: $path");
         
@@ -46,11 +46,11 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
         if ($descendantPath === '') {
             $data = [];
             $data[Module::ATTR_NAME] = $childName;
-            $data[Module::ATTR_TYPE] = $this->definition->getElementAttribute(Module::ATTR_TYPE);
+            $data[Module::ATTR_TYPE] = $this->asset->getElementAttribute(Module::ATTR_TYPE);
             
-            return $this->definition->createChildDefinition(LeanElement::createOneFromArray(Module::TAG_RESOURCE, $data));
+            return $this->asset->addChildElement(LeanElement::createOneFromArray(Module::TAG_RESOURCE, $data));
         } else {
-            return $this->definition->traverseTo($childPath)->traverseTo($descendantPath);
+            return $this->asset->traverseTo($childPath)->traverseTo($descendantPath);
         }
     }
 
@@ -63,8 +63,8 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
 
     private function loadResourceDirectory()
     {
-        $mime = $this->definition->getElementAttribute(Module::ATTR_TYPE, '*/*');
-        $path = $this->definition->getRealPath();
+        $mime = $this->asset->getElementAttribute(Module::ATTR_TYPE, '*/*');
+        $path = $this->asset->getRealPath();
         assert(is_dir($path), "Path is not a directory: $path");
         
         $fileList = FileSystem::scanDir($path);

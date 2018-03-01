@@ -5,9 +5,9 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\Farah\Module\AssetRepository;
-use Slothsoft\Farah\Module\FarahUrl;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
@@ -65,12 +65,13 @@ class Dictionary
     protected static $supportedLang;
 
     /* static functions */
-    public static function getInstance()
+    public static function getInstance() : Dictionary
     {
-        if (! self::$instance) {
-            self::$instance = new Dictionary();
+        static $instance;
+        if ($instance === null) {
+            $instance = new Dictionary();
         }
-        return self::$instance;
+        return $instance;
     }
 
     public static function lookup($word, $namespace = null, $language = null)
@@ -340,11 +341,11 @@ class Dictionary
         }
         
         $ref = "$namespace/dictionary/$language"; // TODO: make this less presumptive
-        $url = FarahUrl::createFromReference($ref, $this->currentModule);
-        $key = $url->toString();
+        $url = FarahUrl::createFromReference($ref, $this->currentModule->getAuthority());
+        $key = (string) $url;
         
         if (! isset($this->langPaths[$key])) {
-            $asset = AssetRepository::getInstance()->lookupAssetByUrl($url);
+            $asset = FarahUrlResolver::resolveToResult($url);
             if ($asset->exists()) {
                 $doc = $asset->toDocument();
             } else {

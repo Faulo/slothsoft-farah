@@ -15,8 +15,9 @@ namespace Slothsoft\Farah;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\Storage;
 use DOMDocument;
+use Slothsoft\Farah\Module\AssetUses\FileWriterInterface;
 
-class HTTPFile
+class HTTPFile implements FileWriterInterface
 {
 
     const CURL_ENABLED = true;
@@ -275,12 +276,12 @@ class HTTPFile
         return $this->name;
     }
 
-    public function getContents()
+    public function getContents() : string
     {
         return file_get_contents($this->getPath());
     }
 
-    public function setContents($content)
+    public function setContents(string $content)
     {
         return file_put_contents($this->getPath(), $content);
     }
@@ -321,4 +322,21 @@ class HTTPFile
     {
         return unlink($this->getPath());
     }
+    public function exists() : bool {
+        return is_file($this->path);
+    }
+    
+    
+    
+    
+    public function toFile() : HTTPFile
+    {
+        return $this;
+    }
+
+    public function toString() : string
+    {
+        return $this->getContents();
+    }
+
 }

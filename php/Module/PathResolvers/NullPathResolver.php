@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\PathResolvers;
 
 use Slothsoft\Farah\Exception\ExceptionContext;
-use Slothsoft\Farah\Module\AssetDefinitions\AssetDefinitionInterface;
+use Slothsoft\Farah\Module\Assets\AssetInterface;
 use OutOfRangeException;
 
 /**
@@ -15,27 +15,28 @@ use OutOfRangeException;
 class NullPathResolver implements PathResolverInterface
 {
 
-    private $definition;
+    private $asset;
 
-    public function __construct(AssetDefinitionInterface $definition)
+    public function __construct(AssetInterface $asset)
     {
-        $this->definition = $definition;
+        $this->asset = $asset;
     }
 
-    public function resolvePath(string $path): AssetDefinitionInterface
+    public function resolvePath(string $path): AssetInterface
     {
         if ($path === '/') {
-            return $this->definition;
+            return $this->asset;
         }
-        throw ExceptionContext::append(new OutOfRangeException("Cannot traverse from {$this->definition->getId()} to $path."), [
-            'definition' => $this->definition
+        throw ExceptionContext::append(new OutOfRangeException("Cannot traverse from {$this->asset->getId()} to $path."), [
+            'asset' => $this->asset,
+            'class' => __CLASS__,
         ]);
     }
 
     public function getPathMap(): array
     {
         return [
-            '/' => $this->definition
+            '/' => $this->asset
         ];
     }
 }

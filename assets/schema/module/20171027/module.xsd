@@ -94,12 +94,24 @@
 		</xsd:complexType>
 	</xsd:element>
 
+	<xsd:element name="call-controller">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset">
+					<xsd:attribute name="class" type="xsd:normalizedString"
+						use="required" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
 	<xsd:group name="assets">
 		<xsd:choice>
 			<xsd:element ref="fragment" />
 			<xsd:element ref="resource" />
 			<xsd:element ref="resource-directory" />
 			<xsd:element ref="directory" />
+			<xsd:element ref="call-controller" />
 		</xsd:choice>
 	</xsd:group>
 

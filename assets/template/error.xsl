@@ -18,21 +18,31 @@
 	<xsl:template match="sfm:error">
 		<h1>
 			<xsl:value-of select="@name" />
+			<xsl:if test="@class">
+				<xsl:text> in class </xsl:text>
+				<br />
+				<code>
+					<xsl:value-of select="@class" />
+				</code>
+			</xsl:if>
 			<xsl:choose>
+				<xsl:when test="@result">
+					<xsl:text> while processing result </xsl:text>
+					<br />
+					<code>
+						<xsl:value-of select="@result" />
+					</code>
+				</xsl:when>
 				<xsl:when test="@asset">
-					<xsl:text> in asset </xsl:text>
+					<xsl:text> while processing asset </xsl:text>
+					<br />
 					<code>
 						<xsl:value-of select="@asset" />
 					</code>
 				</xsl:when>
-				<xsl:when test="@definition">
-					<xsl:text> in definition </xsl:text>
-					<code>
-						<xsl:value-of select="@definition" />
-					</code>
-				</xsl:when>
 				<xsl:when test="@module">
-					<xsl:text> in module </xsl:text>
+					<xsl:text> while processing module </xsl:text>
+					<br />
 					<code>
 						<xsl:value-of select="@module" />
 					</code>
@@ -45,19 +55,27 @@
 			</em>
 		</p>
 		<dl>
+			<xsl:if test="@class">
+				<dt>Class:</dt>
+				<dd>
+					<code>
+						<xsl:value-of select="@class" />
+					</code>
+				</dd>
+			</xsl:if>
+			<xsl:if test="@result">
+				<dt>Result:</dt>
+				<dd>
+					<code>
+						<xsl:value-of select="@result" />
+					</code>
+				</dd>
+			</xsl:if>
 			<xsl:if test="@asset">
 				<dt>Asset:</dt>
 				<dd>
 					<code>
 						<xsl:value-of select="@asset" />
-					</code>
-				</dd>
-			</xsl:if>
-			<xsl:if test="@definition">
-				<dt>Asset Definition:</dt>
-				<dd>
-					<code>
-						<xsl:value-of select="@definition" />
 					</code>
 				</dd>
 			</xsl:if>

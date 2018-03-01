@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\PathResolvers;
 
 use Slothsoft\Farah\Exception\ExceptionContext;
-use Slothsoft\Farah\Module\AssetDefinitions\AssetDefinitionInterface;
+use Slothsoft\Farah\Module\Assets\AssetInterface;
 use OutOfRangeException;
 
 /**
@@ -15,38 +15,39 @@ use OutOfRangeException;
 class MapPathResolver implements PathResolverInterface
 {
 
-    private $definition;
+    private $asset;
 
-    private $definitionMap;
+    private $assetMap;
 
-    public function __construct(AssetDefinitionInterface $definition, array $definitionMap)
+    public function __construct(AssetInterface $asset, array $assetMap)
     {
-        $this->definition = $definition;
-        $this->definitionMap = $definitionMap;
+        $this->asset = $asset;
+        $this->assetMap = $assetMap;
     }
 
-    public function resolvePath(string $path): AssetDefinitionInterface
+    public function resolvePath(string $path): AssetInterface
     {
-        if (isset($this->definitionMap[$path])) {
-            return $this->definitionMap[$path];
+        if (isset($this->assetMap[$path])) {
+            return $this->assetMap[$path];
         } else {
             assert(preg_match('~^/[^/]+~', $path, $match), "Invalid asset path: $path");
             
             $childPath = $match[0];
             $descendantPath = substr($path, strlen($childPath));
             
-            if (isset($this->definitionMap[$childPath])) {
-                return $descendantPath === '' ? $this->definitionMap[$childPath] : $this->definitionMap[$childPath]->traverseTo($descendantPath);
+            if (isset($this->assetMap[$childPath])) {
+                return $descendantPath === '' ? $this->assetMap[$childPath] : $this->assetMap[$childPath]->traverseTo($descendantPath);
             }
         }
-        throw ExceptionContext::append(new OutOfRangeException("Asset {$this->definition->getId()} did not provide a mapping for $path!"), [
-            'definition' => $this->definition
+        throw ExceptionContext::append(new OutOfRangeException("Asset {$this->asset->getId()} did not provide a mapping for $path!"), [
+            'asset' => $this->asset,
+            'class' => __CLASS__,
         ]);
     }
 
     public function getPathMap(): array
     {
-        return $this->definitionMap;
+        return $this->assetMap;
     }
 }
 

@@ -8,9 +8,14 @@ use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Event\EventTargetInterface;
 use Slothsoft\Farah\Event\EventTargetTrait;
 use Slothsoft\Farah\Module\Assets\AssetInterface;
-use DOMDocument;
+use Slothsoft\Farah\Module\Assets\ContainerAsset;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;
 use RuntimeException;
 use Throwable;
+use Slothsoft\Farah\Module\Element\ModuleElementCreator;
 
 /**
  *
@@ -20,62 +25,33 @@ use Throwable;
 class Module implements EventTargetInterface
 {
     use EventTargetTrait;
-
-    public static function createErrorDocument(Throwable $exception, AssetInterface $contextAsset = null): DOMDocument
-    {
-        $ret = new DOMDocument();
-        $element = $ret->createElementNS(DOMHelper::NS_FARAH_MODULE, Module::TAG_ERROR);
-        $element->setAttribute('name', get_class($exception));
-        $element->setAttribute('code', $exception->getCode());
-        $element->setAttribute('file', $exception->getFile());
-        $element->setAttribute('line', $exception->getLine());
-        $element->setAttribute('message', $exception->getMessage());
-        
-        if ($contextAsset) {
-            $element->setAttribute('asset', $contextAsset->getId());
-        }
-        
-        $ret->appendChild($ret->createProcessingInstruction('xml-stylesheet', sprintf('type="text/xsl" href="/getAsset.php/%s"', self::TEMPLATE_ERROR)));
-        $ret->appendChild($element);
-        
-        return $ret;
-    }
-
-    const TAG_MODULE = 'module';
-
+    
+    //root tags
+    const TAG_MODULE_ROOT = 'module';
     const TAG_CONFIGURATION_ROOT = 'default-configuration';
-
     const TAG_ASSET_ROOT = 'assets';
 
+    //asset tags
     const TAG_FRAGMENT = 'fragment';
-
     const TAG_DIRECTORY = 'directory';
-
     const TAG_RESOURCE = 'resource';
-
-    const TAG_RESOURCE_DIRECTORY = 'resource-directory';
-
-    const TAG_ARCHIVE = 'archive';
-
-    const TAG_ARCHIVE_DIRECTORY = 'archive-directory';
-
-    const TAG_INCLUDE_FRAGMENT = 'include-fragment';
-
-    const TAG_PARAM = 'param';
-
-    const TAG_CLOSURE = 'closure';
-
+    const TAG_RESOURCE_DIRECTORY = 'resource-directory';    
+    const TAG_CALL_CONTROLLER = 'call-controller';
     const TAG_DOCUMENT = 'document';
-
     const TAG_ERROR = 'error';
-
+    
+    //meta tags
+    const TAG_INCLUDE_FRAGMENT = 'include-fragment';
+    const TAG_SOURCE = 'source';
+    const TAG_OPTIONS = 'options';
+    const TAG_PARAM = 'param';    
     const TAG_USE_DOCUMENT = 'use-document';
-
     const TAG_USE_STYLESHEET = 'use-stylesheet';
-
     const TAG_USE_SCRIPT = 'use-script';
-
     const TAG_USE_TEMPLATE = 'use-template';
+    
+    
+    
 
     const ATTR_NAME = 'name';
 
@@ -111,11 +87,9 @@ class Module implements EventTargetInterface
 
     const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
 
-    private $vendor;
-
-    private $name;
-
-    private $definitionFactory;
+    private $authority;
+    
+    private $assetList;
 
     private $rootDirectory;
 
@@ -123,24 +97,28 @@ class Module implements EventTargetInterface
 
     /**
      */
-    public function __construct(string $vendor, string $name)
+    public function __construct(FarahUrlAuthority $authority)
     {
-        $this->vendor = $vendor;
-        $this->name = $name;
+        $this->authority = $authority;
         
-        $this->definitionFactory = new DefinitionFactory($this);
+        $this->assetList = [];
         
         // TODO: create a const or something for the SERVER_ROOT . 'vendor' part
-        $this->rootDirectory = SERVER_ROOT . 'vendor' . DIRECTORY_SEPARATOR . $this->vendor . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR;
+        $this->rootDirectory = SERVER_ROOT . 'vendor' . DIRECTORY_SEPARATOR . $this->getVendor() . DIRECTORY_SEPARATOR . $this->getName() . DIRECTORY_SEPARATOR;
         $this->manifestFile = $this->rootDirectory . 'module.xml';
     }
-
-    public function getDefinitionFactory()
-    {
-        return $this->definitionFactory;
+    public function getAuthority() : FarahUrlAuthority {
+        return $this->authority;
+    }
+    public function createUrl(FarahUrlPath $path, FarahUrlArguments $args): FarahUrl {
+        return FarahUrl::createFromComponents(
+            $this->authority,
+            $path,
+            $args
+        );
     }
 
-    public function getManifestFile()
+    public function getManifestFile() : string
     {
         return $this->manifestFile;
     }
@@ -170,7 +148,12 @@ class Module implements EventTargetInterface
     {
         $element->setAttribute('realpath', $this->getRootDirectory() . 'assets');
         $element->setAttribute('assetpath', '');
-        $this->assets = $this->definitionFactory->createDefinition($element);
+        try {
+            $this->assets = $this->createModuleElement($element);
+        } catch(Throwable $e) {
+            $this->assets = new ContainerAsset();
+            throw $e;
+        }
     }
 
     /**
@@ -179,7 +162,7 @@ class Module implements EventTargetInterface
      */
     public function getVendor(): string
     {
-        return $this->vendor;
+        return $this->authority->getVendor();
     }
 
     /**
@@ -188,12 +171,12 @@ class Module implements EventTargetInterface
      */
     public function getName(): string
     {
-        return $this->name;
+        return $this->authority->getModule();
     }
 
     public function getId(): string
     {
-        return "farah://$this->vendor@$this->name";
+        return (string) $this->authority;
     }
 
     /**
@@ -205,15 +188,17 @@ class Module implements EventTargetInterface
         return $this->rootDirectory;
     }
 
-    public function getAssetDefinition(string $assetpath)
-    {
-        return $this->assets->traverseTo($assetpath);
+    
+    public function lookupAssetByPath(FarahUrlPath $path) : AssetInterface {
+        $id = (string) $path;
+        if (!isset($this->assetList[$id])) {
+            $this->assetList[$id] = $this->assets->traverseTo($id);
+        }
+        return $this->assetList[$id];
     }
-
-    public function getAsset(string $assetpath, array $args = [])
-    {
-        return AssetRepository::getInstance()->lookupAssetByUrl($this->assets->traverseTo($assetpath)
-            ->toUrl($args));
+    
+    public function createModuleElement(LeanElement $element, LeanElement $parent = null) {
+        return ModuleElementCreator::getInstance()->create($this, $element, $parent);
     }
 }
 

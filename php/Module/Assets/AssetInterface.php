@@ -1,51 +1,55 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Assets;
 
-use Slothsoft\Farah\Module\FarahUrl;
+use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\AssetDefinitions\AssetDefinitionInterface;
-use DOMDocument;
-use DOMElement;
-use Slothsoft\Farah\Event\EventTargetInterface;
+use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
+use Slothsoft\Farah\Module\Element\ModuleElementInterface;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;
+use Slothsoft\Farah\Module\ParameterFilters\ParameterFilterInterface;
+use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
+use Slothsoft\Farah\Module\Results\ResultInterface;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-interface AssetInterface extends EventTargetInterface
+interface AssetInterface extends DOMWriterInterface, ModuleElementInterface
 {
+    public function __toString() : string;
+    
+    public function initAsset(Module $ownerModule, LeanElement $element, array $children, FarahUrlPath $path);
+    
+    public function getUrlPath(): FarahUrlPath;
 
-    public function init(AssetDefinitionInterface $definition, FarahUrl $url);
-
-    public function getDefinition(): AssetDefinitionInterface;
-
-    public function getOwnerModule(): Module;
-
-    public function lookupAsset(string $ref, array $args = []): AssetInterface;
+    public function getId(): string;
 
     public function getName(): string;
 
     public function getPath(): string;
 
-    public function getId(): string;
-
-    public function getHref(): string;
-
-    public function getUrl(): FarahUrl;
+    public function getRealPath(): string;
 
     public function getAssetPath(): string;
 
-    public function getRealPath(): string;
-
-    // public function setArguments(array $args);
-    // public function withArguments(array $args) : AssetInterface;
-    public function getArguments(): array;
-
-    public function toDefinitionElement(DOMDocument $targetDoc): DOMElement;
-
-    public function exists(): bool;
+    
+    
+    public function getPathResolver(): PathResolverInterface;
+    
+    public function filterArguments(FarahUrlArguments $args): bool;
+    
+    public function getParameterFilter(): ParameterFilterInterface;
+    public function traverseTo(string $path): AssetInterface;
+    
+    public function createUrl(FarahUrlArguments $args): FarahUrl;
+    public function lookupResultByArguments(FarahUrlArguments $args): ResultInterface;
+    
+    
+    
+    
 }
 

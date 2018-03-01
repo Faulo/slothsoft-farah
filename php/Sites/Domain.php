@@ -5,12 +5,14 @@ namespace Slothsoft\Farah\Sites;
 
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Kernel;
-use Slothsoft\Farah\Module\AssetRepository;
-use Slothsoft\Farah\Module\FarahUrl;
 use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use DOMDocument;
 use DOMElement;
 use LengthException;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 
 /**
  *
@@ -69,13 +71,13 @@ class Domain
             }
             foreach ($dataNodeList as $dataNode) {
                 $url = $this->lookupAssetUrl($dataNode);
-                $asset = AssetRepository::getInstance()->lookupAssetByUrl($url);
+                $result = FarahUrlResolver::resolveToResult($url);
                 
-                assert($asset instanceof DOMWriterInterface, 'To <sfs:include-pages> asset {$asset->getId()}, it must implement DOMWriterInterface.');
+                assert($result instanceof DOMWriterInterface, "To <sfs:include-pages> asset {$result->getId()}, it must implement DOMWriterInterface, not " . get_class($result) . ".");
                 
-                $node = $asset->toElement($this->document);
+                $node = $result->toElement($this->document);
                 
-                assert($node->namespaceURI === DOMHelper::NS_FARAH_SITES and $node->localName === self::TAG_PAGES, sprintf('To <sfs:include-pages> asset %s, its root element must be <%s xmlns="%s">!', $asset->getId(), self::TAG_PAGES, DOMHelper::NS_FARAH_SITES));
+                assert($node->namespaceURI === DOMHelper::NS_FARAH_SITES and $node->localName === self::TAG_PAGES, sprintf('To <sfs:include-pages> asset %s, its root element must be <%s xmlns="%s">!', $result->getId(), self::TAG_PAGES, DOMHelper::NS_FARAH_SITES));
                 
                 while ($node->hasChildNodes()) {
                     $dataNode->parentNode->insertBefore($node->firstChild, $dataNode);
@@ -84,7 +86,6 @@ class Domain
                 $dataNode->parentNode->removeChild($dataNode);
             }
         }
-        
         $this->initPageElement($this->domainNode);
         $nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, self::TAG_PAGE);
         foreach ($nodeList as $node) {
@@ -151,7 +152,12 @@ class Domain
         $args = $this->findParameters($dataNode);
         $ref = $dataNode->getAttribute('ref');
         
-        return FarahUrl::createFromUri($ref, "farah://$vendorName@$moduleName", $args);
+        return FarahUrl::createFromReference(
+            $ref,
+            FarahUrlAuthority::createFromVendorAndModule($vendorName, $moduleName),
+            null,
+            FarahUrlArguments::createFromValueList($args)
+        );
     }
 
     private function path2expr(string $path, string $elementName = '*')

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
 use Psr\Cache\CacheItemInterface;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 
 /**
  *
@@ -35,7 +36,7 @@ class AssetCacheItem implements CacheItemInterface
      */
     public function getKey()
     {
-        return $this->url->toString();
+        return (string) $this->url;
     }
 
     /**

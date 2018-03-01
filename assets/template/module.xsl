@@ -15,23 +15,30 @@
 			<summary>
 				<h2>
 					<xsl:value-of select="@name" />
+					<xsl:if test="@class">
+						<xsl:text> in class </xsl:text>
+						<br />
+						<code>
+							<xsl:value-of select="@class" />
+						</code>
+					</xsl:if>
 					<xsl:choose>
+						<xsl:when test="@result">
+							<xsl:text> while processing result </xsl:text>
+							<br />
+							<code>
+								<xsl:value-of select="@result" />
+							</code>
+						</xsl:when>
 						<xsl:when test="@asset">
-							<xsl:text> in asset </xsl:text>
+							<xsl:text> while processing asset </xsl:text>
 							<br />
 							<code>
 								<xsl:value-of select="@asset" />
 							</code>
 						</xsl:when>
-						<xsl:when test="@definition">
-							<xsl:text> in definition </xsl:text>
-							<br />
-							<code>
-								<xsl:value-of select="@definition" />
-							</code>
-						</xsl:when>
 						<xsl:when test="@module">
-							<xsl:text> in module </xsl:text>
+							<xsl:text> while processing module </xsl:text>
 							<br />
 							<code>
 								<xsl:value-of select="@module" />

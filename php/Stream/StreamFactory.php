@@ -3,13 +3,13 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Stream;
 
-use Slothsoft\Farah\Module\AssetRepository;
-use Slothsoft\Farah\Module\FarahUrl;
 use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
 use Slothsoft\Farah\Module\AssetUses\FileWriterInterface;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Stream\Streams\FileStream;
 use Slothsoft\Farah\Stream\Streams\StringStream;
 use RuntimeException;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 
 /**
  *
@@ -21,15 +21,15 @@ class StreamFactory
 
     public static function createStream(string $path, string $mode, int $options)
     {
-        $asset = AssetRepository::getInstance()->lookupAssetByUrl(FarahUrl::createFromUri($path));
+        $result = FarahUrlResolver::resolveToResult(FarahUrl::createFromReference($path));
         
         switch (true) {
-            case $asset instanceof FileWriterInterface:
-                return new FileStream($asset->toFile()->getPath(), $mode);
-            case $asset instanceof DOMWriterInterface:
-                return new StringStream($asset->toDocument()->saveXML());
+            case $result instanceof FileWriterInterface:
+                return new FileStream($result->toFile()->getPath(), $mode);
+            case $result instanceof DOMWriterInterface:
+                return new StringStream($result->toDocument()->saveXML());
         }
-        throw new RuntimeException("asset {$asset->getId()} does not implement a streamable interface!");
+        throw new RuntimeException("asset {$result->getId()} does not implement a streamable interface!");
     }
 }
 

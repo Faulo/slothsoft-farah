@@ -607,9 +607,7 @@ EOT;
             if (self::$httpConfig['merge-styleFiles']) {
                 die('not implemented yet: merge-styleFiles');
             } else {
-                foreach ($this->styleFiles as $asset) {
-                    $styleLinkList[] = $asset->getHref();
-                }
+                die('not implemented yet: $this->styleFiles');
             }
         }
         
@@ -619,9 +617,7 @@ EOT;
             if (self::$httpConfig['merge-scriptFiles']) {
                 die('not implemented yet: merge-scriptFiles');
             } else {
-                foreach ($this->scriptFiles as $asset) {
-                    $scriptLinkList[] = $asset->getHref();
-                }
+                die('not implemented yet: $this->scriptFiles');
             }
         }
         

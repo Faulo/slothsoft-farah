@@ -3,7 +3,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\PathResolvers;
 
-use Slothsoft\Farah\Module\AssetDefinitions\AssetDefinitionInterface;
+use Slothsoft\Farah\Module\Assets\AssetInterface;
 
 /**
  *
@@ -13,7 +13,7 @@ use Slothsoft\Farah\Module\AssetDefinitions\AssetDefinitionInterface;
 interface PathResolverInterface
 {
 
-    public function resolvePath(string $path): AssetDefinitionInterface;
+    public function resolvePath(string $path): AssetInterface;
 
     public function getPathMap(): array;
 }

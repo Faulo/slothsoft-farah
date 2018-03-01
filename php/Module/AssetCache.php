@@ -3,8 +3,9 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
-use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 
 /**
  *
@@ -93,7 +94,7 @@ class AssetCache implements CacheItemPoolInterface
     {
         assert($url instanceof FarahUrl);
         
-        $key = $url->toString();
+        $key = (string) $url;
         if (! isset($this->itemList[$key])) {
             $this->itemList[$key] = new AssetCacheItem($this, $url);
         }
