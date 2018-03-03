@@ -3,8 +3,8 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Node\Asset;
 
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\IO\Writable\DOMWriterDocumentFromElementTrait;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\AssetUses\DOMWriterDocumentFromElementTrait;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;

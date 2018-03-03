@@ -11,7 +11,7 @@ declare(strict_types = 1);
  */
 namespace Slothsoft\Farah;
 
-use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use DOMDocument;
 use DOMElement;
 

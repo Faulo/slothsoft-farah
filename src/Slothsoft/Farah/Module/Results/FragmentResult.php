@@ -3,6 +3,8 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Results;
 
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\IO\Writable\DOMWriterElementFromDocumentTrait;
+use Slothsoft\Core\IO\Writable\FileWriterFromDOMTrait;
 use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\Event\EventTargetInterface;
 use Slothsoft\Farah\Event\EventTargetTrait;
@@ -11,8 +13,6 @@ use Slothsoft\Farah\Event\Events\UseAssetEvent;
 use Slothsoft\Farah\Exception\ExceptionContext;
 use Slothsoft\Farah\Module\FragmentProcessor;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\AssetUses\DOMWriterElementFromDocumentTrait;
-use Slothsoft\Farah\Module\AssetUses\FileWriterFromDOMTrait;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;

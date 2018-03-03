@@ -11,6 +11,8 @@ declare(strict_types = 1);
  */
 namespace Slothsoft\Farah;
 
+use Slothsoft\Core\IO\HTTPFile;
+use Slothsoft\Core\IO\HTTPStream;
 use Slothsoft\Farah\Event\EventTargetInterface;
 use Slothsoft\Farah\Event\EventTargetTrait;
 use Slothsoft\Farah\Event\Events\EventInterface;

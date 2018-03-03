@@ -1,8 +1,8 @@
 <?php
 namespace Slothsoft\Farah\Module\Results;
 
-use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
-use Slothsoft\Farah\Module\AssetUses\FileWriterFromDOMTrait;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\FileWriterFromDOMTrait;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use DOMDocument;
 use DOMElement;

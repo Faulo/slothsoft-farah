@@ -16,6 +16,8 @@ use MatthiasMullie\Minify\JS;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\MimeTypeDictionary;
+use Slothsoft\Core\IO\HTTPFile;
+use Slothsoft\Core\IO\HTTPStream;
 use Slothsoft\Farah\Exception\ExceptionContext;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use DOMDocument;

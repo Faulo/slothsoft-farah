@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Sites;
 
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;

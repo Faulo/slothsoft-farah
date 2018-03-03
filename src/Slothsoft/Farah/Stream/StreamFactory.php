@@ -2,13 +2,13 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Stream;
 
-use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
-use Slothsoft\Farah\Module\AssetUses\FileWriterInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use Slothsoft\Farah\Stream\Streams\FileStream;
 use Slothsoft\Farah\Stream\Streams\StringStream;
 use RuntimeException;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 
 /**
  *

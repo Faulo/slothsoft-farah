@@ -1,9 +1,9 @@
 <?php
 namespace Slothsoft\Farah\Module\Results;
 
-use Slothsoft\Farah\HTTPFile;
-use Slothsoft\Farah\Module\AssetUses\DOMWriterFromFileTrait;
-use Slothsoft\Farah\Module\AssetUses\FileWriterInterface;
+use Slothsoft\Core\IO\HTTPFile;
+use Slothsoft\Core\IO\Writable\DOMWriterFromFileTrait;
+use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 
 /**

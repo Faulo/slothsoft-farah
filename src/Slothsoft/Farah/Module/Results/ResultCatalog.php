@@ -1,14 +1,14 @@
 <?php
 namespace Slothsoft\Farah\Module\Results;
 
-use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
-use Slothsoft\Farah\Module\AssetUses\FileWriterInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\FileWriterInterface;
+use Slothsoft\Farah\Exception\ExceptionContext;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Closure;
 use DOMDocument;
 use DOMElement;
 use InvalidArgumentException;
-use Slothsoft\Farah\Exception\ExceptionContext;
 
 /**
  *
