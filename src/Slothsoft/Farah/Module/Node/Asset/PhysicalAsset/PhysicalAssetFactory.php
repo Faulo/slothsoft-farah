@@ -4,6 +4,7 @@ namespace Slothsoft\Farah\Module\Node\Asset\PhysicalAsset;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 use Slothsoft\Farah\Module\Node\Asset\AssetFactory;
 use DomainException;
 use RuntimeException;
@@ -48,7 +49,7 @@ class PhysicalAssetFactory extends AssetFactory
     
     
     
-    protected function instantiateAsset(LeanElement $element): PhysicalAssetInterface
+    protected function instantiateAsset(LeanElement $element): ModuleNodeInterface 
     {
         switch ($element->getTag()) {
             case Module::TAG_ASSET_ROOT:

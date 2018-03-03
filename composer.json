@@ -9,22 +9,26 @@
 	],
 	"type" : "library",
 	"require" : {
-		"slothsoft/core" : "dev-master",
-		"slothsoft/lang" : "dev-master",
-		"slothsoft/pt" : "dev-master",
+		"slothsoft/core" : "*",
+		"slothsoft/lang" : "*",
+		"slothsoft/pt" : "*",
+		"slothsoft/dbms" : "*",
 		"matthiasmullie/minify" : "~1",
 		"psr/cache" : "~1",
 		"psr/http-message" : "~1",
 		"psr/log" : "~1",
-		"php" : ">=7.0",
-		"slothsoft/dbms" : "dev-master"
+		"php" : ">=7.0"
 	},
 	"require-dev" : {
-		"phpunit/phpunit" : ">=6.0"
+		"phpunit/phpunit" : ">=6.0",
+		"slothsoft/core" : "dev-master",
+		"slothsoft/lang" : "dev-master",
+		"slothsoft/pt" : "dev-master",
+		"slothsoft/dbms" : "dev-master"
 	},
 	"autoload" : {
 		"psr-4" : {
-			"Slothsoft\\Farah\\" : "src/"
+			"Slothsoft\\Farah\\" : "src/Slothsoft/Farah/"
 		}
 	}
 }

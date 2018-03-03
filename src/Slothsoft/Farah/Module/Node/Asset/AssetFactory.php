@@ -6,6 +6,7 @@ namespace Slothsoft\Farah\Module\Node\Asset;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Node\ModuleNodeFactory;
+use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 use DomainException;
 use RuntimeException;
 
@@ -35,7 +36,7 @@ class AssetFactory extends ModuleNodeFactory
         return $parent->getAttribute(Module::ATTR_ASSETPATH) . '/' . $element->getAttribute(Module::ATTR_NAME);
     }
 
-    protected function instantiateNode(LeanElement $element): AssetInterface
+    protected function instantiateNode(LeanElement $element): ModuleNodeInterface 
     {
         switch ($element->getTag()) {
             case Module::TAG_CONTAINER:

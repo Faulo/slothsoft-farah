@@ -2,6 +2,7 @@
 namespace Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\Resource;
 
 use Slothsoft\Core\XML\LeanElement;
+use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\PhysicalAssetFactory;
 
 /**
@@ -11,7 +12,7 @@ use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\PhysicalAssetFactory;
  */
 class ResourceFactory extends PhysicalAssetFactory
 {
-    protected function instantiateAsset(LeanElement $element): ResourceInterface
+    protected function instantiateAsset(LeanElement $element): ModuleNodeInterface 
     {
         switch ($element->getAttribute('type')) {
             case 'text/*':
