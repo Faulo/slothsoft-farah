@@ -11,7 +11,10 @@ use Slothsoft\Farah\Event\EventTargetInterface;
  */
 class ImportInstruction extends InstructionImplementation
 {
-    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener) {;
+
+    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener)
+    {
+        ;
         foreach ($this->getReferencedAsset()->getChildren() as $includedAsset) {
             $includedAsset->crawlAndFireAppropriateEvents($listener);
         }

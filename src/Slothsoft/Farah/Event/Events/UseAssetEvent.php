@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Event\Events;
 
@@ -15,7 +14,9 @@ class UseAssetEvent extends GenericEvent
 {
 
     private $asset;
+
     private $assetArguments;
+
     private $assetName;
 
     public function initEvent(string $type, array $options)
@@ -28,16 +29,17 @@ class UseAssetEvent extends GenericEvent
         $this->assetArguments = $options['assetArguments'] ?? $this->asset->getManifestArguments();
         $this->assetName = $options['assetName'] ?? $this->asset->getName();
     }
-    
+
     public function getAsset(): AssetInterface
     {
         return $this->asset;
     }
-    
-    public function getAssetArguments() : FarahUrlArguments {
+
+    public function getAssetArguments(): FarahUrlArguments
+    {
         return $this->assetArguments;
     }
-    
+
     public function getAssetName(): string
     {
         return $this->assetName;

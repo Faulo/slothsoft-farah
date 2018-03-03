@@ -15,9 +15,10 @@ use DomainException;
  * @author Daniel Schulz
  *        
  */
-class ModuleNodeCreator //TOOD: find a better name maybe
+class ModuleNodeCreator // TOOD: find a better name maybe
 {
-    public static function getInstance() : ModuleNodeCreator
+
+    public static function getInstance(): ModuleNodeCreator
     {
         static $instance;
         if ($instance === null) {
@@ -25,9 +26,11 @@ class ModuleNodeCreator //TOOD: find a better name maybe
         }
         return $instance;
     }
-    
+
     private $factoryMap = [];
-    public function __construct() {
+
+    public function __construct()
+    {
         $assetFactory = new AssetFactory();
         $physicalFactory = new PhysicalAssetFactory();
         $resourceFactory = new ResourceFactory();
@@ -55,20 +58,17 @@ class ModuleNodeCreator //TOOD: find a better name maybe
         $this->factoryMap[Module::TAG_SOURCE] = $metaFactory;
         $this->factoryMap[Module::TAG_OPTIONS] = $metaFactory;
     }
-    public function create(Module $ownerModule, LeanElement $element, LeanElement $parent = null) : ModuleNodeInterface {
+
+    public function create(Module $ownerModule, LeanElement $element, LeanElement $parent = null): ModuleNodeInterface
+    {
         $tag = $element->getTag();
-        if (!isset($this->factoryMap[$tag])) {
+        if (! isset($this->factoryMap[$tag])) {
             throw new DomainException("Module tag <$tag> is not supported by this implementation.");
         }
-        return $this->factoryMap[$tag]->create(
-            $this,
-            $ownerModule, 
-            $element, 
-            $parent
-        );
+        return $this->factoryMap[$tag]->create($this, $ownerModule, $element, $parent);
     }
-    
-    public function createList(Module $ownerModule, array $elementList, LeanElement $parent = null) : array
+
+    public function createList(Module $ownerModule, array $elementList, LeanElement $parent = null): array
     {
         $ret = [];
         foreach ($elementList as $element) {

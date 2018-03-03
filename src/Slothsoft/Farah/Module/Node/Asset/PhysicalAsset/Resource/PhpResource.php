@@ -15,19 +15,20 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class PhpResource extends ResourceImplementation
 {
+
     protected function loadParameterFilter(): ParameterFilterInterface
     {
         return new AllowAllFilter();
     }
-    
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         return ResultCatalog::createFromMixed($url, $this->includePhpFile());
     }
-    
+
     private function includePhpFile()
     {
-        return include($this->getRealPath());
+        return include ($this->getRealPath());
     }
 }
 

@@ -13,9 +13,13 @@ use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
  */
 interface InstructionInterface extends ModuleNodeInterface
 {
-    public function getReference() : string;
+
+    public function getReference(): string;
+
     public function getAlias(): string;
-    public function getReferencedAsset() : AssetInterface;
-    public function createUseAssetEvent(string $type) : UseAssetEvent;
+
+    public function getReferencedAsset(): AssetInterface;
+
+    public function createUseAssetEvent(string $type): UseAssetEvent;
 }
 

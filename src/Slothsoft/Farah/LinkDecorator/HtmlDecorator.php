@@ -10,12 +10,14 @@ use DOMDocument;
  */
 class HtmlDecorator implements LinkDecoratorInterface
 {
+
     private $namespace;
+
     public function __construct(string $namespace)
     {
         $this->namespace = $namespace;
     }
-    
+
     public function decorateDocument(DOMDocument $document, array $stylesheetAssetList, array $scriptAssetList)
     {
         $rootNode = $document->getElementsByTagNameNS($this->namespace, 'head')->item(0) ?? $document->documentElement;

@@ -11,7 +11,8 @@ use DomainException;
  */
 class DecoratorFactory
 {
-    public static function createForNamespace(string $ns) : LinkDecoratorInterface
+
+    public static function createForNamespace(string $ns): LinkDecoratorInterface
     {
         switch ($ns) {
             case DOMHelper::NS_FARAH_MODULE:

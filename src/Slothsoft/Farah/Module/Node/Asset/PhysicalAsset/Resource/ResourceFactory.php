@@ -12,7 +12,8 @@ use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\PhysicalAssetFactory;
  */
 class ResourceFactory extends PhysicalAssetFactory
 {
-    protected function instantiateAsset(LeanElement $element): ModuleNodeInterface 
+
+    protected function instantiateNode(LeanElement $element): ModuleNodeInterface
     {
         switch ($element->getAttribute('type')) {
             case 'text/*':

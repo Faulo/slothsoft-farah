@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\PathResolvers;
 
@@ -35,7 +34,7 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
         return $this->pathMap[$path];
     }
 
-    private function createChildResource(string $path) : AssetInterface
+    private function createChildResource(string $path): AssetInterface
     {
         assert(preg_match('~^/([^/]+)~', $path, $match), "Invalid asset path: $path");
         

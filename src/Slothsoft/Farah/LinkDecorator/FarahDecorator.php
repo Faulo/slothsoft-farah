@@ -10,12 +10,14 @@ use DOMDocument;
  */
 class FarahDecorator implements LinkDecoratorInterface
 {
+
     private $namespace;
+
     public function __construct(string $namespace)
     {
         $this->namespace = $namespace;
     }
-    
+
     public function decorateDocument(DOMDocument $document, array $stylesheetAssetList, array $scriptAssetList)
     {
         $rootNode = $document->documentElement;

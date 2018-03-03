@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Results;
 
@@ -32,20 +31,19 @@ class FragmentResult extends GenericResult implements EventTargetInterface
     use FileWriterFromDOMTrait;
     use DOMWriterElementFromDocumentTrait;
     use EventTargetTrait;
-    
+
     private $asset;
-    
+
     private $resultDoc;
 
     private $templateAsset;
-    
-    public function __construct(FarahUrl $url, AssetInterface $asset) {
+
+    public function __construct(FarahUrl $url, AssetInterface $asset)
+    {
         parent::__construct($url);
         
         $this->asset = $asset;
     }
-    
-    
 
     public function toDocument(): DOMDocument
     {
@@ -57,32 +55,39 @@ class FragmentResult extends GenericResult implements EventTargetInterface
             $this->resultDoc->appendChild($dataNode);
             
             $processor = $this->createProcessor();
-            $processor->addEventListener(Module::EVENT_USE_DOCUMENT, [$this, 'onUseDocument']);
-            $processor->addEventListener(Module::EVENT_USE_TEMPLATE, [$this, 'onUseTemplate']);
+            $processor->addEventListener(Module::EVENT_USE_DOCUMENT, [
+                $this,
+                'onUseDocument'
+            ]);
+            $processor->addEventListener(Module::EVENT_USE_TEMPLATE, [
+                $this,
+                'onUseTemplate'
+            ]);
             
             try {
                 $processor->process();
             } catch (Throwable $exception) {
                 ExceptionContext::append($exception, [
                     'result' => $this,
-                    'class' => __CLASS__,
+                    'class' => __CLASS__
                 ]);
                 $element = $exception->exceptionContext->toElement($this->resultDoc);
                 $dataNode->appendChild($element);
             }
             
             if ($this->templateAsset) {
-                //echo "transforming $this using $this->templateAsset ..." . PHP_EOL;
+                // echo "transforming $this using $this->templateAsset ..." . PHP_EOL;
                 $dom = new DOMHelper();
                 
                 if ($this->getId() === 'farah://slothsoft@slothsoft/home') {
-                    //my_dump($this->resultDoc->saveXML());
+                    // my_dump($this->resultDoc->saveXML());
                 }
                 
-                $this->resultDoc = $dom->transformToDocument($this->resultDoc, $this->templateAsset->lookupResultByArguments($this->getArguments())->toFile());
+                $this->resultDoc = $dom->transformToDocument($this->resultDoc, $this->templateAsset->lookupResultByArguments($this->getArguments())
+                    ->toFile());
                 
                 if ($this->getId() === 'farah://slothsoft@slothsoft/home') {
-                    //my_dump($this->resultDoc->saveXML());
+                    // my_dump($this->resultDoc->saveXML());
                 }
                 
                 if (! $this->resultDoc->documentElement) {
@@ -98,27 +103,25 @@ class FragmentResult extends GenericResult implements EventTargetInterface
         
         return $this->resultDoc;
     }
-    
-    public function exists() : bool {
+
+    public function exists(): bool
+    {
         return true;
     }
-    
-    public function onUseDocument (EventInterface $event) {
+
+    public function onUseDocument(EventInterface $event)
+    {
         if ($event instanceof UseAssetEvent) {
             $asset = $event->getAsset();
             $args = $event->getAssetArguments();
             $alias = $event->getAssetName();
             
             try {
-                $element = $this->createDocumentElement(
-                    $asset,
-                    FarahUrlArguments::createFromMany($args, $this->getArguments()),
-                    $alias
-                );
+                $element = $this->createDocumentElement($asset, FarahUrlArguments::createFromMany($args, $this->getArguments()), $alias);
             } catch (Throwable $exception) {
                 ExceptionContext::append($exception, [
                     'asset' => $asset,
-                    'class' => __CLASS__,
+                    'class' => __CLASS__
                 ]);
                 $element = $exception->exceptionContext->toElement($this->resultDoc);
             } finally {
@@ -126,13 +129,14 @@ class FragmentResult extends GenericResult implements EventTargetInterface
             }
         }
     }
-    
-    public function onUseTemplate (EventInterface $event) {
+
+    public function onUseTemplate(EventInterface $event)
+    {
         if ($event instanceof UseAssetEvent) {
             $this->templateAsset = $event->getAsset();
         }
     }
-    
+
     private function createProcessor(): FragmentProcessor
     {
         $processor = new FragmentProcessor($this->asset);
@@ -147,9 +151,8 @@ class FragmentResult extends GenericResult implements EventTargetInterface
         $element->setAttribute(Module::ATTR_ID, $asset->getId());
         $element->setAttribute(Module::ATTR_HREF, str_replace('farah://', '/getAsset.php/', $asset->getId()));
         
-        $element->appendChild(
-            $asset->lookupResultByArguments($args)->toElement($element->ownerDocument)
-        );
+        $element->appendChild($asset->lookupResultByArguments($args)
+            ->toElement($element->ownerDocument));
         
         return $element;
     }

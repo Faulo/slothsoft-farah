@@ -19,21 +19,24 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class SitesController extends ControllerImplementation
 {
-    public function createResult(FarahUrl $url) : ResultInterface {
+
+    public function createResult(FarahUrl $url): ResultInterface
+    {
         return new DOMDocumentResult($url, Kernel::getInstance()->getSitesDocument());
     }
-    public function createPathResolver() : PathResolverInterface {
+
+    public function createPathResolver(): PathResolverInterface
+    {
         $definition = $this->getAsset();
         $element = LeanElement::createOneFromArray(Module::TAG_CLOSURE, []);
         $closure = $definition->addChildElement($element);
-        $closure->setClosure(new HTTPClosure([], function() { return 'hallo welt'; }));
-        return PathResolverCatalog::createMapPathResolver(
-            $definition,
-            [
-                '/' => $definition,
-                '/test' => $closure
-            ]
-        );
+        $closure->setClosure(new HTTPClosure([], function () {
+            return 'hallo welt';
+        }));
+        return PathResolverCatalog::createMapPathResolver($definition, [
+            '/' => $definition,
+            '/test' => $closure
+        ]);
     }
 }
 

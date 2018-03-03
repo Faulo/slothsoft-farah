@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Exception;
 
@@ -43,22 +42,22 @@ class ExceptionContext implements DOMWriterInterface
     {
         $this->data += $data;
     }
-    
-    
+
     public function getModule()
     {
         return $this->data['module'] ?? null;
     }
+
     public function getAsset()
     {
         return $this->data['asset'] ?? null;
     }
-    
+
     public function getResult()
     {
         return $this->data['result'] ?? null;
     }
-    
+
     public function getClass()
     {
         return $this->data['class'] ?? null;
@@ -108,11 +107,11 @@ class ExceptionContext implements DOMWriterInterface
     {
         $targetDoc = new DOMDocument();
         try {
-            //let's retrieve the error template to make sure it exists
+            // let's retrieve the error template to make sure it exists
             assert((bool) file_get_contents('farah://slothsoft@farah/xsl/error'));
             $targetDoc->appendChild($targetDoc->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="/getAsset.php/slothsoft@farah/xsl/error"'));
-        } catch(Throwable $e) {
-            //we don't really care if it doesn't tho
+        } catch (Throwable $e) {
+            // we don't really care if it doesn't tho
         }
         $targetDoc->appendChild($this->toElement($targetDoc));
         return $targetDoc;

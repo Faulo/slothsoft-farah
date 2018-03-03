@@ -12,12 +12,14 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  *        
  */
 interface ControllerInterface
-{    
+{
+
     public function setAsset(AssetInterface $asset);
-    public function getAsset() : AssetInterface;
-    
-    public function createResult(FarahUrl $url) : ResultInterface;
-    
-    public function createPathResolver() : PathResolverInterface;
+
+    public function getAsset(): AssetInterface;
+
+    public function createResult(FarahUrl $url): ResultInterface;
+
+    public function createPathResolver(): PathResolverInterface;
 }
 

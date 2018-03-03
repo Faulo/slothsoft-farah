@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
@@ -9,7 +8,7 @@ use Slothsoft\Farah\Module\Node\Asset\FragmentAsset;
 
 /**
  *
- * @author Daniel Schulz    
+ * @author Daniel Schulz
  *        
  */
 class FragmentProcessor implements EventTargetInterface

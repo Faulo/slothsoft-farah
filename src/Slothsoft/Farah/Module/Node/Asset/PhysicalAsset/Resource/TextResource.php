@@ -13,6 +13,7 @@ use Slothsoft\Farah\Module\Results\TextFileResult;
  */
 class TextResource extends ResourceImplementation
 {
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         return new TextFileResult($url, $this->getRealPath());

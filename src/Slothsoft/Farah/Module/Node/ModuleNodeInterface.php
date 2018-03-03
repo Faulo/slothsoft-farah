@@ -12,7 +12,7 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
  * @author Daniel Schulz
  *        
  */
-interface ModuleNodeInterface 
+interface ModuleNodeInterface
 {
 
     public function initModuleNode(Module $ownerModule, LeanElement $element, array $children);
@@ -26,17 +26,17 @@ interface ModuleNodeInterface
     public function getElementAttribute(string $key): string;
 
     public function hasElementAttribute(string $key): bool;
-    
+
     public function getChildren(): array;
-    
+
     public function addChildElement(LeanElement $element): ModuleNodeInterface;
-    
+
     public function mergeWithManifestArguments(FarahUrlArguments $args): FarahUrlArguments;
-    
+
     public function getManifestArguments(): FarahUrlArguments;
-    
+
     public function crawlAndFireAppropriateEvents(EventTargetInterface $listener);
-    
-    public function __toString() : string;
+
+    public function __toString(): string;
 }
 

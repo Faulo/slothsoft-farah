@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Node\Asset;
 
@@ -17,7 +16,7 @@ use RuntimeException;
  */
 class AssetFactory extends ModuleNodeFactory
 {
-    
+
     protected function normalizeElementAttributes(LeanElement $element, LeanElement $parent = null)
     {
         if (! $element->hasAttribute(Module::ATTR_NAME)) {
@@ -36,7 +35,7 @@ class AssetFactory extends ModuleNodeFactory
         return $parent->getAttribute(Module::ATTR_ASSETPATH) . '/' . $element->getAttribute(Module::ATTR_NAME);
     }
 
-    protected function instantiateNode(LeanElement $element): ModuleNodeInterface 
+    protected function instantiateNode(LeanElement $element): ModuleNodeInterface
     {
         switch ($element->getTag()) {
             case Module::TAG_CONTAINER:

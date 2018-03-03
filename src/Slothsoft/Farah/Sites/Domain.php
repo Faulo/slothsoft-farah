@@ -1,18 +1,16 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Sites;
 
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\AssetUses\DOMWriterInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use DOMDocument;
 use DOMElement;
 use LengthException;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 
 /**
  *
@@ -152,12 +150,7 @@ class Domain
         $args = $this->findParameters($dataNode);
         $ref = $dataNode->getAttribute('ref');
         
-        return FarahUrl::createFromReference(
-            $ref,
-            FarahUrlAuthority::createFromVendorAndModule($vendorName, $moduleName),
-            null,
-            FarahUrlArguments::createFromValueList($args)
-        );
+        return FarahUrl::createFromReference($ref, FarahUrlAuthority::createFromVendorAndModule($vendorName, $moduleName), null, FarahUrlArguments::createFromValueList($args));
     }
 
     private function path2expr(string $path, string $elementName = '*')
@@ -220,7 +213,7 @@ class Domain
 
     private function findParameters(DOMElement $node): array
     {
-        $ret = Kernel::getInstance()->getRequest()->input;
+        $ret = [];
         foreach ($this->xpath->evaluate('ancestor-or-self::*/sfm:param', $node) as $paramNode) {
             $ret[$paramNode->getAttribute('name')] = $paramNode->getAttribute('value');
         }

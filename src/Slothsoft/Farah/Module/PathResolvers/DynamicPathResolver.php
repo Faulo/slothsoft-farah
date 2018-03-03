@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\PathResolvers;
 
@@ -12,21 +11,21 @@ use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 /**
  *
  * @author Daniel Schulz
- *
+ *        
  */
 class DynamicPathResolver implements PathResolverInterface
 {
-    
+
     private $asset;
-    
+
     private $pathMap = [];
-    
+
     public function __construct(AssetInterface $asset)
     {
         $this->asset = $asset;
         $this->pathMap['/'] = $this->asset;
     }
-    
+
     public function resolvePath(string $path): AssetInterface
     {
         if (! isset($this->pathMap[$path])) {
@@ -34,8 +33,8 @@ class DynamicPathResolver implements PathResolverInterface
         }
         return $this->pathMap[$path];
     }
-    
-    private function createChildResource(string $path) : AssetInterface
+
+    private function createChildResource(string $path): AssetInterface
     {
         assert(preg_match('~^/([^/]+)~', $path, $match), "Invalid asset path: $path");
         
@@ -53,14 +52,14 @@ class DynamicPathResolver implements PathResolverInterface
             return $this->asset->traverseTo($childPath)->traverseTo($descendantPath);
         }
     }
-    
+
     public function getPathMap(): array
     {
         $this->loadResourceDirectory();
         ksort($this->pathMap);
         return $this->pathMap;
     }
-    
+
     private function loadResourceDirectory()
     {
         $mime = $this->asset->getElementAttribute(Module::ATTR_TYPE, '*/*');

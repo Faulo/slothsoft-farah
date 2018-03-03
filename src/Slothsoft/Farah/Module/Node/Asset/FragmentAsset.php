@@ -16,14 +16,17 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class FragmentAsset extends ContainerAsset
 {
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         return new FragmentResult($url, $this);
     }
-    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener) {
+
+    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener)
+    {
         $event = new UseAssetEvent();
         $event->initEvent(Module::EVENT_USE_DOCUMENT, [
-            'asset' => $this,
+            'asset' => $this
         ]);
         $listener->dispatchEvent($event);
     }

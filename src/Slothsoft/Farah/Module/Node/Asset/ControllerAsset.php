@@ -18,36 +18,43 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class ControllerAsset extends AssetImplementation
 {
+
     private $controller;
-    
-    public function getController() : ControllerInterface {
+
+    public function getController(): ControllerInterface
+    {
         if ($this->controller === null) {
             $this->controller = $this->loadController();
         }
         return $this->controller;
     }
-    private function loadController() : ControllerInterface {
+
+    private function loadController(): ControllerInterface
+    {
         $controllerName = $this->getElementAttribute('class');
         $controller = new $controllerName($this);
         assert($controller instanceof ControllerInterface, "<sfm:call-controller> class $controllerName must implement ControllerInterface!");
         $controller->setAsset($this);
         return $controller;
     }
-    
+
     protected function loadParameterFilter(): ParameterFilterInterface
     {
         return $this->getController()->createParameterFilter();
     }
-    protected function loadPathResolver(): PathResolverInterface {
+
+    protected function loadPathResolver(): PathResolverInterface
+    {
         return $this->getController()->createPathResolver();
     }
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         return $this->getController()->createResult($url);
     }
-    
-    
-    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener) {
+
+    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener)
+    {
         $event = new UseAssetEvent();
         $event->initEvent(Module::EVENT_USE_DOCUMENT, [
             'asset' => $this

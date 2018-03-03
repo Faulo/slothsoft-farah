@@ -11,8 +11,10 @@ use Slothsoft\Farah\Module\Module;
  *        
  */
 class UseScriptInstruction extends InstructionImplementation
-{   
-    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener) {
+{
+
+    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener)
+    {
         $event = $this->createUseAssetEvent(Module::EVENT_USE_SCRIPT);
         $listener->dispatchEvent($event);
     }

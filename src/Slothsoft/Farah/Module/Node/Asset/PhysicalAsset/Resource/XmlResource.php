@@ -13,6 +13,7 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class XmlResource extends ResourceImplementation
 {
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         return new DOMFileResult($url, $this->getRealPath());

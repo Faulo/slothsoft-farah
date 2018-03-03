@@ -10,6 +10,7 @@ use DOMDocument;
  */
 interface LinkDecoratorInterface
 {
+
     public function decorateDocument(DOMDocument $document, array $stylesheetAssetList, array $scriptAssetList);
 }
 

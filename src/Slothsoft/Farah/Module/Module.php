@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
@@ -25,38 +24,52 @@ use Throwable;
 class Module implements EventTargetInterface
 {
     use EventTargetTrait;
-    
-    //root tags
+
+    // root tags
     const TAG_MODULE_ROOT = 'module';
+
     const TAG_CONFIGURATION_ROOT = 'default-configuration';
+
+    // asset tags
+    const TAG_FRAGMENT = 'fragment';
+
+    const TAG_CONTAINER = 'container';
+
+    const TAG_CONTROLLER = 'controller';
+
+    // runtime-only asset tags
+    const TAG_DOCUMENT = 'document';
+
+    const TAG_ERROR = 'error';
+
+    const TAG_CLOSURE = 'closure';
+
+    // physical asset tags
     const TAG_ASSET_ROOT = 'assets';
 
-    //asset tags
-    const TAG_FRAGMENT = 'fragment';
-    const TAG_CONTAINER = 'container'; 
-    const TAG_CONTROLLER = 'controller';
-    const TAG_DOCUMENT = 'document';
-    const TAG_ERROR = 'error';
-    
-    //asset-with-file tags
     const TAG_RESOURCE = 'resource';
+
     const TAG_DIRECTORY = 'directory';
-    const TAG_RESOURCE_DIRECTORY = 'resource-directory';   
-    
-    //meta tags
+
+    const TAG_RESOURCE_DIRECTORY = 'resource-directory';
+
+    // meta tags
     const TAG_SOURCE = 'source';
-    const TAG_OPTIONS = 'options';    
+
+    const TAG_OPTIONS = 'options';
+
     const TAG_PARAM = 'param';
-    
-    //instruction tags
+
+    // instruction tags
     const TAG_IMPORT = 'import';
+
     const TAG_USE_DOCUMENT = 'use-document';
+
     const TAG_USE_STYLESHEET = 'use-stylesheet';
+
     const TAG_USE_SCRIPT = 'use-script';
+
     const TAG_USE_TEMPLATE = 'use-template';
-    
-    
-    
 
     const ATTR_NAME = 'name';
 
@@ -93,7 +106,7 @@ class Module implements EventTargetInterface
     const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
 
     private $authority;
-    
+
     private $assetList;
 
     private $rootDirectory;
@@ -112,18 +125,18 @@ class Module implements EventTargetInterface
         $this->rootDirectory = SERVER_ROOT . 'vendor' . DIRECTORY_SEPARATOR . $this->getVendor() . DIRECTORY_SEPARATOR . $this->getName() . DIRECTORY_SEPARATOR;
         $this->manifestFile = $this->rootDirectory . 'module.xml';
     }
-    public function getAuthority() : FarahUrlAuthority {
+
+    public function getAuthority(): FarahUrlAuthority
+    {
         return $this->authority;
     }
-    public function createUrl(FarahUrlPath $path, FarahUrlArguments $args): FarahUrl {
-        return FarahUrl::createFromComponents(
-            $this->authority,
-            $path,
-            $args
-        );
+
+    public function createUrl(FarahUrlPath $path, FarahUrlArguments $args): FarahUrl
+    {
+        return FarahUrl::createFromComponents($this->authority, $path, $args);
     }
 
-    public function getManifestFile() : string
+    public function getManifestFile(): string
     {
         return $this->manifestFile;
     }
@@ -151,11 +164,12 @@ class Module implements EventTargetInterface
 
     private function loadAssets(LeanElement $element)
     {
+        $element->setAttribute('name', 'root');
         $element->setAttribute('realpath', $this->getRootDirectory() . 'assets');
         $element->setAttribute('assetpath', '');
         try {
-            $this->assets = $this->createModuleElement($element);
-        } catch(Throwable $e) {
+            $this->assets = $this->createModuleNode($element);
+        } catch (Throwable $e) {
             $this->assets = new ContainerAsset();
             throw $e;
         }
@@ -193,16 +207,17 @@ class Module implements EventTargetInterface
         return $this->rootDirectory;
     }
 
-    
-    public function lookupAssetByPath(FarahUrlPath $path) : AssetInterface {
+    public function lookupAssetByPath(FarahUrlPath $path): AssetInterface
+    {
         $id = (string) $path;
-        if (!isset($this->assetList[$id])) {
+        if (! isset($this->assetList[$id])) {
             $this->assetList[$id] = $this->assets->traverseTo($id);
         }
         return $this->assetList[$id];
     }
-    
-    public function createModuleElement(LeanElement $element, LeanElement $parent = null) {
+
+    public function createModuleNode(LeanElement $element, LeanElement $parent = null)
+    {
         return ModuleNodeCreator::getInstance()->create($this, $element, $parent);
     }
 }

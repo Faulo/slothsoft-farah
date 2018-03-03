@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 /**
  * *********************************************************************
@@ -145,7 +144,7 @@ class Kernel implements EventTargetInterface
     private $dict;
 
     private $now;
-    
+
     private $linkedAssetCollector;
 
     private $progressStatus = self::STATUS_CONTINUE;
@@ -171,8 +170,14 @@ class Kernel implements EventTargetInterface
                 $this->httpRequest->setInputValue($event->getName(), $event->getValue());
             }
         });
-        $this->addEventListener(Module::EVENT_USE_STYLESHEET, [$this->linkedAssetCollector, 'onStylesheet']);
-        $this->addEventListener(Module::EVENT_USE_STYLESHEET, [$this->linkedAssetCollector, 'onScript']);
+        $this->addEventListener(Module::EVENT_USE_STYLESHEET, [
+            $this->linkedAssetCollector,
+            'onStylesheet'
+        ]);
+        $this->addEventListener(Module::EVENT_USE_STYLESHEET, [
+            $this->linkedAssetCollector,
+            'onScript'
+        ]);
     }
 
     public function init($siteMapPath)
@@ -307,11 +312,7 @@ class Kernel implements EventTargetInterface
                                             $ret = $ret->toDocument();
                                             if ($ret->documentElement) {
                                                 $decorator = DecoratorFactory::createForNamespace((string) $ret->documentElement->namespaceURI);
-                                                $decorator->decorateDocument(
-                                                    $ret,
-                                                    $this->linkedAssetCollector->getStylesheetList(),
-                                                    $this->linkedAssetCollector->getScriptList()
-                                                );
+                                                $decorator->decorateDocument($ret, $this->linkedAssetCollector->getStylesheetList(), $this->linkedAssetCollector->getScriptList());
                                             }
                                             $this->httpResponse->setDocument($ret);
                                             $this->progressStatus |= self::STATUS_RESPONSE_SET;
@@ -360,7 +361,7 @@ class Kernel implements EventTargetInterface
         return $this->httpResponse;
     }
 
-    private function lookupPage() : ResultInterface
+    private function lookupPage(): ResultInterface
     {
         $pageNode = $this->domain->lookupPageNode($this->httpRequest->path);
         
@@ -379,17 +380,12 @@ class Kernel implements EventTargetInterface
         }
     }
 
-    private function lookupAsset() : ResultInterface
+    private function lookupAsset(): ResultInterface
     {
         $ref = $this->httpRequest->path;
         $args = $this->httpRequest->input;
         
-        $url = FarahUrl::createFromReference(
-            $ref,
-            FarahUrlAuthority::createFromVendorAndModule($this->getDefaultVendor(), $this->getDefaultModule()),
-            null,
-            FarahUrlArguments::createFromValueList($args)
-        );
+        $url = FarahUrl::createFromReference($ref, FarahUrlAuthority::createFromVendorAndModule($this->getDefaultVendor(), $this->getDefaultModule()), null, FarahUrlArguments::createFromValueList($args));
         // echo "determined asset url {$url}, processing..." . PHP_EOL;
         return FarahUrlResolver::resolveToResult($url);
     }

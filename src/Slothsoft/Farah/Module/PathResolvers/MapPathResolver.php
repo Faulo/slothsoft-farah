@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\PathResolvers;
 
@@ -41,7 +40,7 @@ class MapPathResolver implements PathResolverInterface
         }
         throw ExceptionContext::append(new OutOfRangeException("Asset {$this->asset->getId()} did not provide a mapping for $path!"), [
             'asset' => $this->asset,
-            'class' => __CLASS__,
+            'class' => __CLASS__
         ]);
     }
 

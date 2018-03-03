@@ -16,10 +16,14 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class RequestController extends ControllerImplementation
 {
-    public function createResult(FarahUrl $url) : ResultInterface{
+
+    public function createResult(FarahUrl $url): ResultInterface
+    {
         return new DOMWriterResult($url, Kernel::getInstance()->getRequest());
     }
-    public function createPathResolver() : PathResolverInterface {
+
+    public function createPathResolver(): PathResolverInterface
+    {
         return PathResolverCatalog::createCatchAllPathResolver($this->getAsset());
     }
 }

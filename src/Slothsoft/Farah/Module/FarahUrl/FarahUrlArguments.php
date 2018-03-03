@@ -1,45 +1,54 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\FarahUrl;
-
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class FarahUrlArguments //TODO: implements Psr\Container\ContainerInterface
+class FarahUrlArguments // TODO: implements Psr\Container\ContainerInterface
 {
-    public static function createEmpty(): FarahUrlArguments {
+
+    public static function createEmpty(): FarahUrlArguments
+    {
         return self::create('', []);
     }
-    public static function createFromMany(...$argsList) : FarahUrlArguments {
+
+    public static function createFromMany(...$argsList): FarahUrlArguments
+    {
         $data = [];
         foreach ($argsList as $args) {
             $data += $args->getValueList();
         }
         return self::createFromValueList($data);
     }
-    public static function createFromQuery(string $query) : FarahUrlArguments{
+
+    public static function createFromQuery(string $query): FarahUrlArguments
+    {
         if ($query === '') {
             return self::createEmpty();
         }
         parse_str($query, $valueList);
         return self::create($query, $valueList);
     }
-    public static function createFromValueList(array $valueList) : FarahUrlArguments{
+
+    public static function createFromValueList(array $valueList): FarahUrlArguments
+    {
         return self::create(http_build_query($valueList), $valueList);
     }
-    private static function create(string $id, array $valueList) : FarahUrlArguments {
+
+    private static function create(string $id, array $valueList): FarahUrlArguments
+    {
         static $cache = [];
-        if (!isset($cache[$id])) {
+        if (! isset($cache[$id])) {
             $cache[$id] = new FarahUrlArguments($id, $valueList);
         }
         return $cache[$id];
     }
 
     private $id;
+
     private $data;
 
     private function __construct(string $id, array $data)
@@ -47,28 +56,39 @@ class FarahUrlArguments //TODO: implements Psr\Container\ContainerInterface
         $this->id = $id;
         $this->data = $data;
     }
+
     public function __toString(): string
     {
         return $this->id;
-    }    
-    
-    public function get(string $key, $default = null) {
+    }
+
+    public function get(string $key, $default = null)
+    {
         return $this->data[$key] ?? $default;
     }
-    public function set(string $key, $val) {
+
+    public function set(string $key, $val)
+    {
         $this->data[$key] = $val;
     }
-    public function has(string $key) {
+
+    public function has(string $key)
+    {
         return isset($this->data[$key]);
     }
-    public function delete(string $key) {
+
+    public function delete(string $key)
+    {
         unset($this->data[$key]);
     }
-    
-    public function getValueList() : array {
+
+    public function getValueList(): array
+    {
         return $this->data;
     }
-    public function getNameList() : array {
+
+    public function getNameList(): array
+    {
         return array_keys($this->data);
     }
 }

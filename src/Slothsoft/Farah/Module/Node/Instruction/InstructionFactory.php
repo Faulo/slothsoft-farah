@@ -15,9 +15,11 @@ use DomainException;
  */
 class InstructionFactory extends ModuleNodeFactory
 {
+
     protected function normalizeElementAttributes(LeanElement $element, LeanElement $parent = null)
     {}
-    protected function instantiateNode(LeanElement $element): ModuleNodeInterface 
+
+    protected function instantiateNode(LeanElement $element): ModuleNodeInterface
     {
         switch ($element->getTag()) {
             case Module::TAG_IMPORT:

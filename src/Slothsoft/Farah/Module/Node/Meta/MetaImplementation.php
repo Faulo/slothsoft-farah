@@ -4,7 +4,7 @@ namespace Slothsoft\Farah\Module\Node\Meta;
 use Slothsoft\Farah\Module\Node\ModuleNodeImplementation;
 
 /**
- * 
+ *
  * @author Daniel Schulz
  *        
  */

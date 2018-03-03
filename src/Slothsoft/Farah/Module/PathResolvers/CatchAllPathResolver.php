@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\PathResolvers;
 
@@ -28,7 +27,7 @@ class CatchAllPathResolver implements PathResolverInterface
             $element = $this->asset->getElement()->withAttributes([
                 'path' => $path,
                 'assetpath' => $this->asset->getAssetPath() . $path,
-                'realpath' => $this->asset->getRealPath() . $path,
+                'realpath' => $this->asset->getRealPath() . $path
             ]);
             return $this->asset->addChildElement($element);
         }

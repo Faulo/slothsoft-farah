@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\PathResolvers;
 
@@ -29,7 +28,7 @@ class NullPathResolver implements PathResolverInterface
         }
         throw ExceptionContext::append(new OutOfRangeException("Cannot traverse from {$this->asset->getId()} to $path."), [
             'asset' => $this->asset,
-            'class' => __CLASS__,
+            'class' => __CLASS__
         ]);
     }
 

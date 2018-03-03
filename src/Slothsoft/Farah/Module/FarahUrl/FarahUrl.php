@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\FarahUrl;
 
@@ -11,24 +10,19 @@ use InvalidArgumentException;
  * @author Daniel Schulz
  *        
  */
-class FarahUrl //TODO: implements Psr\Url
+class FarahUrl // TODO: implements Psr\Url
 {
+
     public static function createFromComponents(FarahUrlAuthority $authority, FarahUrlPath $path, FarahUrlArguments $args): FarahUrl
     {
         $authorityId = (string) $authority;
         $pathId = (string) $path;
         $argsId = (string) $args;
-        $id = $argsId === ''
-            ? "$authorityId$pathId"
-            : "$authorityId$pathId?$argsId";
+        $id = $argsId === '' ? "$authorityId$pathId" : "$authorityId$pathId?$argsId";
         return self::create($id, $authority, $path, $args);
     }
 
-    public static function createFromReference(
-        string $ref,
-        FarahUrlAuthority $contextAuthority = null,
-        FarahUrlPath $contextPath = null,
-        FarahUrlArguments $contextArguments = null): FarahUrl
+    public static function createFromReference(string $ref, FarahUrlAuthority $contextAuthority = null, FarahUrlPath $contextPath = null, FarahUrlArguments $contextArguments = null): FarahUrl
     {
         $res = parse_url($ref);
         if ($res === false) {
@@ -66,10 +60,11 @@ class FarahUrl //TODO: implements Psr\Url
         
         return self::createFromComponents($authority, $path, $arguments);
     }
+
     private static function create(string $id, FarahUrlAuthority $authority, FarahUrlPath $path, FarahUrlArguments $args): FarahUrl
     {
         static $cache = [];
-        if (!isset($cache[$id])) {
+        if (! isset($cache[$id])) {
             $cache[$id] = new FarahUrl($id, $authority, $path, $args);
         }
         return $cache[$id];
@@ -90,26 +85,27 @@ class FarahUrl //TODO: implements Psr\Url
         $this->path = $path;
         $this->args = $args;
     }
+
     public function __toString(): string
     {
         return $this->id;
     }
-    
-    
+
     public function getAuthority(): FarahUrlAuthority
     {
         return $this->authority;
     }
+
     public function getPath(): FarahUrlPath
     {
         return $this->path;
     }
+
     public function getArguments(): FarahUrlArguments
     {
         return $this->args;
     }
-    
-    
+
     public function withQueryArguments(FarahUrlArguments $args): FarahUrl
     {
         return self::createFromComponents($this->getAuthority(), $this->getPath(), $args);

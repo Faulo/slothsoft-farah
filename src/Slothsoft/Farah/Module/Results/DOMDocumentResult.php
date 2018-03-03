@@ -17,16 +17,21 @@ class DOMDocumentResult extends GenericResult
     use DOMWriterElementFromDocumentTrait;
 
     private $document;
+
     public function __construct(FarahUrl $url, DOMDocument $doc)
     {
         parent::__construct($url);
         
         $this->document = $doc;
     }
-    public function toDocument() : DOMDocument {
+
+    public function toDocument(): DOMDocument
+    {
         return $this->document;
     }
-    public function exists() : bool {
+
+    public function exists(): bool
+    {
         return true;
     }
 }

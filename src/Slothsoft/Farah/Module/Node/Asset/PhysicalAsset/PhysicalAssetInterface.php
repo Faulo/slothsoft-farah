@@ -11,7 +11,9 @@ use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
  */
 interface PhysicalAssetInterface extends AssetInterface
 {
+
     public function getPath(): string;
-    public function getRealPath() : string;
+
+    public function getRealPath(): string;
 }
 

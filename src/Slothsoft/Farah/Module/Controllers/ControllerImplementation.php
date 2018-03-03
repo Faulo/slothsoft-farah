@@ -16,26 +16,32 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class ControllerImplementation implements ControllerInterface
 {
+
     private $asset;
-    
-    public function setAsset(AssetInterface $asset) {
+
+    public function setAsset(AssetInterface $asset)
+    {
         $this->asset = $asset;
     }
-    public function getAsset() : AssetInterface {
+
+    public function getAsset(): AssetInterface
+    {
         return $this->asset;
     }
+
     public function createParameterFilter(): ParameterFilterInterface
     {
         return new AllowAllFilter();
     }
-    public function createPathResolver() : PathResolverInterface
+
+    public function createPathResolver(): PathResolverInterface
     {
         return PathResolverCatalog::createNullPathResolver($this->asset);
     }
-    public function createResult(FarahUrl $url) : ResultInterface {
+
+    public function createResult(FarahUrl $url): ResultInterface
+    {
         return NullResult($url);
     }
-    
-    
 }
 

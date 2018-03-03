@@ -4,7 +4,6 @@ namespace Slothsoft\Farah\Module\Node;
 
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\Node\Meta\MetaInterface;
 
 /**
  *
@@ -13,19 +12,17 @@ use Slothsoft\Farah\Module\Node\Meta\MetaInterface;
  */
 abstract class ModuleNodeFactory
 {
-    public function create(ModuleNodeCreator $ownerCreator, Module $ownerModule, LeanElement $element, LeanElement $parent = null) : MetaInterface
+
+    public function create(ModuleNodeCreator $ownerCreator, Module $ownerModule, LeanElement $element, LeanElement $parent = null): ModuleNodeInterface
     {
         $this->normalizeElementAttributes($element, $parent);
         $node = $this->instantiateNode($element);
-        $node->initModuleNode(
-            $ownerModule,
-            $element,
-            $ownerCreator->createList($ownerModule, $element->getChildren(), $element)
-        );
+        $node->initModuleNode($ownerModule, $element, $ownerCreator->createList($ownerModule, $element->getChildren(), $element));
         return $node;
     }
-    
+
     abstract protected function normalizeElementAttributes(LeanElement $element, LeanElement $parent = null);
-    abstract protected function instantiateNode(LeanElement $element) : ModuleNodeInterface;
+
+    abstract protected function instantiateNode(LeanElement $element): ModuleNodeInterface;
 }
 

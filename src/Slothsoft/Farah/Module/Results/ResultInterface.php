@@ -13,14 +13,15 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
  */
 interface ResultInterface extends DOMWriterInterface, FileWriterInterface
 {
-    public function __toString() : string;
-    
-    public function getUrl() : FarahUrl;
-    
-    public function getId() : string;
-    
-    public function getArguments() : FarahUrlArguments;
-    
-    public function exists() : bool;
+
+    public function __toString(): string;
+
+    public function getUrl(): FarahUrl;
+
+    public function getId(): string;
+
+    public function getArguments(): FarahUrlArguments;
+
+    public function exists(): bool;
 }
 

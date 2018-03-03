@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 // © 2012 Daniel Schulz
 namespace Slothsoft\Farah;
@@ -65,7 +64,7 @@ class Dictionary
     protected static $supportedLang;
 
     /* static functions */
-    public static function getInstance() : Dictionary
+    public static function getInstance(): Dictionary
     {
         static $instance;
         if ($instance === null) {

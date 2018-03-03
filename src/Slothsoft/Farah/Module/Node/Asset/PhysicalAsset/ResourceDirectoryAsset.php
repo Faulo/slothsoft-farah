@@ -20,7 +20,9 @@ class ResourceDirectoryAsset extends DirectoryAsset
     {
         return PathResolverCatalog::createResourceDirectoryPathResolver($this);
     }
-    protected function loadResult(FarahUrl $url): ResultInterface {
+
+    protected function loadResult(FarahUrl $url): ResultInterface
+    {
         return new DOMWriterResult($url, $this);
     }
 }

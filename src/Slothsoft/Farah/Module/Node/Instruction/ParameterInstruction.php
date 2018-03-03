@@ -6,23 +6,29 @@ use Slothsoft\Farah\Event\Events\SetParameterEvent;
 use Slothsoft\Farah\Module\Module;
 
 /**
- * 
+ *
  * @author Daniel Schulz
  *        
  */
 class ParameterInstruction extends InstructionImplementation
 {
-    public function getName() : string {
+
+    public function getName(): string
+    {
         return $this->getElementAttribute(Module::ATTR_PARAM_KEY);
     }
-    public function getValue() : string {
+
+    public function getValue(): string
+    {
         return $this->getElementAttribute(Module::ATTR_PARAM_VAL, '');
     }
-    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener) {
+
+    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener)
+    {
         $event = new SetParameterEvent();
         $event->initEvent(Module::EVENT_SET_PARAMETER, [
             'name' => $this->getName(),
-            'value' => $this->getValue(),
+            'value' => $this->getValue()
         ]);
         $listener->dispatchEvent($event);
     }

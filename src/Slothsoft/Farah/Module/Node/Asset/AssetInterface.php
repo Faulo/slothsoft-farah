@@ -18,8 +18,9 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 interface AssetInterface extends ModuleNodeInterface, DOMWriterInterface
 {
-    public function __toString() : string;
-    
+
+    public function __toString(): string;
+
     public function getUrlPath(): FarahUrlPath;
 
     public function getId(): string;
@@ -28,20 +29,16 @@ interface AssetInterface extends ModuleNodeInterface, DOMWriterInterface
 
     public function getAssetPath(): string;
 
-    
-    
     public function getPathResolver(): PathResolverInterface;
-    
+
     public function filterArguments(FarahUrlArguments $args): bool;
-    
+
     public function getParameterFilter(): ParameterFilterInterface;
+
     public function traverseTo(string $path): AssetInterface;
-    
+
     public function createUrl(FarahUrlArguments $args): FarahUrl;
+
     public function lookupResultByArguments(FarahUrlArguments $args): ResultInterface;
-    
-    
-    
-    
 }
 

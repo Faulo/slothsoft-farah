@@ -12,7 +12,9 @@ use Slothsoft\Farah\Module\Module;
  */
 class UseStylesheetInstruction extends InstructionImplementation
 {
-    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener) {
+
+    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener)
+    {
         $event = $this->createUseAssetEvent(Module::EVENT_USE_STYLESHEET);
         $listener->dispatchEvent($event);
     }

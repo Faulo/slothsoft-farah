@@ -18,16 +18,21 @@ class DOMElementResult extends GenericResult
     use DOMWriterDocumentFromElementTrait;
 
     private $element;
+
     public function __construct(FarahUrl $url, DOMElement $element)
     {
         parent::__construct($url);
         
         $this->element = $element;
     }
-    public function toElement(DOMDocument $targetDoc) : DOMElement {
+
+    public function toElement(DOMDocument $targetDoc): DOMElement
+    {
         return $targetDoc->importNode($this->element, true);
     }
-    public function exists() : bool {
+
+    public function exists(): bool
+    {
         return true;
     }
 }

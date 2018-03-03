@@ -12,12 +12,12 @@ use Slothsoft\Farah\Module\Node\Asset\AssetImplementation;
  */
 class PhysicalAssetImplementation extends AssetImplementation implements PhysicalAssetInterface
 {
-    
+
     public function getPath(): string
     {
         return $this->getElementAttribute(Module::ATTR_PATH);
     }
-    
+
     public function getRealPath(): string
     {
         return $this->getElementAttribute(Module::ATTR_REALPATH);

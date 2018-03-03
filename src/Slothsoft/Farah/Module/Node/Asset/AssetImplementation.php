@@ -24,19 +24,18 @@ use DOMElement;
  * @author Daniel Schulz
  *        
  */
-class AssetImplementation extends ModuleNodeImplementation implements AssetInterface 
+class AssetImplementation extends ModuleNodeImplementation implements AssetInterface
 {
     use DOMWriterDocumentFromElementTrait;
 
-   
     private $path;
-    
+
     private $resultList = [];
 
     private $pathResolver;
 
     private $parameterFilter;
-    
+
     public function getUrlPath(): FarahUrlPath
     {
         if ($this->path === null) {
@@ -59,15 +58,12 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     {
         return $this->getElementAttribute(Module::ATTR_ASSETPATH);
     }
-    
-    public function getAssetChildren() : array {
-        return array_filter(
-            $this->getChildren(),
-            function(ModuleNodeInterface $node) {
-                return $node instanceof AssetInterface;
-            },
-            ARRAY_FILTER_USE_BOTH
-        );
+
+    public function getAssetChildren(): array
+    {
+        return array_filter($this->getChildren(), function (ModuleNodeInterface $node) {
+            return $node instanceof AssetInterface;
+        }, ARRAY_FILTER_USE_BOTH);
     }
 
     public function traverseTo(string $path): AssetInterface
@@ -87,6 +83,7 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     {
         return PathResolverCatalog::createNullPathResolver($this);
     }
+
     public function filterArguments(FarahUrlArguments $args): bool
     {
         $ret = false;
@@ -115,30 +112,30 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
 
     public function createUrl(FarahUrlArguments $args): FarahUrl
     {
-        return $this->getOwnerModule()->createUrl(
-            $this->getUrlPath(),
-            $args
-        );
+        return $this->getOwnerModule()->createUrl($this->getUrlPath(), $args);
     }
-    public function lookupResultByArguments(FarahUrlArguments $args): ResultInterface {
+
+    public function lookupResultByArguments(FarahUrlArguments $args): ResultInterface
+    {
         $args = $this->mergeWithManifestArguments($args);
         $id = (string) $args;
-        if (!isset($this->resultList[$id])) {
+        if (! isset($this->resultList[$id])) {
             $this->resultList[$id] = $this->loadResult($this->createUrl($args));
         }
         return $this->resultList[$id];
     }
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         return new NullResult($url);
     }
-    
-    
-    
-    public function __toString() : string {
+
+    public function __toString(): string
+    {
         return $this->getId();
     }
-    public function toElement(DOMDocument $targetDoc) : DOMElement
+
+    public function toElement(DOMDocument $targetDoc): DOMElement
     {
         $element = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, $this->getElementTag());
         $element->setAttribute(Module::ATTR_NAME, $this->getName());
@@ -151,6 +148,5 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
         }
         return $element;
     }
-
 }
 

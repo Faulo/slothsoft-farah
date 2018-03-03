@@ -16,26 +16,31 @@ use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
  */
 class InstructionImplementation extends ModuleNodeImplementation implements InstructionInterface
 {
-    public function getReference() : string {
+
+    public function getReference(): string
+    {
         return $this->getElementAttribute(Module::ATTR_REFERENCE);
     }
+
     public function getAlias(): string
     {
-        return $this->getElementAttribute(Module::ATTR_ALIAS, $this->getReferencedAsset()->getName());
+        return $this->getElementAttribute(Module::ATTR_ALIAS, $this->getReferencedAsset()
+            ->getName());
     }
-    public function getReferencedAsset() : AssetInterface {
-        $url = FarahUrl::createFromReference(
-            $this->getReference(),
-            $this->getOwnerModule()->getAuthority()
-        );
+
+    public function getReferencedAsset(): AssetInterface
+    {
+        $url = FarahUrl::createFromReference($this->getReference(), $this->getOwnerModule()->getAuthority());
         return FarahUrlResolver::resolveToAsset($url);
     }
-    public function createUseAssetEvent(string $type) : UseAssetEvent {
+
+    public function createUseAssetEvent(string $type): UseAssetEvent
+    {
         $event = new UseAssetEvent();
         $event->initEvent($type, [
             'asset' => $this->getReferencedAsset(),
             'assetArguments' => $this->getManifestArguments(),
-            'assetName' => $this->getAlias(),
+            'assetName' => $this->getAlias()
         ]);
         return $event;
     }

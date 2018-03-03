@@ -14,19 +14,22 @@ use Closure;
  */
 class ClosureAsset extends AssetImplementation
 {
+
     private $closure;
-    
-    public function setClosure(Closure $closure) {
+
+    public function setClosure(Closure $closure)
+    {
         $this->closure = $closure;
     }
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         return ResultCatalog::createFromMixed($url, $this->runClosure($url));
     }
-    private function runClosure(FarahUrl $url) {
-        return $this->closure === null
-            ? null
-            : $this->closure($url);
+
+    private function runClosure(FarahUrl $url)
+    {
+        return $this->closure === null ? null : $this->closure($url);
     }
 }
 

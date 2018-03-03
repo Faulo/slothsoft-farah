@@ -17,7 +17,9 @@ use Slothsoft\Farah\Exception\ExceptionContext;
  */
 class ResultCatalog
 {
-    public static function createFromMixed(FarahUrl $url, $result) : ResultInterface {
+
+    public static function createFromMixed(FarahUrl $url, $result): ResultInterface
+    {
         switch (true) {
             case $result instanceof ResultInterface:
                 return $result;
@@ -32,15 +34,13 @@ class ResultCatalog
             case $result instanceof Closure:
                 return self::createFromMixed($url, $result($url));
             case is_object($result):
-                throw ExceptionContext::append(
-                    new InvalidArgumentException("Closure return type " . get_class($result) . " is not supported by this implementation."),
-                    ['class' => __CLASS__]
-                );
+                throw ExceptionContext::append(new InvalidArgumentException("Closure return type " . get_class($result) . " is not supported by this implementation."), [
+                    'class' => __CLASS__
+                ]);
             default:
-                throw ExceptionContext::append(
-                    new InvalidArgumentException("Closure return type " . gettype($result) . " is not supported by this implementation."),
-                    ['class' => __CLASS__]
-                );
+                throw ExceptionContext::append(new InvalidArgumentException("Closure return type " . gettype($result) . " is not supported by this implementation."), [
+                    'class' => __CLASS__
+                ]);
         }
     }
 }

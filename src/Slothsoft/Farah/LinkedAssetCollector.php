@@ -11,25 +11,32 @@ use Slothsoft\Farah\Event\Events\UseAssetEvent;
  */
 class LinkedAssetCollector
 {
+
     private $stylesheetList = [];
+
     private $scriptlist = [];
-    
-    public function onStylesheet(EventInterface $event) {
+
+    public function onStylesheet(EventInterface $event)
+    {
         if ($event instanceof UseAssetEvent) {
-            $this->stylesheetList[$event->getAsset()
-                ->getId()] = $event->getAsset();
+            $this->stylesheetList[$event->getAsset()->getId()] = $event->getAsset();
         }
     }
-    public function getStylesheetList() {
+
+    public function getStylesheetList()
+    {
         return $this->stylesheetList;
     }
-    public function onScript(EventInterface $event) {
+
+    public function onScript(EventInterface $event)
+    {
         if ($event instanceof UseAssetEvent) {
-            $this->scriptList[$event->getAsset()
-                ->getId()] = $event->getAsset();
+            $this->scriptList[$event->getAsset()->getId()] = $event->getAsset();
         }
     }
-    public function getScriptList() {
+
+    public function getScriptList()
+    {
         return $this->scriptlist;
     }
 }

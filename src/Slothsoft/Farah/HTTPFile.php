@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 /**
  * *********************************************************************
@@ -276,7 +275,7 @@ class HTTPFile implements FileWriterInterface
         return $this->name;
     }
 
-    public function getContents() : string
+    public function getContents(): string
     {
         return file_get_contents($this->getPath());
     }
@@ -322,21 +321,19 @@ class HTTPFile implements FileWriterInterface
     {
         return unlink($this->getPath());
     }
-    public function exists() : bool {
+
+    public function exists(): bool
+    {
         return is_file($this->path);
     }
-    
-    
-    
-    
-    public function toFile() : HTTPFile
+
+    public function toFile(): HTTPFile
     {
         return $this;
     }
 
-    public function toString() : string
+    public function toString(): string
     {
         return $this->getContents();
     }
-
 }

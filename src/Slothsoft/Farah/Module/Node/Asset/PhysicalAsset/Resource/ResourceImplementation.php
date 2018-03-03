@@ -16,7 +16,9 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class ResourceImplementation extends PhysicalAssetImplementation implements ResourceInterface
 {
-    public function getType() : string {
+
+    public function getType(): string
+    {
         return $this->getElementAttribute('type');
     }
 
@@ -24,7 +26,7 @@ class ResourceImplementation extends PhysicalAssetImplementation implements Reso
     {
         return new DenyAllFilter();
     }
-    
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         return new BinaryFileResult($url, $this->getRealPath());

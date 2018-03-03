@@ -11,6 +11,7 @@ use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
  */
 interface ResourceInterface extends AssetInterface
 {
-    public function getType() : string;
+
+    public function getType(): string;
 }
 

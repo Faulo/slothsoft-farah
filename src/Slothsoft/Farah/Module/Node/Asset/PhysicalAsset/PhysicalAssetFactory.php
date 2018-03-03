@@ -16,6 +16,7 @@ use RuntimeException;
  */
 class PhysicalAssetFactory extends AssetFactory
 {
+
     protected function normalizeElementAttributes(LeanElement $element, LeanElement $parent = null)
     {
         parent::normalizeElementAttributes($element, $parent);
@@ -30,7 +31,7 @@ class PhysicalAssetFactory extends AssetFactory
             $element->setAttribute(Module::ATTR_REALPATH, $this->inventElementRealPath($element, $parent));
         }
     }
-    
+
     private function inventElementPath(LeanElement $element): string
     {
         $path = $element->getAttribute(Module::ATTR_NAME);
@@ -41,15 +42,13 @@ class PhysicalAssetFactory extends AssetFactory
         }
         return $path;
     }
-    
+
     private function inventElementRealPath(LeanElement $element, LeanElement $parent): string
     {
         return $parent->getAttribute(Module::ATTR_REALPATH) . DIRECTORY_SEPARATOR . $element->getAttribute(Module::ATTR_PATH);
     }
-    
-    
-    
-    protected function instantiateAsset(LeanElement $element): ModuleNodeInterface 
+
+    protected function instantiateNode(LeanElement $element): ModuleNodeInterface
     {
         switch ($element->getTag()) {
             case Module::TAG_ASSET_ROOT:
