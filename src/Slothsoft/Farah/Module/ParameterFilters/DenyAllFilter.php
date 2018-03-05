@@ -14,5 +14,8 @@ class DenyAllFilter implements ParameterFilterInterface
     {
         return false;
     }
+    public function getDefaultMap() : array {
+        return [];
+    }
 }
 

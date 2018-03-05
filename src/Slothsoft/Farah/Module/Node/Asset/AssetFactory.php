@@ -42,10 +42,13 @@ class AssetFactory extends ModuleNodeFactory
                 return new ContainerAsset();
             case Module::TAG_FRAGMENT:
                 return new FragmentAsset();
-            case Module::TAG_CONTROLLER:
+            case Module::TAG_CUSTOM_CONTROLLER:
                 return new ControllerAsset();
             case Module::TAG_CLOSURE:
                 return new ClosureAsset();
+            case Module::TAG_CUSTOM_ASSET:
+                $className = $element->getAttribute('class');
+                return new $className();
         }
         throw new DomainException("illegal tag: {$element->getTag()}");
     }

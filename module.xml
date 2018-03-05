@@ -36,7 +36,7 @@ Llo
         <resource-directory name="latest" path="20171027" type="application/x-xsd+xml"/>
       </directory>
     </directory>
-    <controller name="sites" class="Slothsoft\Farah\Internal\SitesController"/>
-    <controller name="request" class="Slothsoft\Farah\Internal\RequestController"/>
+    <custom-asset name="sites" class="Slothsoft\Farah\Internal\SitesAsset"/>
+    <custom-asset name="request" class="Slothsoft\Farah\Internal\RequestAsset"/>
   </assets>
 </module>

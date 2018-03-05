@@ -94,6 +94,12 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
                 $ret = true;
             }
         }
+        foreach ($filter->getDefaultMap() as $key => $val) {
+            if (!$args->has($key)) {
+                $args->set($key, $val);
+                $ret = true;
+            }
+        }
         return $ret;
     }
 

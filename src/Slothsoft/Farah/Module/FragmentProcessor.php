@@ -4,7 +4,7 @@ namespace Slothsoft\Farah\Module;
 
 use Slothsoft\Farah\Event\EventTargetInterface;
 use Slothsoft\Farah\Event\EventTargetTrait;
-use Slothsoft\Farah\Module\Node\Asset\FragmentAsset;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
 /**
  *
@@ -17,7 +17,7 @@ class FragmentProcessor implements EventTargetInterface
 
     private $context;
 
-    public function __construct(FragmentAsset $context)
+    public function __construct(AssetInterface $context)
     {
         $this->context = $context;
     }

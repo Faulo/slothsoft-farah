@@ -11,7 +11,8 @@
 	
 	<xsd:element name="container" type="container"/>
 	<xsd:element name="fragment" type="fragment"/>
-	<xsd:element name="controller" type="controller" />
+	<xsd:element name="custom-controller" type="custom-controller" />
+	<xsd:element name="custom-asset" type="custom-asset" />
 	
 	<xsd:element name="resource" type="resource" />
 	<xsd:element name="resource-directory" type="resource-directory"/>
@@ -33,7 +34,8 @@
 		<xsd:choice>
 			<xsd:element ref="container" />
 			<xsd:element ref="fragment" />
-			<xsd:element ref="controller" />
+			<xsd:element ref="custom-controller" />
+			<xsd:element ref="custom-asset" />
 		</xsd:choice>
 	</xsd:group>
 
@@ -107,7 +109,16 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 	
-	<xsd:complexType name="controller">
+	<xsd:complexType name="custom-controller">
+		<xsd:complexContent>
+			<xsd:extension base="container">
+				<xsd:attribute name="class" type="xsd:normalizedString"
+						use="required" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="custom-asset">
 		<xsd:complexContent>
 			<xsd:extension base="container">
 				<xsd:attribute name="class" type="xsd:normalizedString"

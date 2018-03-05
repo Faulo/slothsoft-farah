@@ -34,8 +34,10 @@ class Module implements EventTargetInterface
     const TAG_FRAGMENT = 'fragment';
 
     const TAG_CONTAINER = 'container';
+    
+    const TAG_CUSTOM_ASSET = 'custom-asset';
 
-    const TAG_CONTROLLER = 'controller';
+    const TAG_CUSTOM_CONTROLLER = 'custom-controller';
 
     // runtime-only asset tags
     const TAG_DOCUMENT = 'document';
