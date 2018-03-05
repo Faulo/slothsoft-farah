@@ -7,6 +7,7 @@ use Slothsoft\Farah\Module\ParameterFilters\AllowAllFilter;
 use Slothsoft\Farah\Module\ParameterFilters\ParameterFilterInterface;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverCatalog;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
+use Slothsoft\Farah\Module\Results\NullResult;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 
 /**
@@ -41,7 +42,7 @@ class ControllerImplementation implements ControllerInterface
 
     public function createResult(FarahUrl $url): ResultInterface
     {
-        return NullResult($url);
+        return new NullResult($url);
     }
 }
 

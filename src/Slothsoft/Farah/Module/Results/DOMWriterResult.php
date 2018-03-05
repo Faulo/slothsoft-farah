@@ -12,7 +12,7 @@ use DOMElement;
  * @author Daniel Schulz
  *        
  */
-class DOMWriterResult extends GenericResult
+class DOMWriterResult extends ResultImplementation
 {
     use FileWriterFromDOMTrait;
 

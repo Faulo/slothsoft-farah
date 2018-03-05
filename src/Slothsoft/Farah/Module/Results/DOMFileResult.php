@@ -13,7 +13,7 @@ use DOMDocument;
  * @author Daniel Schulz
  *        
  */
-class DOMFileResult extends GenericResult
+class DOMFileResult extends ResultImplementation
 {
     use DOMWriterElementFromDocumentTrait;
 

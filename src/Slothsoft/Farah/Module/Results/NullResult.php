@@ -11,7 +11,7 @@ use DOMElement;
  * @author Daniel Schulz
  *        
  */
-class NullResult extends GenericResult
+class NullResult extends ResultImplementation
 {
     use FileWriterFromDOMTrait;
     use DOMWriterDocumentFromElementTrait;

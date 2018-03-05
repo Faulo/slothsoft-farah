@@ -11,7 +11,7 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
  * @author Daniel Schulz
  *        
  */
-class FileWriterResult extends GenericResult
+class FileWriterResult extends ResultImplementation
 {
     use DOMWriterFromFileTrait;
 

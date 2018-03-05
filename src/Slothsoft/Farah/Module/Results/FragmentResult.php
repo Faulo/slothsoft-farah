@@ -26,7 +26,7 @@ use Throwable;
  * @author Daniel Schulz
  *        
  */
-class FragmentResult extends GenericResult implements EventTargetInterface
+class FragmentResult extends ResultImplementation implements EventTargetInterface
 {
     use FileWriterFromDOMTrait;
     use DOMWriterElementFromDocumentTrait;

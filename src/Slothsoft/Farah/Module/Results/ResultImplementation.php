@@ -9,7 +9,7 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
  * @author Daniel Schulz
  *        
  */
-abstract class GenericResult implements ResultInterface
+abstract class ResultImplementation implements ResultInterface
 {
 
     private $url;

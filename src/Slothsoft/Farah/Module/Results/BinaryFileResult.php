@@ -13,7 +13,7 @@ use DOMElement;
  * @author Daniel Schulz
  *        
  */
-class BinaryFileResult extends GenericResult
+class BinaryFileResult extends ResultImplementation
 {
     use DOMWriterDocumentFromElementTrait;
     use FileWriterStringFromFileTrait;

@@ -11,7 +11,7 @@ use DOMDocument;
  * @author Daniel Schulz
  *        
  */
-class DOMDocumentResult extends GenericResult
+class DOMDocumentResult extends ResultImplementation
 {
     use FileWriterFromDOMTrait;
     use DOMWriterElementFromDocumentTrait;
