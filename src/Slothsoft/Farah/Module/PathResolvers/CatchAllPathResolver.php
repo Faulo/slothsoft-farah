@@ -26,8 +26,7 @@ class CatchAllPathResolver implements PathResolverInterface
         } else {
             $element = $this->asset->getElement()->withAttributes([
                 'path' => $path,
-                'assetpath' => $this->asset->getAssetPath() . $path,
-                'realpath' => $this->asset->getRealPath() . $path
+                'assetpath' => $this->asset->getAssetPath() . $path
             ]);
             return $this->asset->createChildNode($element);
         }
