@@ -143,11 +143,11 @@ class Domain
         return $ret;
     }
 
-    public function lookupAssetUrl(DOMElement $dataNode): FarahUrl
+    public function lookupAssetUrl(DOMElement $dataNode, array $args = []): FarahUrl
     {
         $vendorName = $this->findVendorName($dataNode);
         $moduleName = $this->findModuleName($dataNode);
-        $args = $this->findParameters($dataNode);
+        $args += $this->findParameters($dataNode);
         $ref = $dataNode->getAttribute('ref');
         
         return FarahUrl::createFromReference($ref, FarahUrlAuthority::createFromVendorAndModule($vendorName, $moduleName), null, FarahUrlArguments::createFromValueList($args));

@@ -11,6 +11,7 @@ interface ParameterFilterInterface
 {
 
     public function isAllowedName(string $name): bool;
-    public function getDefaultMap() : array;
+
+    public function getDefaultMap(): array;
 }
 

@@ -37,7 +37,7 @@ class LinkedAssetCollector
 
     public function getScriptList()
     {
-        return $this->scriptlist;
+        return $this->scriptList;
     }
 }
 

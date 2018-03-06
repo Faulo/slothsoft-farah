@@ -14,7 +14,9 @@ class AllowAllFilter implements ParameterFilterInterface
     {
         return true;
     }
-    public function getDefaultMap() : array {
+
+    public function getDefaultMap(): array
+    {
         return [];
     }
 }

@@ -14,6 +14,7 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class SitesAsset extends AssetImplementation
 {
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         return new DOMDocumentResult($url, Kernel::getInstance()->getSitesDocument());

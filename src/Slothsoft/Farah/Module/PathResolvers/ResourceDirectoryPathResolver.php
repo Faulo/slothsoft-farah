@@ -47,7 +47,7 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
             $data[Module::ATTR_NAME] = $childName;
             $data[Module::ATTR_TYPE] = $this->asset->getElementAttribute(Module::ATTR_TYPE);
             
-            return $this->asset->addChildElement(LeanElement::createOneFromArray(Module::TAG_RESOURCE, $data));
+            return $this->asset->createChildNode(LeanElement::createOneFromArray(Module::TAG_RESOURCE, $data));
         } else {
             return $this->asset->traverseTo($childPath)->traverseTo($descendantPath);
         }

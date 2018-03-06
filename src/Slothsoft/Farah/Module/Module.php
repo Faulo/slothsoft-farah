@@ -15,6 +15,7 @@ use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Node\Asset\ContainerAsset;
 use RuntimeException;
 use Throwable;
+use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 
 /**
  *
@@ -34,10 +35,8 @@ class Module implements EventTargetInterface
     const TAG_FRAGMENT = 'fragment';
 
     const TAG_CONTAINER = 'container';
-    
-    const TAG_CUSTOM_ASSET = 'custom-asset';
 
-    const TAG_CUSTOM_CONTROLLER = 'custom-controller';
+    const TAG_CUSTOM_ASSET = 'custom-asset';
 
     // runtime-only asset tags
     const TAG_DOCUMENT = 'document';
@@ -218,7 +217,7 @@ class Module implements EventTargetInterface
         return $this->assetList[$id];
     }
 
-    public function createModuleNode(LeanElement $element, LeanElement $parent = null)
+    public function createModuleNode(LeanElement $element, LeanElement $parent = null): ModuleNodeInterface
     {
         return ModuleNodeCreator::getInstance()->create($this, $element, $parent);
     }

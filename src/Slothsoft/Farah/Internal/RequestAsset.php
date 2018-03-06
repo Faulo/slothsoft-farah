@@ -14,6 +14,7 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class RequestAsset extends AssetImplementation
 {
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         return new DOMWriterResult($url, Kernel::getInstance()->getRequest());

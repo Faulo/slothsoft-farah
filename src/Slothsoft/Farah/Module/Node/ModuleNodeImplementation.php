@@ -23,11 +23,10 @@ class ModuleNodeImplementation implements ModuleNodeInterface
 
     private $manifestArguments;
 
-    public function initModuleNode(Module $ownerModule, LeanElement $element, array $children)
+    public function initModuleNode(Module $ownerModule, LeanElement $element)
     {
         $this->ownerModule = $ownerModule;
         $this->element = $element;
-        $this->children = $children;
     }
 
     public function getOwnerModule(): Module
@@ -57,17 +56,16 @@ class ModuleNodeImplementation implements ModuleNodeInterface
 
     public function getChildren(): array
     {
+        if ($this->children === null) {
+            $this->children = [];
+            foreach ($this->getElement()->getChildren() as $element) {
+                $this->children[] = $this->createChildNode($element);
+            }
+        }
         return $this->children;
     }
 
-    public function addChildElement(LeanElement $element): ModuleNodeInterface
-    {
-        $element = $this->createChildElement($element);
-        $this->children[] = $element;
-        return $element;
-    }
-
-    private function createChildElement(LeanElement $element): ModuleNodeInterface
+    public function createChildNode(LeanElement $element): ModuleNodeInterface
     {
         return $this->ownerModule->createModuleNode($element, $this->getElement());
     }
@@ -88,7 +86,7 @@ class ModuleNodeImplementation implements ModuleNodeInterface
     protected function loadManifestArguments(): FarahUrlArguments
     {
         $data = [];
-        foreach ($this->children as $child) {
+        foreach ($this->getChildren() as $child) {
             if ($child instanceof ParameterInstruction) {
                 $data[$child->getName()] = $child->getValue();
             }
@@ -98,7 +96,7 @@ class ModuleNodeImplementation implements ModuleNodeInterface
 
     public function crawlAndFireAppropriateEvents(EventTargetInterface $listener)
     {
-        foreach ($this->children as $child) {
+        foreach ($this->getChildren() as $child) {
             $child->crawlAndFireAppropriateEvents($listener);
         }
     }

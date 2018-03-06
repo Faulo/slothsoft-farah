@@ -31,7 +31,7 @@ interface AssetInterface extends ModuleNodeInterface, DOMWriterInterface
 
     public function getPathResolver(): PathResolverInterface;
 
-    public function filterArguments(FarahUrlArguments $args): bool;
+    public function applyParameterFilter(FarahUrlArguments $args): FarahUrlArguments;
 
     public function getParameterFilter(): ParameterFilterInterface;
 

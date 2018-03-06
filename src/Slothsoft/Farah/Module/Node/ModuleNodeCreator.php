@@ -40,7 +40,6 @@ class ModuleNodeCreator // TOOD: find a better name maybe
         $this->factoryMap[Module::TAG_CLOSURE] = $assetFactory;
         $this->factoryMap[Module::TAG_CONTAINER] = $assetFactory;
         $this->factoryMap[Module::TAG_FRAGMENT] = $assetFactory;
-        $this->factoryMap[Module::TAG_CUSTOM_CONTROLLER] = $assetFactory;
         $this->factoryMap[Module::TAG_CUSTOM_ASSET] = $assetFactory;
         
         $this->factoryMap[Module::TAG_DIRECTORY] = $physicalFactory;
@@ -67,15 +66,6 @@ class ModuleNodeCreator // TOOD: find a better name maybe
             throw new DomainException("Module tag <$tag> is not supported by this implementation.");
         }
         return $this->factoryMap[$tag]->create($this, $ownerModule, $element, $parent);
-    }
-
-    public function createList(Module $ownerModule, array $elementList, LeanElement $parent = null): array
-    {
-        $ret = [];
-        foreach ($elementList as $element) {
-            $ret[] = $this->create($ownerModule, $element, $parent);
-        }
-        return $ret;
     }
 }
 

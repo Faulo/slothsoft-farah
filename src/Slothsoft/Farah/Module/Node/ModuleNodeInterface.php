@@ -15,7 +15,7 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 interface ModuleNodeInterface
 {
 
-    public function initModuleNode(Module $ownerModule, LeanElement $element, array $children);
+    public function initModuleNode(Module $ownerModule, LeanElement $element);
 
     public function getOwnerModule(): Module;
 
@@ -29,7 +29,7 @@ interface ModuleNodeInterface
 
     public function getChildren(): array;
 
-    public function addChildElement(LeanElement $element): ModuleNodeInterface;
+    public function createChildNode(LeanElement $element): ModuleNodeInterface;
 
     public function mergeWithManifestArguments(FarahUrlArguments $args): FarahUrlArguments;
 

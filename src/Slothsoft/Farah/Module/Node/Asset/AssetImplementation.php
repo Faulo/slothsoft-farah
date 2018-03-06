@@ -84,23 +84,24 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
         return PathResolverCatalog::createNullPathResolver($this);
     }
 
-    public function filterArguments(FarahUrlArguments $args): bool
+    public function applyParameterFilter(FarahUrlArguments $args): FarahUrlArguments
     {
-        $ret = false;
+        $valueList = $args->getValueList();
+        $hasChanged = false;
         $filter = $this->getParameterFilter();
-        foreach ($args->getNameList() as $key) {
-            if (! $filter->isAllowedName($key)) {
-                $args->delete($key);
-                $ret = true;
+        foreach ($valueList as $name => $value) {
+            if (! $filter->isAllowedName($name)) {
+                unset($valueList[$name]);
+                $hasChanged = true;
             }
         }
-        foreach ($filter->getDefaultMap() as $key => $val) {
-            if (!$args->has($key)) {
-                $args->set($key, $val);
-                $ret = true;
+        foreach ($filter->getDefaultMap() as $name => $value) {
+            if (! isset($valueList[$name])) {
+                $valueList[$name] = $value;
+                $hasChanged = true;
             }
         }
-        return $ret;
+        return $hasChanged ? FarahUrlArguments::createFromValueList($valueList) : $args;
     }
 
     public function getParameterFilter(): ParameterFilterInterface
@@ -124,6 +125,7 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     public function lookupResultByArguments(FarahUrlArguments $args): ResultInterface
     {
         $args = $this->mergeWithManifestArguments($args);
+        $args = $this->applyParameterFilter($args);
         $id = (string) $args;
         if (! isset($this->resultList[$id])) {
             $this->resultList[$id] = $this->loadResult($this->createUrl($args));

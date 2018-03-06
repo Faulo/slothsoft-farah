@@ -176,7 +176,7 @@ class Kernel implements EventTargetInterface
             $this->linkedAssetCollector,
             'onStylesheet'
         ]);
-        $this->addEventListener(Module::EVENT_USE_STYLESHEET, [
+        $this->addEventListener(Module::EVENT_USE_SCRIPT, [
             $this->linkedAssetCollector,
             'onScript'
         ]);
@@ -365,15 +365,16 @@ class Kernel implements EventTargetInterface
 
     private function lookupPage(): ResultInterface
     {
-        $pageNode = $this->domain->lookupPageNode($this->httpRequest->path);
+        $ref = $this->httpRequest->path;
+        $args = $this->httpRequest->input;
         
-        if ($pageNode) {
+        if ($pageNode = $this->domain->lookupPageNode($ref)) {
             $pageNode->setAttribute('current', '1');
             
             if ($pageNode->hasAttribute('ref')) {
                 $this->httpResponse->addHeader('content-location', $pageNode->getAttribute('url'));
                 
-                $url = $this->domain->lookupAssetUrl($pageNode);
+                $url = $this->domain->lookupAssetUrl($pageNode, $args);
                 
                 // echo "determined page url {$url}, processing..." . PHP_EOL;
                 

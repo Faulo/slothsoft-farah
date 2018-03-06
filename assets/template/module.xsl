@@ -52,6 +52,7 @@
 					<xsl:value-of select="@message" />
 				</em>
 			</p>
+			<xsl:copy-of select="."/>
 			<xsl:apply-templates select="sfm:error" mode="sfm:html" />
 		</details>
 	</xsl:template>
