@@ -157,15 +157,19 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
         }
         return $element;
     }
-    
+
     private $linkedStylesheets;
-    public function lookupLinkedStylesheets() : array {
+
+    public function lookupLinkedStylesheets(): array
+    {
         if ($this->linkedStylesheets = null) {
             $this->linkedStylesheets = $this->loadLinkedStylesheets();
         }
         return $this->linkedStylesheets;
     }
-    protected function loadLinkedStylesheets() : array {
+
+    protected function loadLinkedStylesheets(): array
+    {
         $ret = [];
         foreach ($this->getChildren() as $child) {
             if ($child instanceof LinkStylesheetInstruction) {

@@ -43,9 +43,7 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
         $descendantPath = substr($path, strlen($childPath));
         
         if ($descendantPath === '') {
-            $tag = $isProbablyDirectory
-                ? Module::TAG_RESOURCE_DIRECTORY
-                : Module::TAG_RESOURCE;
+            $tag = $isProbablyDirectory ? Module::TAG_RESOURCE_DIRECTORY : Module::TAG_RESOURCE;
             $data = [];
             $data[Module::ATTR_NAME] = $childName;
             $data[Module::ATTR_TYPE] = $this->asset->getElementAttribute(Module::ATTR_TYPE);

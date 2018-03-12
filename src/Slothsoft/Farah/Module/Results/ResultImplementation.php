@@ -39,8 +39,9 @@ abstract class ResultImplementation implements ResultInterface
     {
         return $this->url->getArguments();
     }
-    
-    public function getLinkedStylesheets() : array {
+
+    public function getLinkedStylesheets(): array
+    {
         return FarahUrlResolver::resolveToAsset($this->url)->lookupLinkedStylesheets();
     }
 }

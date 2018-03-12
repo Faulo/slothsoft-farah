@@ -11,6 +11,7 @@ declare(strict_types = 1);
  */
 namespace Slothsoft\Farah;
 
+use Slothsoft\Core\Calendar\DateTimeFormatter;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use DOMDocument;
 use DOMElement;
