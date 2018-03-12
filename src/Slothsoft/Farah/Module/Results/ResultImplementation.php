@@ -3,6 +3,7 @@ namespace Slothsoft\Farah\Module\Results;
 
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 
 /**
  *
@@ -37,6 +38,10 @@ abstract class ResultImplementation implements ResultInterface
     public function getArguments(): FarahUrlArguments
     {
         return $this->url->getArguments();
+    }
+    
+    public function getLinkedStylesheets() : array {
+        return FarahUrlResolver::resolveToAsset($this->url)->lookupLinkedStylesheets();
     }
 }
 

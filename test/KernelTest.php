@@ -11,6 +11,9 @@ use PHPUnit\Framework\TestCase;
 *
 *  @author Daniel Schulz
 */
+
+require_once __DIR__ . '/../src/Slothsoft/Farah/Kernel.php';
+
 class KernelTest extends TestCase{
 	
   /**

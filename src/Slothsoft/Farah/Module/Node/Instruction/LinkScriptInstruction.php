@@ -10,7 +10,7 @@ use Slothsoft\Farah\Module\Module;
  * @author Daniel Schulz
  *        
  */
-class UseScriptInstruction extends InstructionImplementation
+class LinkScriptInstruction extends InstructionImplementation
 {
 
     public function crawlAndFireAppropriateEvents(EventTargetInterface $listener)

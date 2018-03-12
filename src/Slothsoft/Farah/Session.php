@@ -125,7 +125,7 @@ class Session
     public function setCookie($key, $val = null)
     {
         if (! headers_sent()) {
-            setcookie($key, $val, time() + TIME_MONTH, '/');
+            setcookie($key, $val, time() + Seconds::MONTH, '/');
         }
         $_COOKIE[$key] = $val;
     }

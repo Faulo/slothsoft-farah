@@ -51,9 +51,9 @@ class ModuleNodeCreator // TOOD: find a better name maybe
         $this->factoryMap[Module::TAG_IMPORT] = $instructionFactory;
         $this->factoryMap[Module::TAG_PARAM] = $instructionFactory;
         $this->factoryMap[Module::TAG_USE_DOCUMENT] = $instructionFactory;
-        $this->factoryMap[Module::TAG_USE_SCRIPT] = $instructionFactory;
-        $this->factoryMap[Module::TAG_USE_STYLESHEET] = $instructionFactory;
         $this->factoryMap[Module::TAG_USE_TEMPLATE] = $instructionFactory;
+        $this->factoryMap[Module::TAG_LINK_SCRIPT] = $instructionFactory;
+        $this->factoryMap[Module::TAG_LINK_STYLESHEET] = $instructionFactory;
         
         $this->factoryMap[Module::TAG_SOURCE] = $metaFactory;
         $this->factoryMap[Module::TAG_OPTIONS] = $metaFactory;

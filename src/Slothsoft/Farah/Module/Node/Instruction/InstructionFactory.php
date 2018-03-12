@@ -28,10 +28,10 @@ class InstructionFactory extends ModuleNodeFactory
                 return new UseDocumentInstruction();
             case Module::TAG_USE_TEMPLATE:
                 return new UseTemplateInstruction();
-            case Module::TAG_USE_STYLESHEET:
-                return new UseStylesheetInstruction();
-            case Module::TAG_USE_SCRIPT:
-                return new UseScriptInstruction();
+            case Module::TAG_LINK_STYLESHEET:
+                return new LinkStylesheetInstruction();
+            case Module::TAG_LINK_SCRIPT:
+                return new LinkScriptInstruction();
             case Module::TAG_PARAM:
                 return new ParameterInstruction();
         }

@@ -36,7 +36,7 @@ class HTTPRequest implements DOMWriterInterface
     {
         $lang = null;
         if (isset($env['HTTP_ACCEPT_LANGUAGE'])) {
-            if ($matchList = http_parse_language($env['HTTP_ACCEPT_LANGUAGE'])) {
+            if ($matchList = Dictionary::parseAcceptLanguageHeader($env['HTTP_ACCEPT_LANGUAGE'])) {
                 foreach ($matchList as $i => $match) {
                     if ($i === 0) {
                         $lang = $match;
@@ -52,7 +52,7 @@ class HTTPRequest implements DOMWriterInterface
             }
         }
         $env['REQUEST_LANGUAGE'] = $lang;
-        $env['REQUEST_TIME_DATE'] = date(DATE_DATETIME, $env['REQUEST_TIME']);
+        $env['REQUEST_TIME_DATE'] = date(DateTimeFormatter::FORMAT_DATETIME, $env['REQUEST_TIME']);
         
         $key = isset($env['HTTP_HOST']) ? array_search(strtolower($env['HTTP_HOST']), self::$allowedHostList) : false;
         if ($key === false) {
@@ -244,8 +244,8 @@ class HTTPRequest implements DOMWriterInterface
         $retNode->setAttribute('query', $this->getQuery());
         $retNode->setAttribute('lang', $this->dict->getLang());
         $retNode->setAttribute('stamp', (string) $this->time);
-        $retNode->setAttribute('datetime', date(DATE_DATETIME, $this->time));
-        $retNode->setAttribute('utc', date(DATE_UTC, $this->time));
+        $retNode->setAttribute('datetime', date(DateTimeFormatter::FORMAT_DATETIME, $this->time));
+        $retNode->setAttribute('utc', date(DateTimeFormatter::FORMAT_UTC, $this->time));
         foreach ($this->input as $key => $val) {
             if (is_string($val)) {
                 $node = $doc->createElement('param');

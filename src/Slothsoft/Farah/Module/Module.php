@@ -66,9 +66,9 @@ class Module implements EventTargetInterface
 
     const TAG_USE_DOCUMENT = 'use-document';
 
-    const TAG_USE_STYLESHEET = 'use-stylesheet';
+    const TAG_LINK_STYLESHEET = 'link-stylesheet';
 
-    const TAG_USE_SCRIPT = 'use-script';
+    const TAG_LINK_SCRIPT = 'link-script';
 
     const TAG_USE_TEMPLATE = 'use-template';
 

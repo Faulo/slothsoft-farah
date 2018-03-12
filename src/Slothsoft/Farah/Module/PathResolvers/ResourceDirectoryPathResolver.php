@@ -34,7 +34,7 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
         return $this->pathMap[$path];
     }
 
-    private function createChildResource(string $path): AssetInterface
+    private function createChildResource(string $path, bool $isProbablyDirectory = false): AssetInterface
     {
         assert(preg_match('~^/([^/]+)~', $path, $match), "Invalid asset path: $path");
         
@@ -43,13 +43,16 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
         $descendantPath = substr($path, strlen($childPath));
         
         if ($descendantPath === '') {
+            $tag = $isProbablyDirectory
+                ? Module::TAG_RESOURCE_DIRECTORY
+                : Module::TAG_RESOURCE;
             $data = [];
             $data[Module::ATTR_NAME] = $childName;
             $data[Module::ATTR_TYPE] = $this->asset->getElementAttribute(Module::ATTR_TYPE);
             
-            return $this->asset->createChildNode(LeanElement::createOneFromArray(Module::TAG_RESOURCE, $data));
+            return $this->asset->createChildNode(LeanElement::createOneFromArray($tag, $data));
         } else {
-            return $this->asset->traverseTo($childPath)->traverseTo($descendantPath);
+            return $this->asset->traverseTo($childPath, true)->traverseTo($descendantPath);
         }
     }
 

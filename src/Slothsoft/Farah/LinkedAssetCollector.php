@@ -14,7 +14,7 @@ class LinkedAssetCollector
 
     private $stylesheetList = [];
 
-    private $scriptlist = [];
+    private $scriptList = [];
 
     public function onStylesheet(EventInterface $event)
     {

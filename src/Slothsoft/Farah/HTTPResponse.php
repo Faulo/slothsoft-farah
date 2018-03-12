@@ -75,9 +75,11 @@ class HTTPResponse
         'minify-styleFiles' => CMS_RESPONSE_MINIFY_STYLEFILES,
         'minify-scriptFiles' => CMS_RESPONSE_MINIFY_SCRIPTFILES,
         'cache-duration' => 30, // max-age, Sekunden
-        'file-size' => 16 * MEMORY_MEGABYTE, // maximum setFile-load
-        'seek-size' => 1 * MEMORY_MEGABYTE, // maximum fseek
-        'chunk-size' => 256 * MEMORY_KILOBYTE, // transfer-encoding
+        'input-size' => 1 * Memory::ONE_MEGABYTE, // maximum $env['RESPONSE_INPUT'] size
+        'download-size' => 10 * Memory::ONE_MEGABYTE, // if above, force download
+        'file-size' => 16 * Memory::ONE_MEGABYTE, // maximum setFile-load
+        'seek-size' => 1 * Memory::ONE_MEGABYTE, // maximum fseek
+        'chunk-size' => 256 * Memory::ONE_KILOBYTE, // transfer-encoding
         'gzip-level' => 9 // encoding-level
     ];
 
@@ -267,7 +269,7 @@ class HTTPResponse
         $env['RESPONSE_LENGTH'] = $this->bodyLength;
         $env['RESPONSE_LANGUAGE'] = $this->language;
         $input = file_get_contents('php://input');
-        if (strlen($input) > 0 and strlen($input) < self::$httpConfig['file-size']) {
+        if (strlen($input) > 0 and strlen($input) < self::$httpConfig['input-size']) {
             $env['RESPONSE_INPUT'] = $input;
         }
     }
@@ -419,7 +421,7 @@ class HTTPResponse
         $this->setBody($uri);
     }
 
-    public function setFile($filePath = null, $fileName = null)
+    public function setFile($filePath, $fileName = null)
     {
         if ($fileName === null) {
             $fileName = basename($filePath);
@@ -438,6 +440,9 @@ class HTTPResponse
             
             $size = FileSystem::size($filePath);
             $changetime = FileSystem::changetime($filePath);
+            if ($size > self::$httpConfig['download-size']) {
+                $this->setDownload(true);
+            }
             if ($size < self::$httpConfig['file-size']) {
                 $this->setBody(file_get_contents($filePath));
                 $this->setEtag(self::calcEtag($this->body));
@@ -724,9 +729,6 @@ EOT;
             $this->setFileExt($ext, false);
         }
         $this->setStatus(self::STATUS_OK);
-        // $this->addHeader('content-location', $this->requestedPage->getAttribute('uri'));
-        // header('last-modified: ' . date(DATE_RFC2822, $this->now)); //todo: cacheControl
-        // header('expires: ' . date(DATE_RFC2822, $this->now)); //todo: cacheControl
         
         if ($this->doctype) {
             $doc->insertBefore($this->doctype, $doc->documentElement);
@@ -842,16 +844,16 @@ EOT;
             case self::BODY_FILE:
                 $cacheDuration = self::$httpConfig['cache-duration'];
                 if (strpos($this->mime, 'image/') === 0) {
-                    $cacheDuration = TIME_MONTH;
+                    $cacheDuration = Seconds::MONTH;
                 }
                 if (strpos($this->mime, 'application/font') === 0) {
-                    $cacheDuration = TIME_YEAR;
+                    $cacheDuration = Seconds::YEAR;
                 }
                 if (strpos($this->mime, 'text/css') === 0) {
-                    $cacheDuration = TIME_WEEK;
+                    $cacheDuration = Seconds::WEEK;
                 }
                 if (strpos($this->mime, 'application/javascript') === 0) {
-                    $cacheDuration = TIME_WEEK;
+                    $cacheDuration = Seconds::WEEK;
                 }
                 $this->addHeader('cache-control', 'must-revalidate, max-age=%d', [
                     $cacheDuration
@@ -874,7 +876,7 @@ EOT;
     protected function sendBody()
     {
         if ($this->includeBody) {
-            set_time_limit(TIME_DAY);
+            set_time_limit(Seconds::DAY);
             switch ($this->bodyType) {
                 case self::BODY_STRING:
                     if ($this->rangeStart === 0 and $this->rangeEnd === $this->bodyLength) {
@@ -954,7 +956,7 @@ EOT;
                             case HTTPStream::STATUS_RETRY:
                                 $intervalTime += $sleepDuration;
                                 $timeoutTime += $sleepDuration;
-                                usleep($sleepDuration * TIME_USLEEP_FACTOR);
+                                usleep($sleepDuration * Seconds::USLEEP_FACTOR);
                                 if ($intervalTime > $heartbeatInterval and $heartbeatContent !== null) {
                                     $intervalTime = 0;
                                     $this->sendBodyChunk($heartbeatContent);

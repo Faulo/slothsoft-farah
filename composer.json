@@ -28,7 +28,10 @@
         "slothsoft\/pt": "dev-master"
     },
     "autoload": {
-        "psr-4": {
+        "files": [
+            "src\/stream_wrapper_register.php"
+        ],
+        "psr-0": {
             "Slothsoft\\Farah\\": "src\/"
         }
     }

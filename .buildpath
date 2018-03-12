@@ -166,22 +166,22 @@
 			<attribute name="composer" value="vendor"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="vendor/slothsoft/core/src/Slothsoft/Core">
+	<buildpathentry kind="src" path="vendor/slothsoft/core/src">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="vendor/slothsoft/dbms/src/Slothsoft/DBMS">
+	<buildpathentry kind="src" path="vendor/slothsoft/dbms/src">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="vendor/slothsoft/lang/src/Slothsoft/Lang">
+	<buildpathentry kind="src" path="vendor/slothsoft/lang/src">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="vendor/slothsoft/pt/src/Slothsoft/PT">
+	<buildpathentry kind="src" path="vendor/slothsoft/pt/src">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
 		</attributes>
