@@ -40,18 +40,18 @@ class Kernel implements EventTargetInterface
 {
     use EventTargetTrait;
     
-    private static function sitesPath() : ConfigurationField {
+    private static function sitesFile() : ConfigurationField {
         static $field;
         if ($field === null) {
             $field = new ConfigurationField();
         }
         return $field;
     }
-    public static function setSitesPath(string $sitesPath) {
-        self::sitesPath()->setValue($sitesPath);
+    public static function setSitesFile(string $path) {
+        self::sitesFile()->setValue($path);
     }
-    public static function getSitesPath() : string {
-        return self::sitesPath()->getValue();
+    public static function getSitesFile() : string {
+        return self::sitesFile()->getValue();
     }
     
     private static function trackingEnabled() : ConfigurationField {
@@ -126,7 +126,7 @@ class Kernel implements EventTargetInterface
         $request->setPath($path);
         
         $httpDocument = self::getInstance();
-        $httpDocument->init(self::getSitesPath());
+        $httpDocument->init(self::getSitesFile());
         
         $response = $httpDocument->lookup($request);
         
