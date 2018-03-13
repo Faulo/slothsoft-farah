@@ -72,10 +72,10 @@ class HTTPResponse
     protected static $httpConfig = [
         'date-format' => 'D, d M Y H:i:s \\G\\M\\T',
         'doc-timestamp' => false, // "rendering took X seconds and Y MB"
-        'merge-styleFiles' => CMS_RESPONSE_MERGE_STYLEFILES,
-        'merge-scriptFiles' => CMS_RESPONSE_MERGE_SCRIPTFILES,
-        'minify-styleFiles' => CMS_RESPONSE_MINIFY_STYLEFILES,
-        'minify-scriptFiles' => CMS_RESPONSE_MINIFY_SCRIPTFILES,
+        'merge-styleFiles' => FARAH_RESPONSE_MERGE_STYLEFILES,
+        'merge-scriptFiles' => FARAH_RESPONSE_MERGE_SCRIPTFILES,
+        'minify-styleFiles' => FARAH_RESPONSE_MINIFY_STYLEFILES,
+        'minify-scriptFiles' => FARAH_RESPONSE_MINIFY_SCRIPTFILES,
         'cache-duration' => 30, // max-age, Sekunden
         'input-size' => 1 * Memory::ONE_MEGABYTE, // maximum $env['RESPONSE_INPUT'] size
         'download-size' => 10 * Memory::ONE_MEGABYTE, // if above, force download

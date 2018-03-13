@@ -69,7 +69,10 @@ class Dictionary
 
     protected static $instance;
 
-    protected static $supportedLang;
+    protected static $supportedLang = [];
+    public static function setSupportedLanguages(array ...$languageList) {
+        $supportedLang = $languageList;
+    }
 
     /* static functions */
     public static function getInstance(): Dictionary
@@ -129,19 +132,11 @@ class Dictionary
             setcookie(self::KEY_REQUEST_LANG, $_REQUEST[self::KEY_SET_LANG], time() + 60 * 60 * 24 * 30, '/');
             $_REQUEST[self::KEY_REQUEST_LANG] = $_REQUEST[self::KEY_SET_LANG];
         }
-        $this->setSupportedLanguages(DICT_LANGUAGES);
+        $this->calcAcceptLanguage();
     }
 
-    public function setSupportedLanguages($languages)
+    private function calcAcceptLanguage()
     {
-        $arr = explode(' ', $languages);
-        self::$supportedLang = [];
-        foreach ($arr as $tmp) {
-            $tmp = trim($tmp);
-            if (strlen($tmp)) {
-                self::$supportedLang[] = $tmp;
-            }
-        }
         if (count(self::$supportedLang)) {
             $this->currentLang = reset(self::$supportedLang);
         } else {

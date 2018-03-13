@@ -36,6 +36,17 @@ use Throwable;
 class Kernel implements EventTargetInterface
 {
     use EventTargetTrait;
+    
+    private static $sitesPath;
+    public static function setSitesPath(string $sitesPath) {
+        self::$sitesPath = $sitesPath;
+    }
+    public static function getSitesPath() : string {
+        if ($sitesPath === null) {
+            throw new \LogicException("Sites path not set! please call Kernel::setSitesPath.");
+        }
+        return self::$sitesPath;
+    }
 
     const LOOKUP_PAGE = 'page';
 
@@ -81,15 +92,15 @@ class Kernel implements EventTargetInterface
         $request->setPath($path);
         
         $httpDocument = self::getInstance();
-        $httpDocument->init(SERVER_ROOT . FILE_SITEMAP);
+        $httpDocument->init(self::getSitesPath());
         
         $response = $httpDocument->lookup($request);
         
-        if (constant('CMS_TRACKING_ENABLED')) {
+        if (constant('FARAH_TRACKING_ENABLED')) {
             $track = ! $request->hasInputValue('dnt');
             $forceTrack = $request->getInputValue('dnt') === 'false';
             
-            foreach (constant('CMS_TRACKING_DNT_URI') as $uri) {
+            foreach (constant('FARAH_TRACKING_DNT_URI') as $uri) {
                 if (strpos($env['REQUEST_URI'], $uri) === 0) {
                     $track = false;
                     break;
