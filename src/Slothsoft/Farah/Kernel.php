@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
 use Slothsoft\Core\Configuration\ConfigurationField;
+use Slothsoft\Core\Configuration\FileConfigurationField;
 
 use Slothsoft\Core\IO\HTTPFile;
 use Slothsoft\Core\IO\HTTPStream;
@@ -43,7 +44,7 @@ class Kernel implements EventTargetInterface
     private static function sitesFile() : ConfigurationField {
         static $field;
         if ($field === null) {
-            $field = new ConfigurationField();
+            $field = new FileConfigurationField();
         }
         return $field;
     }
