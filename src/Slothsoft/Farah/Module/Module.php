@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\ServerEnvironment;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Event\EventTargetInterface;
 use Slothsoft\Farah\Event\EventTargetTrait;
@@ -122,8 +123,7 @@ class Module implements EventTargetInterface
         
         $this->assetList = [];
         
-        // TODO: create a const or something for the SERVER_ROOT . 'vendor' part
-        $this->rootDirectory = SERVER_ROOT . 'vendor' . DIRECTORY_SEPARATOR . $this->getVendor() . DIRECTORY_SEPARATOR . $this->getName() . DIRECTORY_SEPARATOR;
+        $this->rootDirectory = ServerEnvironment::getRootDirectory() . 'vendor' . DIRECTORY_SEPARATOR . $this->getVendor() . DIRECTORY_SEPARATOR . $this->getName() . DIRECTORY_SEPARATOR;
         $this->manifestFile = $this->rootDirectory . 'module.xml';
     }
 

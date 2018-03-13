@@ -11,17 +11,13 @@ declare(strict_types = 1);
  */
 namespace Slothsoft\Farah;
 
-use MatthiasMullie\Minify\CSS;
-use MatthiasMullie\Minify\JS;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\Calendar\Seconds;
-use Slothsoft\Core\IO\HTTPFile;
 use Slothsoft\Core\IO\HTTPStream;
 use Slothsoft\Core\IO\Memory;
 use Slothsoft\Farah\Exception\ExceptionContext;
-use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use DOMDocument;
 use Exception;
 use UnexpectedValueException;
@@ -72,10 +68,6 @@ class HTTPResponse
     protected static $httpConfig = [
         'date-format' => 'D, d M Y H:i:s \\G\\M\\T',
         'doc-timestamp' => false, // "rendering took X seconds and Y MB"
-        'merge-styleFiles' => FARAH_RESPONSE_MERGE_STYLEFILES,
-        'merge-scriptFiles' => FARAH_RESPONSE_MERGE_SCRIPTFILES,
-        'minify-styleFiles' => FARAH_RESPONSE_MINIFY_STYLEFILES,
-        'minify-scriptFiles' => FARAH_RESPONSE_MINIFY_SCRIPTFILES,
         'cache-duration' => 30, // max-age, Sekunden
         'input-size' => 1 * Memory::ONE_MEGABYTE, // maximum $env['RESPONSE_INPUT'] size
         'download-size' => 10 * Memory::ONE_MEGABYTE, // if above, force download
@@ -153,10 +145,6 @@ class HTTPResponse
         return md5($data);
     }
 
-    public $styleFiles = [];
-
-    public $scriptFiles = [];
-
     protected $headerList;
 
     protected $body;
@@ -187,8 +175,6 @@ class HTTPResponse
 
     protected $language;
 
-    protected $doctype;
-
     protected $fileName;
 
     protected $fileExt;
@@ -211,10 +197,6 @@ class HTTPResponse
 
     public $includeBody = true;
 
-    public $includeStyle = true;
-
-    public $includeScript = true;
-
     public function __construct()
     {
         $this->charset = 'UTF-8';
@@ -231,7 +213,6 @@ class HTTPResponse
         $this->fileName = 'index';
         $this->fileExt = 'txt';
         $this->fileDisposition = 'inline';
-        $this->doctype = null;
         $this->ifNoneMatch = null;
         
         $this->method = HTTPRequest::METHOD_GET;
@@ -532,60 +513,6 @@ class HTTPResponse
         return $ret;
     }
 
-    public function getCacheManifestFile()
-    {
-        return HTTPFile::createFromString($this->getCacheManifestContent(), 'manifest.appcache');
-    }
-
-    public function getCacheManifestContent()
-    {
-        $manifest = <<<'EOT'
-CACHE MANIFEST
-
-CACHE:
-%s
-%s
-
-NETWORK:
-*
-
-EOT;
-        return sprintf($manifest, $this->getMergedStyleFile($this->styleFiles), $this->getMergedScriptFile($this->scriptFiles));
-    }
-
-    public function addStyleAsset(AssetInterface $asset)
-    {
-        $this->styleFiles[] = $asset;
-    }
-
-    public function addScriptAsset(AssetInterface $asset)
-    {
-        $this->scriptFiles[] = $asset;
-    }
-
-    protected function getMergedStyleFile(array $styleFiles)
-    {
-        if (self::$httpConfig['minify-styleFiles']) {
-            return $this->cache->mergeFiles($styleFiles, 'css/', function ($buffer) {
-                $minifier = new CSS($buffer);
-                return $minifier->minify();
-            });
-        } else {
-            return $this->cache->mergeFiles($styleFiles, 'css/');
-        }
-    }
-
-    protected function getMergedScriptFile(array $scriptFiles)
-    {
-        if (self::$httpConfig['minify-scriptFiles']) {
-            return $this->cache->mergeFiles($scriptFiles, 'js/', function ($buffer) {
-                $minifier = new JS($buffer);
-                return $minifier->minify();
-            });
-        } else {
-            return $this->cache->mergeFiles($scriptFiles, 'js/');
-        }
-    }
 
     public function setExceptionContext(ExceptionContext $exception)
     {
@@ -609,108 +536,17 @@ EOT;
             $doc->encoding = $this->charset;
         }
         
-        // CSS verlinken
-        $styleLinkList = [];
-        if ($this->includeStyle and $this->styleFiles) {
-            if (self::$httpConfig['merge-styleFiles']) {
-                die('not implemented yet: merge-styleFiles');
-            } else {
-                die('not implemented yet: $this->styleFiles');
-            }
-        }
-        
-        $scriptLinkList = [];
-        // Script-Datei erstellen
-        if ($this->scriptFiles) {
-            if (self::$httpConfig['merge-scriptFiles']) {
-                die('not implemented yet: merge-scriptFiles');
-            } else {
-                die('not implemented yet: $this->scriptFiles');
-            }
-        }
-        
-        // Sprach-Links erstellen
-        $langLinkList = [];
-        /*
-         * foreach ($this->dict->getSupportedLang() as $lang) {
-         * $langLinks[$lang] = $this->dict->createLink($this->requestedPage->getAttribute('url'), $lang);
-         * }
-         * //
-         */
-        
-        foreach ($styleLinkList as $link) {
-            $doc->insertBefore($doc->createProcessingInstruction('xml-stylesheet', sprintf('type="text/css" href="%s"', $link)), $doc->firstChild);
-        }
-        
-        // Script-Datei und Sprach-Links Doctype-abhängig verlinken
         $ns = $doc->documentElement ? $doc->documentElement->namespaceURI : null;
+        $doctype = null;
         switch ($ns) {
-            /*
-             * case DOMHelper::NS_HTML:
-             * $this->mime = 'text/html';
-             * $this->doctype = $doc->doctype;
-             * if (!$this->doctype) {
-             * $this->doctype = $doc->implementation->createDocumentType('html');
-             * }
-             * if ($head = $doc->getElementsByTagNameNS(DOMHelper::NS_HTML, 'head')->item(0)) {
-             * foreach ($langLinks as $lang => $uri) {
-             * $node = $doc->createElementNS(DOMHelper::NS_HTML, 'link');
-             * $node->setAttribute('hreflang', $lang);
-             * $node->setAttribute('href', $uri);
-             * $node->setAttribute('rel', 'alternate');
-             * $head->appendChild($node);
-             * }
-             * } else {
-             * $head = $doc->documentElement;
-             * }
-             * foreach ($this->scriptFiles as $scriptFile) {
-             * if ($scriptFile) {
-             * $node = $doc->createElementNS(DOMHelper::NS_HTML, 'script');
-             * $node->setAttribute('src', $scriptFile);
-             * $node->setAttribute('defer', 'defer');
-             * $node->setAttribute('type', 'application/javascript');
-             * $head->appendChild($node);
-             * }
-             * }
-             * break;
-             * //
-             */
             case DOMHelper::NS_HTML:
                 $this->mime = 'application/xhtml+xml';
-                $this->doctype = $doc->doctype;
-                if (! $this->doctype) {
-                    $this->doctype = $doc->implementation->createDocumentType('html');
-                }
-                if ($head = $doc->getElementsByTagNameNS(DOMHelper::NS_HTML, 'head')->item(0)) {
-                    foreach ($langLinkList as $lang => $uri) {
-                        $node = $doc->createElementNS(DOMHelper::NS_HTML, 'link');
-                        $node->setAttribute('hreflang', $lang);
-                        $node->setAttribute('href', $uri);
-                        $node->setAttribute('rel', 'alternate');
-                        $head->appendChild($node);
-                    }
-                } else {
-                    $head = $doc->documentElement;
-                }
-                foreach ($scriptLinkList as $link) {
-                    $node = $doc->createElementNS(DOMHelper::NS_HTML, 'script');
-                    $node->setAttribute('src', $link);
-                    $node->setAttribute('defer', 'defer');
-                    $node->setAttribute('type', 'application/javascript');
-                    $head->appendChild($node);
-                }
+                $doctype = $doc->doctype
+                    ? $doc->doctype
+                    : $doc->implementation->createDocumentType('html');
                 break;
             case DOMHelper::NS_SVG:
                 $this->mime = 'image/svg+xml';
-                if ($head = $doc->getElementsByTagNameNS(DOMHelper::NS_SVG, 'defs')->item(0)) {} else {
-                    $head = $doc->documentElement;
-                }
-                foreach ($scriptLinkList as $link) {
-                    $node = $doc->createElementNS(DOMHelper::NS_SVG, 'script');
-                    $node->setAttributeNS(DOMHelper::NS_XLINK, 'xlink:href', $link);
-                    $head->appendChild($node);
-                }
-                // $this->doctype = $doc->implementation->createDocumentType('svg');
                 break;
             case DOMHelper::NS_XSL:
                 $this->mime = 'application/xslt+xml';
@@ -719,22 +555,15 @@ EOT;
                 $this->mime = 'application/xml';
                 break;
         }
-        /*
-         * if ($this->requestedPage->hasAttribute('title')) {
-         * $this->fileName = $this->requestedPage->getAttribute('title');
-         * } elseif ($this->requestedPage->hasAttribute('name')) {
-         * $this->fileName = $this->requestedPage->getAttribute('name');
-         * }
-         * //
-         */
         if ($ext = MimeTypeDictionary::guessExtension($this->mime)) {
             $this->setFileExt($ext, false);
         }
         $this->setStatus(self::STATUS_OK);
         
-        if ($this->doctype) {
-            $doc->insertBefore($this->doctype, $doc->documentElement);
+        if ($doctype) {
+            $doc->insertBefore($doctype, $doc->documentElement);
         }
+        
         if (self::$httpConfig['doc-timestamp']) {
             printf(Kernel::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576);
             $this->setEtag(self::calcEtag($doc->saveXML()), false);

@@ -31,8 +31,9 @@ class Domain
     private $file;
 
     private $document;
-
+    
     private $domainNode;
+    private $domainName;
 
     private $xpath;
 
@@ -53,7 +54,10 @@ class Domain
             if (! $node) {
                 throw new LengthException('Sitemap document appears to be empty.');
             }
+            
             assert($node->namespaceURI === DOMHelper::NS_FARAH_SITES and $node->localName === self::TAG_DOMAIN, sprintf('Root element of sitemap document must be <%s xmlns="%s">!', self::TAG_DOMAIN, DOMHelper::NS_FARAH_SITES));
+            
+            $this->domainName = $this->domainNode->getAttribute('name');
             
             $this->init();
         }
@@ -84,20 +88,35 @@ class Domain
                 $dataNode->parentNode->removeChild($dataNode);
             }
         }
-        $this->initPageElement($this->domainNode);
+        $this->initDomainElement($this->domainNode);
         $nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, self::TAG_PAGE);
         foreach ($nodeList as $node) {
             $this->initPageElement($node);
         }
     }
-
-    private function initPageElement(DOMElement $node)
+    private function initDomainElement(DOMElement $node)
     {
         if (! $node->hasAttribute('title')) {
             $node->setAttribute('title', $node->getAttribute('name'));
         }
-        $node->setAttribute('uri', $this->findUri($node));
-        $node->setAttribute('url', $this->findUri($node, true));
+        $node->setAttribute('uri', '/');
+        $node->setAttribute('url', "//{$this->getDomainName()}/");
+    }
+    private function initPageElement(DOMElement $node)
+    {
+        $name = $node->getAttribute('name');
+        if ($node->hasAttribute('ext')) {
+            $uri = $node->getAttribute('ext');
+        } else {
+            $parentUri = $node->parentNode->getAttribute('uri');
+            $uri = $parentUri . $name . '/';
+        }
+        
+        if (! $node->hasAttribute('title')) {
+            $node->setAttribute('title', $name);
+        }
+        $node->setAttribute('uri', $uri);
+        $node->setAttribute('url', "//{$this->getDomainName()}$uri");
     }
 
     public function getDocument(): DOMDocument
@@ -164,11 +183,14 @@ class Domain
         }
         return implode('/', $qry);
     }
-
-    private function findUri(DOMElement $pageNode, bool $includeDomain = false): string
+    
+    //@deprecated
+    private function findUri(DOMElement $pageNode): string
     {
         if ($pageNode->hasAttribute('ext')) {
             return $pageNode->getAttribute('ext');
+        } else {
+            return $pageNode->parentNode->getAttribute('uri') . '/' . $pageNode->getAttribute('name');
         }
         $ret = '/';
         $tmpNode = $pageNode;
@@ -197,8 +219,10 @@ class Domain
                 $ret = implode('/', $ret) . implode('/', $redirect);
             }
         }
-        // TODO: get http from somewhere else maybe
-        return $includeDomain ? 'http://' . $this->domainNode->getAttribute('name') . $ret : $ret;
+        return $ret;
+    }
+    private function getDomainName() : string {
+        return $this->domainName;
     }
 
     private function findModuleName(DOMElement $node): string

@@ -11,6 +11,8 @@ declare(strict_types = 1);
  */
 namespace Slothsoft\Farah;
 
+use Slothsoft\Core\Configuration\ConfigurationField;
+
 use Slothsoft\Core\IO\HTTPFile;
 use Slothsoft\Core\IO\HTTPStream;
 use Slothsoft\Farah\Event\EventTargetInterface;
@@ -29,6 +31,7 @@ use Slothsoft\Farah\Module\Results\FragmentResult;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 use Slothsoft\Farah\Sites\Domain;
 use Slothsoft\Farah\Tracking\Manager;
+use Slothsoft\Core\ServerEnvironment;
 use DOMDocument;
 use DomainException;
 use Throwable;
@@ -37,15 +40,46 @@ class Kernel implements EventTargetInterface
 {
     use EventTargetTrait;
     
-    private static $sitesPath;
+    private static function sitesPath() : ConfigurationField {
+        static $field;
+        if ($field === null) {
+            $field = new ConfigurationField();
+        }
+        return $field;
+    }
     public static function setSitesPath(string $sitesPath) {
-        self::$sitesPath = $sitesPath;
+        self::sitesPath()->setValue($sitesPath);
     }
     public static function getSitesPath() : string {
-        if (self::$sitesPath === null) {
-            throw new \LogicException("Sites path not set! please call Kernel::setSitesPath.");
+        return self::sitesPath()->getValue();
+    }
+    
+    private static function trackingEnabled() : ConfigurationField {
+        static $field;
+        if ($field === null) {
+            $field = new ConfigurationField(false);
         }
-        return self::$sitesPath;
+        return $field;
+    }
+    public static function setTrackingEnabled(bool $value) {
+        self::trackingEnabled()->setValue($value);
+    }
+    public static function getTrackingEnabled() : bool {
+        return self::trackingEnabled()->getValue();
+    }
+    
+    private static function trackingExceptionUris() {
+        static $field;
+        if ($field === null) {
+            $field = new ConfigurationField([]);
+        }
+        return $field;
+    }
+    public static function setTrackingExceptionUris(string ...$uriList) {
+        self::trackingExceptionUris()->setValue($uriList);
+    }
+    public static function getTrackingExceptionUris() : array {
+        return self::trackingExceptionUris()->getValue();
     }
 
     const LOOKUP_PAGE = 'page';
@@ -96,11 +130,11 @@ class Kernel implements EventTargetInterface
         
         $response = $httpDocument->lookup($request);
         
-        if (constant('FARAH_TRACKING_ENABLED')) {
+        if (self::getTrackingEnabled()) {
             $track = ! $request->hasInputValue('dnt');
             $forceTrack = $request->getInputValue('dnt') === 'false';
             
-            foreach (constant('FARAH_TRACKING_DNT_URI') as $uri) {
+            foreach (self::getTrackingExceptionUris() as $uri) {
                 if (strpos($env['REQUEST_URI'], $uri) === 0) {
                     $track = false;
                     break;
@@ -226,13 +260,13 @@ class Kernel implements EventTargetInterface
 
     public function getBannedList()
     {
-        $logFile = SERVER_ROOT . DIR_LOG . 'banned-ips.txt';
+        $logFile = ServerEnvironment::getLogDirectory() . 'banned-ips.txt';
         return file_exists($logFile) ? file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : [];
     }
 
     public function setBannedList(array $list)
     {
-        $logFile = SERVER_ROOT . DIR_LOG . 'banned-ips.txt';
+        $logFile = ServerEnvironment::getLogDirectory() . 'banned-ips.txt';
         return file_put_contents($logFile, implode(PHP_EOL, $list));
     }
 

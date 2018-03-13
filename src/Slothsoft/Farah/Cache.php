@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
 use Slothsoft\Core\FileSystem;
+use Slothsoft\Core\ServerEnvironment;
 
 class Cache
 {
@@ -20,23 +21,14 @@ class Cache
 
     protected $loadScript = '/getCache.php/';
 
-    protected $documentRoot;
-
     public function __construct()
     {
-        $this->documentRoot = SERVER_ROOT;
-        $this->rootDir = SERVER_ROOT . DIR_CACHE;
+        $this->rootDir = ServerEnvironment::getCacheDirectory();
     }
 
     public function getPath($uri, $cacheDir = '')
     {
         $path = $this->sanitizeName($uri);
-        /*
-         * if (strlen($path) > 200) {
-         * $path = md5($uri);
-         * }
-         * //
-         */
         $ret = $this->rootDir . $cacheDir;
         if (! is_dir($ret)) {
             mkdir($ret, 0777, true);
@@ -76,16 +68,8 @@ class Cache
         $ext = explode('.', current($fileList));
         $ext = end($ext);
         $cacheName = sprintf('%s.%s.%s', $this->createName($fileList), max($timeList), $ext);
-        // $cacheFile = $this->loadScript . $targetDir . $cacheName;
         $cacheURI = $this->getURI($cacheName, $targetDir);
         $cachePath = $this->getPath($cacheName, $targetDir);
-        /*
-         * $cachePath = $this->rootDir . $targetDir . $cacheName;
-         * if (!is_dir($this->rootDir . $targetDir)) {
-         * mkdir($this->rootDir . $targetDir, 0777, true);
-         * }
-         * //
-         */
         if (is_file($cachePath)) {
             $checkTime = FileSystem::changetime($cachePath);
             $renew = false;
@@ -114,18 +98,6 @@ class Cache
     protected function createName(array $names)
     {
         return md5(implode(PHP_EOL, $names));
-        /*
-         * $ret = [];
-         * foreach ($names as $path) {
-         * $ret[] = $this->sanitizeName($path);
-         * }
-         * $ret = implode('-', $ret);
-         * //if (strlen($ret) > 200) {
-         * $ret = md5($ret);
-         * //}
-         * return $ret;
-         * //
-         */
     }
 
     protected function sanitizeName($path)
