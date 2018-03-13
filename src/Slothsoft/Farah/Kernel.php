@@ -42,7 +42,7 @@ class Kernel implements EventTargetInterface
         self::$sitesPath = $sitesPath;
     }
     public static function getSitesPath() : string {
-        if ($sitesPath === null) {
+        if (self::$sitesPath === null) {
             throw new \LogicException("Sites path not set! please call Kernel::setSitesPath.");
         }
         return self::$sitesPath;

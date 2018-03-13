@@ -70,7 +70,7 @@ class Dictionary
     protected static $instance;
 
     protected static $supportedLang = [];
-    public static function setSupportedLanguages(array ...$languageList) {
+    public static function setSupportedLanguages(string ...$languageList) {
         $supportedLang = $languageList;
     }
 
