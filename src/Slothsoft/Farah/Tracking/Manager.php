@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace Slothsoft\Farah\Tracking;
 
 use Slothsoft\DBMS\Manager as DBMSManager;
