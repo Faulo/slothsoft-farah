@@ -615,9 +615,9 @@ class HTTPResponse
         $this->addHeader('etag', $etag);
     }
 
-    public function setLastModified($time, $isStrong = true)
+    public function setLastModified($time = null, $isStrong = true)
     {
-        $date = gmdate(self::$httpConfig['date-format'], $time);
+        $date = gmdate(self::$httpConfig['date-format'], $time === null ? time() : $time);
         $this->addHeader('last-modified', $date);
     }
 

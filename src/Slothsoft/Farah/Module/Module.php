@@ -36,6 +36,8 @@ class Module implements EventTargetInterface
     const TAG_FRAGMENT = 'fragment';
 
     const TAG_CONTAINER = 'container';
+    
+    const TAG_EXTERNAL_DOCUMENT = 'external-document';
 
     const TAG_CUSTOM_ASSET = 'custom-asset';
 

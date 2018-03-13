@@ -359,8 +359,12 @@ class Kernel implements EventTargetInterface
                                         case $ret instanceof FragmentResult:
                                             $ret = $ret->toDocument();
                                             if ($ret->documentElement) {
-                                                $decorator = DecoratorFactory::createForNamespace((string) $ret->documentElement->namespaceURI);
-                                                $decorator->decorateDocument($ret, $this->linkedAssetCollector->getStylesheetList(), $this->linkedAssetCollector->getScriptList());
+                                                $stylesheetList = $this->linkedAssetCollector->getStylesheetList();
+                                                $scriptList = $this->linkedAssetCollector->getScriptList();
+                                                if ($stylesheetList or $scriptList) {
+                                                    $decorator = DecoratorFactory::createForNamespace((string) $ret->documentElement->namespaceURI);
+                                                    $decorator->decorateDocument($ret, $stylesheetList, $scriptList);
+                                                }
                                             }
                                             $this->httpResponse->setDocument($ret);
                                             $this->progressStatus |= self::STATUS_RESPONSE_SET;

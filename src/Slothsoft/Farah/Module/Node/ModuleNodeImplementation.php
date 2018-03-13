@@ -58,12 +58,16 @@ class ModuleNodeImplementation implements ModuleNodeInterface
     public function getChildren(): array
     {
         if ($this->children === null) {
-            $this->children = [];
-            foreach ($this->getElement()->getChildren() as $element) {
-                $this->children[] = $this->createChildNode($element);
-            }
+            $this->children = $this->loadChildren();
         }
         return $this->children;
+    }
+    protected function loadChildren() : array {
+        $ret = [];
+        foreach ($this->getElement()->getChildren() as $element) {
+            $ret[] = $this->createChildNode($element);
+        }
+        return $ret;
     }
 
     public function createChildNode(LeanElement $element): ModuleNodeInterface

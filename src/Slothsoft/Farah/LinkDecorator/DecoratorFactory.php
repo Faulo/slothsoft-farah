@@ -21,7 +21,7 @@ class DecoratorFactory
             case DOMHelper::NS_HTML:
                 return new HtmlDecorator($ns);
             default:
-                throw new DomainException("This implementation does not support <sfm:use-stylesheet> and <sfm:use-script> for XML namespace '$ns'.");
+                throw new DomainException("This implementation does not support <sfm:link-stylesheet> and <sfm:link-script> for XML namespace '$ns'.");
         }
     }
 }

@@ -44,6 +44,8 @@ class AssetFactory extends ModuleNodeFactory
                 return new FragmentAsset();
             case Module::TAG_CLOSURE:
                 return new ClosureAsset();
+            case Module::TAG_EXTERNAL_DOCUMENT:
+                return new ExternalDocumentAsset();
             case Module::TAG_CUSTOM_ASSET:
                 $className = $element->getAttribute('class');
                 return new $className();

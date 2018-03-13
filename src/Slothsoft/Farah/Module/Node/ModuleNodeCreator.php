@@ -41,6 +41,7 @@ class ModuleNodeCreator // TOOD: find a better name maybe
         $this->factoryMap[Module::TAG_CLOSURE] = $assetFactory;
         $this->factoryMap[Module::TAG_CONTAINER] = $assetFactory;
         $this->factoryMap[Module::TAG_FRAGMENT] = $assetFactory;
+        $this->factoryMap[Module::TAG_EXTERNAL_DOCUMENT] = $assetFactory;
         $this->factoryMap[Module::TAG_CUSTOM_ASSET] = $assetFactory;
         
         $this->factoryMap[Module::TAG_DIRECTORY] = $physicalFactory;
