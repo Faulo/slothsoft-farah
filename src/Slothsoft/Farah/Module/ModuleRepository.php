@@ -2,11 +2,9 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
-use Slothsoft\Farah\Kernel;
-use Slothsoft\Farah\Exception\ExceptionContext;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Throwable;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
+use DomainException;
 
 /**
  *
@@ -15,8 +13,7 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
  */
 class ModuleRepository
 {
-
-    private $moduleList = [];
+    private $registeredModules = [];
 
     public static function getInstance(): ModuleRepository
     {
@@ -29,19 +26,21 @@ class ModuleRepository
 
     private function __construct()
     {}
-
-    public function lookupModuleByAuthority(FarahUrlAuthority $authority)
-    {
-        $key = (string) $authority;
-        if (! isset($this->moduleList[$key])) {
-            $this->moduleList[$key] = $this->createModule($authority);
-            // must register in $moduleList first to ensure recursive calls work out
-            $this->loadModuleManifest($this->moduleList[$key]);
-        }
-        return $this->moduleList[$key];
+    
+    public function registerModule(Module $module) {
+        $this->registeredModules[(string) $module->getAuthority()] = $module;
     }
 
-    public function lookupModuleByUrl(FarahUrl $url)
+    public function lookupModuleByAuthority(FarahUrlAuthority $authority) : Module
+    {
+        $key = (string) $authority;
+        if (!isset($this->registeredModules[$key])) {
+            throw new DomainException("Module $key has not been registered.");
+        }
+        return $this->registeredModules[$key];
+    }
+
+    public function lookupModuleByUrl(FarahUrl $url) : Module
     {
         return $this->lookupModuleByAuthority($url->getAuthority());
     }
@@ -49,24 +48,6 @@ class ModuleRepository
     public function lookupModule(string $vendor, string $name): Module
     {
         return $this->lookupModuleByAuthority(FarahUrlAuthority::createFromVendorAndModule($vendor, $module));
-    }
-
-    private function createModule(FarahUrlAuthority $authority): Module
-    {
-        return new Module($authority);
-    }
-
-    private function loadModuleManifest(Module $module)
-    {
-        try {
-            $module->addEventAncestor(Kernel::getInstance()); // @TODO: öhh
-            $module->loadManifestFile();
-        } catch (Throwable $exception) {
-            throw ExceptionContext::append($exception, [
-                'module' => $module,
-                'class' => __CLASS__
-            ]);
-        }
     }
 }
 

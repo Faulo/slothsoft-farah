@@ -108,7 +108,7 @@ class ExceptionContext implements DOMWriterInterface
         $targetDoc = new DOMDocument();
         try {
             // let's retrieve the error template to make sure it exists
-            assert((bool) file_get_contents('farah://slothsoft@farah/xsl/error'));
+            assert((bool) @file_get_contents('farah://slothsoft@farah/xsl/error'));
             $targetDoc->appendChild($targetDoc->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="/getAsset.php/slothsoft@farah/xsl/error"'));
         } catch (Throwable $e) {
             // we don't really care if it doesn't tho

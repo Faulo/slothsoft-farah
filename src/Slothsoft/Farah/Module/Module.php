@@ -2,8 +2,6 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
-use Slothsoft\Core\DOMHelper;
-use Slothsoft\Core\ServerEnvironment;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Event\EventTargetInterface;
 use Slothsoft\Farah\Event\EventTargetTrait;
@@ -11,12 +9,10 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;
+use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Node\ModuleNodeCreator;
-use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
-use Slothsoft\Farah\Module\Node\Asset\ContainerAsset;
-use RuntimeException;
-use Throwable;
 use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
 /**
  *
@@ -26,11 +22,6 @@ use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 class Module implements EventTargetInterface
 {
     use EventTargetTrait;
-
-    // root tags
-    const TAG_MODULE_ROOT = 'module';
-
-    const TAG_CONFIGURATION_ROOT = 'default-configuration';
 
     // asset tags
     const TAG_FRAGMENT = 'fragment';
@@ -110,116 +101,61 @@ class Module implements EventTargetInterface
     const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
 
     private $authority;
+    
+    private $manifest;
 
-    private $assetList;
+    private $rootAsset;
+    
+    private $assetDirectory;
+    
+    private $assetList = []; //TODO: AssetCache
 
-    private $rootDirectory;
-
-    private $manifestFile;
-
-    /**
-     */
-    public function __construct(FarahUrlAuthority $authority)
+    public function __construct(FarahUrlAuthority $authority, ManifestInterface $manifest, string $assetDirectory)
     {
         $this->authority = $authority;
-        
-        $this->assetList = [];
-        
-        $this->rootDirectory = ServerEnvironment::getRootDirectory() . 'vendor' . DIRECTORY_SEPARATOR . $this->getVendor() . DIRECTORY_SEPARATOR . $this->getName() . DIRECTORY_SEPARATOR;
-        $this->manifestFile = $this->rootDirectory . 'module.xml';
+        $this->manifest = $manifest;
+        $this->assetDirectory = $assetDirectory;
     }
-
     public function getAuthority(): FarahUrlAuthority
     {
         return $this->authority;
     }
-
-    public function createUrl(FarahUrlPath $path, FarahUrlArguments $args): FarahUrl
-    {
-        return FarahUrl::createFromComponents($this->authority, $path, $args);
-    }
-
-    public function getManifestFile(): string
-    {
-        return $this->manifestFile;
-    }
-
-    public function manifestFileExists()
-    {
-        return is_file($this->manifestFile);
-    }
-
-    public function loadManifestFile()
-    {
-        if (! $this->manifestFileExists()) {
-            throw new RuntimeException("Module {$this->getId()} is missing its manifest at $this->manifestFile.");
-        }
-        
-        $dom = new DOMHelper();
-        $moduleElement = LeanElement::createTreeFromDOMDocument($dom->loadDocument($this->manifestFile));
-        
-        $this->loadDefaultConfiguration($moduleElement->getChildByTag(self::TAG_CONFIGURATION_ROOT));
-        $this->loadAssets($moduleElement->getChildByTag(self::TAG_ASSET_ROOT));
-    }
-
-    private function loadDefaultConfiguration(LeanElement $element)
-    {}
-
-    private function loadAssets(LeanElement $element)
-    {
-        $element->setAttribute('name', 'root');
-        $element->setAttribute('realpath', $this->getRootDirectory() . 'assets');
-        $element->setAttribute('assetpath', '');
-        try {
-            $this->assets = $this->createModuleNode($element);
-        } catch (Throwable $e) {
-            $this->assets = new ContainerAsset();
-            throw $e;
-        }
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getVendor(): string
-    {
-        return $this->authority->getVendor();
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->authority->getModule();
-    }
-
     public function getId(): string
     {
         return (string) $this->authority;
     }
-
-    /**
-     *
-     * @return string
-     */
-    public function getRootDirectory(): string
-    {
-        return $this->rootDirectory;
-    }
-
+    
+    
     public function lookupAssetByPath(FarahUrlPath $path): AssetInterface
     {
         $id = (string) $path;
         if (! isset($this->assetList[$id])) {
-            $this->assetList[$id] = $this->assets->traverseTo($id);
+            $this->assetList[$id] = $this->getRootAsset()->traverseTo($id);
         }
         return $this->assetList[$id];
     }
-
-    public function createModuleNode(LeanElement $element, LeanElement $parent = null): ModuleNodeInterface
+    private function getRootAsset() : AssetInterface {
+        if ($this->rootAsset === null) {
+            $this->rootAsset = $this->loadRootAsset();
+        }
+        return $this->rootAsset;
+    }
+    private function loadRootAsset() : AssetInterface
+    {
+        $manifestElemet = $this->manifest->getRootElement();
+        $manifestElemet->setAttribute('realpath', $this->assetDirectory);
+        $manifestElemet->setAttribute('name', '');
+        $manifestElemet->setAttribute('assetpath', '');
+        
+        return ModuleNodeCreator::getInstance()->create($this, $manifestElemet);
+    }
+    
+    public function createUrl(FarahUrlPath $path, FarahUrlArguments $args): FarahUrl
+    {
+        return FarahUrl::createFromComponents($this->authority, $path, $args);
+    }
+    
+    public function createModuleNode(LeanElement $element, LeanElement $parent): ModuleNodeInterface
     {
         return ModuleNodeCreator::getInstance()->create($this, $element, $parent);
     }
