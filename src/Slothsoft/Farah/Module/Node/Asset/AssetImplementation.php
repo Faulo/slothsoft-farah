@@ -230,18 +230,13 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
         }
         return $ret;
     }
-    
-    
-    
-    
-    
-    
+
     private $instructionsProcessed = false;
-    
+
     private $documentInstructions = [];
-    
+
     private $templateInstruction = null;
-    
+
     private function processInstructions()
     {
         if (! $this->instructionsProcessed) {
@@ -258,7 +253,7 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
             }
         }
     }
-    
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         $this->processInstructions();
@@ -269,30 +264,30 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
         }
         return $result;
     }
-    
+
     public function getReferencedDocumentAsset(): AssetInterface
     {
         return $this;
     }
-    public function getReferencedTemplateAsset():AssetInterface
+
+    public function getReferencedTemplateAsset(): AssetInterface
     {
         return $this;
     }
-    
+
     public function getReferencedDocumentAlias(): string
     {
         return $this->getName();
     }
-    public function isUseDocument() : bool
+
+    public function isUseDocument(): bool
     {
         return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_DOCUMENT) !== false;
     }
 
-    public function isUseTemplate() : bool
+    public function isUseTemplate(): bool
     {
         return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_TEMPLATE) !== false;
     }
-
-
 }
 

@@ -31,7 +31,7 @@ class FarahDecorator implements LinkDecoratorInterface
         }
     }
 
-    public function linkScripts(AssetInterface... $scripts)
+    public function linkScripts(AssetInterface ...$scripts)
     {}
 
     public function setTarget(DOMDocument $document)
@@ -40,7 +40,7 @@ class FarahDecorator implements LinkDecoratorInterface
     public function setNamespace(string $ns)
     {}
 
-    public function linkStylesheets(AssetInterface... $stylesheets)
+    public function linkStylesheets(AssetInterface ...$stylesheets)
     {}
 }
 

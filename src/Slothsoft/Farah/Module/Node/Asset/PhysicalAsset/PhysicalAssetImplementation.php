@@ -25,10 +25,10 @@ class PhysicalAssetImplementation extends AssetImplementation implements Physica
     {
         return $this->getElementAttribute(Module::ATTR_REALPATH);
     }
-    public function toFile() : HTTPFile
+
+    public function toFile(): HTTPFile
     {
         return HTTPFile::createFromPath($this->getRealPath());
     }
-
 }
 

@@ -14,7 +14,7 @@ use DOMElement;
 class TextFileResult extends FileResult
 {
     use DOMWriterDocumentFromElementTrait;
-    
+
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
         $element = $targetDoc->createElement(basename(__CLASS__));

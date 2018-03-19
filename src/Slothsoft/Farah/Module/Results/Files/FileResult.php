@@ -10,21 +10,21 @@ use Slothsoft\Farah\Module\Results\ResultImplementation;
 abstract class FileResult extends ResultImplementation
 {
     use FileWriterStringFromFileTrait;
-    
+
     private $file;
-    
+
     public function __construct(FarahUrl $url, HTTPFile $file)
     {
         parent::__construct($url);
         
         $this->file = $file;
     }
-    
+
     public function toFile(): HTTPFile
     {
         return $this->file;
     }
-    
+
     public function exists(): bool
     {
         return $this->toFile()->exists();

@@ -43,34 +43,54 @@ class ResultCatalog
                 throw new ResultTypeNotSupportedException(gettype($result));
         }
     }
-    public static function createNullResult(FarahUrl $url) : NullResult {
+
+    public static function createNullResult(FarahUrl $url): NullResult
+    {
         return new NullResult($url);
     }
-    public static function createFileWriterResult(FarahUrl $url, FileWriterInterface $writer) : FileWriterResult {
+
+    public static function createFileWriterResult(FarahUrl $url, FileWriterInterface $writer): FileWriterResult
+    {
         return new FileWriterResult($url, $writer);
     }
-    public static function createDOMWriterResult(FarahUrl $url, DOMWriterInterface $writer) : DOMWriterResult {
+
+    public static function createDOMWriterResult(FarahUrl $url, DOMWriterInterface $writer): DOMWriterResult
+    {
         return new DOMWriterResult($url, $writer);
     }
-    public static function createTransformationResult(FarahUrl $url, string $name) : TransformationResult {
+
+    public static function createTransformationResult(FarahUrl $url, string $name): TransformationResult
+    {
         return new TransformationResult($url, $name);
     }
-    public static function createDOMDocumentResult(FarahUrl $url, DOMDocument $document) : DOMDocumentResult {
+
+    public static function createDOMDocumentResult(FarahUrl $url, DOMDocument $document): DOMDocumentResult
+    {
         return new DOMDocumentResult($url, $document);
     }
-    public static function createDOMElementResult(FarahUrl $url, DOMElement $element) : DOMElementResult {
+
+    public static function createDOMElementResult(FarahUrl $url, DOMElement $element): DOMElementResult
+    {
         return new DOMElementResult($url, $element);
     }
-    public static function createBinaryFileResult(FarahUrl $url, HTTPFile $file) : BinaryFileResult{
+
+    public static function createBinaryFileResult(FarahUrl $url, HTTPFile $file): BinaryFileResult
+    {
         return new BinaryFileResult($url, $file);
     }
-    public static function createTextFileResult(FarahUrl $url, HTTPFile $file) : TextFileResult{
+
+    public static function createTextFileResult(FarahUrl $url, HTTPFile $file): TextFileResult
+    {
         return new TextFileResult($url, $file);
     }
-    public static function createXmlFileResult(FarahUrl $url, HTTPFile $file) : XmlFileResult {
+
+    public static function createXmlFileResult(FarahUrl $url, HTTPFile $file): XmlFileResult
+    {
         return new XmlFileResult($url, $file);
     }
-    public static function createClosureResult(FarahUrl $url, Closure $closure) : ClosureResult  {
+
+    public static function createClosureResult(FarahUrl $url, Closure $closure): ClosureResult
+    {
         return new ClosureResult($url, $closure);
     }
 }

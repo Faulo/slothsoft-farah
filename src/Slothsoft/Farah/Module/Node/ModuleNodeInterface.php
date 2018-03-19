@@ -35,8 +35,9 @@ interface ModuleNodeInterface
     public function getManifestArguments(): FarahUrlArguments;
 
     public function __toString(): string;
-    
-    public function isUseDocument() : bool;
-    public function isUseTemplate() : bool;
+
+    public function isUseDocument(): bool;
+
+    public function isUseTemplate(): bool;
 }
 

@@ -15,47 +15,48 @@ use DOMElement;
  */
 class ClosureResult extends ResultImplementation
 {
+
     private $closure;
+
     private $result;
-    
+
     public function __construct(FarahUrl $url, Closure $closure)
     {
         parent::__construct($url);
         
-        $this->closure= $closure;
+        $this->closure = $closure;
     }
-    public function toElement(DOMDocument $targetDoc) : DOMElement
+
+    public function toElement(DOMDocument $targetDoc): DOMElement
     {
         return $this->getResult()->toElement($targetDoc);
     }
 
-    public function toFile() : HTTPFile
+    public function toFile(): HTTPFile
     {
         return $this->getResult()->toFile();
     }
 
-    public function toString() : string
+    public function toString(): string
     {
         return $this->getResult()->toString();
     }
 
-    public function toDocument() : DOMDocument
+    public function toDocument(): DOMDocument
     {
         return $this->getResult()->toDocument();
     }
-    
-    public function exists() : bool
+
+    public function exists(): bool
     {
         return $this->getResult()->exists();
     }
-    
-    private function getResult() : ResultInterface {
+
+    private function getResult(): ResultInterface
+    {
         if ($this->result === null) {
             $closure = $this->closure;
-            $this->result = ResultCatalog::createFromMixed(
-                $this->getUrl(),
-                $closure($this->getUrl())
-            );
+            $this->result = ResultCatalog::createFromMixed($this->getUrl(), $closure($this->getUrl()));
         }
         return $this->result;
     }

@@ -11,16 +11,16 @@ use Slothsoft\Farah\Module\Node\ModuleNodeImplementation;
  */
 class MetaImplementation extends ModuleNodeImplementation implements MetaInterface
 {
-    public function isUseDocument() : bool
+
+    public function isUseDocument(): bool
     {
         return false;
     }
 
-    public function isUseTemplate() : bool
+    public function isUseTemplate(): bool
     {
         return false;
     }
-
 }
 
  

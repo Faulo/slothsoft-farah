@@ -44,7 +44,7 @@ class Module
     const TAG_DIRECTORY = 'directory';
 
     const TAG_RESOURCE_DIRECTORY = 'resource-directory';
-    
+
     const TAG_TEMPLATE_RESOURCE = 'template-resource';
 
     // meta tags
@@ -78,13 +78,15 @@ class Module
     const ATTR_TYPE = 'type';
 
     const ATTR_REALPATH = 'realpath';
-    
+
     const ATTR_ASSETPATH = 'assetpath';
 
     const ATTR_REFERENCE = 'ref';
-    
+
     const ATTR_USE = 'use';
+
     const ATTR_USE_DOCUMENT = 'document';
+
     const ATTR_USE_TEMPLATE = 'template';
 
     const ATTR_PARAM_KEY = 'name';
@@ -112,7 +114,8 @@ class Module
     private $assetDirectory;
 
     private $assetList = [];
- // TODO: AssetCache
+
+    // TODO: AssetCache
     public function __construct(FarahUrlAuthority $authority, ManifestInterface $manifest, string $assetDirectory)
     {
         $this->authority = $authority;

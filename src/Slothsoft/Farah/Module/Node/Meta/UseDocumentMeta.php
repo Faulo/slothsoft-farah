@@ -22,7 +22,8 @@ class UseDocumentMeta extends MetaImplementation implements UseDocumentInstructi
         return $this->getElementAttribute(Module::ATTR_ALIAS, $this->getReferencedDocumentAsset()
             ->getName());
     }
-    public function isUseDocument() : bool
+
+    public function isUseDocument(): bool
     {
         return true;
     }

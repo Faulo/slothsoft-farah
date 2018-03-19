@@ -44,22 +44,16 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
         
         if ($descendantPath === '') {
             if ($isProbablyDirectory) {
-                $element = LeanElement::createOneFromArray(
-                    Module::TAG_RESOURCE_DIRECTORY,
-                    [
-                        Module::ATTR_NAME => $childName,
-                        Module::ATTR_PATH => $childName,
-                        Module::ATTR_TYPE => $this->asset->getElementAttribute(Module::ATTR_TYPE),                        
-                    ]
-                );
+                $element = LeanElement::createOneFromArray(Module::TAG_RESOURCE_DIRECTORY, [
+                    Module::ATTR_NAME => $childName,
+                    Module::ATTR_PATH => $childName,
+                    Module::ATTR_TYPE => $this->asset->getElementAttribute(Module::ATTR_TYPE)
+                ]);
             } else {
-                $element = LeanElement::createOneFromArray(
-                    Module::TAG_RESOURCE,
-                    [
-                        Module::ATTR_NAME => $childName,
-                        Module::ATTR_TYPE => $this->asset->getElementAttribute(Module::ATTR_TYPE),
-                    ]
-                    );
+                $element = LeanElement::createOneFromArray(Module::TAG_RESOURCE, [
+                    Module::ATTR_NAME => $childName,
+                    Module::ATTR_TYPE => $this->asset->getElementAttribute(Module::ATTR_TYPE)
+                ]);
             }
             return $this->asset->createChildNode($element);
         } else {
