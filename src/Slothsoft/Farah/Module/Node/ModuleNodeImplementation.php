@@ -13,7 +13,7 @@ use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\ParameterInstruction;
  * @author Daniel Schulz
  *        
  */
-class ModuleNodeImplementation implements ModuleNodeInterface
+abstract class ModuleNodeImplementation implements ModuleNodeInterface
 {
 
     private $ownerModule;

@@ -15,5 +15,9 @@ class UseTemplateMeta extends MetaImplementation implements UseTemplateInstructi
     use AssetReferenceTrait {
         getReferencedAsset as public getReferencedTemplateAsset;
     }
+    public function isUseTemplate() : bool
+    {
+        return true;
+    }
 }
 

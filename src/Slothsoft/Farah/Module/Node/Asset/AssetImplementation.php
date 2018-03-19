@@ -13,6 +13,8 @@ use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 use Slothsoft\Farah\Module\Node\Meta\MetaInterface;
 use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\LinkScriptInstruction;
 use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\LinkStylesheetInstruction;
+use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\UseDocumentInstruction;
+use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\UseTemplateInstruction;
 use Slothsoft\Farah\Module\ParameterFilters\AllowAllFilter;
 use Slothsoft\Farah\Module\ParameterFilters\ParameterFilterInterface;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverCatalog;
@@ -21,13 +23,14 @@ use Slothsoft\Farah\Module\Results\ResultCatalog;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 use DOMDocument;
 use DOMElement;
+use Throwable;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class AssetImplementation extends ModuleNodeImplementation implements AssetInterface
+class AssetImplementation extends ModuleNodeImplementation implements AssetInterface, UseDocumentInstruction, UseTemplateInstruction
 {
     use DOMWriterDocumentFromElementTrait;
 
@@ -157,11 +160,6 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
         return $this->resultList[$id];
     }
 
-    protected function loadResult(FarahUrl $url): ResultInterface
-    {
-        return ResultCatalog::createNullResult($url);
-    }
-
     public function __toString(): string
     {
         return $this->getId();
@@ -198,6 +196,12 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
                 $ret[(string) $asset] = $asset;
             }
         }
+        $this->processInstructions();
+        foreach ($this->documentInstructions as $instruction) {
+            try {
+                $ret += $instruction->getReferencedDocumentAsset()->lookupLinkedStylesheets();
+            } catch (Throwable $e) {}
+        }
         return $ret;
     }
 
@@ -218,7 +222,77 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
                 $ret[(string) $asset] = $asset;
             }
         }
+        $this->processInstructions();
+        foreach ($this->documentInstructions as $instruction) {
+            try {
+                $ret += $instruction->getReferencedDocumentAsset()->lookupLinkedScripts();
+            } catch (Throwable $e) {}
+        }
         return $ret;
     }
+    
+    
+    
+    
+    
+    
+    private $instructionsProcessed = false;
+    
+    private $documentInstructions = [];
+    
+    private $templateInstruction = null;
+    
+    private function processInstructions()
+    {
+        if (! $this->instructionsProcessed) {
+            $this->instructionsProcessed = true;
+            foreach ($this->getChildren() as $node) {
+                if ($node->isUseTemplate()) {
+                    assert($node instanceof UseTemplateInstruction, get_class($node));
+                    $this->templateInstruction = $node;
+                }
+                if ($node->isUseDocument()) {
+                    assert($node instanceof UseDocumentInstruction, get_class($node));
+                    $this->documentInstructions[] = $node;
+                }
+            }
+        }
+    }
+    
+    protected function loadResult(FarahUrl $url): ResultInterface
+    {
+        $this->processInstructions();
+        $result = ResultCatalog::createTransformationResult($url, $this->getName());
+        $result->setDocumentInstructions(...$this->documentInstructions);
+        if ($this->templateInstruction) {
+            $result->setTemplateInstruction($this->templateInstruction);
+        }
+        return $result;
+    }
+    
+    public function getReferencedDocumentAsset(): AssetInterface
+    {
+        return $this;
+    }
+    public function getReferencedTemplateAsset():AssetInterface
+    {
+        return $this;
+    }
+    
+    public function getReferencedDocumentAlias(): string
+    {
+        return $this->getName();
+    }
+    public function isUseDocument() : bool
+    {
+        return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_DOCUMENT) !== false;
+    }
+
+    public function isUseTemplate() : bool
+    {
+        return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_TEMPLATE) !== false;
+    }
+
+
 }
 

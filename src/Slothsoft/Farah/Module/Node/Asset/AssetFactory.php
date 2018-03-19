@@ -24,6 +24,9 @@ class AssetFactory extends ModuleNodeFactory
             assert($parent, 'Asset must be supplied with either parent element or assetpath attribute.');
             $element->setAttribute(Module::ATTR_ASSETPATH, $this->inventElementAssetPath($element, $parent));
         }
+        if (! $element->hasAttribute(Module::ATTR_USE)) {
+            $element->setAttribute(Module::ATTR_USE, 'document');
+        }
     }
 
     private function inventElementAssetPath(LeanElement $element, LeanElement $parent): string

@@ -44,6 +44,8 @@ class Module
     const TAG_DIRECTORY = 'directory';
 
     const TAG_RESOURCE_DIRECTORY = 'resource-directory';
+    
+    const TAG_TEMPLATE_RESOURCE = 'template-resource';
 
     // meta tags
     const TAG_SOURCE = 'source';
@@ -76,10 +78,14 @@ class Module
     const ATTR_TYPE = 'type';
 
     const ATTR_REALPATH = 'realpath';
-
+    
     const ATTR_ASSETPATH = 'assetpath';
 
     const ATTR_REFERENCE = 'ref';
+    
+    const ATTR_USE = 'use';
+    const ATTR_USE_DOCUMENT = 'document';
+    const ATTR_USE_TEMPLATE = 'template';
 
     const ATTR_PARAM_KEY = 'name';
 

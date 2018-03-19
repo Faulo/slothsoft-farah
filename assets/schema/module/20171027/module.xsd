@@ -17,7 +17,6 @@
 			<xsd:element ref="fragment" />
 			<xsd:element ref="custom-asset" />
 			<xsd:element ref="external-document" />
-			<xsd:element ref="closure" />
 		</xsd:choice>
 	</xsd:group>
 
@@ -29,9 +28,17 @@
 		</xsd:choice>
 	</xsd:group>
 
+	<xsd:group name="runtime-assets">
+		<xsd:choice>
+			<xsd:element ref="closure" />
+		</xsd:choice>
+	</xsd:group>
+
 	<xsd:group name="asset-meta">
 		<xsd:choice>
 			<xsd:element ref="import" />
+			<xsd:element ref="use-document" />
+			<xsd:element ref="use-template" />
 			<xsd:element ref="link-stylesheet" />
 			<xsd:element ref="link-script" />
 			<xsd:element ref="param-filter" />
@@ -41,8 +48,6 @@
 
 	<xsd:group name="fragment-meta">
 		<xsd:choice>
-			<xsd:element ref="use-document" />
-			<xsd:element ref="use-template" />
 		</xsd:choice>
 	</xsd:group>
 
@@ -278,6 +283,7 @@
 			<xsd:extension base="module-node">
 				<xsd:attribute name="name" type="farahUrlPathSegment" use="required" />
 				<xsd:attribute name="assetpath" type="farahUrlPath" use="optional" />
+				<xsd:attribute name="use" type="assetUses" use="optional" />
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -358,6 +364,16 @@
 
 	<xsd:simpleType name="mimeType">
 		<xsd:restriction base="xsd:normalizedString">
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="assetUses">
+		<xsd:list itemType="assetUse"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="assetUse">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="document"/>
+			<xsd:enumeration value="template"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 </xsd:schema>
