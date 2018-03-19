@@ -37,11 +37,11 @@ class ModuleNodeCreator // TOOD: find a better name maybe
         $resourceFactory = new ResourceFactory();
         $metaFactory = new MetaFactory();
         
-        $this->factoryMap[Module::TAG_CLOSURE] = $assetFactory;
         $this->factoryMap[Module::TAG_CONTAINER] = $assetFactory;
         $this->factoryMap[Module::TAG_FRAGMENT] = $assetFactory;
-        $this->factoryMap[Module::TAG_EXTERNAL_DOCUMENT] = $assetFactory;
         $this->factoryMap[Module::TAG_CUSTOM_ASSET] = $assetFactory;
+        $this->factoryMap[Module::TAG_EXTERNAL_DOCUMENT] = $assetFactory;
+        $this->factoryMap[Module::TAG_CLOSURE] = $assetFactory;
         
         $this->factoryMap[Module::TAG_DIRECTORY] = $physicalFactory;
         $this->factoryMap[Module::TAG_RESOURCE_DIRECTORY] = $physicalFactory;

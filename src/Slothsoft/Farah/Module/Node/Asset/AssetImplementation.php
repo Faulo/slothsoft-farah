@@ -17,7 +17,7 @@ use Slothsoft\Farah\Module\ParameterFilters\AllowAllFilter;
 use Slothsoft\Farah\Module\ParameterFilters\ParameterFilterInterface;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverCatalog;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
-use Slothsoft\Farah\Module\Results\NullResult;
+use Slothsoft\Farah\Module\Results\ResultCatalog;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 use DOMDocument;
 use DOMElement;
@@ -159,7 +159,7 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
 
     protected function loadResult(FarahUrl $url): ResultInterface
     {
-        return new NullResult($url);
+        return ResultCatalog::createNullResult($url);
     }
 
     public function __toString(): string

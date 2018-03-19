@@ -16,6 +16,8 @@
 			<xsd:element ref="container" />
 			<xsd:element ref="fragment" />
 			<xsd:element ref="custom-asset" />
+			<xsd:element ref="external-document" />
+			<xsd:element ref="closure" />
 		</xsd:choice>
 	</xsd:group>
 
@@ -111,6 +113,24 @@
 					</xsd:choice>
 					<xsd:attribute name="class" type="phpClass" use="required" />
 				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="external-document">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="virtual-asset">
+					<xsd:attribute name="href" type="wwwUrl" use="required" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="closure">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="virtual-asset"/>
 			</xsd:complexContent>
 		</xsd:complexType>
 	</xsd:element>
@@ -241,7 +261,7 @@
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="meta">
-					<xsd:attribute name="href" type="xsd:anyURI" use="required" />
+					<xsd:attribute name="href" type="wwwUrl" use="required" />
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>
@@ -328,6 +348,11 @@
 
 	<xsd:simpleType name="phpClass">
 		<xsd:restriction base="xsd:normalizedString">
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="wwwUrl">
+		<xsd:restriction base="xsd:anyURI">
 		</xsd:restriction>
 	</xsd:simpleType>
 

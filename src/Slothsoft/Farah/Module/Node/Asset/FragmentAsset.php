@@ -6,8 +6,8 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\UseDocumentInstruction;
 use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\UseTemplateInstruction;
 use Slothsoft\Farah\Module\Results\ResultInterface;
-use Slothsoft\Farah\Module\Results\TransformationResult;
 use Throwable;
+use Slothsoft\Farah\Module\Results\ResultCatalog;
 
 /**
  *
@@ -41,7 +41,7 @@ class FragmentAsset extends ContainerAsset implements UseDocumentInstruction
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         $this->processInstructions();
-        $result = new TransformationResult($url, $this->getName());
+        $result = ResultCatalog::createTransformationResult($url, $this->getName());
         $result->setDocumentInstructions(...$this->documentInstructions);
         if ($this->templateInstruction) {
             $result->setTemplateInstruction($this->templateInstruction);
@@ -67,7 +67,7 @@ class FragmentAsset extends ContainerAsset implements UseDocumentInstruction
         $this->processInstructions();
         foreach ($this->documentInstructions as $instruction) {
             try {
-                $ret += $instruction->getReferencedDocumentAsset()->lookupLinkedStylesheets();
+                $ret += $instruction->getReferencedDocumentAsset()->lookupLinkedScripts();
             } catch (Throwable $e) {}
         }
         return $ret;

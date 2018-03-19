@@ -6,8 +6,8 @@ use Slothsoft\Core\Storage;
 use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\Results\DOMDocumentResult;
 use Slothsoft\Farah\Module\Results\ResultInterface;
+use Slothsoft\Farah\Module\Results\ResultCatalog;
 
 /**
  *
@@ -25,7 +25,7 @@ class ExternalDocumentAsset extends AssetImplementation
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         $document = Storage::loadExternalDocument($this->getHref(), Seconds::DAY);
-        return new DOMDocumentResult($url, $document);
+        return ResultCatalog::createDOMDocumentResult($url, $document);
     }
 }
 

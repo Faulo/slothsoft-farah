@@ -6,7 +6,7 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\PhysicalAssetImplementation;
 use Slothsoft\Farah\Module\ParameterFilters\DenyAllFilter;
 use Slothsoft\Farah\Module\ParameterFilters\ParameterFilterInterface;
-use Slothsoft\Farah\Module\Results\BinaryFileResult;
+use Slothsoft\Farah\Module\Results\ResultCatalog;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 
 /**
@@ -29,7 +29,7 @@ class ResourceImplementation extends PhysicalAssetImplementation implements Reso
 
     protected function loadResult(FarahUrl $url): ResultInterface
     {
-        return new BinaryFileResult($url, $this->getRealPath());
+        return ResultCatalog::createBinaryFileResult($url, $this->toFile());
     }
 }
 

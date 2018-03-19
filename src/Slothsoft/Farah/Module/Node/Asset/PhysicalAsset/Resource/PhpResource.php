@@ -28,6 +28,7 @@ class PhpResource extends ResourceImplementation
 
     private function includePhpFile()
     {
+        assert($this->toFile()->exists());
         return include ($this->getRealPath());
     }
 }

@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\Module\Node\Asset\PhysicalAsset;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverCatalog;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
-use Slothsoft\Farah\Module\Results\DOMWriterResult;
+use Slothsoft\Farah\Module\Results\ResultCatalog;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 
 /**
@@ -23,7 +23,7 @@ class ResourceDirectoryAsset extends DirectoryAsset
 
     protected function loadResult(FarahUrl $url): ResultInterface
     {
-        return new DOMWriterResult($url, $this);
+        return ResultCatalog::createDOMWriterResult($url, $this);
     }
 }
 
