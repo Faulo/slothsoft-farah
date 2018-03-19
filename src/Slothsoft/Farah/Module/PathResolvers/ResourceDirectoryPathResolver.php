@@ -26,15 +26,15 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
         $this->pathMap['/'] = $this->asset;
     }
 
-    public function resolvePath(string $path): AssetInterface
+    public function resolvePath(string $path, bool $isProbablyDirectory = false): AssetInterface
     {
         if (! isset($this->pathMap[$path])) {
-            $this->pathMap[$path] = $this->createChildResource($path);
+            $this->pathMap[$path] = $this->createChildResource($path, $isProbablyDirectory);
         }
         return $this->pathMap[$path];
     }
 
-    private function createChildResource(string $path, bool $isProbablyDirectory = false): AssetInterface
+    private function createChildResource(string $path, bool $isProbablyDirectory): AssetInterface
     {
         assert(preg_match('~^/([^/]+)~', $path, $match), "Invalid asset path: $path");
         
@@ -43,14 +43,27 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
         $descendantPath = substr($path, strlen($childPath));
         
         if ($descendantPath === '') {
-            $tag = $isProbablyDirectory ? Module::TAG_RESOURCE_DIRECTORY : Module::TAG_RESOURCE;
-            $data = [];
-            $data[Module::ATTR_NAME] = $childName;
-            $data[Module::ATTR_TYPE] = $this->asset->getElementAttribute(Module::ATTR_TYPE);
-            
-            return $this->asset->createChildNode(LeanElement::createOneFromArray($tag, $data));
+            if ($isProbablyDirectory) {
+                $element = LeanElement::createOneFromArray(
+                    Module::TAG_RESOURCE_DIRECTORY,
+                    [
+                        Module::ATTR_NAME => $childName,
+                        Module::ATTR_PATH => $childName,
+                        Module::ATTR_TYPE => $this->asset->getElementAttribute(Module::ATTR_TYPE),                        
+                    ]
+                );
+            } else {
+                $element = LeanElement::createOneFromArray(
+                    Module::TAG_RESOURCE,
+                    [
+                        Module::ATTR_NAME => $childName,
+                        Module::ATTR_TYPE => $this->asset->getElementAttribute(Module::ATTR_TYPE),
+                    ]
+                    );
+            }
+            return $this->asset->createChildNode($element);
         } else {
-            return $this->asset->traverseTo($childPath, true)->traverseTo($descendantPath);
+            return $this->resolvePath($childPath, true)->traverseTo($descendantPath);
         }
     }
 

@@ -54,7 +54,7 @@ class ClosureResult extends ResultImplementation
             $closure = $this->closure;
             $this->result = ResultCatalog::createFromMixed(
                 $this->getUrl(),
-                $closure($url)
+                $closure($this->getUrl())
             );
         }
         return $this->result;
