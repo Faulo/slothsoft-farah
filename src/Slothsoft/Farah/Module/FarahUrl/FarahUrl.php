@@ -2,8 +2,9 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\FarahUrl;
 
-use DomainException;
-use InvalidArgumentException;
+use Slothsoft\Farah\Exception\MalformedUrlException;
+use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
+use Slothsoft\Farah\Exception\IncompleteUrlException;
 
 /**
  *
@@ -26,7 +27,7 @@ class FarahUrl // TODO: implements Psr\Url
     {
         $res = parse_url($ref);
         if ($res === false) {
-            throw new InvalidArgumentException("Invalid url: $uri");
+            throw new MalformedUrlException($ref);
         }
         if ($contextAuthority) {
             if (! isset($res['scheme'])) {
@@ -40,10 +41,10 @@ class FarahUrl // TODO: implements Psr\Url
             }
         }
         if (! isset($res['scheme'], $res['user'], $res['host'])) {
-            throw new InvalidArgumentException("Incomplete url, missing authority information: $uri");
+            throw new IncompleteUrlException($ref, 'scheme, user, or host');
         }
         if ($res['scheme'] !== 'farah') {
-            throw new DomainException("Not a farah url: $uri");
+            throw new ProtocolNotSupportedException($res['scheme']);
         }
         if ($contextPath) {
             if (! isset($res['path'])) {

@@ -40,5 +40,9 @@ interface AssetInterface extends ModuleNodeInterface, DOMWriterInterface
     public function createUrl(FarahUrlArguments $args): FarahUrl;
 
     public function lookupResultByArguments(FarahUrlArguments $args): ResultInterface;
+
+    public function lookupLinkedStylesheets(): array;
+
+    public function lookupLinkedScripts(): array;
 }
 

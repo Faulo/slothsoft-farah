@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\LinkDecorator;
 
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use DOMDocument;
 
 /**
@@ -14,29 +15,45 @@ class HtmlDecorator implements LinkDecoratorInterface
 
     private $namespace;
 
-    public function __construct(string $namespace)
+    private $targetDocument;
+
+    private $rootNode;
+
+    public function setNamespace(string $namespace)
     {
         $this->namespace = $namespace;
     }
 
-    public function decorateDocument(DOMDocument $document, array $stylesheetAssetList, array $scriptAssetList)
+    public function setTarget(DOMDocument $document)
     {
-        $rootNode = $document->getElementsByTagNameNS($this->namespace, 'head')->item(0) ?? $document->documentElement;
-        foreach ($stylesheetAssetList as $assetId => $asset) {
-            $assetLink = str_replace('farah://', '/getAsset.php/', $assetId);
-            $node = $document->createElementNS($this->namespace, 'link');
-            $node->setAttribute('href', $assetLink);
+        $this->targetDocument = $document;
+        
+        $this->rootNode = $document->getElementsByTagNameNS($this->namespace, 'head')->item(0) ?? $document->documentElement;
+    }
+
+    public function linkStylesheets(AssetInterface ...$stylesheets)
+    {
+        foreach ($stylesheets as $assetId => $asset) {
+            $assetId = $asset->getId();
+            $assetHref = str_replace('farah://', '/getAsset.php/', $assetId);
+            $node = $this->targetDocument->createElementNS($this->namespace, 'link');
+            $node->setAttribute('href', $assetHref);
             $node->setAttribute('rel', 'stylesheet');
             $node->setAttribute('type', 'text/css');
-            $rootNode->appendChild($node);
+            $this->rootNode->appendChild($node);
         }
-        foreach ($scriptAssetList as $assetId => $asset) {
-            $assetLink = str_replace('farah://', '/getAsset.php/', $assetId);
-            $node = $document->createElementNS($this->namespace, 'script');
-            $node->setAttribute('src', $assetLink);
+    }
+
+    public function linkScripts(AssetInterface ...$scripts)
+    {
+        foreach ($scripts as $asset) {
+            $assetId = $asset->getId();
+            $assetHref = str_replace('farah://', '/getAsset.php/', $assetId);
+            $node = $this->targetDocument->createElementNS($this->namespace, 'script');
+            $node->setAttribute('src', $assetHref);
             $node->setAttribute('defer', 'defer');
             $node->setAttribute('type', 'application/javascript');
-            $rootNode->appendChild($node);
+            $this->rootNode->appendChild($node);
         }
     }
 }

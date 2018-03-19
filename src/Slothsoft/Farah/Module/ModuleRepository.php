@@ -2,9 +2,9 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
+use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
-use DomainException;
 
 /**
  *
@@ -13,6 +13,7 @@ use DomainException;
  */
 class ModuleRepository
 {
+
     private $registeredModules = [];
 
     public static function getInstance(): ModuleRepository
@@ -26,21 +27,22 @@ class ModuleRepository
 
     private function __construct()
     {}
-    
-    public function registerModule(Module $module) {
+
+    public function registerModule(Module $module)
+    {
         $this->registeredModules[(string) $module->getAuthority()] = $module;
     }
 
-    public function lookupModuleByAuthority(FarahUrlAuthority $authority) : Module
+    public function lookupModuleByAuthority(FarahUrlAuthority $authority): Module
     {
         $key = (string) $authority;
-        if (!isset($this->registeredModules[$key])) {
-            throw new DomainException("Module $key has not been registered.");
+        if (! isset($this->registeredModules[$key])) {
+            throw new ModuleNotFoundException($key);
         }
         return $this->registeredModules[$key];
     }
 
-    public function lookupModuleByUrl(FarahUrl $url) : Module
+    public function lookupModuleByUrl(FarahUrl $url): Module
     {
         return $this->lookupModuleByAuthority($url->getAuthority());
     }

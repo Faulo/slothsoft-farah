@@ -10,8 +10,7 @@ class FarahWrapper
     // general
     public function stream_open(string $path, string $mode, int $options, &$opened_path)
     {
-        //echo $path . PHP_EOL;
-        
+        // echo $path . PHP_EOL;
         $this->stream = StreamFactory::createStream($path, $mode, $options);
         
         return $this->stream !== null;

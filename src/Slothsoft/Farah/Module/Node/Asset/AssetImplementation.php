@@ -10,6 +10,9 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\Module\Node\ModuleNodeImplementation;
 use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
+use Slothsoft\Farah\Module\Node\Meta\MetaInterface;
+use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\LinkScriptInstruction;
+use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\LinkStylesheetInstruction;
 use Slothsoft\Farah\Module\ParameterFilters\AllowAllFilter;
 use Slothsoft\Farah\Module\ParameterFilters\ParameterFilterInterface;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverCatalog;
@@ -18,7 +21,6 @@ use Slothsoft\Farah\Module\Results\NullResult;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 use DOMDocument;
 use DOMElement;
-use Slothsoft\Farah\Module\Node\Instruction\LinkStylesheetInstruction;
 
 /**
  *
@@ -36,6 +38,14 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     private $pathResolver;
 
     private $parameterFilter;
+
+    private $assetChildren;
+
+    private $metaChildren;
+
+    private $linkedStylesheets;
+
+    private $linkedScripts;
 
     public function getUrlPath(): FarahUrlPath
     {
@@ -62,9 +72,22 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
 
     public function getAssetChildren(): array
     {
-        return array_filter($this->getChildren(), function (ModuleNodeInterface $node) {
-            return $node instanceof AssetInterface;
-        }, ARRAY_FILTER_USE_BOTH);
+        if ($this->assetChildren === null) {
+            $this->assetChildren = array_filter($this->getChildren(), function (ModuleNodeInterface $node) {
+                return $node instanceof AssetInterface;
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+        return $this->assetChildren;
+    }
+
+    public function getMetaChildren(): array
+    {
+        if ($this->metaChildren === null) {
+            $this->metaChildren = array_filter($this->getChildren(), function (ModuleNodeInterface $node) {
+                return $node instanceof MetaInterface;
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+        return $this->metaChildren;
     }
 
     public function traverseTo(string $path): AssetInterface
@@ -158,11 +181,9 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
         return $element;
     }
 
-    private $linkedStylesheets;
-
     public function lookupLinkedStylesheets(): array
     {
-        if ($this->linkedStylesheets = null) {
+        if ($this->linkedStylesheets === null) {
             $this->linkedStylesheets = $this->loadLinkedStylesheets();
         }
         return $this->linkedStylesheets;
@@ -171,9 +192,30 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     protected function loadLinkedStylesheets(): array
     {
         $ret = [];
-        foreach ($this->getChildren() as $child) {
+        foreach ($this->getMetaChildren() as $child) {
             if ($child instanceof LinkStylesheetInstruction) {
-                $ret[(string) $child] = $child;
+                $asset = $child->getReferencedStylesheetAsset();
+                $ret[(string) $asset] = $asset;
+            }
+        }
+        return $ret;
+    }
+
+    public function lookupLinkedScripts(): array
+    {
+        if ($this->linkedScripts === null) {
+            $this->linkedScripts = $this->loadLinkedScripts();
+        }
+        return $this->linkedScripts;
+    }
+
+    protected function loadLinkedScripts(): array
+    {
+        $ret = [];
+        foreach ($this->getMetaChildren() as $child) {
+            if ($child instanceof LinkScriptInstruction) {
+                $asset = $child->getReferencedScriptAsset();
+                $ret[(string) $asset] = $asset;
             }
         }
         return $ret;

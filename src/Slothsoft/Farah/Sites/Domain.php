@@ -10,7 +10,8 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use DOMDocument;
 use DOMElement;
-use LengthException;
+use Slothsoft\Farah\Exception\EmptySitemapException;
+use Slothsoft\Farah\Kernel;
 
 /**
  *
@@ -19,6 +20,15 @@ use LengthException;
  */
 class Domain
 {
+
+    public static function getInstance(): self
+    {
+        static $instance;
+        if ($instance === null) {
+            $instance = new self(Kernel::getSitesFile()); // todo: move this somewhere else
+        }
+        return $instance;
+    }
 
     const TAG_INCLUDE_PAGES = 'include-pages';
 
@@ -31,13 +41,14 @@ class Domain
     private $file;
 
     private $document;
-    
+
     private $domainNode;
+
     private $domainName;
 
     private $xpath;
 
-    public function __construct(string $file)
+    private function __construct(string $file)
     {
         $this->file = $file;
     }
@@ -52,7 +63,7 @@ class Domain
             
             $node = $this->domainNode;
             if (! $node) {
-                throw new LengthException('Sitemap document appears to be empty.');
+                throw new EmptySitemapException($this->file);
             }
             
             assert($node->namespaceURI === DOMHelper::NS_FARAH_SITES and $node->localName === self::TAG_DOMAIN, sprintf('Root element of sitemap document must be <%s xmlns="%s">!', self::TAG_DOMAIN, DOMHelper::NS_FARAH_SITES));
@@ -66,6 +77,7 @@ class Domain
     private function init()
     {
         // preload all include-pages elements
+        log_execution_time(__FILE__, __LINE__);
         while ($nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, self::TAG_INCLUDE_PAGES) and $nodeList->length) {
             $dataNodeList = [];
             foreach ($nodeList as $node) {
@@ -88,12 +100,15 @@ class Domain
                 $dataNode->parentNode->removeChild($dataNode);
             }
         }
+        log_execution_time(__FILE__, __LINE__);
         $this->initDomainElement($this->domainNode);
         $nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, self::TAG_PAGE);
         foreach ($nodeList as $node) {
             $this->initPageElement($node);
         }
+        log_execution_time(__FILE__, __LINE__);
     }
+
     private function initDomainElement(DOMElement $node)
     {
         if (! $node->hasAttribute('title')) {
@@ -102,6 +117,7 @@ class Domain
         $node->setAttribute('uri', '/');
         $node->setAttribute('url', "//{$this->getDomainName()}/");
     }
+
     private function initPageElement(DOMElement $node)
     {
         $name = $node->getAttribute('name');
@@ -183,8 +199,8 @@ class Domain
         }
         return implode('/', $qry);
     }
-    
-    //@deprecated
+
+    // @deprecated
     private function findUri(DOMElement $pageNode): string
     {
         if ($pageNode->hasAttribute('ext')) {
@@ -221,7 +237,9 @@ class Domain
         }
         return $ret;
     }
-    private function getDomainName() : string {
+
+    private function getDomainName(): string
+    {
         return $this->domainName;
     }
 

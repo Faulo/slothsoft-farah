@@ -43,7 +43,12 @@ abstract class ResultImplementation implements ResultInterface
 
     public function getLinkedStylesheets(): array
     {
-        return FarahUrlResolver::resolveToAsset($this->url)->lookupLinkedStylesheets();
+        return array_values(FarahUrlResolver::resolveToAsset($this->url)->lookupLinkedStylesheets());
+    }
+
+    public function getLinkedScripts(): array
+    {
+        return array_values(FarahUrlResolver::resolveToAsset($this->url)->lookupLinkedScripts());
     }
 }
 

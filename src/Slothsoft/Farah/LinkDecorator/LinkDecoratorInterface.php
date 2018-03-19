@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\LinkDecorator;
 
 use DOMDocument;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
 /**
  *
@@ -12,6 +13,12 @@ use DOMDocument;
 interface LinkDecoratorInterface
 {
 
-    public function decorateDocument(DOMDocument $document, array $stylesheetAssetList, array $scriptAssetList);
+    public function setNamespace(string $ns);
+
+    public function setTarget(DOMDocument $document);
+
+    public function linkStylesheets(AssetInterface ...$stylesheets);
+
+    public function linkScripts(AssetInterface ...$scripts);
 }
 

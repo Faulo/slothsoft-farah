@@ -16,11 +16,12 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class ExternalDocumentAsset extends AssetImplementation
 {
+
     public function getHref(): string
     {
         return $this->getElementAttribute(Module::ATTR_HREF);
     }
-    
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         $document = Storage::loadExternalDocument($this->getHref(), Seconds::DAY);

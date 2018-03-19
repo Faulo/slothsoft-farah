@@ -3,10 +3,10 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Node;
 
 use Slothsoft\Core\XML\LeanElement;
-use Slothsoft\Farah\Event\EventTargetInterface;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
-use Slothsoft\Farah\Module\Node\Instruction\ParameterInstruction;
+use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\ImportInstruction;
+use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\ParameterInstruction;
 
 /**
  *
@@ -62,10 +62,19 @@ class ModuleNodeImplementation implements ModuleNodeInterface
         }
         return $this->children;
     }
-    protected function loadChildren() : array {
+
+    protected function loadChildren(): array
+    {
         $ret = [];
         foreach ($this->getElement()->getChildren() as $element) {
-            $ret[] = $this->createChildNode($element);
+            $node = $this->createChildNode($element);
+            if ($node instanceof ImportInstruction) {
+                foreach ($node->getImportNodes() as $referencedNode) {
+                    $ret[] = $referencedNode;
+                }
+            } else {
+                $ret[] = $node;
+            }
         }
         return $ret;
     }
@@ -93,17 +102,10 @@ class ModuleNodeImplementation implements ModuleNodeInterface
         $data = [];
         foreach ($this->getChildren() as $child) {
             if ($child instanceof ParameterInstruction) {
-                $data[$child->getName()] = $child->getValue();
+                $data[$child->getParameterName()] = $child->getParameterValue();
             }
         }
         return FarahUrlArguments::createFromValueList($data);
-    }
-
-    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener)
-    {
-        foreach ($this->getChildren() as $child) {
-            $child->crawlAndFireAppropriateEvents($listener);
-        }
     }
 
     public function __toString(): string

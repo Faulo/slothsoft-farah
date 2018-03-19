@@ -2,9 +2,9 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\PathResolvers;
 
+use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\ExceptionContext;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
-use OutOfRangeException;
 
 /**
  *
@@ -26,7 +26,7 @@ class NullPathResolver implements PathResolverInterface
         if ($path === '/') {
             return $this->asset;
         }
-        throw ExceptionContext::append(new OutOfRangeException("Cannot traverse from {$this->asset->getId()} to $path."), [
+        throw ExceptionContext::append(new AssetPathNotFoundException($this->asset, $path), [
             'asset' => $this->asset,
             'class' => __CLASS__
         ]);

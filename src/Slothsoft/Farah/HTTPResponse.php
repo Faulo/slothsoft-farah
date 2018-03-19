@@ -18,9 +18,9 @@ use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Core\IO\HTTPStream;
 use Slothsoft\Core\IO\Memory;
 use Slothsoft\Farah\Exception\ExceptionContext;
+use Slothsoft\Farah\Exception\StreamTimedOutException;
 use DOMDocument;
 use Exception;
-use UnexpectedValueException;
 
 class HTTPResponse
 {
@@ -513,7 +513,6 @@ class HTTPResponse
         return $ret;
     }
 
-
     public function setExceptionContext(ExceptionContext $exception)
     {
         $this->setDocument($exception->toDocument());
@@ -541,9 +540,7 @@ class HTTPResponse
         switch ($ns) {
             case DOMHelper::NS_HTML:
                 $this->mime = 'application/xhtml+xml';
-                $doctype = $doc->doctype
-                    ? $doc->doctype
-                    : $doc->implementation->createDocumentType('html');
+                $doctype = $doc->doctype ? $doc->doctype : $doc->implementation->createDocumentType('html');
                 break;
             case DOMHelper::NS_SVG:
                 $this->mime = 'image/svg+xml';
@@ -753,7 +750,7 @@ class HTTPResponse
                         try {
                             $status = $this->body->getStatus();
                             if ($timeoutTime > $heartbeatTimeout) {
-                                throw new UnexpectedValueException('HTTPStream timed out! Aborting stream...');
+                                throw new StreamTimedOutException(get_class($this->body));
                             }
                         } catch (Exception $e) {
                             $status = HTTPStream::STATUS_ERROR;

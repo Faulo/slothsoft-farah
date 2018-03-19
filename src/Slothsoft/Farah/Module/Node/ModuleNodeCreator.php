@@ -2,14 +2,14 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Node;
 
+use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\XML\LeanElement;
+use Slothsoft\Farah\Exception\TagNotSupportedException;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Node\Asset\AssetFactory;
 use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\PhysicalAssetFactory;
 use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\Resource\ResourceFactory;
-use Slothsoft\Farah\Module\Node\Instruction\InstructionFactory;
 use Slothsoft\Farah\Module\Node\Meta\MetaFactory;
-use DomainException;
 
 /**
  *
@@ -35,7 +35,6 @@ class ModuleNodeCreator // TOOD: find a better name maybe
         $assetFactory = new AssetFactory();
         $physicalFactory = new PhysicalAssetFactory();
         $resourceFactory = new ResourceFactory();
-        $instructionFactory = new InstructionFactory();
         $metaFactory = new MetaFactory();
         
         $this->factoryMap[Module::TAG_CLOSURE] = $assetFactory;
@@ -50,13 +49,12 @@ class ModuleNodeCreator // TOOD: find a better name maybe
         
         $this->factoryMap[Module::TAG_RESOURCE] = $resourceFactory;
         
-        $this->factoryMap[Module::TAG_IMPORT] = $instructionFactory;
-        $this->factoryMap[Module::TAG_PARAM] = $instructionFactory;
-        $this->factoryMap[Module::TAG_USE_DOCUMENT] = $instructionFactory;
-        $this->factoryMap[Module::TAG_USE_TEMPLATE] = $instructionFactory;
-        $this->factoryMap[Module::TAG_LINK_SCRIPT] = $instructionFactory;
-        $this->factoryMap[Module::TAG_LINK_STYLESHEET] = $instructionFactory;
-        
+        $this->factoryMap[Module::TAG_IMPORT] = $metaFactory;
+        $this->factoryMap[Module::TAG_PARAM] = $metaFactory;
+        $this->factoryMap[Module::TAG_USE_DOCUMENT] = $metaFactory;
+        $this->factoryMap[Module::TAG_USE_TEMPLATE] = $metaFactory;
+        $this->factoryMap[Module::TAG_LINK_SCRIPT] = $metaFactory;
+        $this->factoryMap[Module::TAG_LINK_STYLESHEET] = $metaFactory;
         $this->factoryMap[Module::TAG_SOURCE] = $metaFactory;
         $this->factoryMap[Module::TAG_OPTIONS] = $metaFactory;
     }
@@ -65,7 +63,7 @@ class ModuleNodeCreator // TOOD: find a better name maybe
     {
         $tag = $element->getTag();
         if (! isset($this->factoryMap[$tag])) {
-            throw new DomainException("Module tag <$tag> is not supported by this implementation.");
+            throw new TagNotSupportedException(DOMHelper::NS_FARAH_MODULE, $tag);
         }
         return $this->factoryMap[$tag]->create($this, $ownerModule, $element, $parent);
     }

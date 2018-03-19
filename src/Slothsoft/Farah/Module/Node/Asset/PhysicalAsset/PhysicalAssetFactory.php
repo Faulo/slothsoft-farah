@@ -2,13 +2,13 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Node\Asset\PhysicalAsset;
 
+use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\XML\LeanElement;
+use Slothsoft\Farah\Exception\TagNotSupportedException;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 use Slothsoft\Farah\Module\Node\Asset\AssetFactory;
-use DomainException;
-use RuntimeException;
 
 /**
  *
@@ -26,9 +26,7 @@ class PhysicalAssetFactory extends AssetFactory
             $element->setAttribute(Module::ATTR_PATH, $this->inventElementPath($element));
         }
         if (! $element->hasAttribute(Module::ATTR_REALPATH)) {
-            if (! $parent) {
-                throw new RuntimeException('Physical asset must be supplied with either parent Asset or realpath.');
-            }
+            assert($parent, 'Physical asset must be supplied with either parent element or realpath attribute.');
             $element->setAttribute(Module::ATTR_REALPATH, $this->inventElementRealPath($element, $parent));
         }
     }
@@ -59,7 +57,7 @@ class PhysicalAssetFactory extends AssetFactory
             case Module::TAG_RESOURCE_DIRECTORY:
                 return new ResourceDirectoryAsset();
         }
-        throw new DomainException("illegal tag: {$element->getTag()}");
+        throw new TagNotSupportedException(DOMHelper::NS_FARAH_MODULE, $element->getTag());
     }
 }
 

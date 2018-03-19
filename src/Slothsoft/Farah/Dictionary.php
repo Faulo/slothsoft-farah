@@ -13,20 +13,25 @@ use DOMNode;
 use DOMXPath;
 use Slothsoft\Core\Configuration\ConfigurationField;
 
-
 class Dictionary
 {
-    private static function supportedLanguages() {
+
+    private static function supportedLanguages()
+    {
         static $field;
         if ($field === null) {
             $field = new ConfigurationField([]);
         }
         return $field;
     }
-    public static function setSupportedLanguages(string ...$languageList) {
+
+    public static function setSupportedLanguages(string ...$languageList)
+    {
         self::supportedLanguages()->setValue($languageList);
     }
-    public static function getSupportedLanguages() : array {
+
+    public static function getSupportedLanguages(): array
+    {
         return self::supportedLanguages()->getValue();
     }
 
@@ -34,9 +39,7 @@ class Dictionary
 
     public static function parseAcceptLanguageHeader(string $language): array
     {
-        return preg_match_all(self::BCP47_PREGMATCH, strtolower($language), $ret, PREG_SET_ORDER)
-            ? $ret
-            : [];
+        return preg_match_all(self::BCP47_PREGMATCH, strtolower($language), $ret, PREG_SET_ORDER) ? $ret : [];
     }
 
     const NS_HTML = 'http://www.w3.org/1999/xhtml';
@@ -84,8 +87,6 @@ class Dictionary
     protected $langPaths = [];
 
     protected static $instance;
-
-    
 
     /* static functions */
     public static function getInstance(): Dictionary

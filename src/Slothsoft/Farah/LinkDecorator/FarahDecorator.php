@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\LinkDecorator;
 
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use DOMDocument;
 
 /**
@@ -29,5 +30,17 @@ class FarahDecorator implements LinkDecoratorInterface
             $rootNode->appendChild($asset->toElement($document));
         }
     }
+
+    public function linkScripts(AssetInterface $scripts)
+    {}
+
+    public function setTarget(DOMDocument $document)
+    {}
+
+    public function setNamespace(string $ns)
+    {}
+
+    public function linkStylesheets(AssetInterface $stylesheets)
+    {}
 }
 

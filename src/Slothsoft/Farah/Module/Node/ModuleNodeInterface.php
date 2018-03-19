@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Node;
 
 use Slothsoft\Core\XML\LeanElement;
-use Slothsoft\Farah\Event\EventTargetInterface;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 
@@ -34,8 +33,6 @@ interface ModuleNodeInterface
     public function mergeWithManifestArguments(FarahUrlArguments $args): FarahUrlArguments;
 
     public function getManifestArguments(): FarahUrlArguments;
-
-    public function crawlAndFireAppropriateEvents(EventTargetInterface $listener);
 
     public function __toString(): string;
 }

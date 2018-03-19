@@ -2,9 +2,9 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\PathResolvers;
 
+use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\ExceptionContext;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
-use OutOfRangeException;
 
 /**
  *
@@ -38,7 +38,7 @@ class MapPathResolver implements PathResolverInterface
                 return $descendantPath === '' ? $this->assetMap[$childPath] : $this->assetMap[$childPath]->traverseTo($descendantPath);
             }
         }
-        throw ExceptionContext::append(new OutOfRangeException("Asset {$this->asset->getId()} did not provide a mapping for $path!"), [
+        throw ExceptionContext::append(new AssetPathNotFoundException($this->asset, $path), [
             'asset' => $this->asset,
             'class' => __CLASS__
         ]);

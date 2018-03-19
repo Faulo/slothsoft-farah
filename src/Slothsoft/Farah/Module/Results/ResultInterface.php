@@ -24,5 +24,9 @@ interface ResultInterface extends DOMWriterInterface, FileWriterInterface
     public function getArguments(): FarahUrlArguments;
 
     public function exists(): bool;
+
+    public function getLinkedStylesheets(): array;
+
+    public function getLinkedScripts(): array;
 }
 
