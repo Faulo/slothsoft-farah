@@ -2,17 +2,17 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Node\Meta;
 
-use Slothsoft\Farah\Module\Node\AssetReferenceTrait;
-use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\UseTemplateInstruction;
+use Slothsoft\Farah\Module\Node\Enhancements\ReferenceTrait;
+use Slothsoft\Farah\Module\Node\Instruction\UseTemplateInstructionInterface;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class UseTemplateMeta extends MetaImplementation implements UseTemplateInstruction
+class UseTemplateMeta extends MetaImplementation implements UseTemplateInstructionInterface
 {
-    use AssetReferenceTrait {
+    use ReferenceTrait {
         getReferencedAsset as public getReferencedTemplateAsset;
     }
 

@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
 <assets xmlns="http://schema.slothsoft.net/farah/module">
-   <resource-directory name="css" path="stylesheet" type="text/css"/>
-   <resource-directory name="js" path="script" type="application/javascript"/>
    <resource-directory name="xsl" path="template" type="application/xslt+xml"/>
-   <resource-directory name="dictionary" path="dictionary" type="application/xml"/>
-   <resource-directory name="pages" path="pages" type="application/xml"/>
    <directory name="schema">
      <directory name="module">
        <resource-directory name="20171027" path="20171027" type="application/x-xsd+xml"/>
@@ -21,4 +17,5 @@
    </directory>
    <custom-asset name="sites" class="Slothsoft\Farah\Internal\SitesAsset"/>
    <custom-asset name="request" class="Slothsoft\Farah\Internal\RequestAsset"/>
+   <external-resource name="proxy" src="http://localhost/robots.txt" type="text/plain"/>
  </assets>

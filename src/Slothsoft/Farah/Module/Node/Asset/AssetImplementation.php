@@ -2,37 +2,34 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Node\Asset;
 
-use Slothsoft\Core\DOMHelper;
-use Slothsoft\Core\IO\Writable\DOMWriterDocumentFromElementTrait;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;
+use Slothsoft\Farah\Module\Node\InstructionCollector;
 use Slothsoft\Farah\Module\Node\ModuleNodeImplementation;
 use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
+use Slothsoft\Farah\Module\Node\Instruction\UseDocumentInstructionInterface;
+use Slothsoft\Farah\Module\Node\Instruction\UseManifestInstructionInterface;
+use Slothsoft\Farah\Module\Node\Instruction\UseScriptInstructionInterface;
+use Slothsoft\Farah\Module\Node\Instruction\UseStylesheetInstructionInterface;
+use Slothsoft\Farah\Module\Node\Instruction\UseTemplateInstructionInterface;
 use Slothsoft\Farah\Module\Node\Meta\MetaInterface;
-use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\LinkScriptInstruction;
-use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\LinkStylesheetInstruction;
-use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\UseDocumentInstruction;
-use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\UseTemplateInstruction;
 use Slothsoft\Farah\Module\ParameterFilters\AllowAllFilter;
 use Slothsoft\Farah\Module\ParameterFilters\ParameterFilterInterface;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverCatalog;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
 use Slothsoft\Farah\Module\Results\ResultCatalog;
 use Slothsoft\Farah\Module\Results\ResultInterface;
-use DOMDocument;
-use DOMElement;
-use Throwable;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class AssetImplementation extends ModuleNodeImplementation implements AssetInterface, UseDocumentInstruction, UseTemplateInstruction
+class AssetImplementation extends ModuleNodeImplementation implements AssetInterface, UseDocumentInstructionInterface, UseTemplateInstructionInterface, UseManifestInstructionInterface, UseStylesheetInstructionInterface, UseScriptInstructionInterface
 {
-    use DOMWriterDocumentFromElementTrait;
+    
 
     private $path;
 
@@ -41,6 +38,8 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     private $pathResolver;
 
     private $parameterFilter;
+    
+    private $instructionCollector;
 
     private $assetChildren;
 
@@ -164,130 +163,89 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     {
         return $this->getId();
     }
-
-    public function toElement(DOMDocument $targetDoc): DOMElement
+    
+    public function getInstructionCollector(): InstructionCollector
     {
-        $element = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, $this->getElementTag());
-        $element->setAttribute(Module::ATTR_NAME, $this->getName());
-        $element->setAttribute(Module::ATTR_ID, $this->getId());
-        $element->setAttribute(Module::ATTR_HREF, str_replace('farah://', '/getAsset.php/', $this->getId()));
-        foreach ($this->getPathResolver()->getPathMap() as $asset) {
-            if ($asset !== $this) {
-                $element->appendChild($asset->toElement($targetDoc));
-            }
+        if ($this->instructionCollector === null) {
+            $this->instructionCollector = $this->loadInstructionCollector();
         }
-        return $element;
+        return $this->instructionCollector;
+    }
+    protected function loadInstructionCollector(): InstructionCollector {
+        return InstructionCollector::createFromAsset($this);
     }
 
     public function lookupLinkedStylesheets(): array
     {
-        if ($this->linkedStylesheets === null) {
-            $this->linkedStylesheets = $this->loadLinkedStylesheets();
-        }
-        return $this->linkedStylesheets;
-    }
-
-    protected function loadLinkedStylesheets(): array
-    {
-        $ret = [];
-        foreach ($this->getMetaChildren() as $child) {
-            if ($child instanceof LinkStylesheetInstruction) {
-                $asset = $child->getReferencedStylesheetAsset();
-                $ret[(string) $asset] = $asset;
-            }
-        }
-        $this->processInstructions();
-        foreach ($this->documentInstructions as $instruction) {
-            try {
-                $ret += $instruction->getReferencedDocumentAsset()->lookupLinkedStylesheets();
-            } catch (Throwable $e) {}
-        }
-        return $ret;
+        return $this->getInstructionCollector()->stylesheetAssets;
     }
 
     public function lookupLinkedScripts(): array
     {
-        if ($this->linkedScripts === null) {
-            $this->linkedScripts = $this->loadLinkedScripts();
-        }
-        return $this->linkedScripts;
-    }
-
-    protected function loadLinkedScripts(): array
-    {
-        $ret = [];
-        foreach ($this->getMetaChildren() as $child) {
-            if ($child instanceof LinkScriptInstruction) {
-                $asset = $child->getReferencedScriptAsset();
-                $ret[(string) $asset] = $asset;
-            }
-        }
-        $this->processInstructions();
-        foreach ($this->documentInstructions as $instruction) {
-            try {
-                $ret += $instruction->getReferencedDocumentAsset()->lookupLinkedScripts();
-            } catch (Throwable $e) {}
-        }
-        return $ret;
-    }
-
-    private $instructionsProcessed = false;
-
-    private $documentInstructions = [];
-
-    private $templateInstruction = null;
-
-    private function processInstructions()
-    {
-        if (! $this->instructionsProcessed) {
-            $this->instructionsProcessed = true;
-            foreach ($this->getChildren() as $node) {
-                if ($node->isUseTemplate()) {
-                    assert($node instanceof UseTemplateInstruction, get_class($node));
-                    $this->templateInstruction = $node;
-                }
-                if ($node->isUseDocument()) {
-                    assert($node instanceof UseDocumentInstruction, get_class($node));
-                    $this->documentInstructions[] = $node;
-                }
-            }
-        }
+        return $this->getInstructionCollector()->scriptAssets;
     }
 
     protected function loadResult(FarahUrl $url): ResultInterface
     {
-        $this->processInstructions();
-        $result = ResultCatalog::createTransformationResult($url, $this->getName());
-        $result->setDocumentInstructions(...$this->documentInstructions);
-        if ($this->templateInstruction) {
-            $result->setTemplateInstruction($this->templateInstruction);
-        }
-        return $result;
+        return ResultCatalog::createTransformationResult($url, $this->getName(), $this->getInstructionCollector());
     }
-
+    
+    
+    
+    
+    
+    
     public function getReferencedDocumentAsset(): AssetInterface
     {
         return $this;
     }
-
-    public function getReferencedTemplateAsset(): AssetInterface
-    {
-        return $this;
-    }
-
     public function getReferencedDocumentAlias(): string
     {
         return $this->getName();
     }
+    public function getReferencedManifestAsset(): AssetInterface
+    {
+        return $this;
+    }
+    public function getReferencedTemplateAsset(): AssetInterface
+    {
+        return $this;
+    }
+    public function getReferencedStylesheetAsset(): AssetInterface
+    {
+        return $this;
+    }
+    public function getReferencedScriptAsset(): AssetInterface
+    {
+        return $this;
+    }
+    
 
+    
+    
+    
     public function isUseDocument(): bool
     {
         return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_DOCUMENT) !== false;
     }
-
+    public function isUseManifest() : bool
+    {
+        return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_MANIFEST) !== false;
+    }
     public function isUseTemplate(): bool
     {
         return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_TEMPLATE) !== false;
     }
+    public function isUseStylesheet() : bool
+    {
+        return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_STYLESHEET) !== false;
+    }
+
+    public function isUseScript() : bool
+    {
+        return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_SCRIPT) !== false;
+    }
+
+
 }
 

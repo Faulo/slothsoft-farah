@@ -3,17 +3,17 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Node\Meta;
 
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\Node\AssetReferenceTrait;
-use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\UseDocumentInstruction;
+use Slothsoft\Farah\Module\Node\Enhancements\ReferenceTrait;
+use Slothsoft\Farah\Module\Node\Instruction\UseDocumentInstructionInterface;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class UseDocumentMeta extends MetaImplementation implements UseDocumentInstruction
+class UseDocumentMeta extends MetaImplementation implements UseDocumentInstructionInterface
 {
-    use AssetReferenceTrait {
+    use ReferenceTrait {
         getReferencedAsset as public getReferencedDocumentAsset;
     }
 

@@ -25,7 +25,7 @@ class AssetFactory extends ModuleNodeFactory
             $element->setAttribute(Module::ATTR_ASSETPATH, $this->inventElementAssetPath($element, $parent));
         }
         if (! $element->hasAttribute(Module::ATTR_USE)) {
-            $element->setAttribute(Module::ATTR_USE, 'document');
+            $element->setAttribute(Module::ATTR_USE, Module::ATTR_USE_MANIFEST);
         }
     }
 
@@ -43,8 +43,8 @@ class AssetFactory extends ModuleNodeFactory
                 return new FragmentAsset();
             case Module::TAG_CLOSURE:
                 return new ClosureAsset();
-            case Module::TAG_EXTERNAL_DOCUMENT:
-                return new ExternalDocumentAsset();
+            case Module::TAG_EXTERNAL_RESOURCE:
+                return new ExternalResourceAsset();
             case Module::TAG_CUSTOM_ASSET:
                 $className = $element->getAttribute('class');
                 return new $className();

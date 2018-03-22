@@ -1,13 +1,13 @@
 <?php
 declare(strict_types = 1);
-namespace Slothsoft\Farah\Module\Node;
+namespace Slothsoft\Farah\Module\Node\Enhancements;
 
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
-trait AssetReferenceTrait {
+trait ReferenceTrait {
 
     private $referencedAsset;
 

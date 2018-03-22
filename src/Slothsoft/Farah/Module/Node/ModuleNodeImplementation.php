@@ -5,8 +5,8 @@ namespace Slothsoft\Farah\Module\Node;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
-use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\ImportInstruction;
-use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\ParameterInstruction;
+use Slothsoft\Farah\Module\Node\Instruction\ImportInstructionInterface;
+use Slothsoft\Farah\Module\Node\Instruction\ParameterInstructionInterface;
 
 /**
  *
@@ -68,7 +68,7 @@ abstract class ModuleNodeImplementation implements ModuleNodeInterface
         $ret = [];
         foreach ($this->getElement()->getChildren() as $element) {
             $node = $this->createChildNode($element);
-            if ($node instanceof ImportInstruction) {
+            if ($node instanceof ImportInstructionInterface) {
                 foreach ($node->getImportNodes() as $referencedNode) {
                     $ret[] = $referencedNode;
                 }
@@ -101,7 +101,7 @@ abstract class ModuleNodeImplementation implements ModuleNodeInterface
     {
         $data = [];
         foreach ($this->getChildren() as $child) {
-            if ($child instanceof ParameterInstruction) {
+            if ($child instanceof ParameterInstructionInterface) {
                 $data[$child->getParameterName()] = $child->getParameterValue();
             }
         }

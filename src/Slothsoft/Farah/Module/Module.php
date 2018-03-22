@@ -25,7 +25,7 @@ class Module
 
     const TAG_CONTAINER = 'container';
 
-    const TAG_EXTERNAL_DOCUMENT = 'external-document';
+    const TAG_EXTERNAL_RESOURCE = 'external-resource';
 
     const TAG_CUSTOM_ASSET = 'custom-asset';
 
@@ -68,8 +68,10 @@ class Module
     const ATTR_NAME = 'name';
 
     const ATTR_ID = 'url';
-
+    
     const ATTR_HREF = 'href';
+    
+    const ATTR_SRC = 'src';
 
     const ATTR_ALIAS = 'as';
 
@@ -84,10 +86,16 @@ class Module
     const ATTR_REFERENCE = 'ref';
 
     const ATTR_USE = 'use';
-
+    
+    const ATTR_USE_MANIFEST = 'manifest';
+    
     const ATTR_USE_DOCUMENT = 'document';
-
+    
     const ATTR_USE_TEMPLATE = 'template';
+    
+    const ATTR_USE_STYLESHEET = 'stylesheet';
+    
+    const ATTR_USE_SCRIPT = 'script';
 
     const ATTR_PARAM_KEY = 'name';
 
@@ -122,10 +130,20 @@ class Module
         $this->manifest = $manifest;
         $this->assetDirectory = $assetDirectory;
     }
-
+    
     public function getAuthority(): FarahUrlAuthority
     {
         return $this->authority;
+    }
+    
+    public function getManifest(): ManifestInterface
+    {
+        return $this->manifest;
+    }
+    
+    public function getAssetDirectory(): string
+    {
+        return $this->assetDirectory;
     }
 
     public function getId(): string
@@ -154,7 +172,7 @@ class Module
     {
         $manifestElemet = $this->manifest->getRootElement();
         $manifestElemet->setAttribute('realpath', $this->assetDirectory);
-        $manifestElemet->setAttribute('name', '');
+        $manifestElemet->setAttribute('name', $this->authority->getModule());
         $manifestElemet->setAttribute('assetpath', '');
         
         return ModuleNodeCreator::getInstance()->create($this, $manifestElemet);

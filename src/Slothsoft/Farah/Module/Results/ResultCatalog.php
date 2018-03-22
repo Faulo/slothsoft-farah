@@ -7,6 +7,7 @@ use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\Farah\Exception\ResultTypeNotSupportedException;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\Node\InstructionCollector;
 use Slothsoft\Farah\Module\Results\Files\BinaryFileResult;
 use Slothsoft\Farah\Module\Results\Files\TextFileResult;
 use Slothsoft\Farah\Module\Results\Files\XmlFileResult;
@@ -59,9 +60,9 @@ class ResultCatalog
         return new DOMWriterResult($url, $writer);
     }
 
-    public static function createTransformationResult(FarahUrl $url, string $name): TransformationResult
+    public static function createTransformationResult(FarahUrl $url, string $name, InstructionCollector $collector): TransformationResult
     {
-        return new TransformationResult($url, $name);
+        return new TransformationResult($url, $name, $collector);
     }
 
     public static function createDOMDocumentResult(FarahUrl $url, DOMDocument $document): DOMDocumentResult

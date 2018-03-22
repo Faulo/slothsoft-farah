@@ -29,7 +29,7 @@ class ClosureAsset extends AssetImplementation
 
     private function runClosure(FarahUrl $url)
     {
-        return $this->closure === null ? null : $this->closure($url);
+        return $this->closure === null ? null : ($this->closure)($url);
     }
 }
 

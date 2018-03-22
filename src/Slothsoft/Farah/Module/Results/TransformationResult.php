@@ -9,10 +9,10 @@ use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Exception\ExceptionContext;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
-use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
-use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\UseDocumentInstruction;
-use Slothsoft\Farah\Module\Node\Meta\InstructionInterfaces\UseTemplateInstruction;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
+use Slothsoft\Farah\Module\Node\InstructionCollector;
+use Slothsoft\Farah\Module\Node\Instruction\UseDocumentInstructionInterface;
+use Slothsoft\Farah\Module\Node\Instruction\UseManifestInstructionInterface;
 use DOMDocument;
 use DOMElement;
 use Throwable;
@@ -38,57 +38,39 @@ class TransformationResult extends ResultImplementation
     const ATTR_HREF = 'href';
 
     private $name;
-
+    
+    private $collector;
+    
     private $resultDoc;
 
-    private $documentInstructions = [];
-
-    private $templateInstruction = null;
-
-    public function __construct(FarahUrl $url, string $name)
+    public function __construct(FarahUrl $url, string $name, InstructionCollector $collector)
     {
         parent::__construct($url);
         
         $this->name = $name;
-    }
-
-    public function setDocumentInstructions(UseDocumentInstruction ...$instructions)
-    {
-        $this->documentInstructions = $instructions;
-    }
-
-    public function setTemplateInstruction(UseTemplateInstruction $instruction)
-    {
-        $this->templateInstruction = $instruction;
+        $this->collector = $collector;
     }
 
     public function toDocument(): DOMDocument
     {
         if ($this->resultDoc === null) {
             $this->resultDoc = new DOMDocument();
-            $dataNode = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, self::TAG_ROOT);
+            $dataNode = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, FarahUrlResolver::resolveToAsset($this->getUrl())->getElement()->getTag());
             $dataNode->setAttribute(self::ATTR_NAME, $this->name);
             $dataNode->setAttribute(self::ATTR_ID, $this->getId());
             
-            foreach ($this->documentInstructions as $instruction) {
-                $asset = $instruction->getReferencedDocumentAsset();
-                try {
-                    $element = $this->createDocumentElement($asset, $this->getArguments(), $instruction->getReferencedDocumentAlias());
-                } catch (Throwable $exception) {
-                    ExceptionContext::append($exception, [
-                        'asset' => $asset,
-                        'class' => __CLASS__
-                    ]);
-                    $element = $exception->exceptionContext->toElement($this->resultDoc);
-                } finally {
-                    $dataNode->appendChild($element);
-                }
+            foreach ($this->collector->documentInstructions as $instruction) {
+                $dataNode->appendChild($this->createElementFromDocumentInstruction($instruction));
+            }
+            
+            foreach ($this->collector->manifestInstructions as $instruction) {
+                $dataNode->appendChild($this->createElementFromManifestInstruction($instruction));
             }
             
             $this->resultDoc->appendChild($dataNode);
             
-            if ($this->templateInstruction) {
-                $asset = $this->templateInstruction->getReferencedTemplateAsset();
+            if ($this->collector->templateInstruction) {
+                $asset = $this->collector->templateInstruction->getReferencedTemplateAsset();
                 // echo "transforming $this using $asset ..." . PHP_EOL;
                 $dom = new DOMHelper();
                 
@@ -121,16 +103,42 @@ class TransformationResult extends ResultImplementation
     {
         return true;
     }
-
-    private function createDocumentElement(AssetInterface $asset, FarahUrlArguments $args, string $name): DOMElement
-    {
-        $element = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, self::TAG_DOCUMENT);
-        $element->setAttribute(self::ATTR_NAME, $name);
-        $element->setAttribute(self::ATTR_ID, $asset->getId());
-        $element->setAttribute(self::ATTR_HREF, str_replace('farah://', '/getAsset.php/', $asset->getId()));
+    
+    private function createElementFromDocumentInstruction(UseDocumentInstructionInterface $instruction) {
+        $asset = $instruction->getReferencedDocumentAsset();
         
-        $element->appendChild($asset->lookupResultByArguments($args)
-            ->toElement($element->ownerDocument));
+        $element = $this->createElement(
+            self::TAG_DOCUMENT,
+            $instruction->getReferencedDocumentAlias(),
+            $asset->getId()
+        );        
+        try {
+            $result = $asset->lookupResultByArguments($this->getArguments());
+            $element->appendChild($result->toElement($this->resultDoc));
+        } catch (Throwable $exception) {
+            ExceptionContext::append($exception, [
+                'asset' => $asset,
+                'class' => __CLASS__
+            ]);
+            $element = $exception->exceptionContext->toElement($this->resultDoc);
+        }
+        return $element;
+    }
+    private function createElementFromManifestInstruction(UseManifestInstructionInterface $instruction) : DOMElement {
+        $asset = $instruction->getReferencedManifestAsset();
+        $element = $this->createElement(
+            $asset->getElement()->getTag(),
+            $asset->getName(),
+            $asset->getId()
+        );
+        return $element;
+    }
+    private function createElement(string $tag, string $name, string $id): DOMElement
+    {
+        $element = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, $tag);
+        $element->setAttribute(self::ATTR_NAME, $name);
+        $element->setAttribute(self::ATTR_ID, $id);
+        $element->setAttribute(self::ATTR_HREF, str_replace('farah://', '/getAsset.php/', $id));
         
         return $element;
     }

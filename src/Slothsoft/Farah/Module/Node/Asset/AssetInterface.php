@@ -2,10 +2,10 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Node\Asset;
 
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;
+use Slothsoft\Farah\Module\Node\InstructionCollector;
 use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 use Slothsoft\Farah\Module\ParameterFilters\ParameterFilterInterface;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
@@ -16,7 +16,7 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  * @author Daniel Schulz
  *        
  */
-interface AssetInterface extends ModuleNodeInterface, DOMWriterInterface
+interface AssetInterface extends ModuleNodeInterface
 {
 
     public function __toString(): string;
@@ -34,6 +34,8 @@ interface AssetInterface extends ModuleNodeInterface, DOMWriterInterface
     public function applyParameterFilter(FarahUrlArguments $args): FarahUrlArguments;
 
     public function getParameterFilter(): ParameterFilterInterface;
+    
+    public function getInstructionCollector(): InstructionCollector;
 
     public function traverseTo(string $path): AssetInterface;
 

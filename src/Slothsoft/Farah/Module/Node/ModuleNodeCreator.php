@@ -7,7 +7,7 @@ use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Exception\TagNotSupportedException;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Node\Asset\AssetFactory;
-use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\PhysicalAssetFactory;
+use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\DirectoryAsset\DirectoryAssetFactory;
 use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\Resource\ResourceFactory;
 use Slothsoft\Farah\Module\Node\Meta\MetaFactory;
 
@@ -33,19 +33,19 @@ class ModuleNodeCreator // TOOD: find a better name maybe
     public function __construct()
     {
         $assetFactory = new AssetFactory();
-        $physicalFactory = new PhysicalAssetFactory();
+        $directoryFactory = new DirectoryAssetFactory();
         $resourceFactory = new ResourceFactory();
         $metaFactory = new MetaFactory();
         
         $this->factoryMap[Module::TAG_CONTAINER] = $assetFactory;
         $this->factoryMap[Module::TAG_FRAGMENT] = $assetFactory;
         $this->factoryMap[Module::TAG_CUSTOM_ASSET] = $assetFactory;
-        $this->factoryMap[Module::TAG_EXTERNAL_DOCUMENT] = $assetFactory;
+        $this->factoryMap[Module::TAG_EXTERNAL_RESOURCE] = $assetFactory;
         $this->factoryMap[Module::TAG_CLOSURE] = $assetFactory;
         
-        $this->factoryMap[Module::TAG_DIRECTORY] = $physicalFactory;
-        $this->factoryMap[Module::TAG_RESOURCE_DIRECTORY] = $physicalFactory;
-        $this->factoryMap[Module::TAG_ASSET_ROOT] = $physicalFactory;
+        $this->factoryMap[Module::TAG_DIRECTORY] = $directoryFactory;
+        $this->factoryMap[Module::TAG_RESOURCE_DIRECTORY] = $directoryFactory;
+        $this->factoryMap[Module::TAG_ASSET_ROOT] = $directoryFactory;
         
         $this->factoryMap[Module::TAG_RESOURCE] = $resourceFactory;
         

@@ -13,10 +13,9 @@
 
 	<xsd:group name="virtual-assets">
 		<xsd:choice>
-			<xsd:element ref="container" />
 			<xsd:element ref="fragment" />
 			<xsd:element ref="custom-asset" />
-			<xsd:element ref="external-document" />
+			<xsd:element ref="external-resource" />
 		</xsd:choice>
 	</xsd:group>
 
@@ -81,19 +80,6 @@
 	</xsd:element>
 
 	<!-- virtual assets -->
-	<xsd:element name="container">
-		<xsd:complexType>
-			<xsd:complexContent>
-				<xsd:extension base="virtual-asset">
-					<xsd:choice minOccurs="0" maxOccurs="unbounded">
-						<xsd:group ref="virtual-assets" />
-						<xsd:group ref="asset-meta" />
-					</xsd:choice>
-				</xsd:extension>
-			</xsd:complexContent>
-		</xsd:complexType>
-	</xsd:element>
-
 	<xsd:element name="fragment">
 		<xsd:complexType>
 			<xsd:complexContent>
@@ -122,11 +108,16 @@
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:element name="external-document">
+	<xsd:element name="external-resource">
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="virtual-asset">
-					<xsd:attribute name="href" type="wwwUrl" use="required" />
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:group ref="asset-meta" />
+						<xsd:group ref="resource-meta" />
+					</xsd:choice>
+					<xsd:attribute name="type" type="mimeType" use="required" />
+					<xsd:attribute name="src" type="wwwUrl" use="required" />
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>

@@ -15,6 +15,10 @@ class XmlManifest extends ManifestImplementation
         $this->path = $path;
         assert(is_file($this->path), "Missing manifest file: {$path}");
     }
+    
+    public function getPath() : string {
+        return $this->path;
+    }
 
     protected function loadRootElement(): LeanElement
     {
