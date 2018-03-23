@@ -133,7 +133,7 @@ class Kernel
 
     public function getRequest(): HTTPRequest
     {
-        return $this->requestBackup;
+        return $this->requestBackup ?? new HTTPResponse();
     }
 }
 
