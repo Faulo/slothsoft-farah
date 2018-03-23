@@ -33,6 +33,17 @@ abstract class ModuleTest extends TestCase
     protected function getManifestDocument() : DOMDocument {
         return $this->getModule()->getManifest()->getRootElement()->toDocument();
     }
+    protected function getAssetReferences() : array {
+        $ret = [];
+        $manifestDocument = $this->getManifestDocument();
+        $nodeList = $manifestDocument->getElementsByTagName('*');
+        foreach ($nodeList as $node) {
+            if ($node->hasAttribute('ref')) {
+                $ret[] = $node->getAttribute('ref');
+            }
+        }
+        return $ret;
+    }
     
     private function failException(Throwable $e) {
         $this->fail(sprintf('%s: %s', basename(get_class($e)), $e->getMessage()));
@@ -56,10 +67,9 @@ abstract class ModuleTest extends TestCase
         }
     }
     /**
-     * @dataProvider assetReferenceProvider
+     * @dataProvider assetReferenceUrlProvider
      */
-    public function testAssetReferenceModuleExists($ref) {
-        $url = FarahUrl::createFromReference($ref, $this->getModuleAuthority());
+    public function testAssetReferenceModuleExists($url) {
         try {
             FarahUrlResolver::resolveToModule($url);
         } catch(ModuleNotFoundException $e) {
@@ -67,10 +77,9 @@ abstract class ModuleTest extends TestCase
         }
     }
     /**
-     * @dataProvider assetReferenceProvider
+     * @dataProvider assetReferenceUrlProvider
      */
-    public function testAssetReferencePathExists($ref) {
-        $url = FarahUrl::createFromReference($ref, $this->getModuleAuthority());
+    public function testAssetReferencePathExists($url) {
         try {
             FarahUrlResolver::resolveToAsset($url);
         } catch(AssetPathNotFoundException $e) {
@@ -78,13 +87,12 @@ abstract class ModuleTest extends TestCase
         }
     }
     /**
-     * @dataProvider assetReferenceProvider
+     * @dataProvider assetReferenceUrlProvider
      */
-    public function testAssetReferenceResultExists($ref) {
-        $url = FarahUrl::createFromReference($ref, $this->getModuleAuthority());
+    public function testAssetReferenceResultExists($url) {
         try {
             FarahUrlResolver::resolveToResult($url);
-        } catch(AssetPathNotFoundException $e) {
+        } catch(Throwable $e) {
             $this->failException($e);
         }
     }
@@ -92,17 +100,21 @@ abstract class ModuleTest extends TestCase
     public function assetReferenceProvider()
     {
         $ret = [];
-        
-        $manifestDocument = $this->getManifestDocument();
-        $nodeList = $manifestDocument->getElementsByTagName('*');
-        
-        foreach ($nodeList as $node) {
-            if ($node->hasAttribute('ref')) {
-                $ref = $node->getAttribute('ref');
-                $ret[$ref] = [$ref];
+        foreach ($this->getAssetReferences() as $ref) {
+            $ret[$ref] = [$ref];
+        }
+        return $ret;
+    }
+    public function assetReferenceUrlProvider()
+    {
+        $ret = [];
+        foreach ($this->getAssetReferences() as $ref) {
+            try {
+                $url = FarahUrl::createFromReference($ref, $this->getModuleAuthority());
+                $ret[(string) $url] = [$url];
+            } catch(Throwable $e) {
             }
         }
-        
         return $ret;
     }
 }

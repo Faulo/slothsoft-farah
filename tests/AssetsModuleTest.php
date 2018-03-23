@@ -11,7 +11,7 @@ class AssetsModuleTest extends ModuleTest
     protected static function loadModule() : Module {
         return new Module(
             FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'farah'),
-            new XmlManifest(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets.xml'),
+            new XmlManifest(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . '.xml'),
             dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets'
         );
     }
