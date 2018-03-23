@@ -11,6 +11,7 @@ use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Node\ModuleNodeCreator;
 use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Manifest\XmlManifest;
 
 /**
  *
@@ -114,21 +115,21 @@ class Module
     const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
 
     private $authority;
+    
+    private $assetDirectory;
 
-    private $manifest;
+    private $assetManifest;
 
     private $rootAsset;
-
-    private $assetDirectory;
 
     private $assetList = [];
 
     // TODO: AssetCache
-    public function __construct(FarahUrlAuthority $authority, ManifestInterface $manifest, string $assetDirectory)
+    public function __construct(FarahUrlAuthority $authority, string $assetDirectory)
     {
         $this->authority = $authority;
-        $this->manifest = $manifest;
         $this->assetDirectory = $assetDirectory;
+        $this->assetManifest = new XmlManifest($this->assetDirectory . DIRECTORY_SEPARATOR . '.xml');
     }
     
     public function getAuthority(): FarahUrlAuthority
@@ -138,7 +139,7 @@ class Module
     
     public function getManifest(): ManifestInterface
     {
-        return $this->manifest;
+        return $this->assetManifest;
     }
     
     public function getAssetDirectory(): string
@@ -170,7 +171,7 @@ class Module
 
     private function loadRootAsset(): AssetInterface
     {
-        $manifestElemet = $this->manifest->getRootElement();
+        $manifestElemet = $this->assetManifest->getRootElement();
         $manifestElemet->setAttribute('realpath', $this->assetDirectory);
         $manifestElemet->setAttribute('name', $this->authority->getModule());
         $manifestElemet->setAttribute('assetpath', '');

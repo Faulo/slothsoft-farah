@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType">
-<stringAttribute key="ATTR_FILE" value="C:\Webserver\workspace\slothsoft-farah\vendor\phpunit\phpunit\phpunit"/>
-<stringAttribute key="ATTR_FILE_FULL_PATH" value="C:\Webserver\workspace\slothsoft-farah\vendor\phpunit\phpunit\phpunit"/>
+<stringAttribute key="ATTR_FILE" value=".\vendor\phpunit\phpunit\phpunit"/>
+<stringAttribute key="ATTR_FILE_FULL_PATH" value=".\vendor\phpunit\phpunit\phpunit"/>
 <stringAttribute key="ATTR_INI_LOCATION" value="C:\Webserver\php-7.0\php-apache2handler.ini"/>
 <stringAttribute key="ATTR_LOCATION" value="C:\Webserver\php-7.0\php.exe"/>
 <stringAttribute key="ZEND_PHPUNIT_TESTS_CONTAINER_TYPE" value="SCRIPT_PROJECT"/>
-<stringAttribute key="bad_container_name" value="\slothsoft-farah\run-phpunit"/>
 <stringAttribute key="debugOutputEncoding" value="UTF-8"/>
 <stringAttribute key="debugTransferEncoding" value="UTF-8"/>
 <booleanAttribute key="firstLineBreakpoint" value="false"/>
@@ -18,7 +17,6 @@
 <listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
 </listAttribute>
 <booleanAttribute key="org.eclipse.debug.ui.private" value="true"/>
-<stringAttribute key="org.eclipse.php.debug.core.PHP_Project" value="/slothsoft-farah"/>
 <booleanAttribute key="org.eclipse.php.debug.core.RunWithDebugInfo" value="false"/>
 <stringAttribute key="org.eclipse.php.debug.coreconfiguration_delegate_class" value="org.eclipse.php.internal.debug.core.launching.XDebugExeLaunchConfigurationDelegate"/>
 <stringAttribute key="org.eclipse.php.debug.corephp_debugger_id" value="org.eclipse.php.debug.core.xdebugDebugger"/>
