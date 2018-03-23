@@ -82,6 +82,7 @@ abstract class ModuleTest extends TestCase
     public function testAssetReferencePathExists($url) {
         try {
             FarahUrlResolver::resolveToAsset($url);
+        } catch(ModuleNotFoundException $e) {
         } catch(AssetPathNotFoundException $e) {
             $this->failException($e);
         }
@@ -92,6 +93,8 @@ abstract class ModuleTest extends TestCase
     public function testAssetReferenceResultExists($url) {
         try {
             FarahUrlResolver::resolveToResult($url);
+        } catch(ModuleNotFoundException $e) {
+        } catch(AssetPathNotFoundException $e) {
         } catch(Throwable $e) {
             $this->failException($e);
         }
