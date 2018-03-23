@@ -1,5 +1,5 @@
 <?php
-namespace tests;
+namespace tests\Slothsoft\Farah;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\Kernel;

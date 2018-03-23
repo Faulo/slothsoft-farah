@@ -6,8 +6,11 @@ use DOMDocument;
 
 abstract class XmlManifestTest extends ManifestTest
 {
-    
     const SCHEMA_URL = 'farah://slothsoft@farah/schema/module/latest/module';
+    protected function getManifestPath() {
+        return $this->getManifest()->getPath();
+    }
+    
     public function testSchemaExists() {
         $path = self::SCHEMA_URL;
         $this->assertFileExists($path, 'Schema file not found!');
@@ -19,7 +22,7 @@ abstract class XmlManifestTest extends ManifestTest
     public function testSchemaIsValidXml(string $path) {
         $dom = new DOMHelper();
         $document = $dom->load($path);
-        $this->assertTrue($document instanceof DOMDocument);
+        $this->assertInstanceOf(DOMDocument::class, $document);
         return $document;
     }
     
@@ -27,8 +30,7 @@ abstract class XmlManifestTest extends ManifestTest
      * 
      */
     public function testManifestExists() {
-        $manifest = $this->getManifest();
-        $path = $manifest->getPath();
+        $path = $this->getManifestPath();
         $this->assertFileExists($path, 'Asset file not found!');
         return $path;
     }

@@ -10,12 +10,19 @@ use DOMDocument;
 
 abstract class ManifestTest extends TestCase
 {
-    abstract protected function getManifest() : ManifestInterface;
+    abstract protected static function loadManifest() : ManifestInterface;
+    protected function getManifest() {
+        static $manifest;
+        if ($manifest === null) {
+            $manifest = static::loadManifest();
+        }
+        return $manifest;
+    }
     protected function getManifestRoot() : LeanElement {
         return $this->getManifest()->getRootElement();
     }
     protected function getManifestDocument() : DOMDocument {
-        return $this->getManifest()->getRootElement()->toDocument();
+        return $this->getManifestRoot()->toDocument();
     }
     
     public function testRootElementIsAssets() {

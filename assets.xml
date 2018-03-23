@@ -18,4 +18,9 @@
    <custom-asset name="sites" class="Slothsoft\Farah\Internal\SitesAsset"/>
    <custom-asset name="request" class="Slothsoft\Farah\Internal\RequestAsset"/>
    <external-resource name="proxy" src="http://localhost/robots.txt" type="text/plain"/>
+   <fragment name="test">
+   	 <use-document ref="proxy?exit=true"/>
+   	 <use-document ref="ü+#ä"/>
+   	 <use-document ref="farah://slothsoft@nope/proxy"/>
+   </fragment>
  </assets>
