@@ -9,18 +9,19 @@ use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
+use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseDocumentInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseManifestInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseScriptInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseStylesheetInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseTemplateInstructionInterface;
+use Slothsoft\Farah\Module\Results\ResultInterface;
 use DOMDocument;
 use Throwable;
-use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
-use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 
 abstract class AbstractModuleTest extends TestCase
 {
@@ -112,6 +113,7 @@ abstract class AbstractModuleTest extends TestCase
     public function testAssetReferenceIsValid($ref) {
         try {
             $url = FarahUrl::createFromReference($ref, $this->getModuleAuthority());
+            $this->assertInstanceOf(FarahUrl::class, $url);
         } catch(MalformedUrlException $e) {
             $this->failException($e);
         } catch(ProtocolNotSupportedException $e) {
@@ -123,7 +125,8 @@ abstract class AbstractModuleTest extends TestCase
      */
     public function testReferencedAssetModuleExists($url) {
         try {
-            FarahUrlResolver::resolveToModule($url);
+            $module = FarahUrlResolver::resolveToModule($url);
+            $this->assertInstanceOf(Module::class, $module);
         } catch(ModuleNotFoundException $e) {
             $this->failException($e);
         }
@@ -133,7 +136,8 @@ abstract class AbstractModuleTest extends TestCase
      */
     public function testReferencedAssetPathExists($url) {
         try {
-            FarahUrlResolver::resolveToAsset($url);
+            $asset = FarahUrlResolver::resolveToAsset($url);
+            $this->assertInstanceOf(AssetInterface::class, $asset);
         } catch(ModuleNotFoundException $e) {
         } catch(AssetPathNotFoundException $e) {
             $this->failException($e);
@@ -144,7 +148,8 @@ abstract class AbstractModuleTest extends TestCase
      */
     public function testReferencedAssetResultExists($url) {
         try {
-            FarahUrlResolver::resolveToResult($url);
+            $result = FarahUrlResolver::resolveToResult($url);
+            $this->assertInstanceOf(ResultInterface::class, $result);
         } catch(ModuleNotFoundException $e) {
         } catch(AssetPathNotFoundException $e) {
         } catch(Throwable $e) {
@@ -180,7 +185,8 @@ abstract class AbstractModuleTest extends TestCase
      */
     public function testLocalAssetPathExists($url) {
         try {
-            FarahUrlResolver::resolveToAsset($url);
+            $asset = FarahUrlResolver::resolveToAsset($url);
+            $this->assertInstanceOf(AssetInterface::class, $asset);
         } catch(ModuleNotFoundException $e) {
         } catch(AssetPathNotFoundException $e) {
             $this->failException($e);
@@ -204,7 +210,8 @@ abstract class AbstractModuleTest extends TestCase
      */
     public function testLocalAssetResultExists(AssetInterface $asset) {
         try {
-            $asset->lookupResultByArguments(FarahUrlArguments::createEmpty());
+            $result = $asset->lookupResultByArguments(FarahUrlArguments::createEmpty());
+            $this->assertInstanceOf(ResultInterface::class, $result);
         } catch(Throwable $e) {
             $this->failException($e);
         }
