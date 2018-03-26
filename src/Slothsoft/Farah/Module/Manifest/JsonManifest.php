@@ -12,7 +12,6 @@ class JsonManifest extends ManifestImplementation
     public function __construct(string $path)
     {
         $this->path = $path;
-        assert(is_file($this->path), "Missing manifest file: {$path}");
     }
 
     protected function loadRootElement(): LeanElement

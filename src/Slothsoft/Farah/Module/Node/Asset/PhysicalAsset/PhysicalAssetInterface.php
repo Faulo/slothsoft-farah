@@ -4,7 +4,6 @@ namespace Slothsoft\Farah\Module\Node\Asset\PhysicalAsset;
 
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
-
 /**
  *
  * @author Daniel Schulz
@@ -12,6 +11,7 @@ use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
  */
 interface PhysicalAssetInterface extends AssetInterface
 {
+
     public function getPath(): string;
 
     public function getRealPath(): string;

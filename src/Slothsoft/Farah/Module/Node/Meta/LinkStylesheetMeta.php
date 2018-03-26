@@ -15,6 +15,7 @@ class LinkStylesheetMeta extends MetaImplementation implements UseStylesheetInst
     use ReferenceTrait {
         getReferencedAsset as public getReferencedStylesheetAsset;
     }
+
     public function isUseStylesheet(): bool
     {
         return true;

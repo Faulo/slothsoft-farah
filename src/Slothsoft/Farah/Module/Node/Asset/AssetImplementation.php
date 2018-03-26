@@ -29,7 +29,6 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class AssetImplementation extends ModuleNodeImplementation implements AssetInterface, UseDocumentInstructionInterface, UseTemplateInstructionInterface, UseManifestInstructionInterface, UseStylesheetInstructionInterface, UseScriptInstructionInterface
 {
-    
 
     private $path;
 
@@ -38,7 +37,7 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     private $pathResolver;
 
     private $parameterFilter;
-    
+
     private $instructionCollector;
 
     private $assetChildren;
@@ -163,7 +162,7 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     {
         return $this->getId();
     }
-    
+
     public function getInstructionCollector(): InstructionCollector
     {
         if ($this->instructionCollector === null) {
@@ -171,7 +170,9 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
         }
         return $this->instructionCollector;
     }
-    protected function loadInstructionCollector(): InstructionCollector {
+
+    protected function loadInstructionCollector(): InstructionCollector
+    {
         return InstructionCollector::createFromAsset($this);
     }
 
@@ -189,63 +190,60 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     {
         return ResultCatalog::createTransformationResult($url, $this->getName(), $this->getInstructionCollector());
     }
-    
-    
-    
-    
-    
-    
+
     public function getReferencedDocumentAsset(): AssetInterface
     {
         return $this;
     }
+
     public function getReferencedDocumentAlias(): string
     {
         return $this->getName();
     }
+
     public function getReferencedManifestAsset(): AssetInterface
     {
         return $this;
     }
+
     public function getReferencedTemplateAsset(): AssetInterface
     {
         return $this;
     }
+
     public function getReferencedStylesheetAsset(): AssetInterface
     {
         return $this;
     }
+
     public function getReferencedScriptAsset(): AssetInterface
     {
         return $this;
     }
-    
 
-    
-    
-    
     public function isUseDocument(): bool
     {
         return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_DOCUMENT) !== false;
     }
-    public function isUseManifest() : bool
+
+    public function isUseManifest(): bool
     {
         return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_MANIFEST) !== false;
     }
+
     public function isUseTemplate(): bool
     {
         return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_TEMPLATE) !== false;
     }
-    public function isUseStylesheet() : bool
+
+    public function isUseStylesheet(): bool
     {
         return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_STYLESHEET) !== false;
     }
 
-    public function isUseScript() : bool
+    public function isUseScript(): bool
     {
         return strpos($this->getElementAttribute(Module::ATTR_USE), Module::ATTR_USE_SCRIPT) !== false;
     }
-
-
 }
 

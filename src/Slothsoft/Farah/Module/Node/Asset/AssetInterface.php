@@ -34,7 +34,7 @@ interface AssetInterface extends ModuleNodeInterface
     public function applyParameterFilter(FarahUrlArguments $args): FarahUrlArguments;
 
     public function getParameterFilter(): ParameterFilterInterface;
-    
+
     public function getInstructionCollector(): InstructionCollector;
 
     public function traverseTo(string $path): AssetInterface;

@@ -17,7 +17,7 @@ trait AssetBuilderTrait {
         $element = LeanElement::createOneFromArray(Module::TAG_EXTERNAL_RESOURCE, [
             'name' => $name,
             'src' => $href,
-            'type' => $type,
+            'type' => $type
         ]);
         return $this->createChildNode($element);
     }
@@ -43,13 +43,16 @@ trait AssetBuilderTrait {
         
         return $this->createChildNode($element);
     }
-    protected function buildResourceFromContents(string $contents, string $name, string $type) {
+
+    protected function buildResourceFromContents(string $contents, string $name, string $type)
+    {
         $path = $name;
         if ($extension = MimeTypeDictionary::guessExtension($type)) {
             $path .= ".$extension";
         }
         return $this->buildResourceFromFile(HTTPFile::createFromString($contents, $path), $name, $type);
     }
+
     protected function buildResourceFromFile(HTTPFile $file, string $name, string $type): ResourceInterface
     {
         $tag = Module::TAG_RESOURCE;

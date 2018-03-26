@@ -15,7 +15,7 @@ class LinkScriptMeta extends MetaImplementation implements UseScriptInstructionI
     use ReferenceTrait {
         getReferencedAsset as public getReferencedScriptAsset;
     }
-    
+
     public function isUseScript(): bool
     {
         return true;

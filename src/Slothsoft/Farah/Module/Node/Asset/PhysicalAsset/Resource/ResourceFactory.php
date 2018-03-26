@@ -15,13 +15,14 @@ use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\PhysicalAssetFactory;
  */
 class ResourceFactory extends PhysicalAssetFactory
 {
+
     protected function normalizeElementAttributes(LeanElement $element, LeanElement $parent = null)
     {
         parent::normalizeElementAttributes($element, $parent);
         
-        //assert(is_file($element->getAttribute(Module::ATTR_REALPATH)), "Resource asset at path {$element->getAttribute(Module::ATTR_REALPATH)} does not exist.");
+        // assert(is_file($element->getAttribute(Module::ATTR_REALPATH)), "Resource asset at path {$element->getAttribute(Module::ATTR_REALPATH)} does not exist.");
     }
-    
+
     protected function inventElementPath(LeanElement $element): string
     {
         $path = $element->getAttribute(Module::ATTR_NAME);
@@ -30,7 +31,7 @@ class ResourceFactory extends PhysicalAssetFactory
         }
         return $path;
     }
-    
+
     protected function instantiateNode(LeanElement $element): ModuleNodeInterface
     {
         switch ($element->getAttribute('type')) {

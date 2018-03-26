@@ -20,7 +20,18 @@ use Slothsoft\Farah\Module\Manifest\XmlManifest;
  */
 class Module
 {
-
+    const TAGS_ASSETS = [
+        self::TAG_CONTAINER,
+        self::TAG_FRAGMENT,
+        self::TAG_CUSTOM_ASSET,
+        self::TAG_EXTERNAL_RESOURCE,
+        self::TAG_CLOSURE,
+        self::TAG_DIRECTORY,
+        self::TAG_RESOURCE_DIRECTORY,
+        self::TAG_ASSET_ROOT,
+        self::TAG_RESOURCE,
+    ];
+    
     // asset tags
     const TAG_FRAGMENT = 'fragment';
 

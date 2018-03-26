@@ -10,10 +10,14 @@ use Slothsoft\Farah\Module\Node\Instruction\UseTemplateInstructionInterface;
 
 class InstructionCollector
 {
-    public static function createFromAsset(AssetInterface $asset) {
+
+    public static function createFromAsset(AssetInterface $asset)
+    {
         return self::createFromInstructions($asset->getChildren());
     }
-    public static function createFromInstructions(array $nodeList) {
+
+    public static function createFromInstructions(array $nodeList)
+    {
         $collector = new self();
         foreach ($nodeList as $node) {
             if ($node->isUseDocument()) {
@@ -45,13 +49,15 @@ class InstructionCollector
         }
         return $collector;
     }
-    
+
     public $documentInstructions = [];
+
     public $manifestInstructions = [];
-    
+
     public $templateInstruction = null;
-    
+
     public $stylesheetAssets = [];
+
     public $scriptAssets = [];
 }
 

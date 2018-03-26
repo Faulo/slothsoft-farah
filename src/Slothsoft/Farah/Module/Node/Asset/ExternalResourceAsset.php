@@ -25,12 +25,13 @@ class ExternalResourceAsset extends AssetImplementation
     {
         return $this->getElementAttribute(Module::ATTR_SRC);
     }
-    
-    private function lookupResource() : ResourceInterface {
+
+    private function lookupResource(): ResourceInterface
+    {
         $contents = Storage::loadExternalFile($this->getSource(), Seconds::DAY);
         return $this->buildResourceFromContents($contents, $this->getName(), $this->getMimeType());
     }
-    
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         return $this->lookupResource()->lookupResultByArguments($url->getArguments());

@@ -4,6 +4,7 @@ namespace Slothsoft\Farah\Module\Node\Instruction;
 
 interface ImportInstructionInterface
 {
+
     public function getImportNodes(): array;
 }
 

@@ -31,7 +31,7 @@ abstract class PhysicalAssetFactory extends AssetFactory
     {
         return $parent->getAttribute(Module::ATTR_REALPATH) . DIRECTORY_SEPARATOR . $element->getAttribute(Module::ATTR_PATH);
     }
-    
+
     abstract protected function inventElementPath(LeanElement $element);
 }
 

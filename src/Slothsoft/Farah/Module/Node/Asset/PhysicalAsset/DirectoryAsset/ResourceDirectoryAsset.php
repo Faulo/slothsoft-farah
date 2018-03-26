@@ -16,7 +16,7 @@ use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
 class ResourceDirectoryAsset extends DirectoryAssetImplementation
 {
     use MimeTypeTrait;
-    
+
     protected function loadChildren(): array
     {
         $ret = [];
@@ -34,6 +34,7 @@ class ResourceDirectoryAsset extends DirectoryAssetImplementation
         }
         return $ret;
     }
+
     protected function loadPathResolver(): PathResolverInterface
     {
         return PathResolverCatalog::createResourceDirectoryPathResolver($this);

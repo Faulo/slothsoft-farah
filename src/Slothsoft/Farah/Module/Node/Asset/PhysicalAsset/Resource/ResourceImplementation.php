@@ -31,7 +31,7 @@ class ResourceImplementation extends PhysicalAssetImplementation implements Reso
     {
         return ResultCatalog::createFileWriterResult($url, $this);
     }
-    
+
     public function toFile(): HTTPFile
     {
         return HTTPFile::createFromPath($this->getRealPath(), $this->getPath());

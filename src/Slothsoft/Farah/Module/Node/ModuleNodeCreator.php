@@ -37,6 +37,7 @@ class ModuleNodeCreator // TOOD: find a better name maybe
         $resourceFactory = new ResourceFactory();
         $metaFactory = new MetaFactory();
         
+        //assets
         $this->factoryMap[Module::TAG_CONTAINER] = $assetFactory;
         $this->factoryMap[Module::TAG_FRAGMENT] = $assetFactory;
         $this->factoryMap[Module::TAG_CUSTOM_ASSET] = $assetFactory;
@@ -49,6 +50,7 @@ class ModuleNodeCreator // TOOD: find a better name maybe
         
         $this->factoryMap[Module::TAG_RESOURCE] = $resourceFactory;
         
+        //meta
         $this->factoryMap[Module::TAG_IMPORT] = $metaFactory;
         $this->factoryMap[Module::TAG_PARAM] = $metaFactory;
         $this->factoryMap[Module::TAG_USE_DOCUMENT] = $metaFactory;

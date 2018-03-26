@@ -13,7 +13,6 @@ class XmlManifest extends ManifestImplementation
     public function __construct(string $path)
     {
         $this->path = $path;
-        assert(is_file($this->path), "Missing manifest file: {$path}");
     }
     
     public function getPath() : string {

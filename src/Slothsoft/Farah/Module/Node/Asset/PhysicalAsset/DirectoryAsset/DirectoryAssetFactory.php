@@ -16,13 +16,14 @@ use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\PhysicalAssetFactory;
  */
 class DirectoryAssetFactory extends PhysicalAssetFactory
 {
+
     protected function normalizeElementAttributes(LeanElement $element, LeanElement $parent = null)
     {
         parent::normalizeElementAttributes($element, $parent);
         
-        //assert(is_dir($element->getAttribute(Module::ATTR_REALPATH)), "Directory asset at path {$element->getAttribute(Module::ATTR_REALPATH)} does not exist.");
+        // assert(is_dir($element->getAttribute(Module::ATTR_REALPATH)), "Directory asset at path {$element->getAttribute(Module::ATTR_REALPATH)} does not exist.");
     }
-    
+
     protected function inventElementPath(LeanElement $element): string
     {
         return $element->getAttribute(Module::ATTR_NAME);

@@ -8,7 +8,7 @@ use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use DOMDocument;
 
-abstract class ManifestTest extends TestCase
+abstract class AbstractManifestTest extends TestCase
 {
     abstract protected static function loadManifest() : ManifestInterface;
     protected function getManifest() {
@@ -25,6 +25,12 @@ abstract class ManifestTest extends TestCase
         return $this->getManifestRoot()->toDocument();
     }
     
+    public function testHasRootElement() {
+        $this->assertInstanceOf(LeanElement::class, $this->getManifestRoot());
+    }
+    /**
+     * @depends testHasRootElement
+     */
     public function testRootElementIsAssets() {
         $this->assertEquals($this->getManifestRoot()->getTag(), Module::TAG_ASSET_ROOT);
     }
@@ -35,7 +41,7 @@ abstract class ManifestTest extends TestCase
     public function testCustomAssetsImplementAssetInterface($assetClassName) {
         $this->assertNotNull($assetClassName);
         $this->assertTrue(class_exists($assetClassName));
-        $this->assertTrue(new $assetClassName() instanceof AssetInterface);
+        $this->assertInstanceOf(AssetInterface::class, new $assetClassName());
     }
     public function customAssetClassProvider()
     {

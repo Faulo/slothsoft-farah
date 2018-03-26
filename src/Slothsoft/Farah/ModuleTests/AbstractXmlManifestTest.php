@@ -4,7 +4,7 @@ namespace Slothsoft\Farah\ModuleTests;
 use Slothsoft\Core\DOMHelper;
 use DOMDocument;
 
-abstract class XmlManifestTest extends ManifestTest
+abstract class AbstractXmlManifestTest extends AbstractManifestTest
 {
     const SCHEMA_URL = 'farah://slothsoft@farah/schema/module/latest/module';
     protected function getManifestPath() {
