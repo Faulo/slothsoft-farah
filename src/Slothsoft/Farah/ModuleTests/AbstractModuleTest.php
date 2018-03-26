@@ -139,6 +139,7 @@ abstract class AbstractModuleTest extends TestCase
             $asset = FarahUrlResolver::resolveToAsset($url);
             $this->assertInstanceOf(AssetInterface::class, $asset);
         } catch(ModuleNotFoundException $e) {
+            $this->assertTrue(true);
         } catch(AssetPathNotFoundException $e) {
             $this->failException($e);
         }
@@ -151,7 +152,9 @@ abstract class AbstractModuleTest extends TestCase
             $result = FarahUrlResolver::resolveToResult($url);
             $this->assertInstanceOf(ResultInterface::class, $result);
         } catch(ModuleNotFoundException $e) {
+            $this->assertTrue(true);
         } catch(AssetPathNotFoundException $e) {
+            $this->assertTrue(true);
         } catch(Throwable $e) {
             $this->failException($e);
         }
@@ -188,6 +191,7 @@ abstract class AbstractModuleTest extends TestCase
             $asset = FarahUrlResolver::resolveToAsset($url);
             $this->assertInstanceOf(AssetInterface::class, $asset);
         } catch(ModuleNotFoundException $e) {
+            $this->assertTrue(true);
         } catch(AssetPathNotFoundException $e) {
             $this->failException($e);
         }
