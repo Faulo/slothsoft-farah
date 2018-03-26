@@ -11,8 +11,16 @@ use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
+use Slothsoft\Farah\Module\Node\Instruction\UseDocumentInstructionInterface;
+use Slothsoft\Farah\Module\Node\Instruction\UseManifestInstructionInterface;
+use Slothsoft\Farah\Module\Node\Instruction\UseScriptInstructionInterface;
+use Slothsoft\Farah\Module\Node\Instruction\UseStylesheetInstructionInterface;
+use Slothsoft\Farah\Module\Node\Instruction\UseTemplateInstructionInterface;
 use DOMDocument;
 use Throwable;
+use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 
 abstract class AbstractModuleTest extends TestCase
 {
@@ -27,6 +35,9 @@ abstract class AbstractModuleTest extends TestCase
     }
     protected function getModuleAuthority() : FarahUrlAuthority {
         return $this->getModule()->getAuthority();
+    }
+    protected function getModuleRoot() : AssetInterface {
+        return $this->getModule()->getRootAsset();
     }
     protected function getAssetDirectory() : string {
         return $this->getModule()->getAssetDirectory();
@@ -49,9 +60,9 @@ abstract class AbstractModuleTest extends TestCase
         return $ret;
     }
     protected function getAssetPaths() : array {
-        return $this->buildIndex($this->getManifestRoot());
+        return $this->buildPathIndex($this->getManifestRoot());
     }
-    private function buildIndex(LeanElement $element, string $parentPath = '/') : array {
+    private function buildPathIndex(LeanElement $element, string $parentPath = '/') : array {
         $ret = [];
         $name = $element->getAttribute(Module::ATTR_NAME, '');
         $path = $parentPath === '/'
@@ -60,10 +71,30 @@ abstract class AbstractModuleTest extends TestCase
             $ret[] = $path;
             foreach ($element->getChildren() as $childElement) {
                 if (in_array($childElement->getTag(), Module::TAGS_ASSETS)) {
-                    $ret = array_merge($ret, $this->buildIndex($childElement, $path));
+                    $ret = array_merge($ret, $this->buildPathIndex($childElement, $path));
                 }
             }
             return $ret;
+    }
+    protected function getModuleNodes() : array {
+        return $this->buildNodeIndex($this->getModuleRoot());
+    }
+    private function buildNodeIndex(ModuleNodeInterface $node) : array {
+        $ret = [];
+        $ret[] = $node;
+        foreach ($node->getChildren() as $child) {
+            $ret = array_merge($ret, $this->buildNodeIndex($child));
+        }
+        return $ret;
+    }
+    protected function getModuleAssets() : array {
+        return array_filter(
+            $this->getModuleNodes(),
+            function(ModuleNodeInterface $node) {
+                return $node instanceof AssetInterface;
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
     }
     
     private function failException(Throwable $e) {
@@ -135,7 +166,8 @@ abstract class AbstractModuleTest extends TestCase
         foreach ($this->getAssetReferences() as $ref) {
             try {
                 $url = FarahUrl::createFromReference($ref, $this->getModuleAuthority());
-                $ret[(string) $url] = [$url];
+                $key = sprintf('%3d: %s', count($ret), (string) $url);
+                $ret[$key] = [$url];
             } catch(Throwable $e) {
             }
         }
@@ -154,27 +186,64 @@ abstract class AbstractModuleTest extends TestCase
             $this->failException($e);
         }
     }
-    /**
-     * @dataProvider assetPathUrlProvider
-     */
-    public function testLocalAssetResultExists($url) {
-        try {
-            FarahUrlResolver::resolveToResult($url);
-        } catch(ModuleNotFoundException $e) {
-        } catch(AssetPathNotFoundException $e) {
-        } catch(Throwable $e) {
-            $this->failException($e);
-        }
-    }
     public function assetPathUrlProvider()
     {
         $ret = [];
         foreach ($this->getAssetPaths() as $ref) {
             try {
                 $url = FarahUrl::createFromReference($ref, $this->getModuleAuthority());
-                $ret[(string) $url] = [$url];
+                $key = sprintf('%3d: %s', count($ret), (string) $url);
+                $ret[$key] = [$url];
             } catch(Throwable $e) {
             }
+        }
+        return $ret;
+    }
+    /**
+     * @dataProvider assetProvider
+     */
+    public function testLocalAssetResultExists(AssetInterface $asset) {
+        try {
+            $asset->lookupResultByArguments(FarahUrlArguments::createEmpty());
+        } catch(Throwable $e) {
+            $this->failException($e);
+        }
+    }
+    public function assetProvider()
+    {
+        $ret = [];
+        foreach ($this->getModuleAssets() as $node) {
+            $key = sprintf('%3d: %s', count($ret), (string) $node);
+            $ret[$key] = [$node];
+        }
+        return $ret;
+    }
+    /**
+     * @dataProvider nodeProvider
+     */
+    public function testUseInstructionImplementsInstructionInterface(ModuleNodeInterface $node) {
+        if ($node->isUseDocument()) {
+            $this->assertInstanceOf(UseDocumentInstructionInterface::class, $node);
+        }
+        if ($node->isUseManifest()) {
+            $this->assertInstanceOf(UseManifestInstructionInterface::class, $node);
+        }
+        if ($node->isUseTemplate()) {
+            $this->assertInstanceOf(UseTemplateInstructionInterface::class, $node);
+        }
+        if ($node->isUseScript()) {
+            $this->assertInstanceOf(UseScriptInstructionInterface::class, $node);
+        }
+        if ($node->isUseStylesheet()) {
+            $this->assertInstanceOf(UseStylesheetInstructionInterface::class, $node);
+        }
+    }
+    public function nodeProvider()
+    {
+        $ret = [];
+        foreach ($this->getModuleNodes() as $node) {
+            $key = sprintf('%3d: %s', count($ret), (string) $node);
+            $ret[$key] = [$node];
         }
         return $ret;
     }

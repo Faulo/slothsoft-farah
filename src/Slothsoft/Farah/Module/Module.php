@@ -172,7 +172,7 @@ class Module
         return $this->assetList[$id];
     }
 
-    private function getRootAsset(): AssetInterface
+    public function getRootAsset(): AssetInterface
     {
         if ($this->rootAsset === null) {
             $this->rootAsset = $this->loadRootAsset();
