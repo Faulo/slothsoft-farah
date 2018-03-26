@@ -7,6 +7,7 @@ use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use DOMDocument;
+use Slothsoft\Farah\Module\Node\Asset\AssetImplementation;
 
 abstract class AbstractManifestTest extends TestCase
 {
@@ -46,6 +47,8 @@ abstract class AbstractManifestTest extends TestCase
     public function customAssetClassProvider()
     {
         $ret = [];
+        
+        $ret[AssetImplementation::class] = [AssetImplementation::class];
         
         $manifestDocument = $this->getManifestDocument(); 
         $nodeList = $manifestDocument->getElementsByTagName('custom-asset');
