@@ -222,6 +222,7 @@ abstract class AbstractModuleTest extends TestCase
      * @dataProvider nodeProvider
      */
     public function testUseInstructionImplementsInstructionInterface(ModuleNodeInterface $node) {
+        $this->assertTrue(true); //let's not generate a warning if $node isn't any sort of isUse*
         if ($node->isUseDocument()) {
             $this->assertInstanceOf(UseDocumentInstructionInterface::class, $node);
         }
