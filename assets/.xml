@@ -17,4 +17,9 @@
    </directory>
    <custom-asset name="sites" class="Slothsoft\Farah\Internal\SitesAsset"/>
    <custom-asset name="request" class="Slothsoft\Farah\Internal\RequestAsset"/>
+    <directory name="sitemap">
+      <resource name="generate" type="application/xslt+xml" use="template"/>
+      <resource name="prettify" type="application/xslt+xml"/>
+      <use-document ref="sites"/>
+    </directory>
  </assets>
