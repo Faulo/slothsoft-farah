@@ -2,6 +2,8 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\FarahUrl;
 
+use Slothsoft\Farah\Exception\IncompleteUrlException;
+
 /**
  *
  * @author Daniel Schulz
@@ -13,6 +15,9 @@ class FarahUrlAuthority // TODO: implements Psr\Container\ContainerInterface
     public static function createFromVendorAndModule(string $vendor, string $module): FarahUrlAuthority
     {
         $id = "farah://$vendor@$module";
+        if ($vendor === '' or $module === '') {
+            throw new IncompleteUrlException($id, 'vendor or module');
+        }
         return self::create($id, $vendor, $module);
     }
 

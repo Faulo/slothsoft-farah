@@ -9,6 +9,7 @@ use Slothsoft\Farah\Exception\ResultTypeNotSupportedException;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Node\InstructionCollector;
 use Slothsoft\Farah\Module\Results\Files\BinaryFileResult;
+use Slothsoft\Farah\Module\Results\Files\HtmlFileResult;
 use Slothsoft\Farah\Module\Results\Files\TextFileResult;
 use Slothsoft\Farah\Module\Results\Files\XmlFileResult;
 use Closure;
@@ -84,10 +85,15 @@ class ResultCatalog
     {
         return new TextFileResult($url, $file);
     }
-
+    
     public static function createXmlFileResult(FarahUrl $url, HTTPFile $file): XmlFileResult
     {
         return new XmlFileResult($url, $file);
+    }
+    
+    public static function createHtmlFileResult(FarahUrl $url, HTTPFile $file): HtmlFileResult
+    {
+        return new HtmlFileResult($url, $file);
     }
 
     public static function createClosureResult(FarahUrl $url, Closure $closure): ClosureResult

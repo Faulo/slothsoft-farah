@@ -40,20 +40,16 @@ class FarahUrl // TODO: implements Psr\Url
                 $res['host'] = $contextAuthority->getModule();
             }
         }
-        if (! isset($res['scheme'], $res['user'], $res['host'])) {
+        if (! isset($res['scheme'], $res['user'], $res['host'])
+            or $res['scheme'] === '' or $res['user'] === '' or $res['host'] === '') {
             throw new IncompleteUrlException($ref, 'scheme, user, or host');
         }
         if ($res['scheme'] !== 'farah') {
             throw new ProtocolNotSupportedException($res['scheme']);
         }
-        if ($contextPath) {
-            if (! isset($res['path'])) {
-                $res['path'] = $contextPath->toString();
-            }
-        }
         
         $authority = FarahUrlAuthority::createFromVendorAndModule($res['user'], $res['host']);
-        $path = FarahUrlPath::createFromString($res['path'] ?? '');
+        $path = FarahUrlPath::createFromString($res['path'] ?? FarahUrlPath::SEPARATOR, $contextPath);
         $arguments = FarahUrlArguments::createFromQuery($res['query'] ?? '');
         if ($contextArguments) {
             $arguments = FarahUrlArguments::createFromMany($arguments, $contextArguments);
