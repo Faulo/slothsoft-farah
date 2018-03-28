@@ -23,6 +23,8 @@ use Slothsoft\Farah\Module\Node\Instruction\UseTemplateInstructionInterface;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 use DOMDocument;
 use Throwable;
+use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\DirectoryAsset\DirectoryAssetInterface;
+use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\Resource\ResourceInterface;
 
 abstract class AbstractModuleTest extends TestCase
 {
@@ -219,6 +221,26 @@ abstract class AbstractModuleTest extends TestCase
             $this->assertInstanceOf(ResultInterface::class, $result);
         } catch(Throwable $e) {
             $this->failException($e);
+        }
+    }
+    /**
+     * @dataProvider assetProvider
+     */
+    public function testLocalDirectoryAssetExists(AssetInterface $asset) {
+        if ($asset instanceof DirectoryAssetInterface) {
+            $this->assertDirectoryExists($asset->getRealPath());
+        } else {
+            $this->assertTrue(true);
+        }
+    }
+    /**
+     * @dataProvider assetProvider
+     */
+    public function testLocalResourceAssetExists(AssetInterface $asset) {
+        if ($asset instanceof ResourceInterface) {
+            $this->assertFileExists($asset->getRealPath());
+        } else {
+            $this->assertTrue(true);
         }
     }
     public function assetProvider()

@@ -11,8 +11,8 @@
        <resource-directory name="latest" path="20171027" type="application/x-xsd+xml"/>
      </directory>
      <directory name="sites">
-       <resource-directory name="20171027" path="20171027" type="application/x-xsd+xml"/>
-       <resource-directory name="latest" path="20171027" type="application/x-xsd+xml"/>
+       <resource-directory name="20180208" path="20180208" type="application/x-xsd+xml"/>
+       <resource-directory name="latest" path="20180208" type="application/x-xsd+xml"/>
      </directory>
    </directory>
    <custom-asset name="sites" class="Slothsoft\Farah\Internal\SitesAsset"/>

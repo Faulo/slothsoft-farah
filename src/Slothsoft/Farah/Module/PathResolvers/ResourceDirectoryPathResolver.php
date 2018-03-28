@@ -70,16 +70,24 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
 
     private function loadResourceDirectory()
     {
-        $mime = $this->asset->getElementAttribute(Module::ATTR_TYPE, '*/*');
+        $desiredMime = $this->asset->getElementAttribute(Module::ATTR_TYPE, '*/*');
+        $desiredExtension = MimeTypeDictionary::guessExtension($desiredMime);
         $path = $this->asset->getRealPath();
         assert(is_dir($path), "Path is not a directory: $path");
         
         $fileList = FileSystem::scanDir($path);
         foreach ($fileList as $file) {
-            $name = pathinfo($file, PATHINFO_FILENAME);
-            $ext = pathinfo($file, PATHINFO_EXTENSION);
-            if (MimeTypeDictionary::matchesMime($ext, $mime)) {
-                $this->resolvePath("/$name");
+            $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+            if ($desiredExtension === '') {
+                if (MimeTypeDictionary::matchesMime($fileExtension, $desiredMime)) {
+                    $fileName = $file;
+                    $this->resolvePath("/$fileName");
+                }
+            } else {
+                if ($fileExtension === $desiredExtension) {
+                    $fileName = pathinfo($file, PATHINFO_FILENAME);
+                    $this->resolvePath("/$fileName");
+                }
             }
         }
     }
