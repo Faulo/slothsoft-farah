@@ -2,11 +2,11 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\PathResolvers;
 
-use Slothsoft\Core\FileSystem;
-use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\PhysicalAssetInterface;
+use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\DirectoryAsset\DirectoryAssetInterface;
 
 /**
  *
@@ -20,21 +20,21 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
 
     private $pathMap = [];
 
-    public function __construct(AssetInterface $asset)
+    public function __construct(DirectoryAssetInterface $asset)
     {
         $this->asset = $asset;
         $this->pathMap['/'] = $this->asset;
     }
 
-    public function resolvePath(string $path, bool $isProbablyDirectory = false): AssetInterface
+    public function resolvePath(string $path): AssetInterface
     {
         if (! isset($this->pathMap[$path])) {
-            $this->pathMap[$path] = $this->createChildResource($path, $isProbablyDirectory);
+            $this->pathMap[$path] = $this->createChildResource($path);
         }
         return $this->pathMap[$path];
     }
 
-    private function createChildResource(string $path, bool $isProbablyDirectory): AssetInterface
+    private function createChildResource(string $path): PhysicalAssetInterface
     {
         assert(preg_match('~^/([^/]+)~', $path, $match), "Invalid asset path: $path");
         
@@ -43,7 +43,7 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
         $descendantPath = substr($path, strlen($childPath));
         
         if ($descendantPath === '') {
-            if ($isProbablyDirectory) {
+            if (is_dir($this->asset->getRealPath() . DIRECTORY_SEPARATOR . $path)) {
                 $element = LeanElement::createOneFromArray(Module::TAG_RESOURCE_DIRECTORY, [
                     Module::ATTR_NAME => $childName,
                     Module::ATTR_PATH => $childName,
@@ -63,33 +63,8 @@ class ResourceDirectoryPathResolver implements PathResolverInterface
 
     public function getPathMap(): array
     {
-        $this->loadResourceDirectory();
         ksort($this->pathMap);
         return $this->pathMap;
-    }
-
-    private function loadResourceDirectory()
-    {
-        $desiredMime = $this->asset->getElementAttribute(Module::ATTR_TYPE, '*/*');
-        $desiredExtension = MimeTypeDictionary::guessExtension($desiredMime);
-        $path = $this->asset->getRealPath();
-        assert(is_dir($path), "Path is not a directory: $path");
-        
-        $fileList = FileSystem::scanDir($path);
-        foreach ($fileList as $file) {
-            $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
-            if ($desiredExtension === '') {
-                if (MimeTypeDictionary::matchesMime($fileExtension, $desiredMime)) {
-                    $fileName = $file;
-                    $this->resolvePath("/$fileName");
-                }
-            } else {
-                if ($fileExtension === $desiredExtension) {
-                    $fileName = pathinfo($file, PATHINFO_FILENAME);
-                    $this->resolvePath("/$fileName");
-                }
-            }
-        }
     }
 }
 

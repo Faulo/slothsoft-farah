@@ -20,16 +20,24 @@ class ResourceDirectoryAsset extends DirectoryAssetImplementation
     protected function loadChildren(): array
     {
         $ret = [];
-        $mime = $this->getMimeType();
+        $desiredMime = $this->getMimeType();
+        $desiredExtension = MimeTypeDictionary::guessExtension($desiredMime);
         $path = $this->getRealPath();
         $resolver = $this->getPathResolver();
         
         $fileList = FileSystem::scanDir($path);
         foreach ($fileList as $file) {
-            $name = pathinfo($file, PATHINFO_FILENAME);
-            $ext = pathinfo($file, PATHINFO_EXTENSION);
-            if (MimeTypeDictionary::matchesMime($ext, $mime)) {
-                $ret[] = $resolver->resolvePath("/$name");
+            $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+            if ($desiredExtension === '') {
+                if (MimeTypeDictionary::matchesMime($fileExtension, $desiredMime)) {
+                    $fileName = $file;
+                    $ret[] = $resolver->resolvePath("/$fileName");
+                }
+            } else {
+                if ($fileExtension === $desiredExtension) {
+                    $fileName = pathinfo($file, PATHINFO_FILENAME);
+                    $ret[] = $resolver->resolvePath("/$fileName");
+                }
             }
         }
         return $ret;
