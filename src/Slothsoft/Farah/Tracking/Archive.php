@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Tracking;
 
-use Slothsoft\DBMS\Manager;
-use Slothsoft\DBMS\Database;
+use Slothsoft\Core\DBMS\Manager;
+use Slothsoft\Core\DBMS\Database;
 use Slothsoft\Farah\HTTPRequest;
 
 class Archive

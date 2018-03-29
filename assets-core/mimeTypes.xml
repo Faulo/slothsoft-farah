@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mimeTypes>
+	<type name="*"/>
+	<type name="application">
+		<sub name="xml" ext="xml"/>
+		<sub name="xhtml+xml" ext="xhtml"/>
+		<sub name="xslt+xml" ext="xsl"/>
+		<sub name="rdf+xml" ext="rdf"/>
+		<sub name="javascript" ext="js"/>
+		<sub name="octet-stream" ext=""/>
+		<sub name="json" ext="json"/>
+		<sub name="pdf" ext="pdf"/>
+		<sub name="font-sfnt" ext="ttf" spec="http://developer.apple.com/fonts/TTRefMan/RM06/Chap6name.html"/>
+		<sub name="font-woff" ext="woff" spec="http://www.w3.org/TR/WOFF/"/>
+		<sub name="vnd.unity" ext="unity3d"/>
+		<sub name="zip" ext="zip"/>
+		<sub name="x-7z-compressed" ext="7z"/>
+		<sub name="x-lzh-compressed" ext="lha"/>
+		<sub name="x-nbt" ext="dat"/>
+		<sub name="x-mcr" ext="mcr"/>
+		<sub name="x-mca" ext="mca"/>
+		<sub name="x-subrip" ext="srt"/>
+		<sub name="x-xpinstall" ext="xpi"/>
+		<sub name="x-php" ext="php"/>
+		<sub name="x-xsd+xml" ext="xsd"/>
+		<sub name="vnd.microsoft.portable-executable" ext="exe"/><!-- x-msdownload -->
+	</type>
+	<type name="text">
+		<sub name="html" ext="html"/>
+		<sub name="plain" ext="txt"/>
+		<sub name="csv" ext="csv" spec="http://tools.ietf.org/html/rfc4180">
+			<options del="," sep='"' esc="\" cols="" output="table" min-length="0" key-col="-1" val-col="-1"/>
+		</sub>
+		<sub name="css" ext="css"/>
+		<sub name="vtt" ext="vtt"/>
+		<sub name="event-stream" ext="event-stream"/>
+		<sub name="cache-manifest" ext="appcache"/>
+	</type>
+	<type name="image">
+		<sub name="svg+xml" ext="svg" spec="http://www.w3.org/TR/SVG11/"/>
+		<sub name="png" ext="png" spec="http://tools.ietf.org/html/rfc2083"/>
+		<sub name="jpeg" ext="jpg"/>
+		<sub name="gif" ext="gif"/>
+	</type>
+	<type name="video">
+		<sub name="webm" ext="webm"/>
+		<sub name="ogg" ext="ogv"/>
+		<sub name="mpeg" ext="mpg"/>
+		<sub name="mp4" ext="mp4"/>
+		<sub name="x-matroska" ext="mkv"/>
+		<sub name="x-msvideo" ext="avi"/>
+		<sub name="x-ms-wmv" ext="wmv"/>
+		<sub name="x-m4v" ext="m4v"/>
+	</type>
+	<type name="audio">
+		<sub name="mpeg" ext="mp3"/>
+	</type>
+</mimeTypes>

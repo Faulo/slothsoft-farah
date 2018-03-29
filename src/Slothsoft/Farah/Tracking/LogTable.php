@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Tracking;
 
-use Slothsoft\DBMS\Table;
+use Slothsoft\Core\DBMS\Table;
 
 class LogTable
 {

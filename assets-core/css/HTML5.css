@@ -1,0 +1,38 @@
+/* HTML5 */
+/*
+main, header, footer, section, nav, article, aside, details, summary, menuitem, menu {
+	display: block;
+}
+*/
+details {
+	display: block;
+}
+details > summary {
+	display: list-item;
+}
+details > summary h1,
+details > summary h2,
+details > summary h3,
+details > summary h4,
+details > summary h5,
+details > summary h6 {
+	display: inline;
+}
+/*
+details, summary {
+	display: block;
+}
+details > summary {
+	cursor: pointer;
+	padding-left: 0.25em;
+}
+details > summary h1, details > summary h2, details > summary h3, details > summary h4, details > summary h5, details > summary h6 {
+	display: inline-block;
+}
+details > summary:hover {
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+}
+details:not([open]) > summary ~ * {
+	display: none;
+}
+*/

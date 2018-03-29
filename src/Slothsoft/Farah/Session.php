@@ -12,7 +12,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
 use Slothsoft\Core\Calendar\Seconds;
-use Slothsoft\DBMS\Manager;
+use Slothsoft\Core\DBMS\Manager;
 use Exception;
 
 class Session

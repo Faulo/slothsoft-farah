@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="application/xslt+xml" href="graph.xsl"?>
+<graph scaleX="10" scaleY="10">
+	<xAxis min="0" max="365" size="10">
+	</xAxis>
+	<yAxis min="-11" max="11" size="10">
+		<label position="-10">-10</label>
+		<label position="-5">-5</label>
+		<label position="5">+5</label>
+		<label position="10">+10</label>
+	</yAxis>
+	<valueList>
+		<value x="0" y="0"/>
+		<value x="0" y="1"/>
+		<value x="1" y="1"/>
+		<value x="2" y="3"/>
+		<value x="3" y="2"/>
+		<value x="4" y="-3"/>
+	</valueList>
+</graph>
