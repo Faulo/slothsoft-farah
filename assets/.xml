@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <assets xmlns="http://schema.slothsoft.net/farah/module">
-   <resource-directory name="xsl" path="template" type="application/xslt+xml"/>
+   <resource-directory name="xsl" type="application/xslt+xml"/>
    
     <directory name="sitemap">
       <resource name="generate" type="application/xslt+xml" use="template"/>

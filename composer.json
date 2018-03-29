@@ -26,7 +26,7 @@
     "autoload": {
         "files": [
             "src\/autoload.php",
-            "src\/registerModule.php"
+            "C:\\Webserver\\workspace\\slothsoft-farah\\src\\registerModule.php"
         ],
         "psr-0": {
             "Slothsoft\\Farah\\": "src\/"
