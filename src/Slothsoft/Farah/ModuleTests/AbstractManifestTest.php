@@ -2,15 +2,14 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\ModuleTests;
 
-use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use Slothsoft\Farah\Module\Node\Asset\AssetImplementation;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use DOMDocument;
-use Slothsoft\Farah\Module\Node\Asset\AssetImplementation;
 
-abstract class AbstractManifestTest extends TestCase
+abstract class AbstractManifestTest extends AbstractTestCase
 {
     abstract protected static function loadManifest() : ManifestInterface;
     protected function getManifest() {

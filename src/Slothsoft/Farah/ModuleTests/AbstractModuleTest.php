@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\ModuleTests;
 
-use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
@@ -15,6 +14,8 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\DirectoryAsset\DirectoryAssetInterface;
+use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\Resource\ResourceInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseDocumentInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseManifestInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseScriptInstructionInterface;
@@ -23,10 +24,8 @@ use Slothsoft\Farah\Module\Node\Instruction\UseTemplateInstructionInterface;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 use DOMDocument;
 use Throwable;
-use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\DirectoryAsset\DirectoryAssetInterface;
-use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\Resource\ResourceInterface;
 
-abstract class AbstractModuleTest extends TestCase
+abstract class AbstractModuleTest extends AbstractTestCase
 {
     abstract protected static function loadModule() : Module;
     
@@ -101,9 +100,7 @@ abstract class AbstractModuleTest extends TestCase
         );
     }
     
-    private function failException(Throwable $e) {
-        $this->fail(sprintf('%s: %s', basename(get_class($e)), $e->getMessage()));
-    }
+    
     
     public function testAssetDirectoryExists() {
         $path = $this->getAssetDirectory();

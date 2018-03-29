@@ -4,6 +4,7 @@ namespace Slothsoft\Farah\ModuleTests;
 
 use Slothsoft\Core\DOMHelper;
 use DOMDocument;
+use Throwable;
 
 abstract class AbstractXmlManifestTest extends AbstractManifestTest
 {
@@ -51,7 +52,12 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest
      * @depends testSchemaIsValidXml
      */
     public function testManifestIsValidAccordingToSchema($manifestDocument, $schemaDocument) {
-        $validateResult = $manifestDocument->schemaValidate($schemaDocument->documentURI);
+        try {
+            $validateResult = $manifestDocument->schemaValidate($schemaDocument->documentURI);
+        } catch(Throwable $e) {
+            $validateResult = false;
+            $this->failException($e);
+        }
         $this->assertTrue($validateResult, 'Asset file is invalid!');
         return $manifestDocument;
     }
