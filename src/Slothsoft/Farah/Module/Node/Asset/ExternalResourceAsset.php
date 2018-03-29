@@ -28,7 +28,7 @@ class ExternalResourceAsset extends AssetImplementation
 
     private function lookupResource(): ResourceInterface
     {
-        $contents = Storage::loadExternalFile($this->getSource(), Seconds::DAY);
+        $contents = (string) Storage::loadExternalFile($this->getSource(), Seconds::DAY);
         return $this->buildResourceFromContents($contents, $this->getName(), $this->getMimeType());
     }
 
