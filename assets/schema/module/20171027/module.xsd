@@ -365,6 +365,9 @@
 		<xsd:restriction base="xsd:token">
 			<xsd:enumeration value="document"/>
 			<xsd:enumeration value="template"/>
+			<xsd:enumeration value="manifest"/>
+			<xsd:enumeration value="script"/>
+			<xsd:enumeration value="stylesheet"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 </xsd:schema>
