@@ -4,13 +4,13 @@
     <resource-directory name="js" type="application/javascript"/>
     <resource-directory name="xsl" type="application/xslt+xml"/>
 	
-    <fragment name="imports">
+    <fragment name="api">
 	    <fragment name="DOM">
 	      <link-script ref="js/DOM"/>
 	      <link-script ref="js/DOMHelper"/>
-	      <import ref="imports/HTML5"/>
-	      <import ref="imports/XPath"/>
-	      <import ref="imports/XSLT"/>
+	      <import ref="api/HTML5"/>
+	      <import ref="api/XPath"/>
+	      <import ref="api/XSLT"/>
 	    </fragment>
 	    <fragment name="HTML5">
 	      <link-stylesheet ref="js/HTML5"/>
@@ -25,8 +25,6 @@
 	      <link-script ref="js/XSLT"/>
 	    </fragment>
     </fragment>
-    
-    <resource name="mimeTypes" type="application/xml"/>
 	
     <!--
     
