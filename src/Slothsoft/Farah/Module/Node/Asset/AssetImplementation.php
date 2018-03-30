@@ -8,13 +8,11 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\Module\Node\InstructionCollector;
 use Slothsoft\Farah\Module\Node\ModuleNodeImplementation;
-use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseDocumentInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseManifestInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseScriptInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseStylesheetInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseTemplateInstructionInterface;
-use Slothsoft\Farah\Module\Node\Meta\MetaInterface;
 use Slothsoft\Farah\Module\ParameterFilters\AllowAllFilter;
 use Slothsoft\Farah\Module\ParameterFilters\ParameterFilterInterface;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverCatalog;
@@ -39,10 +37,6 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     private $parameterFilter;
 
     private $instructionCollector;
-
-    private $assetChildren;
-
-    private $metaChildren;
 
     private $linkedStylesheets;
 
@@ -69,26 +63,6 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     public function getAssetPath(): string
     {
         return $this->getElementAttribute(Module::ATTR_ASSETPATH);
-    }
-
-    public function getAssetChildren(): array
-    {
-        if ($this->assetChildren === null) {
-            $this->assetChildren = array_filter($this->getChildren(), function (ModuleNodeInterface $node) {
-                return $node instanceof AssetInterface;
-            }, ARRAY_FILTER_USE_BOTH);
-        }
-        return $this->assetChildren;
-    }
-
-    public function getMetaChildren(): array
-    {
-        if ($this->metaChildren === null) {
-            $this->metaChildren = array_filter($this->getChildren(), function (ModuleNodeInterface $node) {
-                return $node instanceof MetaInterface;
-            }, ARRAY_FILTER_USE_BOTH);
-        }
-        return $this->metaChildren;
     }
 
     public function traverseTo(string $path): AssetInterface

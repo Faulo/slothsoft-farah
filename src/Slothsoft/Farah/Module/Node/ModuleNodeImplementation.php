@@ -5,8 +5,10 @@ namespace Slothsoft\Farah\Module\Node;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Node\Instruction\ImportInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\ParameterInstructionInterface;
+use Slothsoft\Farah\Module\Node\Meta\MetaInterface;
 
 /**
  *
@@ -21,6 +23,10 @@ abstract class ModuleNodeImplementation implements ModuleNodeInterface
     private $element;
 
     private $children;
+    
+    private $assetChildren;
+    
+    private $metaChildren;
 
     private $manifestArguments;
 
@@ -77,6 +83,26 @@ abstract class ModuleNodeImplementation implements ModuleNodeInterface
             }
         }
         return $ret;
+    }
+    
+    public function getAssetChildren(): array
+    {
+        if ($this->assetChildren === null) {
+            $this->assetChildren = array_filter($this->getChildren(), function (ModuleNodeInterface $node) {
+                return $node instanceof AssetInterface;
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+        return $this->assetChildren;
+    }
+    
+    public function getMetaChildren(): array
+    {
+        if ($this->metaChildren === null) {
+            $this->metaChildren = array_filter($this->getChildren(), function (ModuleNodeInterface $node) {
+                return $node instanceof MetaInterface;
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+        return $this->metaChildren;
     }
 
     public function createChildNode(LeanElement $element): ModuleNodeInterface
