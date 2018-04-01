@@ -4,9 +4,7 @@ namespace Slothsoft\Farah\RequestProcessor;
 
 use Slothsoft\Farah\HTTPRequest;
 use Slothsoft\Farah\HTTPResponse;
-use Slothsoft\Farah\LinkDecorator\DecoratorFactory;
 use Slothsoft\Farah\Module\Results\ResultInterface;
-use Slothsoft\Farah\Module\Results\TransformationResult;
 use Slothsoft\Farah\Security\BannedManager;
 
 abstract class RequestProcessorImplementation implements RequestProcessorInterface
@@ -95,22 +93,8 @@ abstract class RequestProcessorImplementation implements RequestProcessorInterfa
         
         $result = $this->loadResult();
         
-        if ($result instanceof TransformationResult) {
-            $document = $result->toDocument();
-            if ($document->documentElement) {
-                $stylesheetList = $result->getLinkedStylesheets();
-                $scriptList = $result->getLinkedScripts();
-                if ($stylesheetList or $scriptList) {
-                    $decorator = DecoratorFactory::createForDocument($document);
-                    $decorator->linkStylesheets(...$stylesheetList);
-                    $decorator->linkScripts(...$scriptList);
-                }
-            }
-            $this->response->setDocument($document);
-        } else {
-            $file = $result->toFile();
-            $this->response->setFile($file->getPath(), $file->getName());
-        }
+        $file = $result->toFile();
+        $this->response->setFile($file->getPath(), $file->getName());
     }
 
     abstract protected function loadResult(): ResultInterface;
