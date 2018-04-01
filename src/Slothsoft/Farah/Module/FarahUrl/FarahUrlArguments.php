@@ -2,12 +2,16 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\FarahUrl;
 
+use IteratorAggregate;
+use Traversable;
+use ArrayIterator;
+
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class FarahUrlArguments // TODO: implements Psr\Container\ContainerInterface
+class FarahUrlArguments implements IteratorAggregate // TODO: implements Psr\Container\ContainerInterface
 {
 
     public static function createEmpty(): FarahUrlArguments
@@ -90,6 +94,10 @@ class FarahUrlArguments // TODO: implements Psr\Container\ContainerInterface
     public function getNameList(): array
     {
         return array_keys($this->data);
+    }
+    public function getIterator() : Traversable
+    {
+        return new ArrayIterator($this->data);
     }
 }
 
