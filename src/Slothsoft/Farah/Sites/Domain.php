@@ -68,9 +68,6 @@ class Domain
             if (! $node) {
                 throw new EmptySitemapException($this->asset->getId());
             }
-            
-            assert($node->namespaceURI === DOMHelper::NS_FARAH_SITES and $node->localName === self::TAG_DOMAIN, sprintf('Root element of sitemap document must be <%s xmlns="%s">!', self::TAG_DOMAIN, DOMHelper::NS_FARAH_SITES));
-            
             $this->domainName = $this->domainNode->getAttribute('name');
             
             $this->init();
@@ -170,8 +167,6 @@ class Domain
             $redirectNode = $this->lookupPageNode($redirectPath, $pageNode);
             throw new PageRedirectionException($redirectNode->getAttribute('uri'));
         }
-        
-        assert($pageNode->hasAttribute('ref'), "<page> $path must have either ref or redirect attribute");
         
         return $pageNode;
     }

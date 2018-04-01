@@ -5,7 +5,7 @@
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
 	attributeFormDefault="unqualified">
 
-	<xsd:import namespace="http://schema.slothsoft.net/farah/module" />
+	<xsd:import namespace="http://schema.slothsoft.net/farah/module" schemaLocation="farah://slothsoft@farah/schema/module/latest/module"/>
 
 	<xsd:element name="domain">
 		<xsd:complexType>
