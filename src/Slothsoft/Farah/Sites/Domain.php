@@ -3,18 +3,17 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Sites;
 
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Farah\Kernel;
+use Slothsoft\Farah\Exception\EmptySitemapException;
+use Slothsoft\Farah\Exception\PageNotFoundException;
+use Slothsoft\Farah\Exception\PageRedirectionException;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use DOMDocument;
 use DOMElement;
-use Slothsoft\Farah\Exception\EmptySitemapException;
-use Slothsoft\Farah\Kernel;
-use Slothsoft\Farah\Exception\PageNotFoundException;
-use Slothsoft\Farah\Exception\PageRedirectionException;
-use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
 /**
  *
@@ -77,7 +76,6 @@ class Domain
     private function init()
     {
         // preload all include-pages elements
-        log_execution_time(__FILE__, __LINE__);
         while ($nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, self::TAG_INCLUDE_PAGES) and $nodeList->length) {
             $dataNodeList = [];
             foreach ($nodeList as $node) {
@@ -86,27 +84,18 @@ class Domain
             foreach ($dataNodeList as $dataNode) {
                 $url = $this->lookupAssetUrl($dataNode);
                 $result = FarahUrlResolver::resolveToResult($url);
-                
-                assert($result instanceof DOMWriterInterface, "To <sfs:include-pages> asset {$result->getId()}, it must implement DOMWriterInterface, not " . get_class($result) . ".");
-                
                 $node = $result->toElement($this->document);
-                
-                assert($node->namespaceURI === DOMHelper::NS_FARAH_SITES and $node->localName === self::TAG_PAGES, sprintf('To <sfs:include-pages> asset %s, its root element must be <%s xmlns="%s">!', $result->getId(), self::TAG_PAGES, DOMHelper::NS_FARAH_SITES));
-                
                 while ($node->hasChildNodes()) {
                     $dataNode->parentNode->insertBefore($node->firstChild, $dataNode);
                 }
-                
                 $dataNode->parentNode->removeChild($dataNode);
             }
         }
-        log_execution_time(__FILE__, __LINE__);
         $this->initDomainElement($this->domainNode);
         $nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, self::TAG_PAGE);
         foreach ($nodeList as $node) {
             $this->initPageElement($node);
         }
-        log_execution_time(__FILE__, __LINE__);
     }
 
     private function initDomainElement(DOMElement $node)

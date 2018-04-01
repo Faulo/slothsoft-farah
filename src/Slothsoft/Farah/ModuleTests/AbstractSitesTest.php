@@ -133,10 +133,26 @@ abstract class AbstractSitesTest extends AbstractTestCase
     public function testIncludeExists($url) {
         try {
             $result = FarahUrlResolver::resolveToResult($url);
-            $this->assertInstanceOf(ResultInterface::class, $result);
+            $document = $result->toDocument();
+            $this->assertInstanceOf(DOMElement::class, $document->documentElement);
         } catch(Throwable $e) {
             $this->failException($e);
         }
+    }
+    /**
+     * @depends testIncludeExists
+     * @dataProvider includeProvider
+     */
+    public function testIncludeIsValidAccordingToSchema($url) {
+        $result = FarahUrlResolver::resolveToResult($url);
+        $document = $result->toDocument();
+        try {
+            $validateResult = $document->schemaValidate(self::SCHEMA_URL);
+        } catch (Throwable $e) {
+            $validateResult = false;
+            $this->failException($e);
+        }
+        $this->assertTrue($validateResult, '<include-pages> document is invalid!');
     }
     public function includeProvider()
     {
@@ -160,7 +176,7 @@ abstract class AbstractSitesTest extends AbstractTestCase
     }
     
     /**
-     * @depends      testPageMustHaveEitherRefOrRedirect
+     * @depends      testIncludeExists
      * @dataProvider pageNodeProvider
      */
     public function testPageResultExists($node) {
