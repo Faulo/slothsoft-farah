@@ -18,7 +18,11 @@ class RequestAsset extends AssetImplementation
 
     protected function loadResult(FarahUrl $url): ResultInterface
     {
-        return ResultCatalog::createDOMWriterResult($url, Kernel::getInstance()->getRequest());
+        $request = Kernel::getInstance()->getRequest();
+        foreach ($url->getArguments() as $name => $value) {
+            $request->setInputValue($name, $value);
+        }
+        return ResultCatalog::createDOMWriterResult($url, $request);
     }
 }
 

@@ -3,11 +3,12 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Results;
 
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\IO\HTTPFile;
 use Slothsoft\Core\IO\Writable\DOMWriterElementFromDocumentTrait;
-use Slothsoft\Core\IO\Writable\FileWriterFromDOMTrait;
 use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Exception\ExceptionContext;
+use Slothsoft\Farah\LinkDecorator\DecoratorFactory;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use Slothsoft\Farah\Module\Node\InstructionCollector;
@@ -24,7 +25,6 @@ use Throwable;
  */
 class TransformationResult extends ResultImplementation
 {
-    use FileWriterFromDOMTrait;
     use DOMWriterElementFromDocumentTrait;
 
     const TAG_ROOT = 'fragment';
@@ -142,5 +142,25 @@ class TransformationResult extends ResultImplementation
         
         return $element;
     }
+    public function toFile() : HTTPFile
+    {
+        $document = $this->toDocument();
+        if ($document->documentElement) {
+            $stylesheetList = $this->getLinkedStylesheets();
+            $scriptList = $this->getLinkedScripts();
+            if ($stylesheetList or $scriptList) {
+                $decorator = DecoratorFactory::createForDocument($document);
+                $decorator->linkStylesheets(...$stylesheetList);
+                $decorator->linkScripts(...$scriptList);
+            }
+        }
+        return HTTPFile::createFromDocument($document);
+    }
+
+    public function toString() : string
+    {
+        return $this->toFile()->getContents();
+    }
+
 }
 

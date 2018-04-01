@@ -13,6 +13,7 @@ use DOMElement;
 use Slothsoft\Farah\Exception\EmptySitemapException;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\PageNotFoundException;
+use Slothsoft\Farah\Exception\PageRedirectionException;
 
 /**
  *
@@ -159,16 +160,17 @@ class Domain
         }
         
         if ($pageNode->hasAttribute('redirect')) {
-            $redirect = $ret->getAttribute('redirect');
-            switch ($redirect) {
+            $redirectPath = $pageNode->getAttribute('redirect');
+            switch ($redirectPath) {
                 case '..':
-                    $pageNode = $pageNode->parentNode;
-                    break;
-                default:
-                    $pageNode = $this->lookupPageNode($redirect, $pageNode);
+                    $redirectPath = $pageNode->parentNode->getAttribute('uri');
                     break;
             }
+            $redirectNode = $this->lookupPageNode($redirectPath, $pageNode);
+            throw new PageRedirectionException($redirectNode->getAttribute('uri'));
         }
+        
+        assert($pageNode->hasAttribute('ref'), "<page> $path must have either ref or redirect attribute");
         
         return $pageNode;
     }
