@@ -12,6 +12,7 @@ use DOMDocument;
 use DOMElement;
 use Slothsoft\Farah\Exception\EmptySitemapException;
 use Slothsoft\Farah\Kernel;
+use Slothsoft\Farah\Exception\PageNotFoundException;
 
 /**
  *
@@ -142,40 +143,34 @@ class Domain
         return $this->document;
     }
 
-    public function lookupPageNode(string $path, DOMElement $contextNode = null)
+    public function lookupPageNode(string $path, DOMElement $contextNode = null) : DOMElement
     {
         $this->loadDocument();
         
-        if (! $contextNode) {
+        $path = str_pad($path, 1, '/');
+        if ($contextNode === null or $path[0] === '/') {
             $contextNode = $this->domainNode;
         }
-        $ret = null;
-        $redirected = false;
-        $path = str_pad($path, 1, '/');
-        if ($qry = $this->path2expr($path, 'sfs:' . self::TAG_PAGE)) {
-            if ($path[0] === '/') {
-                $contextNode = $this->domainNode;
-            }
-            $res = $this->xpath->evaluate($qry, $contextNode);
-            // my_dump($qry);my_dump($res->length);
-            if ($res->length) {
-                $ret = $res->item(0);
-            }
+        $query = $this->path2expr($path, 'sfs:' . self::TAG_PAGE);
+        $pageNode = $this->xpath->evaluate($query, $contextNode)->item(0);
+        
+        if (!$pageNode) {
+            throw new PageNotFoundException($path);
         }
-        if ($ret and $ret->hasAttribute('redirect')) {
+        
+        if ($pageNode->hasAttribute('redirect')) {
             $redirect = $ret->getAttribute('redirect');
             switch ($redirect) {
                 case '..':
-                    $ret = $ret->parentNode;
+                    $pageNode = $pageNode->parentNode;
                     break;
                 default:
-                    $ret = $this->lookupPageNode($redirect, $ret);
+                    $pageNode = $this->lookupPageNode($redirect, $pageNode);
                     break;
             }
-            $redirected = true;
         }
         
-        return $ret;
+        return $pageNode;
     }
 
     public function lookupAssetUrl(DOMElement $dataNode, array $args = []): FarahUrl
@@ -188,7 +183,7 @@ class Domain
         return FarahUrl::createFromReference($ref, FarahUrlAuthority::createFromVendorAndModule($vendorName, $moduleName), null, FarahUrlArguments::createFromValueList($args));
     }
 
-    private function path2expr(string $path, string $elementName = '*')
+    private function path2expr(string $path, string $elementName = '*') : string
     {
         $path = array_filter(explode('/', $path), 'strlen');
         $qry = [

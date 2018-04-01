@@ -99,7 +99,7 @@ class Kernel
         try {
             $processor->process();
         } catch (HttpStatusException $e) {
-            $response->setStatus($e->getStatusCode());
+            $response->setStatus($e->getCode(), $e->getMessage());
         }
         
         $response->send();
