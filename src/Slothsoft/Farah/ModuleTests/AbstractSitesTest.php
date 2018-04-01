@@ -12,6 +12,7 @@ use DOMElement;
 use Throwable;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
+use Slothsoft\Farah\Exception\PageRedirectionException;
 
 abstract class AbstractSitesTest extends AbstractTestCase
 {
@@ -42,7 +43,10 @@ abstract class AbstractSitesTest extends AbstractTestCase
     protected function getSitesIncludes() : array {
         $ret = [];
         $result = $this->getSitesResult();
-        $this->getSitesIncludesCrawl($ret, $result->getUrl(), $result->toDocument());
+        $url = $result->getUrl();
+        $document = $result->toDocument();
+        $ret[(string) $url] = $url;
+        $this->getSitesIncludesCrawl($ret, $url, $document);
         return $ret;
     }
     protected function getSitesIncludesCrawl(array &$ret, FarahUrl $parentUrl, DOMDocument $document) {
@@ -170,23 +174,22 @@ abstract class AbstractSitesTest extends AbstractTestCase
      * @dataProvider pageNodeProvider
      */
     public function testPageMustHaveEitherRefOrRedirect($node) {
-        $hasRef = $node->hasAttribute('ref');
-        $hasRedirect = $node->hasAttribute('redirect');
-        $this->assertTrue($hasRef !== $hasRedirect);
+        $this->assertNotEquals($node->hasAttribute('ref'), $node->hasAttribute('redirect'), '<page> must have either ref or redirect attribute.');
     }
     
     /**
-     * @depends      testIncludeExists
+     * @depends      testPageMustHaveEitherRefOrRedirect
      * @dataProvider pageNodeProvider
      */
     public function testPageResultExists($node) {
+        $path = $node->getAttribute('uri');
         if ($node->hasAttribute('ref')) {
-            $path = $node->getAttribute('uri');
             $this->assertEquals($node, $this->getDomain()->lookupPageNode($path));
             $url = $this->getDomain()->lookupAssetUrl($node);
             $this->assertInstanceOf(ResultInterface::class, FarahUrlResolver::resolveToResult($url));
         } else {
-            $this->assertTrue(true);
+            $this->expectException(PageRedirectionException::class);
+            $this->getDomain()->lookupPageNode($path);
         }
     }
     public function pageNodeProvider()
