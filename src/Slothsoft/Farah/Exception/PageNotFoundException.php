@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Exception;
 
-
 class PageNotFoundException extends \RuntimeException
 {
 

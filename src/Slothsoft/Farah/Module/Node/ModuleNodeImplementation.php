@@ -23,9 +23,9 @@ abstract class ModuleNodeImplementation implements ModuleNodeInterface
     private $element;
 
     private $children;
-    
+
     private $assetChildren;
-    
+
     private $metaChildren;
 
     private $manifestArguments;
@@ -84,7 +84,7 @@ abstract class ModuleNodeImplementation implements ModuleNodeInterface
         }
         return $ret;
     }
-    
+
     public function getAssetChildren(): array
     {
         if ($this->assetChildren === null) {
@@ -94,7 +94,7 @@ abstract class ModuleNodeImplementation implements ModuleNodeInterface
         }
         return $this->assetChildren;
     }
-    
+
     public function getMetaChildren(): array
     {
         if ($this->metaChildren === null) {

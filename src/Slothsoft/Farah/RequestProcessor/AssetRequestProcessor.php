@@ -24,9 +24,9 @@ class AssetRequestProcessor extends RequestProcessorImplementation
         // echo "determined asset url {$url}, processing..." . PHP_EOL;
         try {
             return FarahUrlResolver::resolveToResult($url);
-        } catch(ModuleNotFoundException $e) {
+        } catch (ModuleNotFoundException $e) {
             throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_NOT_FOUND, $e);
-        } catch(AssetPathNotFoundException $e) {
+        } catch (AssetPathNotFoundException $e) {
             throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_NOT_FOUND, $e);
         }
     }

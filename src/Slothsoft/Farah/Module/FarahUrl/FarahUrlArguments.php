@@ -95,7 +95,8 @@ class FarahUrlArguments implements IteratorAggregate // TODO: implements Psr\Con
     {
         return array_keys($this->data);
     }
-    public function getIterator() : Traversable
+
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->data);
     }

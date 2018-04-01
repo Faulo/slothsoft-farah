@@ -24,16 +24,16 @@ class PageRequestProcessor extends RequestProcessorImplementation
         
         try {
             $pageNode = $domain->lookupPageNode($ref);
-        } catch(PageRedirectionException $e) {
+        } catch (PageRedirectionException $e) {
             $this->response->addHeader('location', $e->getTargetPath());
             throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_PERMANENT_REDIRECT, $e);
-        } catch(PageNotFoundException $e) {
+        } catch (PageNotFoundException $e) {
             throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_GONE, $e);
         }
         
         $pageNode->setAttribute('current', '1');
         
-        if (!$pageNode->hasAttribute('ref')) {
+        if (! $pageNode->hasAttribute('ref')) {
             throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_NOT_IMPLEMENTED, $e);
         }
         
@@ -45,9 +45,9 @@ class PageRequestProcessor extends RequestProcessorImplementation
         
         try {
             return FarahUrlResolver::resolveToResult($url);
-        } catch(ModuleNotFoundException $e) {
+        } catch (ModuleNotFoundException $e) {
             throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_INTERNAL_SERVER_ERROR, $e);
-        } catch(AssetPathNotFoundException $e) {
+        } catch (AssetPathNotFoundException $e) {
             throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_INTERNAL_SERVER_ERROR, $e);
         }
     }

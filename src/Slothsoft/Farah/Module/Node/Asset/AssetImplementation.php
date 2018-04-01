@@ -120,8 +120,9 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
     {
         return $this->getOwnerModule()->createUrl($this->getUrlPath(), $args ?? FarahUrlArguments::createEmpty());
     }
-    
-    public function createResult(FarahUrlArguments $args = null): ResultInterface {
+
+    public function createResult(FarahUrlArguments $args = null): ResultInterface
+    {
         $args = $this->mergeWithManifestArguments($args ?? FarahUrlArguments::createEmpty());
         $args = $this->applyParameterFilter($args);
         $id = (string) $args;

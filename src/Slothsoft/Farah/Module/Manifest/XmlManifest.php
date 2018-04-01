@@ -14,8 +14,9 @@ class XmlManifest extends ManifestImplementation
     {
         $this->path = $path;
     }
-    
-    public function getPath() : string {
+
+    public function getPath(): string
+    {
         return $this->path;
     }
 

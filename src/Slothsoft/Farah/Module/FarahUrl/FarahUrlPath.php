@@ -11,6 +11,7 @@ use Slothsoft\Farah\Exception\MalformedUrlException;
  */
 class FarahUrlPath
 {
+
     const SEPARATOR = '/';
 
     public static function createEmpty(): FarahUrlArguments
@@ -21,7 +22,7 @@ class FarahUrlPath
     public static function createFromString(string $path, FarahUrlPath $base = null): FarahUrlPath
     {
         if ($base and substr($path, 0, 1) !== self::SEPARATOR) {
-            return self::create(self::normalize($base.self::SEPARATOR.$path));
+            return self::create(self::normalize($base . self::SEPARATOR . $path));
         } else {
             return self::create(self::normalize($path));
         }
@@ -35,7 +36,9 @@ class FarahUrlPath
         }
         return $cache[$id];
     }
-    private static function normalize(string $path): string {
+
+    private static function normalize(string $path): string
+    {
         $segments = [];
         if ($path !== '') {
             foreach (explode(self::SEPARATOR, $path) as $i => $val) {
@@ -45,7 +48,7 @@ class FarahUrlPath
                     case '.':
                         break;
                     case '..':
-                        if (!count($segments)) {
+                        if (! count($segments)) {
                             throw new MalformedUrlException($path);
                         }
                         array_pop($segments);
@@ -56,9 +59,7 @@ class FarahUrlPath
                 }
             }
         }
-        return count($segments)
-        ? self::SEPARATOR . implode(self::SEPARATOR, $segments)
-        : self::SEPARATOR;
+        return count($segments) ? self::SEPARATOR . implode(self::SEPARATOR, $segments) : self::SEPARATOR;
     }
 
     private $id;

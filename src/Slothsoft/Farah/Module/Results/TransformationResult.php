@@ -38,9 +38,9 @@ class TransformationResult extends ResultImplementation
     const ATTR_HREF = 'href';
 
     private $name;
-    
+
     private $collector;
-    
+
     private $resultDoc;
 
     public function __construct(FarahUrl $url, string $name, InstructionCollector $collector)
@@ -55,7 +55,8 @@ class TransformationResult extends ResultImplementation
     {
         if ($this->resultDoc === null) {
             $this->resultDoc = new DOMDocument();
-            $dataNode = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, FarahUrlResolver::resolveToAsset($this->getUrl())->getElement()->getTag());
+            $dataNode = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, FarahUrlResolver::resolveToAsset($this->getUrl())->getElement()
+                ->getTag());
             $dataNode->setAttribute(self::ATTR_NAME, $this->name);
             $dataNode->setAttribute(self::ATTR_ID, $this->getId());
             
@@ -103,15 +104,12 @@ class TransformationResult extends ResultImplementation
     {
         return true;
     }
-    
-    private function createElementFromDocumentInstruction(UseDocumentInstructionInterface $instruction) {
+
+    private function createElementFromDocumentInstruction(UseDocumentInstructionInterface $instruction)
+    {
         $asset = $instruction->getReferencedDocumentAsset();
         
-        $element = $this->createElement(
-            self::TAG_DOCUMENT,
-            $instruction->getReferencedDocumentAlias(),
-            $asset->getId()
-        );        
+        $element = $this->createElement(self::TAG_DOCUMENT, $instruction->getReferencedDocumentAlias(), $asset->getId());
         try {
             $result = $asset->createResult($this->getArguments());
             $element->appendChild($result->toElement($this->resultDoc));
@@ -124,15 +122,15 @@ class TransformationResult extends ResultImplementation
         }
         return $element;
     }
-    private function createElementFromManifestInstruction(UseManifestInstructionInterface $instruction) : DOMElement {
+
+    private function createElementFromManifestInstruction(UseManifestInstructionInterface $instruction): DOMElement
+    {
         $asset = $instruction->getReferencedManifestAsset();
-        $element = $this->createElement(
-            $asset->getElement()->getTag(),
-            $asset->getName(),
-            $asset->getId()
-        );
+        $element = $this->createElement($asset->getElement()
+            ->getTag(), $asset->getName(), $asset->getId());
         return $element;
     }
+
     private function createElement(string $tag, string $name, string $id): DOMElement
     {
         $element = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, $tag);
@@ -142,7 +140,8 @@ class TransformationResult extends ResultImplementation
         
         return $element;
     }
-    public function toFile() : HTTPFile
+
+    public function toFile(): HTTPFile
     {
         $document = $this->toDocument();
         if ($document->documentElement) {
@@ -157,10 +156,9 @@ class TransformationResult extends ResultImplementation
         return HTTPFile::createFromDocument($document);
     }
 
-    public function toString() : string
+    public function toString(): string
     {
         return $this->toFile()->getContents();
     }
-
 }
 

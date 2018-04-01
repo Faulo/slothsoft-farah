@@ -27,7 +27,9 @@ interface ModuleNodeInterface
     public function hasElementAttribute(string $key): bool;
 
     public function getChildren(): array;
+
     public function getAssetChildren(): array;
+
     public function getMetaChildren(): array;
 
     public function createChildNode(LeanElement $element): ModuleNodeInterface;

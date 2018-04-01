@@ -40,8 +40,7 @@ class FarahUrl // TODO: implements Psr\Url
                 $res['host'] = $contextAuthority->getModule();
             }
         }
-        if (! isset($res['scheme'], $res['user'], $res['host'])
-            or $res['scheme'] === '' or $res['user'] === '' or $res['host'] === '') {
+        if (! isset($res['scheme'], $res['user'], $res['host']) or $res['scheme'] === '' or $res['user'] === '' or $res['host'] === '') {
             throw new IncompleteUrlException($ref, 'scheme, user, or host');
         }
         if ($res['scheme'] !== 'farah') {

@@ -145,7 +145,7 @@ class Domain
         return $this->document;
     }
 
-    public function lookupPageNode(string $path, DOMElement $contextNode = null) : DOMElement
+    public function lookupPageNode(string $path, DOMElement $contextNode = null): DOMElement
     {
         $this->loadDocument();
         
@@ -156,7 +156,7 @@ class Domain
         $query = $this->path2expr($path, 'sfs:' . self::TAG_PAGE);
         $pageNode = $this->xpath->evaluate($query, $contextNode)->item(0);
         
-        if (!$pageNode) {
+        if (! $pageNode) {
             throw new PageNotFoundException($path);
         }
         
@@ -186,7 +186,7 @@ class Domain
         return FarahUrl::createFromReference($ref, FarahUrlAuthority::createFromVendorAndModule($vendorName, $moduleName), null, FarahUrlArguments::createFromValueList($args));
     }
 
-    private function path2expr(string $path, string $elementName = '*') : string
+    private function path2expr(string $path, string $elementName = '*'): string
     {
         $path = array_filter(explode('/', $path), 'strlen');
         $qry = [

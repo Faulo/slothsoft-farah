@@ -85,12 +85,12 @@ class ResultCatalog
     {
         return new TextFileResult($url, $file);
     }
-    
+
     public static function createXmlFileResult(FarahUrl $url, HTTPFile $file): XmlFileResult
     {
         return new XmlFileResult($url, $file);
     }
-    
+
     public static function createHtmlFileResult(FarahUrl $url, HTTPFile $file): HtmlFileResult
     {
         return new HtmlFileResult($url, $file);

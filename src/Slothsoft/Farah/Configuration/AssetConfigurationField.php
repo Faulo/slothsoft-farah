@@ -10,6 +10,7 @@ use Slothsoft\Core\Configuration\ConfigurationField;
 
 class AssetConfigurationField extends ConfigurationField
 {
+
     public function setValue($newValue)
     {
         if (is_string($newValue)) {

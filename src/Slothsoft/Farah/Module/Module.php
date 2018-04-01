@@ -20,6 +20,7 @@ use Slothsoft\Farah\Module\Manifest\XmlManifest;
  */
 class Module
 {
+
     const TAGS_ASSETS = [
         self::TAG_CONTAINER,
         self::TAG_FRAGMENT,
@@ -29,9 +30,9 @@ class Module
         self::TAG_DIRECTORY,
         self::TAG_RESOURCE_DIRECTORY,
         self::TAG_ASSET_ROOT,
-        self::TAG_RESOURCE,
+        self::TAG_RESOURCE
     ];
-    
+
     // asset tags
     const TAG_FRAGMENT = 'fragment';
 
@@ -80,9 +81,9 @@ class Module
     const ATTR_NAME = 'name';
 
     const ATTR_ID = 'url';
-    
+
     const ATTR_HREF = 'href';
-    
+
     const ATTR_SRC = 'src';
 
     const ATTR_ALIAS = 'as';
@@ -98,15 +99,15 @@ class Module
     const ATTR_REFERENCE = 'ref';
 
     const ATTR_USE = 'use';
-    
+
     const ATTR_USE_MANIFEST = 'manifest';
-    
+
     const ATTR_USE_DOCUMENT = 'document';
-    
+
     const ATTR_USE_TEMPLATE = 'template';
-    
+
     const ATTR_USE_STYLESHEET = 'stylesheet';
-    
+
     const ATTR_USE_SCRIPT = 'script';
 
     const ATTR_PARAM_KEY = 'name';
@@ -126,7 +127,7 @@ class Module
     const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
 
     private $authority;
-    
+
     private $assetDirectory;
 
     private $assetManifest;
@@ -142,17 +143,17 @@ class Module
         $this->assetDirectory = $assetDirectory;
         $this->assetManifest = new XmlManifest($this->assetDirectory . DIRECTORY_SEPARATOR . '.xml');
     }
-    
+
     public function getAuthority(): FarahUrlAuthority
     {
         return $this->authority;
     }
-    
+
     public function getManifest(): ManifestInterface
     {
         return $this->assetManifest;
     }
-    
+
     public function getAssetDirectory(): string
     {
         return $this->assetDirectory;
