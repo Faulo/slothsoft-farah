@@ -125,6 +125,8 @@ class Module
     const EVENT_SET_PARAMETER = 'set-parameter';
 
     const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
+    
+    const FILE_MANIFEST = 'manifest.xml';
 
     private $authority;
 
@@ -141,7 +143,7 @@ class Module
     {
         $this->authority = $authority;
         $this->assetDirectory = $assetDirectory;
-        $this->assetManifest = new XmlManifest($this->assetDirectory . DIRECTORY_SEPARATOR . '.xml');
+        $this->assetManifest = new XmlManifest($this->assetDirectory . DIRECTORY_SEPARATOR . self::FILE_MANIFEST);
     }
 
     public function getAuthority(): FarahUrlAuthority
