@@ -39,9 +39,9 @@ interface AssetInterface extends ModuleNodeInterface
 
     public function traverseTo(string $path): AssetInterface;
 
-    public function createUrl(FarahUrlArguments $args): FarahUrl;
-
-    public function lookupResultByArguments(FarahUrlArguments $args): ResultInterface;
+    public function createUrl(FarahUrlArguments $args = null): FarahUrl;
+    
+    public function createResult(FarahUrlArguments $args = null) : ResultInterface;
 
     public function lookupLinkedStylesheets(): array;
 

@@ -9,7 +9,6 @@ use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
@@ -214,7 +213,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
      */
     public function testLocalAssetResultExists(AssetInterface $asset) {
         try {
-            $result = $asset->lookupResultByArguments(FarahUrlArguments::createEmpty());
+            $result = $asset->createResult();
             $this->assertInstanceOf(ResultInterface::class, $result);
         } catch(Throwable $e) {
             $this->failException($e);

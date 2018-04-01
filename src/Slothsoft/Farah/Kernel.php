@@ -12,8 +12,9 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
 use Slothsoft\Core\Configuration\ConfigurationField;
-use Slothsoft\Core\Configuration\FileConfigurationField;
+use Slothsoft\Farah\Configuration\AssetConfigurationField;
 use Slothsoft\Farah\Exception\HttpStatusException;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use Slothsoft\Farah\RequestProcessor\RequestProcessorInterface;
 
 class Kernel
@@ -28,23 +29,23 @@ class Kernel
         return $instance;
     }
 
-    private static function sitesFile(): ConfigurationField
+    private static function sitesAsset(): ConfigurationField
     {
         static $field;
         if ($field === null) {
-            $field = new FileConfigurationField();
+            $field = new AssetConfigurationField();
         }
         return $field;
     }
 
-    public static function setSitesFile(string $path)
+    public static function setSitesAsset($asset)
     {
-        self::sitesFile()->setValue($path);
+        self::sitesAsset()->setValue($asset);
     }
 
-    public static function getSitesFile(): string
+    public static function getSitesAsset(): AssetInterface
     {
-        return self::sitesFile()->getValue();
+        return self::sitesAsset()->getValue();
     }
 
     private static function trackingEnabled(): ConfigurationField

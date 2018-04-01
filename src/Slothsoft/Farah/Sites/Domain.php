@@ -14,6 +14,7 @@ use Slothsoft\Farah\Exception\EmptySitemapException;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\PageNotFoundException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
+use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
 /**
  *
@@ -27,7 +28,7 @@ class Domain
     {
         static $instance;
         if ($instance === null) {
-            $instance = new self(Kernel::getSitesFile()); // todo: move this somewhere else
+            $instance = new self(Kernel::getSitesAsset()); // todo: move this somewhere else
         }
         return $instance;
     }
@@ -50,22 +51,22 @@ class Domain
 
     private $xpath;
 
-    private function __construct(string $file)
+    private function __construct(AssetInterface $asset)
     {
-        $this->file = $file;
+        $this->asset = $asset;
     }
 
     private function loadDocument()
     {
         if (! $this->document) {
             
-            $this->document = DOMHelper::loadDocument($this->file);
+            $this->document = $this->asset->createResult()->toDocument();
             $this->xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT | DOMHelper::XPATH_PHP);
             $this->domainNode = $this->document->documentElement;
             
             $node = $this->domainNode;
             if (! $node) {
-                throw new EmptySitemapException($this->file);
+                throw new EmptySitemapException($this->asset->getId());
             }
             
             assert($node->namespaceURI === DOMHelper::NS_FARAH_SITES and $node->localName === self::TAG_DOMAIN, sprintf('Root element of sitemap document must be <%s xmlns="%s">!', self::TAG_DOMAIN, DOMHelper::NS_FARAH_SITES));

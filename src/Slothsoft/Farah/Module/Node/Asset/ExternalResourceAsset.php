@@ -34,7 +34,7 @@ class ExternalResourceAsset extends AssetImplementation
 
     protected function loadResult(FarahUrl $url): ResultInterface
     {
-        return $this->lookupResource()->lookupResultByArguments($url->getArguments());
+        return $this->lookupResource()->createResult($url->getArguments());
     }
 }
 

@@ -116,14 +116,13 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
         return new AllowAllFilter();
     }
 
-    public function createUrl(FarahUrlArguments $args): FarahUrl
+    public function createUrl(FarahUrlArguments $args = null): FarahUrl
     {
-        return $this->getOwnerModule()->createUrl($this->getUrlPath(), $args);
+        return $this->getOwnerModule()->createUrl($this->getUrlPath(), $args ?? FarahUrlArguments::createEmpty());
     }
-
-    public function lookupResultByArguments(FarahUrlArguments $args): ResultInterface
-    {
-        $args = $this->mergeWithManifestArguments($args);
+    
+    public function createResult(FarahUrlArguments $args = null): ResultInterface {
+        $args = $this->mergeWithManifestArguments($args ?? FarahUrlArguments::createEmpty());
         $args = $this->applyParameterFilter($args);
         $id = (string) $args;
         if (! isset($this->resultList[$id])) {

@@ -78,7 +78,7 @@ class TransformationResult extends ResultImplementation
                     // my_dump($this->resultDoc->saveXML());
                 }
                 
-                $this->resultDoc = $dom->transformToDocument($this->resultDoc, $asset->lookupResultByArguments($this->getArguments())
+                $this->resultDoc = $dom->transformToDocument($this->resultDoc, $asset->createResult($this->getArguments())
                     ->toFile());
                 
                 if ($this->getId() === 'farah://slothsoft@slothsoft/home') {
@@ -113,7 +113,7 @@ class TransformationResult extends ResultImplementation
             $asset->getId()
         );        
         try {
-            $result = $asset->lookupResultByArguments($this->getArguments());
+            $result = $asset->createResult($this->getArguments());
             $element->appendChild($result->toElement($this->resultDoc));
         } catch (Throwable $exception) {
             ExceptionContext::append($exception, [

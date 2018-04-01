@@ -27,7 +27,7 @@ class FarahUrlResolver
 
     public static function resolveToResult(FarahUrl $url): ResultInterface
     {
-        return self::resolveToAsset($url)->lookupResultByArguments($url->getArguments());
+        return self::resolveToAsset($url)->createResult($url->getArguments());
     }
 }
 
