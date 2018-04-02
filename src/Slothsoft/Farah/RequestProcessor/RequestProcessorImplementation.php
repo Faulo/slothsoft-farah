@@ -6,6 +6,7 @@ use Slothsoft\Farah\HTTPRequest;
 use Slothsoft\Farah\HTTPResponse;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 use Slothsoft\Farah\Security\BannedManager;
+use Slothsoft\Farah\Exception\HttpStatusException;
 
 abstract class RequestProcessorImplementation implements RequestProcessorInterface
 {
@@ -94,6 +95,9 @@ abstract class RequestProcessorImplementation implements RequestProcessorInterfa
         $result = $this->loadResult();
         
         $file = $result->toFile();
+        if (!$file->exists()) {
+            throw new HttpStatusException("Failed to locate file '{$file->getName()}'.", HTTPResponse::STATUS_NOT_FOUND);
+        }
         $this->response->setFile($file->getPath(), $file->getName());
     }
 
