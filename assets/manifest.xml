@@ -8,18 +8,9 @@
       <use-document ref="sites"/>
     </directory>
    <directory name="schema">
-     <directory name="module">
-       <resource-directory name="20171027" path="20171027" type="application/x-xsd+xml"/>
-       <resource-directory name="latest" path="20171027" type="application/x-xsd+xml"/>
-     </directory>
-     <directory name="dictionary">
-       <resource-directory name="20171027" path="20171027" type="application/x-xsd+xml"/>
-       <resource-directory name="latest" path="20171027" type="application/x-xsd+xml"/>
-     </directory>
-     <directory name="sites">
-       <resource-directory name="20180208" path="20180208" type="application/x-xsd+xml"/>
-       <resource-directory name="latest" path="20180208" type="application/x-xsd+xml"/>
-     </directory>
+       <resource-directory name="dictionary" type="application/x-xsd+xml"/>
+       <resource-directory name="module" type="application/x-xsd+xml"/>
+       <resource-directory name="sitemap" type="application/x-xsd+xml"/>
    </directory>
    <custom-asset name="sites" class="Slothsoft\Farah\Internal\SitesAsset"/>
    <custom-asset name="request" class="Slothsoft\Farah\Internal\RequestAsset"/>

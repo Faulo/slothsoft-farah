@@ -1,23 +1,38 @@
 <?xml version="1.0"?>
-<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/sites"
-	xmlns="http://schema.slothsoft.net/farah/sites" xmlns:sfs="http://schema.slothsoft.net/farah/sites"
-	xmlns:sfm="http://schema.slothsoft.net/farah/module" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-	attributeFormDefault="unqualified">
+<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/sitemap"
+	xmlns="http://schema.slothsoft.net/farah/sitemap" 
+	xmlns:sfs="http://schema.slothsoft.net/farah/sitemap"
+	xmlns:sfm="http://schema.slothsoft.net/farah/module" 
+	xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	elementFormDefault="qualified" attributeFormDefault="unqualified"
+	version="1.0">
+	
+	<xsd:annotation>
+		<xsd:documentation><![CDATA[
+Schema    : Farah Sitemap
+Version   : 1.0
+Revision  : R20180402
+Namespace : http://schema.slothsoft.net/farah/sitemap
+Author    : Daniel Schulz (daniel.lio.schulz@gmail.com)
 
-	<xsd:import namespace="http://schema.slothsoft.net/farah/module" schemaLocation="farah://slothsoft@farah/schema/module/latest/module"/>
+*** Version 1.0 ***
+	R20180402
+		- initial release
+		]]></xsd:documentation>
+	</xsd:annotation>
 
-	<xsd:element name="domain">
-		<xsd:complexType>
-			<xsd:complexContent>
-				<xsd:extension base="genericPage">
+	<xsd:import namespace="http://schema.slothsoft.net/farah/module" schemaLocation="farah://slothsoft@farah/schema/module/1.0"/>
+	
+	<xsd:attributeGroup name="schemaVersion">
+		<xsd:attribute name="version" type="xsd:token" use="required" fixed="1.0">
+			<xsd:annotation>
+				<xsd:documentation>The schema version used by the instance document.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:attributeGroup>
 
-				</xsd:extension>
-			</xsd:complexContent>
-		</xsd:complexType>
-	</xsd:element>
-
-	<xsd:element name="pages">
+	<xsd:element name="sitemap">
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:restriction base="xsd:anyType">
@@ -26,7 +41,18 @@
 						<xsd:element ref="include-pages" />
 						<xsd:element ref="sfm:param" />
 					</xsd:choice>
+					<xsd:attributeGroup ref="schemaVersion"/>
 				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="domain">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="genericPage">
+
+				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>
 	</xsd:element>

@@ -1,7 +1,33 @@
 <?xml version="1.0"?>
-<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/module"
-	xmlns="http://schema.slothsoft.net/farah/module" xmlns:sfm="http://schema.slothsoft.net/farah/module"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xsd:schema 
+	targetNamespace="http://schema.slothsoft.net/farah/module"
+	xmlns="http://schema.slothsoft.net/farah/module" 
+	xmlns:sfm="http://schema.slothsoft.net/farah/module"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	elementFormDefault="qualified" attributeFormDefault="unqualified"
+	version="1.0">
+	
+	<xsd:annotation>
+		<xsd:documentation><![CDATA[
+Schema    : Farah Module Manifest
+Version   : 1.0
+Revision  : R20180402
+Namespace : http://schema.slothsoft.net/farah/module
+Author    : Daniel Schulz (daniel.lio.schulz@gmail.com)
+
+*** Version 1.0 ***
+	R20180402
+		- initial release
+		]]></xsd:documentation>
+	</xsd:annotation>
+	
+	<xsd:attributeGroup name="schemaVersion">
+		<xsd:attribute name="version" type="xsd:token" use="required" fixed="1.0">
+			<xsd:annotation>
+				<xsd:documentation>The schema version used by the instance document.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:attributeGroup>
 
 	<!-- groups -->
 	<xsd:group name="assets">

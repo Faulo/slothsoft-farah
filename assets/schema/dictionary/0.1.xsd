@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<xsd:schema 
+	targetNamespace="http://schema.slothsoft.net/farah/dictionary"
+	xmlns="http://schema.slothsoft.net/farah/dictionary" 
+	xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	elementFormDefault="qualified" attributeFormDefault="unqualified"
+	version="0.1">
+	
+	<xsd:annotation>
+		<xsd:documentation><![CDATA[
+Schema    : Farah Dictionary
+Version   : 0.1
+Revision  : R20180402
+Namespace : http://schema.slothsoft.net/farah/dictionary
+Author    : Daniel Schulz (daniel.lio.schulz@gmail.com)
+
+*** Version 1.0 ***
+	R20180402
+		- initial release
+		]]></xsd:documentation>
+	</xsd:annotation>
+	
+	<xsd:attributeGroup name="schemaVersion">
+		<xsd:attribute name="version" type="xsd:token" use="required" fixed="0.1">
+			<xsd:annotation>
+				<xsd:documentation>The schema version used by the instance document.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:attributeGroup>
+
+	<xsd:element name="dictionary">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:any minOccurs="0" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="schemaVersion"/>
+		</xsd:complexType>
+	</xsd:element>
+
+</xsd:schema>
