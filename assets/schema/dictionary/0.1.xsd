@@ -3,22 +3,29 @@
 	targetNamespace="http://schema.slothsoft.net/farah/dictionary"
 	xmlns="http://schema.slothsoft.net/farah/dictionary" 
 	xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
+	xmlns:ssv="http://schema.slothsoft.net/schema/versioning"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-	elementFormDefault="qualified" attributeFormDefault="unqualified"
-	version="0.1">
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	
 	<xsd:annotation>
-		<xsd:documentation><![CDATA[
-Schema    : Farah Dictionary
-Version   : 0.1
-Revision  : R20180402
-Namespace : http://schema.slothsoft.net/farah/dictionary
-Author    : Daniel Schulz (daniel.lio.schulz@gmail.com)
-
-*** Version 1.0 ***
+		<xsd:appinfo>
+			<ssv:manifest version="1.0">
+				<ssv:name>Farah Dictionary</ssv:name>
+				<ssv:version>0.1</ssv:version>
+				<ssv:revision>R20180402</ssv:revision>
+				<ssv:prefix>sfd</ssv:prefix>
+				<ssv:namespace>http://schema.slothsoft.net/farah/dictionary</ssv:namespace>
+				<ssv:author email="daniel.lio.schulz@gmail.com">Daniel Schulz</ssv:author>
+				<ssv:description><![CDATA[
+This namespace defines elements to describe a dictionary, that is, a language-dependend list of key/value pairs to be used for automatic translating of XML documents.
+				]]></ssv:description>
+				<ssv:changelog><![CDATA[
+*** Version 0.1 ***
 	R20180402
 		- initial release
-		]]></xsd:documentation>
+				]]></ssv:changelog>
+			</ssv:manifest>
+		</xsd:appinfo>
 	</xsd:annotation>
 	
 	<xsd:attributeGroup name="schemaVersion">

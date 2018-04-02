@@ -4,22 +4,30 @@
 	xmlns:sfs="http://schema.slothsoft.net/farah/sitemap"
 	xmlns:sfm="http://schema.slothsoft.net/farah/module" 
 	xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
+	xmlns:ssv="http://schema.slothsoft.net/schema/versioning"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
 	elementFormDefault="qualified" attributeFormDefault="unqualified"
 	version="1.0">
 	
 	<xsd:annotation>
-		<xsd:documentation><![CDATA[
-Schema    : Farah Sitemap
-Version   : 1.0
-Revision  : R20180402
-Namespace : http://schema.slothsoft.net/farah/sitemap
-Author    : Daniel Schulz (daniel.lio.schulz@gmail.com)
-
+		<xsd:appinfo>
+			<ssv:manifest version="1.0">
+				<ssv:name>Farah Sitemap</ssv:name>
+				<ssv:version>1.0</ssv:version>
+				<ssv:revision>R20180402</ssv:revision>
+				<ssv:prefix>sfs</ssv:prefix>
+				<ssv:namespace>http://schema.slothsoft.net/farah/sitemap</ssv:namespace>
+				<ssv:author email="daniel.lio.schulz@gmail.com">Daniel Schulz</ssv:author>
+				<ssv:description><![CDATA[
+This namespace defines elements to describe a sitemap, that is, a rough overview of the individual pages that make up a website.
+				]]></ssv:description>
+				<ssv:changelog><![CDATA[
 *** Version 1.0 ***
 	R20180402
 		- initial release
-		]]></xsd:documentation>
+				]]></ssv:changelog>
+			</ssv:manifest>
+		</xsd:appinfo>
 	</xsd:annotation>
 
 	<xsd:import namespace="http://schema.slothsoft.net/farah/module" schemaLocation="farah://slothsoft@farah/schema/module/1.0"/>
