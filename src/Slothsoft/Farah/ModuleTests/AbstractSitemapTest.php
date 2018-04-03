@@ -14,7 +14,7 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use Slothsoft\Farah\Exception\PageRedirectionException;
 
-abstract class AbstractSitesTest extends AbstractTestCase
+abstract class AbstractSitemapTest extends AbstractTestCase
 {
     const SCHEMA_URL = 'farah://slothsoft@farah/schema/sitemap/1.0';
 

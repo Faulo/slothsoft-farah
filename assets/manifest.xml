@@ -2,8 +2,8 @@
 <assets xmlns="http://schema.slothsoft.net/farah/module">
    <resource-directory name="xsl" type="application/xslt+xml"/>
    
-    <directory name="sitemap">
-      <resource name="generate" type="application/xslt+xml" use="template"/>
+    <directory name="sitemap-generator">
+      <resource name="template" type="application/xslt+xml" use="template"/>
       <resource name="prettify" type="application/xslt+xml"/>
       <use-document ref="sites"/>
     </directory>
