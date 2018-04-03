@@ -11,7 +11,7 @@
 	
 	<xsd:annotation>
 		<xsd:appinfo>
-			<ssv:manifest version="1.0">
+			<ssv:info version="1.0">
 				<ssv:name>Farah Sitemap</ssv:name>
 				<ssv:version>1.0</ssv:version>
 				<ssv:revision>R20180402</ssv:revision>
@@ -26,7 +26,7 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 	R20180402
 		- initial release
 				]]></ssv:changelog>
-			</ssv:manifest>
+			</ssv:info>
 		</xsd:appinfo>
 	</xsd:annotation>
 

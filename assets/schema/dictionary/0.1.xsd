@@ -9,7 +9,7 @@
 	
 	<xsd:annotation>
 		<xsd:appinfo>
-			<ssv:manifest version="1.0">
+			<ssv:info version="1.0">
 				<ssv:name>Farah Dictionary</ssv:name>
 				<ssv:version>0.1</ssv:version>
 				<ssv:revision>R20180402</ssv:revision>
@@ -24,7 +24,7 @@ This namespace defines elements to describe a dictionary, that is, a language-de
 	R20180402
 		- initial release
 				]]></ssv:changelog>
-			</ssv:manifest>
+			</ssv:info>
 		</xsd:appinfo>
 	</xsd:annotation>
 	

@@ -9,7 +9,7 @@
 	
 	<xsd:annotation>
 		<xsd:appinfo>
-			<ssv:manifest version="1.0">
+			<ssv:info version="1.0">
 				<ssv:name>Farah Module Manifest</ssv:name>
 				<ssv:version>1.0</ssv:version>
 				<ssv:revision>R20180402</ssv:revision>
@@ -24,7 +24,7 @@ This namespace defines elements to identify assets in a Farah module.
 	R20180402
 		- initial release
 				]]></ssv:changelog>
-			</ssv:manifest>
+			</ssv:info>
 		</xsd:appinfo>
 	</xsd:annotation>
 	
@@ -49,6 +49,7 @@ This namespace defines elements to identify assets in a Farah module.
 			<xsd:element ref="fragment" />
 			<xsd:element ref="custom-asset" />
 			<xsd:element ref="external-resource" />
+			<xsd:group ref="runtime-assets" />
 		</xsd:choice>
 	</xsd:group>
 
@@ -75,11 +76,6 @@ This namespace defines elements to identify assets in a Farah module.
 			<xsd:element ref="link-script" />
 			<xsd:element ref="param-filter" />
 			<xsd:element ref="param" />
-		</xsd:choice>
-	</xsd:group>
-
-	<xsd:group name="fragment-meta">
-		<xsd:choice>
 		</xsd:choice>
 	</xsd:group>
 
@@ -120,7 +116,6 @@ This namespace defines elements to identify assets in a Farah module.
 					<xsd:choice minOccurs="0" maxOccurs="unbounded">
 						<xsd:group ref="virtual-assets" />
 						<xsd:group ref="asset-meta" />
-						<xsd:group ref="fragment-meta" />
 					</xsd:choice>
 				</xsd:extension>
 			</xsd:complexContent>
