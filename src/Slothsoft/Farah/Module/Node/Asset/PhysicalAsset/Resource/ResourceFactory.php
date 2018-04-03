@@ -34,7 +34,8 @@ class ResourceFactory extends PhysicalAssetFactory
 
     protected function instantiateNode(LeanElement $element): ModuleNodeInterface
     {
-        switch ($element->getAttribute('type')) {
+        $type = $element->getAttribute('type');
+        switch ($type) {
             case 'text/*':
             case 'text/plain':
             case 'text/csv':
@@ -43,16 +44,14 @@ class ResourceFactory extends PhysicalAssetFactory
                 return new TextResource();
             case 'text/html':
                 return new HtmlResource();
-            case 'image/svg+xml':
-            case 'application/xhtml+xml':
-            case 'application/rdf+xml':
             case 'application/xml':
-            case 'application/xslt+xml':
                 return new XmlResource();
             case 'application/x-php':
                 return new PhpResource();
             default:
-                return new ResourceImplementation();
+                return substr($type, -4) === '+xml'
+                    ? new XmlResource()
+                    : new ResourceImplementation();
         }
     }
 }
