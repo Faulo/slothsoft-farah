@@ -29,7 +29,7 @@ class ResourceImplementation extends PhysicalAssetImplementation implements Reso
 
     protected function loadResult(FarahUrl $url): ResultInterface
     {
-        return ResultCatalog::createFileWriterResult($url, $this);
+        return ResultCatalog::createBinaryFileResult($url, $this->toFile());
     }
 
     public function toFile(): HTTPFile
