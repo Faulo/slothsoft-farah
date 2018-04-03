@@ -34,7 +34,7 @@ class PageRequestProcessor extends RequestProcessorImplementation
         $pageNode->setAttribute('current', '1');
         
         if (! $pageNode->hasAttribute('ref')) {
-            throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_NOT_IMPLEMENTED, $e);
+            throw new HttpStatusException('', HTTPResponse::STATUS_NOT_IMPLEMENTED);
         }
         
         $this->response->addHeader('content-location', $pageNode->getAttribute('url'));
