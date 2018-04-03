@@ -104,7 +104,7 @@ class Domain
             $node->setAttribute('title', $node->getAttribute('name'));
         }
         $node->setAttribute('uri', '/');
-        $node->setAttribute('url', "//{$this->getDomainName()}/");
+        $node->setAttribute('url', "{$this->getProtocol()}://{$this->getDomainName()}/");
     }
 
     private function initPageElement(DOMElement $node)
@@ -121,7 +121,7 @@ class Domain
             $node->setAttribute('title', $name);
         }
         $node->setAttribute('uri', $uri);
-        $node->setAttribute('url', "//{$this->getDomainName()}$uri");
+        $node->setAttribute('url', "{$this->getProtocol()}://{$this->getDomainName()}$uri");
     }
 
     public function getDocument(): DOMDocument
@@ -219,10 +219,15 @@ class Domain
         }
         return $ret;
     }
-
+    
     private function getDomainName(): string
     {
         return $this->domainName;
+    }
+    
+    private function getProtocol(): string
+    {
+        return 'http'; //TODO: where to put this?
     }
 
     private function findModuleName(DOMElement $node): string
