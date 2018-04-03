@@ -18,6 +18,11 @@ use DOMElement;
 
 class HTTPRequest implements DOMWriterInterface
 {
+    private static function getServerName() : string {
+        return defined('SERVER_NAME')
+            ? constant('SERVER_NAME')
+            : 'localhost';
+    }
 
     protected static $allowedHostList = [
         'slothsoft.net',
@@ -62,7 +67,7 @@ class HTTPRequest implements DOMWriterInterface
         $env['SERVER_NAME'] = $key === false ? self::$allowedHostList[0] : self::$allowedHostList[$key];
         
         if ($env['SERVER_NAME'] === 'localhost') {
-            $env['SERVER_NAME'] = SERVER_NAME;
+            $env['SERVER_NAME'] = self::getServerName();
         }
         
         $turing = 'human';
@@ -125,7 +130,7 @@ class HTTPRequest implements DOMWriterInterface
 
     public $clientHost;
 
-    public $input = null;
+    public $input;
 
     public $mode;
 
@@ -136,6 +141,7 @@ class HTTPRequest implements DOMWriterInterface
     public function __construct()
     {
         $this->headerList = [];
+        $this->input = [];
         $this->protocolRecognised = true;
         $this->protocolName = self::PROTOCOL_HTTP;
         $this->protocolMajorVersion = 1;
@@ -159,7 +165,7 @@ class HTTPRequest implements DOMWriterInterface
         $this->timeFloat = isset($env['REQUEST_TIME_FLOAT']) ? $env['REQUEST_TIME_FLOAT'] : (float) time();
         $this->clientIp = isset($env['REMOTE_ADDR']) ? $env['REMOTE_ADDR'] : '127.0.0.1';
         $this->clientAgent = isset($env['HTTP_USER_AGENT']) ? $env['HTTP_USER_AGENT'] : '';
-        $this->clientHost = isset($env['HTTP_HOST']) ? $env['HTTP_HOST'] : SERVER_NAME;
+        $this->clientHost = isset($env['HTTP_HOST']) ? $env['HTTP_HOST'] : self::getServerName();;
         $this->clientHost = strtolower($this->clientHost);
         $this->dict = Dictionary::getInstance();
     }
@@ -243,7 +249,7 @@ class HTTPRequest implements DOMWriterInterface
         $retNode = $doc->createElement('request');
         $retNode->setAttribute('url', $this->getURL());
         $retNode->setAttribute('query', $this->getQuery());
-        $retNode->setAttribute('lang', $this->dict->getLang());
+        $retNode->setAttribute('lang', (string) $this->dict->getLang());
         $retNode->setAttribute('stamp', (string) $this->time);
         $retNode->setAttribute('datetime', date(DateTimeFormatter::FORMAT_DATETIME, $this->time));
         $retNode->setAttribute('utc', date(DateTimeFormatter::FORMAT_UTC, $this->time));

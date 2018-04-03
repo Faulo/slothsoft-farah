@@ -33,12 +33,12 @@ class Domain
     }
 
     const TAG_INCLUDE_PAGES = 'include-pages';
-
+    
+    const TAG_SITEMAP = 'sitemap';
+    
     const TAG_DOMAIN = 'domain';
 
     const TAG_PAGE = 'page';
-
-    const TAG_PAGES = 'pages';
 
     private $file;
 

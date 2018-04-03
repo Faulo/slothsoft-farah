@@ -22,6 +22,7 @@ use Slothsoft\Farah\Module\Node\Instruction\UseStylesheetInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseTemplateInstructionInterface;
 use Slothsoft\Farah\Module\Results\ResultInterface;
 use DOMDocument;
+use DOMElement;
 use Throwable;
 
 abstract class AbstractModuleTest extends AbstractTestCase
@@ -245,7 +246,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
         }
         return $ret;
     }
-
+    
     /**
      *
      * @dataProvider assetProvider
@@ -257,6 +258,41 @@ abstract class AbstractModuleTest extends AbstractTestCase
             $this->assertInstanceOf(ResultInterface::class, $result);
         } catch (Throwable $e) {
             $this->failException($e);
+        }
+    }
+    
+    /**
+     * @depends      testLocalAssetResultExists
+     * @dataProvider assetProvider
+     */
+    public function testLocalAssetResultIsValidAccordingToSchema(AssetInterface $asset)
+    {
+        $result = $asset->createResult();
+        $document = $result->toDocument();
+        $this->assertInstanceOf(DOMElement::class, $document->documentElement);
+        $ns = $document->documentElement->namespaceURI;
+        if ($ns === null) {
+            return;
+        }
+        if ($ns === 'http://schema.slothsoft.net/farah/module') {
+            return;
+        }
+        if (strpos($ns, 'http://schema.slothsoft.net/') === 0) {
+            $this->assertTrue($document->documentElement->hasAttribute('version'), "Invalid slothsoft document, missing version.");
+            $version = $document->documentElement->getAttribute('version');
+            
+            $schema = explode('/', substr($ns, strlen('http://schema.slothsoft.net/')));
+            $this->assertEquals(2, count($schema), "Invalid slothsoft schema: $ns");
+            
+            $url = "farah://slothsoft@$schema[0]/schema/$schema[1]/$version";
+            
+            try {
+                $validateResult = $document->schemaValidate($url);
+            } catch (Throwable $e) {
+                $validateResult = false;
+                $this->failException($e);
+            }
+            $this->assertTrue($validateResult, 'Slothsoft document did not pass its own vaidation!');
         }
     }
 

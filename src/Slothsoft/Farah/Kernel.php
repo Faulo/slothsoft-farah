@@ -134,7 +134,13 @@ class Kernel
 
     public function getRequest(): HTTPRequest
     {
-        return $this->requestBackup ?? new HTTPRequest();
+        if ($this->requestBackup) {
+            $ret = $this->requestBackup;
+        } else {
+            $ret = new HTTPRequest();
+            $ret->init([]);
+        }
+        return $ret;
     }
 }
 

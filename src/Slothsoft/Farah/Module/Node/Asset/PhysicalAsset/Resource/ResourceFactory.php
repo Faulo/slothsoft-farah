@@ -39,6 +39,7 @@ class ResourceFactory extends PhysicalAssetFactory
             case 'text/plain':
             case 'text/csv':
             case 'text/css':
+            case 'application/javascript':
                 return new TextResource();
             case 'text/html':
                 return new HtmlResource();

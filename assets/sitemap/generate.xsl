@@ -4,7 +4,7 @@
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	
-	<xsl:template match="/data">
+	<xsl:template match="/*">
 		<xsl:processing-instruction name="xml-stylesheet"> href="/getAsset.php/farah/sitemap/prettify" type="application/xslt+xml"</xsl:processing-instruction>
 		
 		<urlset>

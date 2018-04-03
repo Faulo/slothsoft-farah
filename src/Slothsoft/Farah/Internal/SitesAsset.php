@@ -25,7 +25,8 @@ class SitesAsset extends AssetImplementation
             $document = Domain::getInstance()->getDocument();
         } catch (ConfigurationRequiredException $e) {
             $document = new DOMDocument();
-            $document->appendChild($document->createElementNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_DOMAIN));
+            $document->appendChild($document->createElementNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_SITEMAP));
+            $document->documentElement->setAttribute('version', '1.0');
         }
         return ResultCatalog::createDOMDocumentResult($url, $document);
     }
