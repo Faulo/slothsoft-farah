@@ -16,7 +16,7 @@ use Slothsoft\Farah\Exception\PageRedirectionException;
 
 abstract class AbstractSitesTest extends AbstractTestCase
 {
-    const SCHEMA_URL = 'farah://slothsoft@farah/schema/sites/latest/sites';
+    const SCHEMA_URL = 'farah://slothsoft@farah/schema/sitemap/1.0';
 
     abstract protected static function loadSitesAsset(): AssetInterface;
 

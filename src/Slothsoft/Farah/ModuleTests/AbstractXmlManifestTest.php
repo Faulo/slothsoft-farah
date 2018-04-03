@@ -9,7 +9,7 @@ use Throwable;
 abstract class AbstractXmlManifestTest extends AbstractManifestTest
 {
 
-    const SCHEMA_URL = 'farah://slothsoft@farah/schema/module/latest/module';
+    const SCHEMA_URL = 'farah://slothsoft@farah/schema/module/1.0';
 
     protected function getManifestPath()
     {
