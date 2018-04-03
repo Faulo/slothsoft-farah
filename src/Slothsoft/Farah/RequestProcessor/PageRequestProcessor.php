@@ -25,7 +25,11 @@ class PageRequestProcessor extends RequestProcessorImplementation
         try {
             $pageNode = $domain->lookupPageNode($ref);
         } catch (PageRedirectionException $e) {
-            $this->response->addHeader('location', $e->getTargetPath());
+            $url = $e->getTargetPath();
+            if (count($args)) {
+                $url .= '?' . http_build_query($args);
+            }
+            $this->response->addHeader('location', $url);
             throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_PERMANENT_REDIRECT, $e);
         } catch (PageNotFoundException $e) {
             throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_GONE, $e);

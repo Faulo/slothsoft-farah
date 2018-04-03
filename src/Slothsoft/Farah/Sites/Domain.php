@@ -157,6 +157,10 @@ class Domain
             throw new PageRedirectionException($redirectNode->getAttribute('uri'));
         }
         
+        if ($pageNode->getAttribute('uri') !== $path) {
+            throw new PageRedirectionException($pageNode->getAttribute('uri'));
+        }
+        
         return $pageNode;
     }
 
