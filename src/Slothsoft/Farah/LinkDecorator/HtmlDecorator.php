@@ -52,7 +52,8 @@ class HtmlDecorator implements LinkDecoratorInterface
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
             $node->setAttribute('src', $assetHref);
             $node->setAttribute('defer', 'defer');
-            //$node->setAttribute('type', 'application/javascript'); "The type attribute is unnecessary for JavaScript resources."
+            //"The type attribute is unnecessary for JavaScript resources."
+            //$node->setAttribute('type', 'application/javascript');
             $this->rootNode->appendChild($node);
         }
     }
