@@ -140,9 +140,9 @@ class HTTPResponse
         unset($val);
     }
 
-    public static function calcEtag($data)
+    public static function calcEtag($data) : string
     {
-        return md5($data);
+        return md5((string) $data);
     }
 
     protected $headerList;
