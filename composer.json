@@ -1,38 +1,46 @@
 {
-	"name" : "slothsoft/farah",
-	"description" : "Files and Resources and Hypertext: A content management system.",
-	"license" : "WTFPL",
-	"authors" : [{
-			"name" : "Daniel Schulz",
-			"email" : "info.slothsoft@gmail.com"
-		}
-	],
-	"type" : "library",
-	"require" : {
-		"matthiasmullie/minify" : "*",
-		"psr/cache" : "*",
-		"psr/http-message" : "*",
-		"psr/log" : "*",
-		"php" : ">=7.0",
-		"slothsoft/core" : "*"
-	},
-	"require-dev" : {
-		"phpunit/phpunit" : ">=6.0",
-		"slothsoft/core" : "dev-master",
-		"slothsoft/lang" : "dev-master",
-		"slothsoft/w3c" : "dev-master"
-	},
-	"autoload" : {
-		"files" : [
-			"src/autoload.php",
-			"src/registerModule.php"
-		],
-		"psr-0" : {
-			"Slothsoft\\Farah\\" : "src/"
-		}
-	},
-	"keywords" : [
-		"farah-module",
-		"farah-abstract"
-	]
+    "name": "slothsoft/farah",
+    "description": "Files and Resources and Hypertext: A content management system.",
+    "license": "WTFPL",
+    "authors": [
+        {
+            "name": "Daniel Schulz",
+            "email": "info.slothsoft@gmail.com"
+        }
+    ],
+    "type": "library",
+    "require": {
+        "matthiasmullie/minify": "*",
+        "php": ">=7.0",
+        "psr/cache": "*",
+        "psr/http-message": "*",
+        "psr/log": "*",
+        "slothsoft/core": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=6.5",
+        "slothsoft/core": "dev-master",
+        "slothsoft/lang": "dev-master",
+        "slothsoft/w3c": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "Slothsoft\\Farah\\": "src/"
+        },
+        "files": [
+            "src/autoload.php",
+            "src/registerModule.php"
+        ]
+    },
+    "keywords": [
+        "farah-abstract",
+        "farah-module",
+        "slothsoft"
+    ],
+    "classmap-authoritative": false,
+    "autoload-dev": {
+        "classmap": [
+            "tests/"
+        ]
+    }
 }

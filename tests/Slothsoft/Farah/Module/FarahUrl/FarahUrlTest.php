@@ -1,13 +1,11 @@
 <?php
-namespace tests\Slothsoft\Farah\Module\FarahUrl;
+declare(strict_types = 1);
+namespace Slothsoft\Farah\Module\FarahUrl;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;
 
 class FarahUrlTest extends TestCase
 {

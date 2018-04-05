@@ -1,8 +1,8 @@
 <?php
-namespace tests\Slothsoft\Farah;
+declare(strict_types = 1);
+namespace Slothsoft\Farah;
 
 use PHPUnit\Framework\TestCase;
-use Slothsoft\Farah\Kernel;
 
 /**
 *  Corresponding Class to test YourClass class
