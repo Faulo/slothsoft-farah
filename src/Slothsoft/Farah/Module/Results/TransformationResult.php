@@ -144,21 +144,30 @@ class TransformationResult extends ResultImplementation
     public function toFile(): HTTPFile
     {
         $document = $this->toDocument();
-        if ($document->documentElement) {
-            $stylesheetList = $this->getLinkedStylesheets();
-            $scriptList = $this->getLinkedScripts();
-            if ($stylesheetList or $scriptList) {
-                $decorator = DecoratorFactory::createForDocument($document);
-                $decorator->linkStylesheets(...$stylesheetList);
-                $decorator->linkScripts(...$scriptList);
-            }
+        $stylesheetList = $this->getLinkedStylesheets();
+        $scriptList = $this->getLinkedScripts();
+        if ($stylesheetList or $scriptList) {
+            $decorator = DecoratorFactory::createForDocument($document);
+            $decorator->linkStylesheets(...$stylesheetList);
+            $decorator->linkScripts(...$scriptList);
         }
-        return HTTPFile::createFromDocument($document);
+        
+        $extension = $this->guessExtension((string) $document->documentElement->namespaceURI);
+        
+        return HTTPFile::createFromDocument($document, "$this->name.$extension");
     }
 
     public function toString(): string
     {
         return $this->toFile()->getContents();
+    }
+    
+    private function guessExtension(string $namespaceURI) {
+        switch ($namespaceURI) {
+            case DOMHelper::NS_HTML:    return 'xhtml';
+            case DOMHelper::NS_SVG:     return 'svg';
+            default:                    return 'xml';
+        }
     }
 }
 
