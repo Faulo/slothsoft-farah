@@ -96,7 +96,7 @@ abstract class RequestProcessorImplementation implements RequestProcessorInterfa
         
         $file = $result->toFile();
         if (!$file->exists()) {
-            throw new HttpStatusException("Failed to locate file '{$file->getName()}'.", HTTPResponse::STATUS_NOT_FOUND);
+            throw new HttpStatusException("Failed to locate file '{$file->getName()}' ({$result->getUrl()}).", HTTPResponse::STATUS_NOT_FOUND);
         }
         $this->response->setFile($file->getPath(), $file->getName());
     }
