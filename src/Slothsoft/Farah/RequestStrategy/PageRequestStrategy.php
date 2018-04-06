@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Slothsoft\Farah\RequestProcessor;
+namespace Slothsoft\Farah\RequestStrategy;
 
 use Slothsoft\Farah\HTTPResponse;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
@@ -12,13 +12,14 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
 use Slothsoft\Farah\Sites\Domain;
 use Slothsoft\Farah\Exception\PageRedirectionException;
 
-class PageRequestProcessor extends RequestProcessorImplementation
+class PageRequestStrategy extends RequestStrategyImplementation
 {
 
     protected function loadResult(): ResultInterface
     {
-        $ref = $this->request->path;
-        $args = $this->request->input;
+        $request = $this->getRequest();
+        $ref = $request->path;
+        $args = $request->input;
         
         $domain = Domain::getInstance();
         
@@ -29,8 +30,7 @@ class PageRequestProcessor extends RequestProcessorImplementation
             if (count($args)) {
                 $url .= '?' . http_build_query($args);
             }
-            $this->response->addHeader('location', $url);
-            throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_PERMANENT_REDIRECT, $e);
+            throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_PERMANENT_REDIRECT, $e, ['location' => $url]);
         } catch (PageNotFoundException $e) {
             throw new HttpStatusException($e->getMessage(), HTTPResponse::STATUS_GONE, $e);
         }
@@ -41,7 +41,7 @@ class PageRequestProcessor extends RequestProcessorImplementation
             throw new HttpStatusException('', HTTPResponse::STATUS_NOT_IMPLEMENTED);
         }
         
-        $this->response->addHeader('content-location', $pageNode->getAttribute('url'));
+        //$this->response->addHeader('content-location', $pageNode->getAttribute('url'));
         
         $url = $domain->lookupAssetUrl($pageNode, $args);
         

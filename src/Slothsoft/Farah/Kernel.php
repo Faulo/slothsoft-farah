@@ -15,20 +15,11 @@ use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Farah\Configuration\AssetConfigurationField;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
-use Slothsoft\Farah\RequestProcessor\RequestProcessorInterface;
+use Slothsoft\Farah\RequestStrategy\RequestStrategyInterface;
+use Slothsoft\Farah\ResponseStrategy\ResponseStrategyInterface;
 
 class Kernel
 {
-
-    public static function getInstance(): Kernel
-    {
-        static $instance;
-        if ($instance === null) {
-            $instance = new Kernel();
-        }
-        return $instance;
-    }
-
     private static function sitesAsset(): ConfigurationField
     {
         static $field;
@@ -85,31 +76,44 @@ class Kernel
     {
         return self::trackingExceptionUris()->getValue();
     }
-
-    public static function processPathRequest($path, RequestProcessorInterface $processor)
-    {
-        $kernel = self::getInstance();
-        
-        $request = $kernel->createRequest($path, $_REQUEST, $_SERVER);
-        
-        $response = $kernel->createResponse($request);
-        
-        $processor->setRequest($request);
-        $processor->setResponse($response);
-        
-        try {
-            $processor->process();
-        } catch (HttpStatusException $e) {
-            $response->setStatus($e->getCode(), $e->getMessage());
-        }
-        
-        $response->send();
+    
+    private $requestStrategy;
+    private $responseStrategy;
+    
+    public function __construct(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy) {
+        $this->requestStrategy = $requestStrategy;
+        $this->responseStrategy = $responseStrategy;
     }
 
-    private function __construct()
-    {}
-
-    public function createRequest(string $path, array $req, array $env): HTTPRequest
+    
+    
+    public function processPath(string $path)
+    {
+        $request = $this->createRequest($path, $_REQUEST, $_SERVER);
+        
+        $response = $this->createResponse($request);
+        
+        $this->requestStrategy->setRequest($request);
+        
+        try {
+            $result = $this->requestStrategy->process();
+            $file = $result->toFile();
+            if (!$file->exists()) {
+                throw new HttpStatusException("Failed to locate file '{$file->getName()}' ({$result->getUrl()}).", HTTPResponse::STATUS_NOT_FOUND);
+            }
+            $response->setFile($file->getPath(), $file->getName());
+        } catch (HttpStatusException $e) {
+            $response->setStatus($e->getCode(), $e->getMessage());
+            foreach ($e->getAdditionalHeaders() as $key => $val) {
+                $response->addHeader($key, $val);
+            }
+        }
+        
+        $this->responseStrategy->setResponse($response);
+        return $this->responseStrategy->process();
+    }
+    
+    private static function createRequest(string $path, array $req, array $env): HTTPRequest
     {
         $request = new HTTPRequest();
         $request->init($env);
@@ -117,30 +121,15 @@ class Kernel
         $request->setAllHeaders(apache_request_headers());
         $request->setPath($path);
         
-        $this->requestBackup = $request; // TODO: figure out where this belongs
-        
         return $request;
     }
 
-    public function createResponse(HTTPRequest $request)
+    private static function createResponse(HTTPRequest $request)
     {
         $httpResponse = new HTTPResponse();
         $httpResponse->setRequest($request);
         
         return $httpResponse;
-    }
-
-    private $requestBackup;
-
-    public function getRequest(): HTTPRequest
-    {
-        if ($this->requestBackup) {
-            $ret = $this->requestBackup;
-        } else {
-            $ret = new HTTPRequest();
-            $ret->init([]);
-        }
-        return $ret;
     }
 }
 

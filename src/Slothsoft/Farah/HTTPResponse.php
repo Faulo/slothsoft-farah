@@ -181,8 +181,6 @@ class HTTPResponse
 
     protected $fileDisposition;
 
-    protected $cache;
-
     protected $ifNoneMatch;
 
     protected $ifModifiedSince;
@@ -220,7 +218,6 @@ class HTTPResponse
         $this->protocolMajorVersion = 1;
         $this->protocolMinorVersion = 1;
         
-        $this->cache = new Cache();
         $this->headerList = [];
     }
 

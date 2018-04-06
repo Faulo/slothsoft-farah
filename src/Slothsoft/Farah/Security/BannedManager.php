@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Security;
 use Slothsoft\Core\ServerEnvironment;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Core\Configuration\FileConfigurationField;
+use Slothsoft\Core\Configuration\ConfigurationRequiredException;
 
 class BannedManager
 {
@@ -22,7 +23,12 @@ class BannedManager
     {
         static $field;
         if ($field === null) {
-            $field = new FileConfigurationField(ServerEnvironment::getDataDirectory() . 'banned-ips.txt');
+            try {
+                $path = ServerEnvironment::getDataDirectory() . 'banned-ips.txt';
+            } catch(ConfigurationRequiredException $e) {
+                $path = temp_file(__NAMESPACE__);
+            }
+            $field = new FileConfigurationField($path);
         }
         return $field;
     }
