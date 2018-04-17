@@ -19,8 +19,6 @@ use Slothsoft\Farah\Security\BannedManager;
 abstract class RequestStrategyBase implements RequestStrategyInterface
 {
     private $request;
-    private $negotiatedContentCodings;
-    private $negotiatedTransferCodings;
     
     public function process(ServerRequestInterface $request) : ResponseInterface
     {
@@ -69,15 +67,15 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                     }
                 }
                 
-                $this->negotiateContentCodings();
-                foreach ($this->negotiatedContentCodings as $coding) {
+                $coding = $this->negotiateContentCoding();
+                if (!$coding->isNoEncoding()) {
                     stream_filter_append($resource, $coding->getFilterName(), STREAM_FILTER_READ);
                     $headers['content-encoding'] = $coding->getHttpName();
                     $headers['vary'] = 'accept-encoding';
                 }
                 
-                $this->negotiateTransferCodings();
-                foreach ($this->negotiatedTransferCodings as $coding) {
+                $coding = $this->negotiateTransferCoding();
+                if (!$coding->isNoEncoding()) {
                     stream_filter_append($resource, $coding->getFilterName(), STREAM_FILTER_READ);
                     $headers['transfer-encoding'] = $coding->getHttpName();
                 }
@@ -120,29 +118,27 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
     
     abstract protected function createUrl(ServerRequestInterface $request): FarahUrl;
     
-    private function negotiateContentCodings() {
-        $this->negotiatedContentCodings = [];
+    private function negotiateContentCoding() : ContentCoding {
         $accept = $this->request->getHeaderLine('accept-encoding');
         foreach (ContentCoding::values() as $coding) {
             if ($coding->isAvailable() and strpos($accept, $coding->getHttpName()) !== false) {
-                //$this->negotiatedContentCodings[] = $coding;
-                break;
+                return $coding;
             }
         }
+        return ContentCoding::identity();
     }
     
-    private function negotiateTransferCodings() {
-        $this->negotiatedTransferCodings = [];
+    private function negotiateTransferCoding() : TransferCoding {
         $accept = $this->request->getHeaderLine('te');
         if (version_compare($this->request->getProtocolVersion(), '1.1', '>=')) {
             $accept .= ', chunked'; //HTTP 1.1 must accept chunked encoding
         }
         foreach (TransferCoding::values() as $coding) {
             if ($coding->isAvailable() and strpos($accept, $coding->getHttpName()) !== false) {
-                //$this->negotiatedTransferCodings[] = $coding;
-                break;
+                return $coding;
             }
         }
+        return TransferCoding::identity();
     }
 }
 

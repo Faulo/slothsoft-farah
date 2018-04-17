@@ -11,13 +11,16 @@ class TransferCoding
     
     public static function values() : array {
         return [
-            new self('identity'),
-                new self('chunked'),
-                    new self('compress'),
-                        new self('deflate'),
-                            new self('gzip'),
+            new self('chunked'),
+            new self('compress'),
+            new self('deflate'),
+            new self('gzip'),
         ];
     }
+    public static function identity() : TransferCoding {
+        return new self(self::NO_ENCODING);
+    }
+    
     private $httpName;
     private function __construct(string $httpName) {
         $this->httpName = $httpName;

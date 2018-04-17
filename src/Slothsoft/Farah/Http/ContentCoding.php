@@ -20,6 +20,10 @@ class ContentCoding
             new self('pack200-gzip'),
         ];
     }
+    public static function identity() : ContentCoding {
+        return new self(self::NO_ENCODING);
+    }
+    
     private $httpName;
     private function __construct(string $httpName) {
         $this->httpName = $httpName;

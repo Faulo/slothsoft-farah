@@ -10,8 +10,8 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\StreamWrapper\FarahStreamWrapperFactory;
 
 
-stream_filter_register('http.content-encoding.gzip', ZlibEncodeGzip::class);
-stream_filter_register('http.content-encoding.deflate', ZlibEncodeDeflate::class);
+//stream_filter_register('http.content-encoding.gzip', ZlibEncodeGzip::class);
+//stream_filter_register('http.content-encoding.deflate', ZlibEncodeDeflate::class);
 
 stream_filter_register('http.transfer-encoding.chunked', ChunkEncode::class);
 
