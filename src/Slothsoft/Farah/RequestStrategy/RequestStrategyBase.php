@@ -92,6 +92,10 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
             $body = MessageFactory::createStreamFromContents(StatusCode::getMessage($statusCode, $e->getMessage()));
         }
         
+        if (!$this->shouldIncludeBody($this->request->getMethod(), $statusCode)) {
+            $body->detach();
+        }
+        
         return MessageFactory::createServerResponse(
             $statusCode,
             $headers,
@@ -139,6 +143,26 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
             }
         }
         return TransferCoding::identity();
+    }
+    
+    private function shouldIncludeBody(string $method, int $statusCode) : bool {
+        switch ($method) {
+            case 'HEAD':
+                return false;
+        }
+        
+        switch ($statusCode) {
+            case StatusCode::STATUS_NO_CONTENT:
+            case StatusCode::STATUS_MULTIPLE_CHOICES:
+            case StatusCode::STATUS_MOVED_PERMANENTLY:
+            case StatusCode::STATUS_SEE_OTHER:
+            case StatusCode::STATUS_NOT_MODIFIED:
+            case StatusCode::STATUS_TEMPORARY_REDIRECT:
+            case StatusCode::STATUS_PERMANENT_REDIRECT:
+                return false;
+        }
+        
+        return true;
     }
 }
 
