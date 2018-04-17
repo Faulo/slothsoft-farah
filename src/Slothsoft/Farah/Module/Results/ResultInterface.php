@@ -11,9 +11,11 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
  * @author Daniel Schulz
  *        
  */
-interface ResultInterface 
+interface ResultInterface
 {
+
     const STREAM_TYPE_DEFAULT = '';
+
     const STREAM_TYPE_XML = 'xml';
 
     public function __toString(): string;
@@ -29,11 +31,13 @@ interface ResultInterface
     public function getLinkedStylesheets(): array;
 
     public function getLinkedScripts(): array;
-    
-    public function createDefaultUrl() : FarahUrl;
-    public function createDefaultStreamWrapper() : StreamWrapperInterface;
-    
-    public function createXmlUrl() : FarahUrl;
-    public function createXmlStreamWrapper() : StreamWrapperInterface;
+
+    public function createDefaultUrl(): FarahUrl;
+
+    public function createDefaultStreamWrapper(): StreamWrapperInterface;
+
+    public function createXmlUrl(): FarahUrl;
+
+    public function createXmlStreamWrapper(): StreamWrapperInterface;
 }
 

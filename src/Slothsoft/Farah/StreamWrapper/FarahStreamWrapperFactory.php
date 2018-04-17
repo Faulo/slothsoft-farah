@@ -15,6 +15,7 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface
 {
+
     public function createStreamWrapper(string $url, string $mode, int $options)
     {
         $url = FarahUrl::createFromReference($url);
@@ -30,7 +31,7 @@ class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface
                 throw new StreamTypeNotSupportedException((string) $url);
         }
     }
-    
+
     public function statUrl(string $url, int $flags)
     {
         return [];

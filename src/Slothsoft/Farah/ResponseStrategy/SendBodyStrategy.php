@@ -7,10 +7,13 @@ use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 
 class SendBodyStrategy extends ResponseStrategyBase
 {
+
     private $destination;
+
     private $chunkSize;
-    
-    public function __construct(string $destination = 'php://output', int $chunkSize = null) {
+
+    public function __construct(string $destination = 'php://output', int $chunkSize = null)
+    {
         $this->destination = $destination;
         $this->chunkSize = $chunkSize;
     }
@@ -24,7 +27,7 @@ class SendBodyStrategy extends ResponseStrategyBase
             if ($this->chunkSize === null) {
                 stream_copy_to_stream($input, $output);
             } else {
-                while (!feof($input)) {
+                while (! feof($input)) {
                     fwrite($output, fread($input, $this->chunkSize));
                 }
             }

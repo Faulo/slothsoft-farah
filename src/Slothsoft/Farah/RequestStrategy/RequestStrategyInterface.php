@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 interface RequestStrategyInterface
 {
-    public function process(ServerRequestInterface  $request) : ResponseInterface;
+
+    public function process(ServerRequestInterface $request): ResponseInterface;
 }
 

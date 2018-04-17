@@ -16,11 +16,12 @@ use Slothsoft\Farah\Exception\PageRedirectionException;
 
 abstract class AbstractSitemapTest extends AbstractTestCase
 {
+
     const SCHEMA_URL = 'farah://slothsoft@farah/schema/sitemap/1.0';
 
     abstract protected static function loadSitesAsset(): AssetInterface;
 
-    protected function getSitesAsset() : AssetInterface
+    protected function getSitesAsset(): AssetInterface
     {
         static $asset;
         if ($asset === null) {
@@ -29,19 +30,24 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         }
         return $asset;
     }
+
     protected function getSitesResult(): ResultInterface
     {
         return $this->getSitesAsset()->createResult();
     }
+
     protected function getSitesDocument(): DOMDocument
     {
         return $this->getSitesResult()->toDocument();
     }
+
     protected function getSitesRoot(): DOMElement
     {
         return $this->getSitesDocument()->documentElement;
     }
-    protected function getSitesIncludes() : array {
+
+    protected function getSitesIncludes(): array
+    {
         $ret = [];
         $result = $this->getSitesResult();
         $url = $result->getUrl();
@@ -50,25 +56,22 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         $this->getSitesIncludesCrawl($ret, $url, $document);
         return $ret;
     }
-    protected function getSitesIncludesCrawl(array &$ret, FarahUrl $parentUrl, DOMDocument $document) {
+
+    protected function getSitesIncludesCrawl(array &$ret, FarahUrl $parentUrl, DOMDocument $document)
+    {
         $nodeList = $document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_INCLUDE_PAGES);
         foreach ($nodeList as $node) {
-            $url = FarahUrl::createFromReference(
-                $node->getAttribute('ref'),
-                $parentUrl->getAssetAuthority(),
-                null,
-                $parentUrl->getArguments()
-            );
+            $url = FarahUrl::createFromReference($node->getAttribute('ref'), $parentUrl->getAssetAuthority(), null, $parentUrl->getArguments());
             $ret[(string) $url] = $url;
             trigger_error("<include-pages> is deprecated (referencing $url)", E_USER_DEPRECATED);
             try {
                 $result = FarahUrlResolver::resolveToResult($url);
                 $document = $result->toDocument();
                 $this->getSitesIncludesCrawl($ret, $url, $document);
-            } catch(Throwable $e) {
-            }
+            } catch (Throwable $e) {}
         }
     }
+
     protected function getDomain(): Domain
     {
         static $domain;
@@ -77,6 +80,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         }
         return $domain;
     }
+
     protected function getDomainDocument(): DOMDocument
     {
         return $this->getDomain()->getDocument();
@@ -96,15 +100,14 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         $this->assertEquals($this->getSitesRoot()->namespaceURI, DOMHelper::NS_FARAH_SITES);
         $this->assertEquals($this->getSitesRoot()->localName, Domain::TAG_DOMAIN);
     }
-    
+
     public function testSchemaExists()
     {
         $path = self::SCHEMA_URL;
         $this->assertFileExists($path, 'Schema file not found!');
         return $path;
     }
-    
-    
+
     /**
      *
      * @depends testSchemaExists
@@ -116,8 +119,9 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         $this->assertInstanceOf(DOMDocument::class, $document);
         return $document;
     }
-    
+
     /**
+     *
      * @depends testSchemaIsValidXml
      */
     public function testSitesIsValidAccordingToSchema($schemaDocument)
@@ -132,23 +136,29 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         $this->assertTrue($validateResult, 'Asset file is invalid!');
         return $sitesDocument;
     }
+
     /**
+     *
      * @dataProvider includeProvider
      */
-    public function testIncludeExists($url) {
+    public function testIncludeExists($url)
+    {
         try {
             $result = FarahUrlResolver::resolveToResult($url);
             $document = $result->toDocument();
             $this->assertInstanceOf(DOMElement::class, $document->documentElement);
-        } catch(Throwable $e) {
+        } catch (Throwable $e) {
             $this->failException($e);
         }
     }
+
     /**
+     *
      * @depends testIncludeExists
      * @dataProvider includeProvider
      */
-    public function testIncludeIsValidAccordingToSchema($url) {
+    public function testIncludeIsValidAccordingToSchema($url)
+    {
         $result = FarahUrlResolver::resolveToResult($url);
         $document = $result->toDocument();
         try {
@@ -159,6 +169,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         }
         $this->assertTrue($validateResult, '<include-pages> document is invalid!');
     }
+
     public function includeProvider()
     {
         $ret = [];
@@ -169,23 +180,28 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         }
         return $ret;
     }
-    
+
     /**
+     *
      * @depends      testIncludeExists
      * @dataProvider pageNodeProvider
      */
-    public function testPageMustHaveEitherRefOrRedirect($node) {
+    public function testPageMustHaveEitherRefOrRedirect($node)
+    {
         $this->assertNotEquals($node->hasAttribute('ref'), $node->hasAttribute('redirect'), '<page> must have either ref or redirect attribute.');
     }
-    
+
     /**
+     *
      * @depends      testPageMustHaveEitherRefOrRedirect
      * @dataProvider pageNodeProvider
      */
-    public function testPageResultExists($node) {
+    public function testPageResultExists($node)
+    {
         $path = $node->getAttribute('uri');
         if ($node->hasAttribute('ref')) {
-            $this->assertEquals($node, $this->getDomain()->lookupPageNode($path));
+            $this->assertEquals($node, $this->getDomain()
+                ->lookupPageNode($path));
             $url = $this->getDomain()->lookupAssetUrl($node);
             $this->assertInstanceOf(ResultInterface::class, FarahUrlResolver::resolveToResult($url));
         } else {
@@ -193,6 +209,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
             $this->getDomain()->lookupPageNode($path);
         }
     }
+
     public function pageNodeProvider()
     {
         $ret = [];

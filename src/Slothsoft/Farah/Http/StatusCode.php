@@ -4,44 +4,45 @@ namespace Slothsoft\Farah\Http;
 
 abstract class StatusCode
 {
+
     const STATUS_OK = 200;
-    
+
     const STATUS_NO_CONTENT = 204;
-    
+
     const STATUS_PARTIAL_CONTENT = 206;
-    
+
     const STATUS_MULTIPLE_CHOICES = 300;
-    
+
     const STATUS_MOVED_PERMANENTLY = 301;
-    
+
     const STATUS_SEE_OTHER = 303;
-    
+
     const STATUS_NOT_MODIFIED = 304;
-    
+
     const STATUS_TEMPORARY_REDIRECT = 307;
-    
+
     const STATUS_PERMANENT_REDIRECT = 308;
-    
+
     const STATUS_BAD_REQUEST = 400;
-    
+
     const STATUS_UNAUTHORIZED = 401;
-    
+
     const STATUS_NOT_FOUND = 404;
-    
+
     const STATUS_METHOD_NOT_ALLOWED = 405;
-    
+
     const STATUS_GONE = 410;
-    
+
     const STATUS_PRECONDITION_FAILED = 412;
-    
+
     const STATUS_REQUESTED_RANGE_NOT_SATISFIABLE = 416;
-    
+
     const STATUS_INTERNAL_SERVER_ERROR = 500;
-    
+
     const STATUS_NOT_IMPLEMENTED = 501;
-    
+
     const STATUS_HTTP_VERSION_NOT_SUPPORTED = 505;
-    
+
     const REASON_PHRASES = [
         self::STATUS_OK => 'OK',
         self::STATUS_NO_CONTENT => 'No Content',
@@ -63,11 +64,14 @@ abstract class StatusCode
         self::STATUS_NOT_IMPLEMENTED => 'Not Implemented',
         self::STATUS_HTTP_VERSION_NOT_SUPPORTED => 'HTTP Version Not Supported'
     ];
-    
-    public static function getReasonPhrase(int $statusCode) : string {
+
+    public static function getReasonPhrase(int $statusCode): string
+    {
         return self::REASON_PHRASES[$statusCode] ?? '';
     }
-    public static function getMessage(int $statusCode, string $message = '') : string {
+
+    public static function getMessage(int $statusCode, string $message = ''): string
+    {
         $ret = '';
         $ret .= $statusCode;
         if (isset(self::REASON_PHRASES[$statusCode])) {

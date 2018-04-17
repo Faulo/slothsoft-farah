@@ -14,6 +14,7 @@ use Closure;
  */
 class ClosureResult extends ProxyResult
 {
+
     private $closure;
 
     public function __construct(FarahUrl $url, Closure $closure)
@@ -22,6 +23,7 @@ class ClosureResult extends ProxyResult
         
         $this->closure = $closure;
     }
+
     protected function loadProxiedResult(): ResultInterface
     {
         $closure = $this->closure;

@@ -13,11 +13,13 @@ use DOMDocument;
  */
 class HtmlFileResult extends FileResult
 {
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
      */
-    protected function loadXmlStreamWrapper() : StreamWrapperInterface
+    protected function loadXmlStreamWrapper(): StreamWrapperInterface
     {
         $dataDoc = new DOMDocument();
         $dataDoc->loadHTMLFile($this->file->getPath());

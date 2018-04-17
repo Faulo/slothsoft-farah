@@ -16,11 +16,12 @@ use Slothsoft\Core\Configuration\ConfigurationRequiredException;
  */
 class RequestAsset extends AssetImplementation
 {
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         try {
             return ResultCatalog::createMessageResult($url, Kernel::getCurrentRequest());
-        } catch(ConfigurationRequiredException $e) {
+        } catch (ConfigurationRequiredException $e) {
             return ResultCatalog::createNullResult($url);
         }
     }

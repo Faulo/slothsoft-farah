@@ -20,9 +20,11 @@ use Slothsoft\Farah\ResponseStrategy\ResponseStrategyInterface;
 
 class Kernel
 {
+
     const URL_REQUEST = 'farah://slothsoft@farah/request';
+
     const URL_SITEMAP = 'farah://slothsoft@farah/sites';
-    
+
     private static function currentSitemap(): ConfigurationField
     {
         static $field;
@@ -31,17 +33,17 @@ class Kernel
         }
         return $field;
     }
-    
+
     public static function setCurrentSitemap($asset)
     {
         self::currentSitemap()->setValue($asset);
     }
-    
+
     public static function getCurrentSitemap(): AssetInterface
     {
         return self::currentSitemap()->getValue();
     }
-    
+
     private static function currentRequest(): ConfigurationField
     {
         static $field;
@@ -50,12 +52,12 @@ class Kernel
         }
         return $field;
     }
-    
+
     public static function setCurrentRequest(ServerRequestInterface $request)
     {
         self::currentRequest()->setValue($request);
     }
-    
+
     public static function getCurrentRequest(): ServerRequestInterface
     {
         return self::currentRequest()->getValue();
@@ -98,17 +100,19 @@ class Kernel
     {
         return self::trackingExceptionUris()->getValue();
     }
-    
-    
+
     private $requestStrategy;
+
     private $responseStrategy;
-    
-    public function __construct(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy) {
+
+    public function __construct(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy)
+    {
         $this->requestStrategy = $requestStrategy;
         $this->responseStrategy = $responseStrategy;
     }
-    
-    public function handle(ServerRequestInterface $request) {
+
+    public function handle(ServerRequestInterface $request)
+    {
         self::setCurrentRequest($request);
         
         $response = $this->requestStrategy->process($request);

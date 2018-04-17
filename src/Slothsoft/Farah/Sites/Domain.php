@@ -21,10 +21,11 @@ use DOMElement;
  */
 class Domain
 {
+
     const TAG_INCLUDE_PAGES = 'include-pages';
-    
+
     const TAG_SITEMAP = 'sitemap';
-    
+
     const TAG_DOMAIN = 'domain';
 
     const TAG_PAGE = 'page';
@@ -212,15 +213,15 @@ class Domain
         }
         return $ret;
     }
-    
+
     private function getDomainName(): string
     {
         return $this->domainName;
     }
-    
+
     private function getProtocol(): string
     {
-        return 'http'; //TODO: where to put this?
+        return 'http'; // TODO: where to put this?
     }
 
     private function findModuleName(DOMElement $node): string

@@ -22,7 +22,9 @@ abstract class ResultImplementation implements ResultInterface, DOMWriterInterfa
 {
 
     private $url;
+
     private $defaultStreamWrapper;
+
     private $xmlStreamWrapper;
 
     public function __construct(FarahUrl $url)
@@ -59,36 +61,40 @@ abstract class ResultImplementation implements ResultInterface, DOMWriterInterfa
     {
         return array_values(FarahUrlResolver::resolveToAsset($this->url)->lookupLinkedScripts());
     }
-    
-    
-    
-    public function createDefaultUrl() : FarahUrl {
+
+    public function createDefaultUrl(): FarahUrl
+    {
         return $this->url->withStreamIdentifier(FarahUrlStreamIdentifier::createFromString(self::STREAM_TYPE_DEFAULT));
     }
-    public function createDefaultStreamWrapper() : StreamWrapperInterface {
+
+    public function createDefaultStreamWrapper(): StreamWrapperInterface
+    {
         if ($this->defaultStreamWrapper === null) {
             $this->defaultStreamWrapper = $this->loadDefaultStreamWrapper();
         }
         return $this->defaultStreamWrapper;
     }
-    abstract protected function loadDefaultStreamWrapper() : StreamWrapperInterface;
-    
-    
-    
-    public function createXmlUrl() : FarahUrl {
+
+    abstract protected function loadDefaultStreamWrapper(): StreamWrapperInterface;
+
+    public function createXmlUrl(): FarahUrl
+    {
         return $this->url->withStreamIdentifier(FarahUrlStreamIdentifier::createFromString(self::STREAM_TYPE_XML));
     }
-    public function createXmlStreamWrapper() : StreamWrapperInterface {
+
+    public function createXmlStreamWrapper(): StreamWrapperInterface
+    {
         if ($this->xmlStreamWrapper === null) {
             $this->xmlStreamWrapper = $this->loadXmlStreamWrapper();
         }
         return $this->xmlStreamWrapper;
     }
-    abstract protected function loadXmlStreamWrapper() : StreamWrapperInterface;
-    
-    
+
+    abstract protected function loadXmlStreamWrapper(): StreamWrapperInterface;
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Core\IO\Writable\DOMWriterInterface::toDocument()
      */
     public function toDocument(): DOMDocument
@@ -97,8 +103,10 @@ abstract class ResultImplementation implements ResultInterface, DOMWriterInterfa
         $targetDoc->load((string) $this->createXmlUrl());
         return $targetDoc;
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Core\IO\Writable\DOMWriterInterface::toElement()
      */
     public function toElement(DOMDocument $targetDoc): DOMElement
@@ -114,19 +122,20 @@ abstract class ResultImplementation implements ResultInterface, DOMWriterInterfa
         }
         throw new \DOMException("$this->url#xml does not contain an element node");
     }
-    
-    
-    
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Core\IO\Writable\FileWriterInterface::toFile()
      */
     public function toFile(): HTTPFile
     {
         return HTTPFile::createFromPath((string) $this->createDefaultUrl());
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Core\IO\Writable\FileWriterInterface::toString()
      */
     public function toString(): string

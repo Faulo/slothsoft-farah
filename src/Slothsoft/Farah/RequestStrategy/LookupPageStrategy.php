@@ -13,8 +13,11 @@ use Slothsoft\Farah\Sites\Domain;
 
 class LookupPageStrategy extends RequestStrategyBase
 {
+
     private $domain;
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->domain = new Domain(Kernel::getCurrentSitemap());
     }
 
@@ -30,7 +33,9 @@ class LookupPageStrategy extends RequestStrategyBase
             if (count($args)) {
                 $url .= '?' . http_build_query($args);
             }
-            throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_PERMANENT_REDIRECT, $e, ['location' => $url]);
+            throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_PERMANENT_REDIRECT, $e, [
+                'location' => $url
+            ]);
         } catch (PageNotFoundException $e) {
             throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_GONE, $e);
         }

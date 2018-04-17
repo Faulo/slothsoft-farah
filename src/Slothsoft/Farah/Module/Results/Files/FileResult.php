@@ -12,7 +12,7 @@ use Slothsoft\Core\IO\Writable\FileWriterStringFromFileTrait;
 abstract class FileResult extends ResultImplementation
 {
     use FileWriterStringFromFileTrait;
-    
+
     protected $file;
 
     public function __construct(FarahUrl $url, HTTPFile $file)
@@ -22,32 +22,33 @@ abstract class FileResult extends ResultImplementation
         $this->file = $file;
     }
 
-    
-    
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
      */
-    protected function loadDefaultStreamWrapper() : StreamWrapperInterface
+    protected function loadDefaultStreamWrapper(): StreamWrapperInterface
     {
         return new FileStreamWrapper($this->file);
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
      */
     public function exists(): bool
     {
         return $this->file->exists();
     }
-    
-   
-    
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toFile()
      */
-    public function toFile() : HTTPFile {
+    public function toFile(): HTTPFile
+    {
         return $this->file;
     }
 }

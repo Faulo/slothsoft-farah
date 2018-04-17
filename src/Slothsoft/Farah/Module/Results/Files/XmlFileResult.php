@@ -11,11 +11,13 @@ use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
  */
 class XmlFileResult extends FileResult
 {
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
      */
-    protected function loadXmlStreamWrapper() : StreamWrapperInterface
+    protected function loadXmlStreamWrapper(): StreamWrapperInterface
     {
         return $this->createDefaultStreamWrapper();
     }

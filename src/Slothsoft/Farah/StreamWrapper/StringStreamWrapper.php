@@ -7,6 +7,7 @@ use Slothsoft\Core\StreamWrapper\ResourceStreamWrapper;
 
 class StringStreamWrapper extends ResourceStreamWrapper
 {
+
     public function __construct(string $contents)
     {
         $resource = BlobUrl::createTemporaryObject();

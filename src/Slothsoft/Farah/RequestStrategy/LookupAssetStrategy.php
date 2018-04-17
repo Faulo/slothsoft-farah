@@ -10,9 +10,11 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 
 class LookupAssetStrategy extends RequestStrategyBase
 {
+
     const DEFAULT_VENDOR = 'slothsoft';
+
     const DEFAULT_MODULE = 'farah';
-    
+
     private static function hrefBase(): ConfigurationField
     {
         static $field;
@@ -21,12 +23,12 @@ class LookupAssetStrategy extends RequestStrategyBase
         }
         return $field;
     }
-    
+
     public static function setHrefBase($hrefBase)
     {
         self::hrefBase()->setValue($hrefBase);
     }
-    
+
     public static function getHrefBase(): string
     {
         return self::hrefBase()->getValue();
@@ -37,22 +39,17 @@ class LookupAssetStrategy extends RequestStrategyBase
         $uri = $request->getUri();
         $args = $request->getQueryParams();
         
-        
         if ($uri instanceof FarahUrl) {
             $url = $uri;
         } else {
-            $url = FarahUrl::createFromReference(
-                $this->extractFarahUrl($uri->getPath()),
-                FarahUrlAuthority::createFromVendorAndModule(self::DEFAULT_VENDOR, self::DEFAULT_MODULE),
-                null,
-                FarahUrlArguments::createFromValueList($args)
-            );
+            $url = FarahUrl::createFromReference($this->extractFarahUrl($uri->getPath()), FarahUrlAuthority::createFromVendorAndModule(self::DEFAULT_VENDOR, self::DEFAULT_MODULE), null, FarahUrlArguments::createFromValueList($args));
         }
         
         return $url;
     }
-    
-    private function extractFarahUrl(string $path) : string {
+
+    private function extractFarahUrl(string $path): string
+    {
         if (strpos($path, self::getHrefBase()) === 0) {
             $path = substr($path, strlen(self::getHrefBase()));
         }

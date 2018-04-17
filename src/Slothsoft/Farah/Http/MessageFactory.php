@@ -14,31 +14,37 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 
 abstract class MessageFactory
 {
-    public static function createServerRequest() : ServerRequestInterface {
+
+    public static function createServerRequest(): ServerRequestInterface
+    {
         return ServerRequest::fromGlobals();
     }
-    
-    public static function createServerResponse(int $statusCode, array $headers, StreamInterface $stream) : ResponseInterface {
-        return new Response(
-            $statusCode,
-            $headers,
-            $stream
-        );
+
+    public static function createServerResponse(int $statusCode, array $headers, StreamInterface $stream): ResponseInterface
+    {
+        return new Response($statusCode, $headers, $stream);
     }
-    
-    public static function createStreamFromResource($resource) : StreamInterface {
+
+    public static function createStreamFromResource($resource): StreamInterface
+    {
         return new Stream($resource);
     }
-    public static function createStreamFromContents(string $contents) : StreamInterface {
+
+    public static function createStreamFromContents(string $contents): StreamInterface
+    {
         $handle = fopen('php://temp', StreamWrapperInterface::MODE_CREATE_READWRITE);
         fwrite($handle, $contents);
         rewind($handle);
         return self::createStreamFromResource($handle);
     }
-    public static function createStreamFromFile(HTTPFile $file) : StreamInterface {
+
+    public static function createStreamFromFile(HTTPFile $file): StreamInterface
+    {
         return self::createStreamFromResource(fopen($file->getPath(), StreamWrapperInterface::MODE_OPEN_READONLY));
     }
-    public static function createStreamFromUrl(FarahUrl $url) : StreamInterface {
+
+    public static function createStreamFromUrl(FarahUrl $url): StreamInterface
+    {
         return self::createStreamFromResource(fopen((string) $url, StreamWrapperInterface::MODE_OPEN_READONLY));
     }
 }

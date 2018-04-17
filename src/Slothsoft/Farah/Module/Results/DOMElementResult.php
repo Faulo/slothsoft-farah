@@ -15,6 +15,7 @@ use DOMElement;
  */
 class DOMElementResult extends ResultImplementation
 {
+
     private $element;
 
     public function __construct(FarahUrl $url, DOMElement $element)
@@ -23,36 +24,40 @@ class DOMElementResult extends ResultImplementation
         
         $this->element = $element;
     }
-    
+
     /**
+     *
      * @override
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
      */
-    protected function loadDefaultStreamWrapper() : StreamWrapperInterface
+    protected function loadDefaultStreamWrapper(): StreamWrapperInterface
     {
         return new DocumentStreamWrapper($this->toDocument());
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
      */
-    protected function loadXmlStreamWrapper() : StreamWrapperInterface
+    protected function loadXmlStreamWrapper(): StreamWrapperInterface
     {
         return new DocumentStreamWrapper($this->toDocument());
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
      */
     public function exists(): bool
     {
         return true;
     }
-    
-    
-        
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toDocument()
      */
     public function toDocument(): DOMDocument
@@ -61,8 +66,10 @@ class DOMElementResult extends ResultImplementation
         $targetDoc->appendChild($this->toElement($targetDoc));
         return $targetDoc;
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toElement()
      */
     public function toElement(DOMDocument $targetDoc): DOMElement

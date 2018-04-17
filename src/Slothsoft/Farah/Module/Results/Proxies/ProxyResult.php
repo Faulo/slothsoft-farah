@@ -16,6 +16,7 @@ use DOMElement;
  */
 abstract class ProxyResult extends ResultImplementation
 {
+
     private function getResult(): ResultInterface
     {
         if ($this->result === null) {
@@ -23,45 +24,52 @@ abstract class ProxyResult extends ResultImplementation
         }
         return $this->result;
     }
-    abstract protected function loadProxiedResult() : ResultInterface;
-    
+
+    abstract protected function loadProxiedResult(): ResultInterface;
+
     /**
-    * {@inheritDoc}
-    * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
-    */
-    protected function loadDefaultStreamWrapper() : StreamWrapperInterface
+     *
+     * {@inheritdoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
+     */
+    protected function loadDefaultStreamWrapper(): StreamWrapperInterface
     {
         return $this->getResult()->createDefaultStreamWrapper();
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
      */
-    protected function loadXmlStreamWrapper() : StreamWrapperInterface
+    protected function loadXmlStreamWrapper(): StreamWrapperInterface
     {
         return $this->getResult()->createXmlStreamWrapper();
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
      */
     public function exists(): bool
     {
         return $this->getResult()->exists();
     }
-    
-    
-    
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toDocument()
      */
     public function toDocument(): DOMDocument
     {
         return $this->getResult()->toDocument();
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toElement()
      */
     public function toElement(DOMDocument $targetDoc): DOMElement
@@ -69,18 +77,19 @@ abstract class ProxyResult extends ResultImplementation
         return $this->getResult()->toElement($targetDoc);
     }
 
-    
-    
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toFile()
      */
     public function toFile(): HTTPFile
     {
         return $this->getResult()->toFile();
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toString()
      */
     public function toString(): string

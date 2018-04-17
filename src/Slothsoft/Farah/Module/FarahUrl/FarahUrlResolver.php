@@ -24,7 +24,7 @@ class FarahUrlResolver
     {
         return self::resolveToModule($url)->lookupAssetByPath($url->getAssetPath());
     }
-    
+
     public static function resolveToResult(FarahUrl $url): ResultInterface
     {
         return self::resolveToAsset($url)->createResult($url->getArguments());

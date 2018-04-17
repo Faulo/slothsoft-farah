@@ -16,11 +16,12 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
  */
 class SitesAsset extends AssetImplementation
 {
+
     protected function loadResult(FarahUrl $url): ResultInterface
     {
         try {
             return Kernel::getCurrentSitemap()->createResult($url->getArguments());
-        } catch(ConfigurationRequiredException $e) {
+        } catch (ConfigurationRequiredException $e) {
             return ResultCatalog::createNullResult($url);
         }
     }

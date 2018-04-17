@@ -10,14 +10,14 @@ use Slothsoft\Core\Configuration\ConfigurationField;
 
 class AssetConfigurationField extends ConfigurationField
 {
-    public function getValue() {
+
+    public function getValue()
+    {
         $value = parent::getValue();
-        return $value instanceof AssetInterface
-            ? $value
-            : $this->loadValue($value);
+        return $value instanceof AssetInterface ? $value : $this->loadValue($value);
     }
 
-    private function loadValue($newValue) : AssetInterface
+    private function loadValue($newValue): AssetInterface
     {
         if (is_string($newValue)) {
             $newValue = FarahUrl::createFromReference($newValue);

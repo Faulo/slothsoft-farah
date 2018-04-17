@@ -25,7 +25,7 @@ class BannedManager
         if ($field === null) {
             try {
                 $path = ServerEnvironment::getDataDirectory() . 'banned-ips.txt';
-            } catch(ConfigurationRequiredException $e) {
+            } catch (ConfigurationRequiredException $e) {
                 $path = temp_file(__NAMESPACE__);
             }
             $field = new FileConfigurationField($path);

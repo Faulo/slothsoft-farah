@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\FarahUrl;
 
-
 /**
  *
  * @author Daniel Schulz
@@ -10,6 +9,7 @@ namespace Slothsoft\Farah\Module\FarahUrl;
  */
 class FarahUrlStreamIdentifier
 {
+
     public static function createEmpty(): FarahUrlStreamIdentifier
     {
         return self::create('');

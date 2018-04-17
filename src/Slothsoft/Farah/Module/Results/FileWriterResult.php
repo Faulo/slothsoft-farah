@@ -15,6 +15,7 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
  */
 class FileWriterResult extends ResultImplementation
 {
+
     private $writer;
 
     public function __construct(FarahUrl $url, FileWriterInterface $writer)
@@ -23,25 +24,30 @@ class FileWriterResult extends ResultImplementation
         
         $this->writer = $writer;
     }
-    
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
      */
-    protected function loadDefaultStreamWrapper() : StreamWrapperInterface
+    protected function loadDefaultStreamWrapper(): StreamWrapperInterface
     {
         return new FileStreamWrapper($this->writer->toFile());
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
      */
-    protected function loadXmlStreamWrapper() : StreamWrapperInterface
+    protected function loadXmlStreamWrapper(): StreamWrapperInterface
     {
         return new FileStreamWrapper($this->writer->toFile());
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
      */
     public function exists(): bool
@@ -49,18 +55,19 @@ class FileWriterResult extends ResultImplementation
         return $this->writer->toFile()->exists();
     }
 
-    
-    
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toFile()
      */
     public function toFile(): HTTPFile
     {
         return $this->writer->toFile();
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toString()
      */
     public function toString(): string

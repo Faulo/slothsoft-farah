@@ -16,6 +16,7 @@ use DOMElement;
  */
 class DOMWriterResult extends ResultImplementation
 {
+
     private $writer;
 
     public function __construct(FarahUrl $url, DOMWriterInterface $writer)
@@ -24,25 +25,30 @@ class DOMWriterResult extends ResultImplementation
         
         $this->writer = $writer;
     }
-    
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
      */
-    protected function loadDefaultStreamWrapper() : StreamWrapperInterface
+    protected function loadDefaultStreamWrapper(): StreamWrapperInterface
     {
         return new DocumentStreamWrapper($this->writer->toDocument());
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
      */
-    protected function loadXmlStreamWrapper() : StreamWrapperInterface
+    protected function loadXmlStreamWrapper(): StreamWrapperInterface
     {
         return new DocumentStreamWrapper($this->writer->toDocument());
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
      */
     public function exists(): bool
@@ -50,18 +56,19 @@ class DOMWriterResult extends ResultImplementation
         return true;
     }
 
-    
-    
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toElement()
      */
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
         return $this->writer->toElement($targetDoc);
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toDocument()
      */
     public function toDocument(): DOMDocument

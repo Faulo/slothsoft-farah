@@ -18,9 +18,10 @@ use Slothsoft\Farah\Security\BannedManager;
 
 abstract class RequestStrategyBase implements RequestStrategyInterface
 {
+
     private $request;
-    
-    public function process(ServerRequestInterface $request) : ResponseInterface
+
+    public function process(ServerRequestInterface $request): ResponseInterface
     {
         try {
             $this->request = $request;
@@ -37,17 +38,8 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 $fileDisposition = 'inline';
                 $fileEncoding = 'UTF-8';
                 $headers = [];
-                $headers['content-disposition'] = sprintf(
-                    '%s; filename="%s"; filename*=UTF-8\'\'%s',
-                    $fileDisposition,
-                    preg_replace('/[^[:print:]]/', '', $fileName),
-                    rawurlencode($fileName)
-                );
-                $headers['content-type'] = sprintf(
-                    '%s; charset=%s',
-                    MimeTypeDictionary::guessMime(pathinfo($fileName, PATHINFO_EXTENSION)),
-                    $fileEncoding
-                );
+                $headers['content-disposition'] = sprintf('%s; filename="%s"; filename*=UTF-8\'\'%s', $fileDisposition, preg_replace('/[^[:print:]]/', '', $fileName), rawurlencode($fileName));
+                $headers['content-type'] = sprintf('%s; charset=%s', MimeTypeDictionary::guessMime(pathinfo($fileName, PATHINFO_EXTENSION)), $fileEncoding);
                 
                 $body = MessageFactory::createStreamFromUrl($url);
                 $resource = $body->detach();
@@ -55,27 +47,29 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 if ($body->isSeekable()) {
                     $hash = hash_init('md5');
                     hash_update_stream($hash, $resource);
-                    $responseTag = '"'.hash_final($hash).'"';
+                    $responseTag = '"' . hash_final($hash) . '"';
                     
                     $headers['etag'] = $responseTag;
                     
                     $requestTag = $request->getHeaderLine('if-none-match');
                     if ($requestTag === $responseTag) {
-                        throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, ['etag' => $responseTag]);
+                        throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, [
+                            'etag' => $responseTag
+                        ]);
                     } else {
                         rewind($resource);
                     }
                 }
                 
                 $coding = $this->negotiateContentCoding();
-                if (!$coding->isNoEncoding()) {
+                if (! $coding->isNoEncoding()) {
                     stream_filter_append($resource, $coding->getFilterName(), STREAM_FILTER_READ);
                     $headers['content-encoding'] = $coding->getHttpName();
                     $headers['vary'] = 'accept-encoding';
                 }
                 
                 $coding = $this->negotiateTransferCoding();
-                if (!$coding->isNoEncoding()) {
+                if (! $coding->isNoEncoding()) {
                     stream_filter_append($resource, $coding->getFilterName(), STREAM_FILTER_READ);
                     $headers['transfer-encoding'] = $coding->getHttpName();
                 }
@@ -92,15 +86,11 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
             $body = MessageFactory::createStreamFromContents(StatusCode::getMessage($statusCode, $e->getMessage()));
         }
         
-        if (!$this->shouldIncludeBody($this->request->getMethod(), $statusCode)) {
+        if (! $this->shouldIncludeBody($this->request->getMethod(), $statusCode)) {
             $body->detach();
         }
         
-        return MessageFactory::createServerResponse(
-            $statusCode,
-            $headers,
-            $body
-        );
+        return MessageFactory::createServerResponse($statusCode, $headers, $body);
     }
 
     private function validateRequest()
@@ -111,18 +101,26 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
             throw new HttpStatusException('You have been found wanting.', StatusCode::STATUS_PRECONDITION_FAILED);
         }
         
-        if (!in_array($this->request->getUri()->getScheme(), ['http', 'farah'])) {
+        if (! in_array($this->request->getUri()->getScheme(), [
+            'http',
+            'farah'
+        ])) {
             throw new HttpStatusException("Scheme '{$this->request->getUri()->getScheme()}' is not supported by this implementation.", StatusCode::STATUS_NOT_IMPLEMENTED);
         }
         
-        if (!in_array($this->request->getMethod(), ['HEAD', 'GET', 'POST'])) {
+        if (! in_array($this->request->getMethod(), [
+            'HEAD',
+            'GET',
+            'POST'
+        ])) {
             throw new HttpStatusException("HTTP Method '{$this->request->getMethod()}' is not supported by this implementation.", StatusCode::STATUS_METHOD_NOT_ALLOWED);
         }
     }
-    
+
     abstract protected function createUrl(ServerRequestInterface $request): FarahUrl;
-    
-    private function negotiateContentCoding() : ContentCoding {
+
+    private function negotiateContentCoding(): ContentCoding
+    {
         $accept = $this->request->getHeaderLine('accept-encoding');
         foreach (ContentCoding::values() as $coding) {
             if ($coding->isAvailable() and strpos($accept, $coding->getHttpName()) !== false) {
@@ -131,11 +129,12 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         }
         return ContentCoding::identity();
     }
-    
-    private function negotiateTransferCoding() : TransferCoding {
+
+    private function negotiateTransferCoding(): TransferCoding
+    {
         $accept = $this->request->getHeaderLine('te');
         if (version_compare($this->request->getProtocolVersion(), '1.1', '>=')) {
-            $accept .= ', chunked'; //HTTP 1.1 must accept chunked encoding
+            $accept .= ', chunked'; // HTTP 1.1 must accept chunked encoding
         }
         foreach (TransferCoding::values() as $coding) {
             if ($coding->isAvailable() and strpos($accept, $coding->getHttpName()) !== false) {
@@ -144,8 +143,9 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         }
         return TransferCoding::identity();
     }
-    
-    private function shouldIncludeBody(string $method, int $statusCode) : bool {
+
+    private function shouldIncludeBody(string $method, int $statusCode): bool
+    {
         switch ($method) {
             case 'HEAD':
                 return false;

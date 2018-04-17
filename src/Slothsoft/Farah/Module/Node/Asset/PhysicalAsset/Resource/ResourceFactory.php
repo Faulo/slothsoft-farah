@@ -49,9 +49,7 @@ class ResourceFactory extends PhysicalAssetFactory
             case 'application/x-php':
                 return new PhpResource();
             default:
-                return substr($type, -4) === '+xml'
-                    ? new XmlResource()
-                    : new ResourceImplementation();
+                return substr($type, - 4) === '+xml' ? new XmlResource() : new ResourceImplementation();
         }
     }
 }

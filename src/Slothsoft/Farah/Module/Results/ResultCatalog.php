@@ -102,8 +102,9 @@ class ResultCatalog
     {
         return new ClosureResult($url, $closure);
     }
-    
-    public static function createMessageResult(FarahUrl $url, MessageInterface $message) {
+
+    public static function createMessageResult(FarahUrl $url, MessageInterface $message)
+    {
         return new NullResult($url);
     }
 }

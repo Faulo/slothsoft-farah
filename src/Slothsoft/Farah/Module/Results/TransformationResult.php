@@ -31,7 +31,7 @@ class TransformationResult extends ResultImplementation
 {
     use DOMWriterElementFromDocumentTrait;
     use FileWriterStringFromFileTrait;
-    
+
     const TAG_ROOT = 'fragment';
 
     const TAG_DOCUMENT = 'document';
@@ -55,25 +55,30 @@ class TransformationResult extends ResultImplementation
         $this->name = $name;
         $this->collector = $collector;
     }
-    
-    
-    
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
      */
-    protected function loadDefaultStreamWrapper() : StreamWrapperInterface {
+    protected function loadDefaultStreamWrapper(): StreamWrapperInterface
+    {
         return new FileStreamWrapper($this->toFile());
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
      */
-    protected function loadXmlStreamWrapper() : StreamWrapperInterface {
+    protected function loadXmlStreamWrapper(): StreamWrapperInterface
+    {
         return new DocumentStreamWrapper($this->toDocument());
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
      */
     public function exists(): bool
@@ -81,10 +86,9 @@ class TransformationResult extends ResultImplementation
         return true;
     }
 
-    
-    
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toDocument()
      */
     public function toDocument(): DOMDocument
@@ -108,14 +112,12 @@ class TransformationResult extends ResultImplementation
             
             if ($this->collector->templateInstruction) {
                 $templateAsset = $this->collector->templateInstruction->getReferencedTemplateAsset();
-                $templateUrl = $templateAsset->createResult($this->getArguments())->createXmlUrl();
+                $templateUrl = $templateAsset->createResult($this->getArguments())
+                    ->createXmlUrl();
                 
                 $dom = new DOMHelper();
                 
-                $this->resultDoc = $dom->transformToDocument(
-                    $this->resultDoc,
-                    (string) $templateUrl
-                );
+                $this->resultDoc = $dom->transformToDocument($this->resultDoc, (string) $templateUrl);
                 
                 if (! $this->resultDoc->documentElement) {
                     throw ExceptionContext::append(new EmptyTransformationException($templateAsset), [
@@ -167,10 +169,9 @@ class TransformationResult extends ResultImplementation
         return $element;
     }
 
-    
-    
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toFile()
      */
     public function toFile(): HTTPFile
@@ -188,12 +189,16 @@ class TransformationResult extends ResultImplementation
         
         return HTTPFile::createFromDocument($document, "$this->name.$extension");
     }
-    
-    private function guessExtension(string $namespaceURI) {
+
+    private function guessExtension(string $namespaceURI)
+    {
         switch ($namespaceURI) {
-            case DOMHelper::NS_HTML:    return 'xhtml';
-            case DOMHelper::NS_SVG:     return 'svg';
-            default:                    return 'xml';
+            case DOMHelper::NS_HTML:
+                return 'xhtml';
+            case DOMHelper::NS_SVG:
+                return 'svg';
+            default:
+                return 'xml';
         }
     }
 }

@@ -126,7 +126,7 @@ class Module
     const EVENT_SET_PARAMETER = 'set-parameter';
 
     const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
-    
+
     const FILE_MANIFEST = 'manifest.xml';
 
     private $authority;

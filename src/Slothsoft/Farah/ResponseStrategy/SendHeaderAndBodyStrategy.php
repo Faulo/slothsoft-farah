@@ -6,9 +6,10 @@ use Psr\Http\Message\ResponseInterface;
 
 class SendHeaderAndBodyStrategy extends ResponseStrategyBase
 {
+
     public function process(ResponseInterface $response)
     {
-        if (!headers_sent()) {
+        if (! headers_sent()) {
             $header = new SendHeaderStrategy();
             $header->process($response);
             flush();

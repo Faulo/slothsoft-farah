@@ -18,10 +18,10 @@ use DOMElement;
 
 class HTTPRequest implements DOMWriterInterface
 {
-    private static function getServerName() : string {
-        return defined('SERVER_NAME')
-            ? constant('SERVER_NAME')
-            : 'localhost';
+
+    private static function getServerName(): string
+    {
+        return defined('SERVER_NAME') ? constant('SERVER_NAME') : 'localhost';
     }
 
     protected static $allowedHostList = [
@@ -165,7 +165,8 @@ class HTTPRequest implements DOMWriterInterface
         $this->timeFloat = isset($env['REQUEST_TIME_FLOAT']) ? $env['REQUEST_TIME_FLOAT'] : (float) time();
         $this->clientIp = isset($env['REMOTE_ADDR']) ? $env['REMOTE_ADDR'] : '127.0.0.1';
         $this->clientAgent = isset($env['HTTP_USER_AGENT']) ? $env['HTTP_USER_AGENT'] : '';
-        $this->clientHost = isset($env['HTTP_HOST']) ? $env['HTTP_HOST'] : self::getServerName();;
+        $this->clientHost = isset($env['HTTP_HOST']) ? $env['HTTP_HOST'] : self::getServerName();
+        ;
         $this->clientHost = strtolower($this->clientHost);
         $this->dict = Dictionary::getInstance();
     }

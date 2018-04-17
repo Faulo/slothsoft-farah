@@ -140,7 +140,7 @@ class HTTPResponse
         unset($val);
     }
 
-    public static function calcEtag($data) : string
+    public static function calcEtag($data): string
     {
         return md5((string) $data);
     }

@@ -246,7 +246,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
         }
         return $ret;
     }
-    
+
     /**
      *
      * @dataProvider assetProvider
@@ -260,8 +260,9 @@ abstract class AbstractModuleTest extends AbstractTestCase
             $this->failException($e);
         }
     }
-    
+
     /**
+     *
      * @depends      testLocalAssetResultExists
      * @dataProvider assetProvider
      */

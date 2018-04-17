@@ -13,11 +13,13 @@ use DOMDocument;
  */
 class BinaryFileResult extends FileResult
 {
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
      */
-    protected function loadXmlStreamWrapper() : StreamWrapperInterface
+    protected function loadXmlStreamWrapper(): StreamWrapperInterface
     {
         $dataDoc = new DOMDocument();
         $element = $dataDoc->createElement(basename(get_class($this)));
