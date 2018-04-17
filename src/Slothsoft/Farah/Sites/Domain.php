@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Sites;
 
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\EmptySitemapException;
 use Slothsoft\Farah\Exception\PageNotFoundException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
@@ -22,16 +21,6 @@ use DOMElement;
  */
 class Domain
 {
-
-    public static function getInstance(): self
-    {
-        static $instance;
-        if ($instance === null) {
-            $instance = new self(Kernel::getSitesAsset()); // todo: move this somewhere else
-        }
-        return $instance;
-    }
-
     const TAG_INCLUDE_PAGES = 'include-pages';
     
     const TAG_SITEMAP = 'sitemap';
@@ -50,7 +39,7 @@ class Domain
 
     private $xpath;
 
-    private function __construct(AssetInterface $asset)
+    public function __construct(AssetInterface $asset)
     {
         $this->asset = $asset;
     }

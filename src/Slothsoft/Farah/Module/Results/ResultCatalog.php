@@ -16,6 +16,7 @@ use Slothsoft\Farah\Module\Results\Proxies\ClosureResult;
 use Closure;
 use DOMDocument;
 use DOMElement;
+use Psr\Http\Message\MessageInterface;
 
 /**
  *
@@ -100,6 +101,10 @@ class ResultCatalog
     public static function createClosureResult(FarahUrl $url, Closure $closure): ClosureResult
     {
         return new ClosureResult($url, $closure);
+    }
+    
+    public static function createMessageResult(FarahUrl $url, MessageInterface $message) {
+        return new NullResult($url);
     }
 }
 

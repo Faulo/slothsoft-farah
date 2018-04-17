@@ -25,6 +25,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         static $asset;
         if ($asset === null) {
             $asset = static::loadSitesAsset();
+            Kernel::setCurrentSitemap($asset);
         }
         return $asset;
     }
@@ -72,8 +73,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
     {
         static $domain;
         if ($domain === null) {
-            Kernel::setSitesAsset($this->getSitesAsset());
-            $domain = Domain::getInstance();
+            $domain = new Domain($this->getSitesAsset());
         }
         return $domain;
     }

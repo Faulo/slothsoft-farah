@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\RequestStrategy;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\PageNotFoundException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
@@ -12,16 +13,18 @@ use Slothsoft\Farah\Sites\Domain;
 
 class LookupPageStrategy extends RequestStrategyBase
 {
+    private $domain;
+    public function __construct() {
+        $this->domain = new Domain(Kernel::getCurrentSitemap());
+    }
 
     protected function createUrl(ServerRequestInterface $request): FarahUrl
     {
         $uri = $request->getUri();
         $args = $request->getQueryParams();
         
-        $domain = Domain::getInstance();
-        
         try {
-            $pageNode = $domain->lookupPageNode($uri->getPath());
+            $pageNode = $this->domain->lookupPageNode($uri->getPath());
         } catch (PageRedirectionException $e) {
             $url = $e->getTargetPath();
             if (count($args)) {
@@ -38,7 +41,7 @@ class LookupPageStrategy extends RequestStrategyBase
             throw new HttpStatusException('', StatusCode::STATUS_NOT_IMPLEMENTED);
         }
         
-        $url = $domain->lookupAssetUrl($pageNode, $args);
+        $url = $this->domain->lookupAssetUrl($pageNode, $args);
         
         return $url;
     }
