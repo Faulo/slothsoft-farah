@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\ResponseStrategy;
 
 use Psr\Http\Message\ResponseInterface;
-use Slothsoft\Farah\Http\StatusCodes;
+use Slothsoft\Farah\Http\StatusCode;
 
 class SendHeaderAndBodyStrategy extends ResponseStrategyBase
 {
@@ -16,13 +16,13 @@ class SendHeaderAndBodyStrategy extends ResponseStrategyBase
             flush();
             
             switch ($response->getStatusCode()) {
-                case StatusCodes::STATUS_NO_CONTENT:
-                case StatusCodes::STATUS_MULTIPLE_CHOICES:
-                case StatusCodes::STATUS_MOVED_PERMANENTLY:
-                case StatusCodes::STATUS_SEE_OTHER:
-                case StatusCodes::STATUS_NOT_MODIFIED:
-                case StatusCodes::STATUS_TEMPORARY_REDIRECT:
-                case StatusCodes::STATUS_PERMANENT_REDIRECT:
+                case StatusCode::STATUS_NO_CONTENT:
+                case StatusCode::STATUS_MULTIPLE_CHOICES:
+                case StatusCode::STATUS_MOVED_PERMANENTLY:
+                case StatusCode::STATUS_SEE_OTHER:
+                case StatusCode::STATUS_NOT_MODIFIED:
+                case StatusCode::STATUS_TEMPORARY_REDIRECT:
+                case StatusCode::STATUS_PERMANENT_REDIRECT:
                     break;
                 default:
                     $body = new SendBodyStrategy('php://output');

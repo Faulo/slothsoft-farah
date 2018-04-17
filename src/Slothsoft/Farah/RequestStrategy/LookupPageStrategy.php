@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\PageNotFoundException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
-use Slothsoft\Farah\Http\StatusCodes;
+use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Sites\Domain;
 
@@ -27,15 +27,15 @@ class LookupPageStrategy extends RequestStrategyBase
             if (count($args)) {
                 $url .= '?' . http_build_query($args);
             }
-            throw new HttpStatusException($e->getMessage(), StatusCodes::STATUS_PERMANENT_REDIRECT, $e, ['location' => $url]);
+            throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_PERMANENT_REDIRECT, $e, ['location' => $url]);
         } catch (PageNotFoundException $e) {
-            throw new HttpStatusException($e->getMessage(), StatusCodes::STATUS_GONE, $e);
+            throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_GONE, $e);
         }
         
         $pageNode->setAttribute('current', '1');
         
         if (! $pageNode->hasAttribute('ref')) {
-            throw new HttpStatusException('', StatusCodes::STATUS_NOT_IMPLEMENTED);
+            throw new HttpStatusException('', StatusCode::STATUS_NOT_IMPLEMENTED);
         }
         
         $url = $domain->lookupAssetUrl($pageNode, $args);

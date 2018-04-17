@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Http;
 
-abstract class StatusCodes
+abstract class StatusCode
 {
     const STATUS_OK = 200;
     
@@ -66,6 +66,17 @@ abstract class StatusCodes
     
     public static function getReasonPhrase(int $statusCode) : string {
         return self::REASON_PHRASES[$statusCode] ?? '';
+    }
+    public static function getMessage(int $statusCode, string $message = '') : string {
+        $ret = '';
+        $ret .= $statusCode;
+        if (isset(self::REASON_PHRASES[$statusCode])) {
+            $ret .= ' ' . self::REASON_PHRASES[$statusCode];
+        }
+        if ($message !== '') {
+            $ret .= PHP_EOL . $message;
+        }
+        return $ret;
     }
 }
 

@@ -10,7 +10,7 @@ use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\Http\ContentCoding;
 use Slothsoft\Farah\Http\MessageFactory;
-use Slothsoft\Farah\Http\StatusCodes;
+use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Http\TransferCoding;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
@@ -33,7 +33,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
             try {
                 $result = FarahUrlResolver::resolveToResult($url);
                 
-                $statusCode = StatusCodes::STATUS_OK;
+                $statusCode = StatusCode::STATUS_OK;
                 $file = $result->toFile();
                 $fileName = $file->getName();
                 $fileDisposition = 'inline';
@@ -63,7 +63,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                     
                     $requestTag = $request->getHeaderLine('if-none-match');
                     if ($requestTag === $responseTag) {
-                        throw new HttpStatusException('', StatusCodes::STATUS_NOT_MODIFIED, null, ['etag' => $responseTag]);
+                        throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, ['etag' => $responseTag]);
                     } else {
                         rewind($resource);
                     }
@@ -84,14 +84,14 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 
                 $body = MessageFactory::createStreamFromResource($resource);
             } catch (ModuleNotFoundException $e) {
-                throw new HttpStatusException($e->getMessage(), StatusCodes::STATUS_NOT_FOUND, $e);
+                throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_NOT_FOUND, $e);
             } catch (AssetPathNotFoundException $e) {
-                throw new HttpStatusException($e->getMessage(), StatusCodes::STATUS_NOT_FOUND, $e);
+                throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_NOT_FOUND, $e);
             }
         } catch (HttpStatusException $e) {
             $statusCode = $e->getCode();
             $headers = $e->getAdditionalHeaders();
-            $body = MessageFactory::createStreamFromContents($e->getMessage());
+            $body = MessageFactory::createStreamFromContents(StatusCode::getMessage($statusCode, $e->getMessage()));
         }
         
         return MessageFactory::createServerResponse(
@@ -106,15 +106,15 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         $clientIp = $this->request->getServerParams()['REMOTE_ADDR'] ?? '';
         if (strlen($clientIp) and BannedManager::getInstance()->isBanned($clientIp)) {
             // BANHAMMER
-            throw new HttpStatusException('You have been found wanting.', StatusCodes::STATUS_PRECONDITION_FAILED);
+            throw new HttpStatusException('You have been found wanting.', StatusCode::STATUS_PRECONDITION_FAILED);
         }
         
         if (!in_array($this->request->getUri()->getScheme(), ['http', 'farah'])) {
-            throw new HttpStatusException("Scheme '{$this->request->getUri()->getScheme()}' is not supported by this implementation.", StatusCodes::STATUS_NOT_IMPLEMENTED);
+            throw new HttpStatusException("Scheme '{$this->request->getUri()->getScheme()}' is not supported by this implementation.", StatusCode::STATUS_NOT_IMPLEMENTED);
         }
         
         if (!in_array($this->request->getMethod(), ['HEAD', 'GET', 'POST'])) {
-            throw new HttpStatusException("HTTP Method '{$this->request->getMethod()}' is not supported by this implementation.", StatusCodes::STATUS_METHOD_NOT_ALLOWED);
+            throw new HttpStatusException("HTTP Method '{$this->request->getMethod()}' is not supported by this implementation.", StatusCode::STATUS_METHOD_NOT_ALLOWED);
         }
     }
     
