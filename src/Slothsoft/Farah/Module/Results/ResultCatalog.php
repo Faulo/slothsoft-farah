@@ -12,6 +12,7 @@ use Slothsoft\Farah\Module\Results\Files\BinaryFileResult;
 use Slothsoft\Farah\Module\Results\Files\HtmlFileResult;
 use Slothsoft\Farah\Module\Results\Files\TextFileResult;
 use Slothsoft\Farah\Module\Results\Files\XmlFileResult;
+use Slothsoft\Farah\Module\Results\Proxies\ClosureResult;
 use Closure;
 use DOMDocument;
 use DOMElement;

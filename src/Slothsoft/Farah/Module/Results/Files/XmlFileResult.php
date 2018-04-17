@@ -2,9 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Results\Files;
 
-use Slothsoft\Core\DOMHelper;
-use Slothsoft\Core\IO\Writable\DOMWriterElementFromDocumentTrait;
-use DOMDocument;
+use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 
 /**
  *
@@ -13,11 +11,13 @@ use DOMDocument;
  */
 class XmlFileResult extends FileResult
 {
-    use DOMWriterElementFromDocumentTrait;
-
-    public function toDocument(): DOMDocument
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
+     */
+    protected function loadXmlStreamWrapper() : StreamWrapperInterface
     {
-        return DOMHelper::loadDocument($this->toFile()->getPath(), false);
+        return $this->createDefaultStreamWrapper();
     }
 }
 

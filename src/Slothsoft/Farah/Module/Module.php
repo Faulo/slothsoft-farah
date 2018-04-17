@@ -7,11 +7,12 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use Slothsoft\Farah\Module\Manifest\XmlManifest;
 use Slothsoft\Farah\Module\Node\ModuleNodeCreator;
 use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
-use Slothsoft\Farah\Module\Manifest\XmlManifest;
 
 /**
  *
@@ -193,9 +194,9 @@ class Module
         return ModuleNodeCreator::getInstance()->create($this, $manifestElemet);
     }
 
-    public function createUrl(FarahUrlPath $path, FarahUrlArguments $args): FarahUrl
+    public function createUrl(FarahUrlPath $path, FarahUrlArguments $args, FarahUrlStreamIdentifier $fragment): FarahUrl
     {
-        return FarahUrl::createFromComponents($this->authority, $path, $args);
+        return FarahUrl::createFromComponents($this->authority, $path, $args, $fragment);
     }
 
     public function createModuleNode(LeanElement $element, LeanElement $parent): ModuleNodeInterface

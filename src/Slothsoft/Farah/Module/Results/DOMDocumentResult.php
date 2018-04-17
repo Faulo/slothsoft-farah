@@ -2,10 +2,11 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Results;
 
-use Slothsoft\Core\IO\Writable\DOMWriterElementFromDocumentTrait;
-use Slothsoft\Core\IO\Writable\FileWriterFromDOMTrait;
+use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\StreamWrapper\DocumentStreamWrapper;
 use DOMDocument;
+use DOMElement;
 
 /**
  *
@@ -14,9 +15,6 @@ use DOMDocument;
  */
 class DOMDocumentResult extends ResultImplementation
 {
-    use FileWriterFromDOMTrait;
-    use DOMWriterElementFromDocumentTrait;
-
     private $document;
 
     public function __construct(FarahUrl $url, DOMDocument $doc)
@@ -25,15 +23,51 @@ class DOMDocumentResult extends ResultImplementation
         
         $this->document = $doc;
     }
-
+    
+    
+    
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
+     */
+    protected function loadDefaultStreamWrapper() : StreamWrapperInterface
+    {
+        return new DocumentStreamWrapper($this->document);
+    }
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
+     */
+    protected function loadXmlStreamWrapper() : StreamWrapperInterface
+    {
+        return new DocumentStreamWrapper($this->document);
+    }
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
+     */
+    public function exists(): bool
+    {
+        return true;
+    }
+    
+    
+    
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toDocument()
+     */
     public function toDocument(): DOMDocument
     {
         return $this->document;
     }
-
-    public function exists(): bool
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toElement()
+     */
+    public function toElement(DOMDocument $targetDoc): DOMElement
     {
-        return true;
+        return $targetDoc->importNode($this->document->documentElement, true);
     }
 }
 

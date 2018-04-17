@@ -4,7 +4,7 @@ namespace Slothsoft\Farah\Module\Results;
 
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\HTTPFile;
-use Slothsoft\Core\IO\Writable\DOMWriterElementFromDocumentTrait;
+use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Exception\ExceptionContext;
@@ -14,9 +14,13 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use Slothsoft\Farah\Module\Node\InstructionCollector;
 use Slothsoft\Farah\Module\Node\Instruction\UseDocumentInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseManifestInstructionInterface;
+use Slothsoft\Farah\StreamWrapper\DocumentStreamWrapper;
 use DOMDocument;
 use DOMElement;
 use Throwable;
+use Slothsoft\Core\StreamWrapper\FileStreamWrapper;
+use Slothsoft\Core\IO\Writable\DOMWriterElementFromDocumentTrait;
+use Slothsoft\Core\IO\Writable\FileWriterStringFromFileTrait;
 
 /**
  *
@@ -26,7 +30,8 @@ use Throwable;
 class TransformationResult extends ResultImplementation
 {
     use DOMWriterElementFromDocumentTrait;
-
+    use FileWriterStringFromFileTrait;
+    
     const TAG_ROOT = 'fragment';
 
     const TAG_DOCUMENT = 'document';
@@ -50,7 +55,38 @@ class TransformationResult extends ResultImplementation
         $this->name = $name;
         $this->collector = $collector;
     }
+    
+    
+    
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
+     */
+    protected function loadDefaultStreamWrapper() : StreamWrapperInterface {
+        return new FileStreamWrapper($this->toFile());
+    }
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
+     */
+    protected function loadXmlStreamWrapper() : StreamWrapperInterface {
+        return new DocumentStreamWrapper($this->toDocument());
+    }
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
+     */
+    public function exists(): bool
+    {
+        return true;
+    }
 
+    
+    
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toDocument()
+     */
     public function toDocument(): DOMDocument
     {
         if ($this->resultDoc === null) {
@@ -71,38 +107,28 @@ class TransformationResult extends ResultImplementation
             $this->resultDoc->appendChild($dataNode);
             
             if ($this->collector->templateInstruction) {
-                $asset = $this->collector->templateInstruction->getReferencedTemplateAsset();
-                // echo "transforming $this using $asset ..." . PHP_EOL;
+                $templateAsset = $this->collector->templateInstruction->getReferencedTemplateAsset();
+                $templateUrl = $templateAsset->createResult($this->getArguments())->createXmlUrl();
+                
                 $dom = new DOMHelper();
                 
-                if ($this->getId() === 'farah://slothsoft@slothsoft/home') {
-                    // my_dump($this->resultDoc->saveXML());
-                }
-                
-                $this->resultDoc = $dom->transformToDocument($this->resultDoc, $asset->createResult($this->getArguments())
-                    ->toFile());
-                
-                if ($this->getId() === 'farah://slothsoft@slothsoft/home') {
-                    // my_dump($this->resultDoc->saveXML());
-                }
+                $this->resultDoc = $dom->transformToDocument(
+                    $this->resultDoc,
+                    (string) $templateUrl
+                );
                 
                 if (! $this->resultDoc->documentElement) {
-                    throw ExceptionContext::append(new EmptyTransformationException($asset), [
-                        'asset' => $asset
+                    throw ExceptionContext::append(new EmptyTransformationException($templateAsset), [
+                        'asset' => $templateAsset
                     ]);
                 }
                 
                 // translating
-                Dictionary::getInstance()->translateDoc($this->resultDoc, $asset->getOwnerModule());
+                Dictionary::getInstance()->translateDoc($this->resultDoc, $templateAsset->getOwnerModule());
             }
         }
         
         return $this->resultDoc;
-    }
-
-    public function exists(): bool
-    {
-        return true;
     }
 
     private function createElementFromDocumentInstruction(UseDocumentInstructionInterface $instruction)
@@ -141,6 +167,12 @@ class TransformationResult extends ResultImplementation
         return $element;
     }
 
+    
+    
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toFile()
+     */
     public function toFile(): HTTPFile
     {
         $document = $this->toDocument();
@@ -155,11 +187,6 @@ class TransformationResult extends ResultImplementation
         $extension = $this->guessExtension((string) $document->documentElement->namespaceURI);
         
         return HTTPFile::createFromDocument($document, "$this->name.$extension");
-    }
-
-    public function toString(): string
-    {
-        return $this->toFile()->getContents();
     }
     
     private function guessExtension(string $namespaceURI) {

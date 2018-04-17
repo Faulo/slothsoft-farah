@@ -81,6 +81,8 @@ class FarahUrlTest extends TestCase
         $urls['farah://slothsoft@farah/']       = 'farah://slothsoft@farah/';
         $urls['farah://slothsoft@farah/tmp/..'] = 'farah://slothsoft@farah/';
         $urls['farah://slothsoft@farah/./']     = 'farah://slothsoft@farah/';
+        $urls['farah://slothsoft@farah/./#']    = 'farah://slothsoft@farah/';
+        $urls['farah://slothsoft@farah/./#xml'] = 'farah://slothsoft@farah/#xml';
         
         $urls['farah://slothsoft@farah/asset']          = 'farah://slothsoft@farah/asset';
         $urls['farah://slothsoft@farah/asset/']         = 'farah://slothsoft@farah/asset';
@@ -113,6 +115,8 @@ class FarahUrlTest extends TestCase
         $urls['farah://slothsoft@farah']    = 'farah://slothsoft@farah/';
         $urls['//slothsoft@farah']          = 'farah://slothsoft@farah/';
         $urls['//farah']                    = 'farah://slothsoft@farah/';
+        $urls['//farah#']                   = 'farah://slothsoft@farah/';
+        $urls['//farah#xml']                = 'farah://slothsoft@farah/#xml';
         
         $urls['/']                          = 'farah://slothsoft@farah/';
         $urls['..']                         = 'farah://slothsoft@farah/';

@@ -19,6 +19,7 @@ use Slothsoft\Farah\Module\PathResolvers\PathResolverCatalog;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
 use Slothsoft\Farah\Module\Results\ResultCatalog;
 use Slothsoft\Farah\Module\Results\ResultInterface;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlStreamIdentifier;
 
 /**
  *
@@ -116,9 +117,9 @@ class AssetImplementation extends ModuleNodeImplementation implements AssetInter
         return new AllowAllFilter();
     }
 
-    public function createUrl(FarahUrlArguments $args = null): FarahUrl
+    public function createUrl(FarahUrlArguments $args = null, FarahUrlStreamIdentifier $fragment = null): FarahUrl
     {
-        return $this->getOwnerModule()->createUrl($this->getUrlPath(), $args ?? FarahUrlArguments::createEmpty());
+        return $this->getOwnerModule()->createUrl($this->getUrlPath(), $args ?? FarahUrlArguments::createEmpty(), $fragment ?? FarahUrlStreamIdentifier::createEmpty());
     }
 
     public function createResult(FarahUrlArguments $args = null): ResultInterface

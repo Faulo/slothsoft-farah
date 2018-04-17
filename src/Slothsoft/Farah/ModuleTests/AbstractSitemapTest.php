@@ -54,7 +54,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         foreach ($nodeList as $node) {
             $url = FarahUrl::createFromReference(
                 $node->getAttribute('ref'),
-                $parentUrl->getAuthority(),
+                $parentUrl->getAssetAuthority(),
                 null,
                 $parentUrl->getArguments()
             );

@@ -2,10 +2,8 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Results;
 
-use Slothsoft\Core\IO\Writable\DOMWriterDocumentFromElementTrait;
-use Slothsoft\Core\IO\Writable\FileWriterFromDOMTrait;
-use DOMDocument;
-use DOMElement;
+use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
+use Slothsoft\Farah\StreamWrapper\StringStreamWrapper;
 
 /**
  *
@@ -14,17 +12,30 @@ use DOMElement;
  */
 class NullResult extends ResultImplementation
 {
-    use FileWriterFromDOMTrait;
-    use DOMWriterDocumentFromElementTrait;
-
-    public function toElement(DOMDocument $targetDoc): DOMElement
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
+     */
+    protected function loadDefaultStreamWrapper() : StreamWrapperInterface
     {
-        return $targetDoc->createElement('null');
+        return new StringStreamWrapper('');
     }
-
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
+     */
+    protected function loadXmlStreamWrapper() : StreamWrapperInterface
+    {
+        return new StringStreamWrapper('<null/>');
+    }
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
+     */
     public function exists(): bool
     {
         return false;
     }
+
 }
 

@@ -3,15 +3,17 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Results\Files;
 
 use Slothsoft\Core\IO\HTTPFile;
-use Slothsoft\Core\IO\Writable\FileWriterStringFromFileTrait;
+use Slothsoft\Core\StreamWrapper\FileStreamWrapper;
+use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Results\ResultImplementation;
+use Slothsoft\Core\IO\Writable\FileWriterStringFromFileTrait;
 
 abstract class FileResult extends ResultImplementation
 {
     use FileWriterStringFromFileTrait;
-
-    private $file;
+    
+    protected $file;
 
     public function __construct(FarahUrl $url, HTTPFile $file)
     {
@@ -20,14 +22,33 @@ abstract class FileResult extends ResultImplementation
         $this->file = $file;
     }
 
-    public function toFile(): HTTPFile
+    
+    
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
+     */
+    protected function loadDefaultStreamWrapper() : StreamWrapperInterface
     {
-        return $this->file;
+        return new FileStreamWrapper($this->file);
     }
-
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
+     */
     public function exists(): bool
     {
-        return $this->toFile()->exists();
+        return $this->file->exists();
+    }
+    
+   
+    
+    /**
+     * {@inheritDoc}
+     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toFile()
+     */
+    public function toFile() : HTTPFile {
+        return $this->file;
     }
 }
 

@@ -4,6 +4,7 @@ namespace Slothsoft\Farah\Module\Node\Asset;
 
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\Module\Node\InstructionCollector;
 use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
@@ -39,7 +40,7 @@ interface AssetInterface extends ModuleNodeInterface
 
     public function traverseTo(string $path): AssetInterface;
 
-    public function createUrl(FarahUrlArguments $args = null): FarahUrl;
+    public function createUrl(FarahUrlArguments $args = null, FarahUrlStreamIdentifier $fragment = null): FarahUrl;
 
     public function createResult(FarahUrlArguments $args = null): ResultInterface;
 

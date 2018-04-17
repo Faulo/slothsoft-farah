@@ -44,7 +44,7 @@ class ModuleRepository
 
     public function lookupModuleByUrl(FarahUrl $url): Module
     {
-        return $this->lookupModuleByAuthority($url->getAuthority());
+        return $this->lookupModuleByAuthority($url->getAssetAuthority());
     }
 
     public function lookupModule(string $vendor, string $name): Module

@@ -1,15 +1,11 @@
 <?php
+declare(strict_types = 1);
 namespace Slothsoft\Farah\ResponseStrategy;
 
-use Slothsoft\Farah\HTTPResponse;
+use Psr\Http\Message\ResponseInterface;
 
 interface ResponseStrategyInterface
 {
-    
-    public function setResponse(HTTPResponse $response);
-    
-    public function getResponse(): HTTPResponse;
-    
-    public function process();
+    public function process(ResponseInterface $response);
 }
 

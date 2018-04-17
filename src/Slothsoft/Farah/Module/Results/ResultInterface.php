@@ -2,8 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Results;
 
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
-use Slothsoft\Core\IO\Writable\FileWriterInterface;
+use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 
@@ -12,8 +11,10 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
  * @author Daniel Schulz
  *        
  */
-interface ResultInterface extends DOMWriterInterface, FileWriterInterface
+interface ResultInterface 
 {
+    const STREAM_TYPE_DEFAULT = '';
+    const STREAM_TYPE_XML = 'xml';
 
     public function __toString(): string;
 
@@ -28,5 +29,11 @@ interface ResultInterface extends DOMWriterInterface, FileWriterInterface
     public function getLinkedStylesheets(): array;
 
     public function getLinkedScripts(): array;
+    
+    public function createDefaultUrl() : FarahUrl;
+    public function createDefaultStreamWrapper() : StreamWrapperInterface;
+    
+    public function createXmlUrl() : FarahUrl;
+    public function createXmlStreamWrapper() : StreamWrapperInterface;
 }
 
