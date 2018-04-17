@@ -1,47 +1,46 @@
 {
-    "name": "slothsoft/farah",
-    "description": "Files and Resources and Hypertext: A content management system.",
-    "license": "WTFPL",
-    "authors": [
-        {
-            "name": "Daniel Schulz",
-            "email": "info.slothsoft@gmail.com"
-        }
-    ],
-    "type": "library",
-    "require": {
-        "matthiasmullie/minify": "*",
-        "php": ">=7.0",
-        "psr/cache": "*",
-        "psr/http-message": "*",
-        "psr/log": "*",
-        "slim/http": "~0.3",
-        "slothsoft/blob": "dev-master",
-        "slothsoft/core": "dev-master"
-    },
-    "require-dev": {
-        "phpunit/phpunit": ">=6.5"
-    },
-    "autoload": {
-        "psr-0": {
-            "Slothsoft\\Farah\\": "src/"
-        },
-        "files": [
-            "src/autoload.php",
-            "src/registerModule.php"
-        ]
-    },
-    "keywords": [
-        "farah-abstract",
-        "farah-module",
-        "slothsoft"
-    ],
-    "classmap-authoritative": false,
-    "autoload-dev": {
-        "classmap": [
-            "tests/"
-        ]
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+	"name" : "slothsoft/farah",
+	"description" : "Files and Resources and Hypertext: A content management system.",
+	"license" : "WTFPL",
+	"authors" : [{
+			"name" : "Daniel Schulz",
+			"email" : "info.slothsoft@gmail.com"
+		}
+	],
+	"type" : "library",
+	"require" : {
+		"matthiasmullie/minify" : "*",
+		"php" : ">=7.0",
+		"psr/cache" : "*",
+		"psr/http-message" : "*",
+		"psr/log" : "*",
+		"slim/http" : "~0.3",
+		"slothsoft/blob" : "dev-master",
+		"slothsoft/core" : "dev-master"
+	},
+	"require-dev" : {
+		"phpunit/phpunit" : ">=6.5"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"Slothsoft\\Farah\\" : "src/"
+		},
+		"files" : [
+			"src/autoload.php",
+			"src/registerModule.php"
+		]
+	},
+	"keywords" : [
+		"farah-abstract",
+		"farah-module",
+		"slothsoft"
+	],
+	"classmap-authoritative" : false,
+	"autoload-dev" : {
+		"classmap" : [
+			"tests/"
+		]
+	},
+	"minimum-stability" : "dev",
+	"prefer-stable" : true
 }

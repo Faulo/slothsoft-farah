@@ -59,6 +59,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
                 $parentUrl->getArguments()
             );
             $ret[(string) $url] = $url;
+            trigger_error("<include-pages> is deprecated (referencing $url)", E_USER_DEPRECATED);
             try {
                 $result = FarahUrlResolver::resolveToResult($url);
                 $document = $result->toDocument();

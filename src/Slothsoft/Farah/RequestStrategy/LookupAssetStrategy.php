@@ -10,6 +10,9 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 
 class LookupAssetStrategy extends RequestStrategyBase
 {
+    const DEFAULT_VENDOR = 'slothsoft';
+    const DEFAULT_MODULE = 'farah';
+    
     private static function hrefBase(): ConfigurationField
     {
         static $field;
@@ -40,7 +43,7 @@ class LookupAssetStrategy extends RequestStrategyBase
         } else {
             $url = FarahUrl::createFromReference(
                 $this->extractFarahUrl($uri->getPath()),
-                FarahUrlAuthority::createFromVendorAndModule($this->getDefaultVendor(), $this->getDefaultModule()),
+                FarahUrlAuthority::createFromVendorAndModule(self::DEFAULT_VENDOR, self::DEFAULT_MODULE),
                 null,
                 FarahUrlArguments::createFromValueList($args)
             );

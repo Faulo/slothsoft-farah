@@ -18,16 +18,6 @@ use Slothsoft\Farah\Security\BannedManager;
 
 abstract class RequestStrategyBase implements RequestStrategyInterface
 {
-    public function getDefaultVendor(): string
-    {
-        return 'slothsoft'; // TODO
-    }
-
-    public function getDefaultModule(): string
-    {
-        return 'farah'; // TODO
-    }
-    
     private $request;
     private $negotiatedContentCodings;
     private $negotiatedTransferCodings;

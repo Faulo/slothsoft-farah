@@ -104,6 +104,7 @@ abstract class MessageFactory
     public static function createStreamFromContents(string $contents) : StreamInterface {
         $handle = fopen('php://temp', StreamWrapperInterface::MODE_CREATE_READWRITE);
         fwrite($handle, $contents);
+        rewind($handle);
         return self::createStreamFromResource($handle);
     }
     public static function createStreamFromFile(HTTPFile $file) : StreamInterface {
