@@ -2,15 +2,22 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Node\Meta;
 
-use Slothsoft\Farah\Module\Node\ModuleNodeImplementation;
+use Slothsoft\Farah\Module\Node\ModuleNodeBase;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class MetaImplementation extends ModuleNodeImplementation implements MetaInterface
+abstract class MetaBase extends ModuleNodeBase implements MetaInterface
 {
+    public function isImport() : bool {
+        return false;
+    }
+    
+    public function isParameter() : bool {
+        return false;
+    }
 
     public function isUseDocument(): bool
     {

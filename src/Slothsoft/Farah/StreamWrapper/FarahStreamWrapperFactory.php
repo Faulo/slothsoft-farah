@@ -2,11 +2,10 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\StreamWrapper;
 
+use Slothsoft\Core\StreamWrapper\Psr7StreamWrapper;
 use Slothsoft\Core\StreamWrapper\StreamWrapperFactoryInterface;
-use Slothsoft\Farah\Exception\StreamTypeNotSupportedException;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
-use Slothsoft\Farah\Module\Results\ResultInterface;
 
 /**
  *
@@ -20,21 +19,18 @@ class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface
     {
         $url = FarahUrl::createFromReference($url);
         
-        $result = FarahUrlResolver::resolveToResult($url);
+        $stream = FarahUrlResolver::resolveToStream($url);
         
-        switch ((string) $url->getStreamIdentifier()) {
-            case ResultInterface::STREAM_TYPE_DEFAULT:
-                return $result->createDefaultStreamWrapper();
-            case ResultInterface::STREAM_TYPE_XML:
-                return $result->createXmlStreamWrapper();
-            default:
-                throw new StreamTypeNotSupportedException((string) $url);
-        }
+        return new Psr7StreamWrapper($stream);
     }
 
     public function statUrl(string $url, int $flags)
     {
-        return [];
+        $url = FarahUrl::createFromReference($url);
+        
+        $stream = FarahUrlResolver::resolveToStream($url);
+        
+        return $stream->getMetadata();
     }
 }
 

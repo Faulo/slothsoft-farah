@@ -17,7 +17,7 @@ abstract class ModuleNodeFactory
     {
         $this->normalizeElementAttributes($element, $parent);
         $node = $this->instantiateNode($element);
-        $node->initModuleNode($ownerModule, $element);
+        $node->init($ownerModule, $element);
         return $node;
     }
 

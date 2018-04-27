@@ -10,7 +10,7 @@ use Slothsoft\Farah\Module\Node\Instruction\UseStylesheetInstructionInterface;
  * @author Daniel Schulz
  *        
  */
-class LinkStylesheetMeta extends MetaImplementation implements UseStylesheetInstructionInterface
+class LinkStylesheetMeta extends MetaBase implements UseStylesheetInstructionInterface
 {
     use ReferenceTrait {
         getReferencedAsset as public getReferencedStylesheetAsset;

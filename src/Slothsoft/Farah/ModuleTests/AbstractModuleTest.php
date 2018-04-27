@@ -8,13 +8,13 @@ use Slothsoft\Farah\Exception\MalformedUrlException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Executables\ExecutableInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
+use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
-use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\DirectoryAsset\DirectoryAssetInterface;
-use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\Resource\ResourceInterface;
+use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\PhysicalAssetInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseDocumentInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseManifestInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseScriptInstructionInterface;
@@ -24,6 +24,7 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
 use DOMDocument;
 use DOMElement;
 use Throwable;
+use Traversable;
 
 abstract class AbstractModuleTest extends AbstractTestCase
 {
@@ -38,27 +39,48 @@ abstract class AbstractModuleTest extends AbstractTestCase
         }
         return $module;
     }
-
-    protected function getModuleAuthority(): FarahUrlAuthority
-    {
-        return $this->getModule()->getAuthority();
+    protected function getModuleProperty(string $name) {
+        $module = $this->getModule();
+        $getProperty = function(string $name) {
+            return $this->$name;
+        };
+        $getProperty = $getProperty->bindTo($module, get_class($module));
+        return $getProperty($name);
     }
-
-    protected function getModuleRoot(): AssetInterface
+    
+    protected function getModuleId(): FarahUrl
     {
-        return $this->getModule()->getRootAsset();
+        return $this->getModule()->getId();
     }
-
+    protected function getModuleUrl(): FarahUrl
+    {
+        return $this->getModule()->createUrl();
+    }
+    protected function getModuleAuthority(): AssetInterface
+    {
+        return $this->getModuleProperty('authority');
+    }
+    protected function getModuleRootAsset(): AssetInterface
+    {
+        return $this->getModule()->lookupAsset('/');
+    }
     protected function getAssetDirectory(): string
     {
-        return $this->getModule()->getAssetDirectory();
+        return $this->getModuleProperty('assetDirectory');
     }
-
+    protected function getModuleAssetManifest(): ManifestInterface
+    {
+        return $this->getModuleProperty('assetManifest');
+    }
+    protected function getModuleAssets(): Traversable
+    {
+        return $this->getModuleProperty('assets');
+    }
+    
+    
     protected function getManifestRoot(): LeanElement
     {
-        return $this->getModule()
-            ->getManifest()
-            ->getRootElement();
+        return $this->getModuleAssetManifest()->getRootElement();
     }
 
     protected function getManifestDocument(): DOMDocument
@@ -98,9 +120,9 @@ abstract class AbstractModuleTest extends AbstractTestCase
         return $ret;
     }
 
-    protected function getModuleNodes(): array
+    protected function lookupAllModuleNodes(): array
     {
-        return $this->buildNodeIndex($this->getModuleRoot());
+        return $this->buildNodeIndex($this->getModuleRootAsset());
     }
 
     private function buildNodeIndex(ModuleNodeInterface $node): array
@@ -113,9 +135,9 @@ abstract class AbstractModuleTest extends AbstractTestCase
         return $ret;
     }
 
-    protected function getModuleAssets(): array
+    protected function lookupAllAssets(): array
     {
-        return array_filter($this->getModuleNodes(), function (ModuleNodeInterface $node) {
+        return array_filter($this->lookupAllModuleNodes(), function (ModuleNodeInterface $node) {
             return $node instanceof AssetInterface;
         }, ARRAY_FILTER_USE_BOTH);
     }
@@ -133,7 +155,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
     public function testAssetReferenceIsValid($ref)
     {
         try {
-            $url = FarahUrl::createFromReference($ref, $this->getModuleAuthority());
+            $url = FarahUrl::createFromReference($ref, $this->getModuleUrl());
             $this->assertInstanceOf(FarahUrl::class, $url);
         } catch (MalformedUrlException $e) {
             $this->failException($e);
@@ -206,7 +228,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
         $ret = [];
         foreach ($this->getAssetReferences() as $ref) {
             try {
-                $url = FarahUrl::createFromReference($ref, $this->getModuleAuthority());
+                $url = FarahUrl::createFromReference($ref, $this->getModuleUrl());
                 $key = sprintf('%3d: %s', count($ret), (string) $url);
                 $ret[$key] = [
                     $url
@@ -237,7 +259,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
         $ret = [];
         foreach ($this->getAssetPaths() as $ref) {
             try {
-                $url = FarahUrl::createFromReference($ref, $this->getModuleAuthority());
+                $url = FarahUrl::createFromReference($ref, $this->getModuleUrl());
                 $key = sprintf('%3d: %s', count($ret), (string) $url);
                 $ret[$key] = [
                     $url
@@ -254,8 +276,8 @@ abstract class AbstractModuleTest extends AbstractTestCase
     public function testLocalAssetResultExists(AssetInterface $asset)
     {
         try {
-            $result = $asset->createResult();
-            $this->assertInstanceOf(ResultInterface::class, $result);
+            $result = $asset->lookupExecutable();
+            $this->assertInstanceOf(ExecutableInterface::class, $result);
         } catch (Throwable $e) {
             $this->failException($e);
         }
@@ -268,7 +290,9 @@ abstract class AbstractModuleTest extends AbstractTestCase
      */
     public function testLocalAssetResultIsValidAccordingToSchema(AssetInterface $asset)
     {
-        $result = $asset->createResult();
+        $executable = $asset->lookupExecutable();
+        $result = $executable->lookupXmlResult();
+        
         $document = $result->toDocument();
         $node = $document->documentElement;
         
@@ -297,23 +321,15 @@ abstract class AbstractModuleTest extends AbstractTestCase
      *
      * @dataProvider assetProvider
      */
-    public function testLocalDirectoryAssetExists(AssetInterface $asset)
+    public function testLocalPhysicalAssetExists(AssetInterface $asset)
     {
-        if ($asset instanceof DirectoryAssetInterface) {
-            $this->assertDirectoryExists($asset->getRealPath());
-        } else {
-            $this->assertTrue(true);
-        }
-    }
-
-    /**
-     *
-     * @dataProvider assetProvider
-     */
-    public function testLocalResourceAssetExists(AssetInterface $asset)
-    {
-        if ($asset instanceof ResourceInterface) {
-            $this->assertFileExists($asset->getRealPath());
+        if ($asset instanceof PhysicalAssetInterface) {
+            if ($asset->isDirectory()) {
+                $this->assertDirectoryExists($asset->getRealPath());
+            }
+            if ($asset->isFile()) {
+                $this->assertFileExists($asset->getRealPath());
+            }
         } else {
             $this->assertTrue(true);
         }
@@ -322,7 +338,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
     public function assetProvider()
     {
         $ret = [];
-        foreach ($this->getModuleAssets() as $node) {
+        foreach ($this->lookupAllAssets() as $node) {
             $key = sprintf('%3d: %s', count($ret), (string) $node);
             $ret[$key] = [
                 $node
@@ -358,7 +374,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
     public function nodeProvider()
     {
         $ret = [];
-        foreach ($this->getModuleNodes() as $node) {
+        foreach ($this->lookupAllModuleNodes() as $node) {
             $key = sprintf('%3d: %s', count($ret), (string) $node);
             $ret[$key] = [
                 $node

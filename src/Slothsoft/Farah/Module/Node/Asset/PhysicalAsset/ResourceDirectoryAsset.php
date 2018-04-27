@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\DirectoryAsset;
+namespace Slothsoft\Farah\Module\Node\Asset\PhysicalAsset;
 
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\MimeTypeDictionary;
@@ -13,7 +13,7 @@ use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
  * @author Daniel Schulz
  *        
  */
-class ResourceDirectoryAsset extends DirectoryAssetImplementation
+class ResourceDirectoryAsset extends PhysicalAssetBase
 {
     use MimeTypeTrait;
 

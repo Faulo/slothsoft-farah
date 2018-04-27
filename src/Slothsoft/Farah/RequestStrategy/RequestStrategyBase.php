@@ -4,7 +4,6 @@ namespace Slothsoft\Farah\RequestStrategy;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
@@ -33,18 +32,31 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 $result = FarahUrlResolver::resolveToResult($url);
                 
                 $statusCode = StatusCode::STATUS_OK;
-                $file = $result->toFile();
-                $fileName = $file->getName();
+                
+                $fileName = $result->lookupFileName();
                 $fileDisposition = 'inline';
-                $fileEncoding = 'UTF-8';
+                $fileMime = $result->lookupMimeType(); //MimeTypeDictionary::guessMime(pathinfo($fileName, PATHINFO_EXTENSION));
+                $fileCharset = $result->lookupCharset(); //'UTF-8';
+                
                 $headers = [];
                 $headers['content-disposition'] = sprintf('%s; filename="%s"; filename*=UTF-8\'\'%s', $fileDisposition, preg_replace('/[^[:print:]]/', '', $fileName), rawurlencode($fileName));
-                $headers['content-type'] = sprintf('%s; charset=%s', MimeTypeDictionary::guessMime(pathinfo($fileName, PATHINFO_EXTENSION)), $fileEncoding);
+                $headers['content-type'] = $fileCharset === ''
+                    ? $fileMime
+                    : "$fileMime; charset=$fileCharset";
+                    
                 
-                $body = MessageFactory::createStreamFromUrl($url);
+                $body = $result->lookupStream();
+                $isSeekable = $body->isSeekable();
                 $resource = $body->detach();
                 
-                if ($body->isSeekable()) {
+                $coding = $this->negotiateContentCoding();
+                if (! $coding->isNoEncoding()) {
+                    stream_filter_append($resource, $coding->getFilterName(), STREAM_FILTER_READ);
+                    $headers['content-encoding'] = $coding->getHttpName();
+                    $headers['vary'] = 'accept-encoding';
+                }
+                
+                if ($isSeekable) {
                     $hash = hash_init('md5');
                     hash_update_stream($hash, $resource);
                     $responseTag = '"' . hash_final($hash) . '"';
@@ -59,13 +71,6 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                     } else {
                         rewind($resource);
                     }
-                }
-                
-                $coding = $this->negotiateContentCoding();
-                if (! $coding->isNoEncoding()) {
-                    stream_filter_append($resource, $coding->getFilterName(), STREAM_FILTER_READ);
-                    $headers['content-encoding'] = $coding->getHttpName();
-                    $headers['vary'] = 'accept-encoding';
                 }
                 
                 $coding = $this->negotiateTransferCoding();

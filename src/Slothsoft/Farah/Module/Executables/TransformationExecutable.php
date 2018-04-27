@@ -1,37 +1,34 @@
 <?php
 declare(strict_types = 1);
-namespace Slothsoft\Farah\Module\Results;
+namespace Slothsoft\Farah\Module\Executables;
 
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\Core\IO\HTTPFile;
-use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterElementFromDocumentTrait;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Exception\ExceptionContext;
-use Slothsoft\Farah\LinkDecorator\DecoratorFactory;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\LinkDecorator\DecoratedDOMWriter;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Node\InstructionCollector;
 use Slothsoft\Farah\Module\Node\Instruction\UseDocumentInstructionInterface;
 use Slothsoft\Farah\Module\Node\Instruction\UseManifestInstructionInterface;
-use Slothsoft\Farah\StreamWrapper\DocumentStreamWrapper;
+use Slothsoft\Farah\Module\Results\ResultCreator;
+use Slothsoft\Farah\Module\Results\ResultInterface;
 use DOMDocument;
 use DOMElement;
 use Throwable;
-use Slothsoft\Core\StreamWrapper\FileStreamWrapper;
-use Slothsoft\Core\IO\Writable\DOMWriterElementFromDocumentTrait;
-use Slothsoft\Core\IO\Writable\FileWriterStringFromFileTrait;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class TransformationResult extends ResultImplementation
+class TransformationExecutable extends ExecutableBase implements DOMWriterInterface
 {
     use DOMWriterElementFromDocumentTrait;
-    use FileWriterStringFromFileTrait;
-
+    
     const TAG_ROOT = 'fragment';
 
     const TAG_DOCUMENT = 'document';
@@ -48,55 +45,38 @@ class TransformationResult extends ResultImplementation
 
     private $resultDoc;
 
-    public function __construct(FarahUrl $url, string $name, InstructionCollector $collector)
+    public function __construct(string $name, InstructionCollector $collector)
     {
-        parent::__construct($url);
-        
         $this->name = $name;
         $this->collector = $collector;
     }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
-     */
-    protected function loadDefaultStreamWrapper(): StreamWrapperInterface
+    
+    protected function loadResult(FarahUrlStreamIdentifier $type): ResultInterface
     {
-        return new FileStreamWrapper($this->toFile());
+        $writer = $this;
+        if ($type === self::resultIsDefault()) {
+            //default result is the root transformation, so we gotta add all <link> and <script> elements
+            $stylesheets = $this->getLinkedStylesheets();
+            $scripts = $this->getLinkedScripts();
+            if ($stylesheets or $scripts) {
+                $writer = new DecoratedDOMWriter($writer, $stylesheets, $scripts);
+            }
+        }
+        
+        $resultCreator = new ResultCreator($this, $type);
+        return $resultCreator->createDOMWriterResult($writer);
     }
 
     /**
      *
      * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
-     */
-    protected function loadXmlStreamWrapper(): StreamWrapperInterface
-    {
-        return new DocumentStreamWrapper($this->toDocument());
-    }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
-     */
-    public function exists(): bool
-    {
-        return true;
-    }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toDocument()
+     * @see \Slothsoft\Farah\Module\Results\ResultBase::toDocument()
      */
     public function toDocument(): DOMDocument
     {
         if ($this->resultDoc === null) {
             $this->resultDoc = new DOMDocument();
-            $dataNode = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, FarahUrlResolver::resolveToAsset($this->getUrl())->getElement()
-                ->getTag());
+            $dataNode = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, $this->getOwnerAsset()->getElementTag());
             $dataNode->setAttribute(self::ATTR_NAME, $this->name);
             $dataNode->setAttribute(self::ATTR_ID, $this->getId());
             
@@ -112,8 +92,7 @@ class TransformationResult extends ResultImplementation
             
             if ($this->collector->templateInstruction) {
                 $templateAsset = $this->collector->templateInstruction->getReferencedTemplateAsset();
-                $templateUrl = $templateAsset->createResult($this->getArguments())
-                    ->createXmlUrl();
+                $templateUrl = $templateAsset->createUrl($this->getArguments(), self::resultIsXml());
                 
                 $dom = new DOMHelper();
                 
@@ -126,7 +105,7 @@ class TransformationResult extends ResultImplementation
                 }
                 
                 // translating
-                Dictionary::getInstance()->translateDoc($this->resultDoc, $templateAsset->getOwnerModule());
+                Dictionary::getInstance()->translateDoc($this->resultDoc, FarahUrlResolver::resolveToModule($templateAsset->createUrl()));
             }
         }
         
@@ -139,7 +118,7 @@ class TransformationResult extends ResultImplementation
         
         $element = $this->createElement(self::TAG_DOCUMENT, $instruction->getReferencedDocumentAlias(), $asset->getId());
         try {
-            $result = $asset->createResult($this->getArguments());
+            $result = $asset->lookupExecutable($this->getArguments())->lookupXmlResult();
             $element->appendChild($result->toElement($this->resultDoc));
         } catch (Throwable $exception) {
             ExceptionContext::append($exception, [
@@ -154,8 +133,7 @@ class TransformationResult extends ResultImplementation
     private function createElementFromManifestInstruction(UseManifestInstructionInterface $instruction): DOMElement
     {
         $asset = $instruction->getReferencedManifestAsset();
-        $element = $this->createElement($asset->getElement()
-            ->getTag(), $asset->getName(), $asset->getId());
+        $element = $this->createElement($asset->getElementTag(), $asset->getName(), $asset->getId());
         return $element;
     }
 
@@ -168,29 +146,22 @@ class TransformationResult extends ResultImplementation
         
         return $element;
     }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toFile()
-     */
-    public function toFile(): HTTPFile
+    
+    private function getLinkedStylesheets(): array
     {
-        $document = $this->toDocument();
-        $stylesheetList = $this->getLinkedStylesheets();
-        $scriptList = $this->getLinkedScripts();
-        if ($stylesheetList or $scriptList) {
-            $decorator = DecoratorFactory::createForDocument($document);
-            $decorator->linkStylesheets(...$stylesheetList);
-            $decorator->linkScripts(...$scriptList);
-        }
-        
-        $extension = $this->guessExtension((string) $document->documentElement->namespaceURI);
-        
-        return HTTPFile::createFromDocument($document, "$this->name.$extension");
+        return array_values($this->getOwnerAsset()->collectInstructions()->stylesheetAssets);
+    }
+    
+    private function getLinkedScripts(): array
+    {
+        return array_values($this->getOwnerAsset()->collectInstructions()->scriptAssets);
+    }
+    
+    private function guessFileName(DOMDocument $document) : string {
+        return $this->name .'.'. $this->guessExtension((string) $document->documentElement->namespaceURI);
     }
 
-    private function guessExtension(string $namespaceURI)
+    private function guessExtension(string $namespaceURI) : string
     {
         switch ($namespaceURI) {
             case DOMHelper::NS_HTML:

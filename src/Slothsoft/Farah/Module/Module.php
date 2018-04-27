@@ -2,16 +2,11 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
-use Slothsoft\Core\XML\LeanElement;
+use Ds\Map;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlPath;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlStreamIdentifier;
-use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\XmlManifest;
 use Slothsoft\Farah\Module\Node\ModuleNodeCreator;
-use Slothsoft\Farah\Module\Node\ModuleNodeInterface;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
 /**
@@ -19,7 +14,7 @@ use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
  * @author Daniel Schulz
  *        
  */
-class Module
+class Module implements ModuleInterface
 {
 
     const TAGS_ASSETS = [
@@ -130,6 +125,8 @@ class Module
     const FILE_MANIFEST = 'manifest.xml';
 
     private $authority;
+    
+    private $id;
 
     private $assetDirectory;
 
@@ -137,71 +134,55 @@ class Module
 
     private $rootAsset;
 
-    private $assetList = [];
+    private $assets = [];
 
-    // TODO: AssetCache
     public function __construct(FarahUrlAuthority $authority, string $assetDirectory)
     {
         $this->authority = $authority;
+        $this->id = (string) $this->authority;
         $this->assetDirectory = $assetDirectory;
         $this->assetManifest = new XmlManifest($this->assetDirectory . DIRECTORY_SEPARATOR . self::FILE_MANIFEST);
+        $this->assets = new Map();
+    }
+    
+    public function getId() : string
+    {
+        return $this->id;
+    }
+    
+    public function createUrl($path = null, $args = null, $fragment = null): FarahUrl
+    {
+        return FarahUrl::createFromComponents($this->authority, $path, $args, $fragment);
     }
 
-    public function getAuthority(): FarahUrlAuthority
+    public function lookupAsset($path): AssetInterface
     {
-        return $this->authority;
-    }
-
-    public function getManifest(): ManifestInterface
-    {
-        return $this->assetManifest;
-    }
-
-    public function getAssetDirectory(): string
-    {
-        return $this->assetDirectory;
-    }
-
-    public function getId(): string
-    {
-        return (string) $this->authority;
-    }
-
-    public function lookupAssetByPath(FarahUrlPath $path): AssetInterface
-    {
-        $id = (string) $path;
-        if (! isset($this->assetList[$id])) {
-            $this->assetList[$id] = $this->getRootAsset()->traverseTo($id);
+        $path = (string) $path;
+        if (!$this->assets->hasKey($path)) {
+            $this->assets->put($path, $this->loadAsset($path));
         }
-        return $this->assetList[$id];
+        return $this->assets->get($path);
+    }
+    private function loadAsset(string $path) : AssetInterface {
+        return $this->lookupRootAsset()->traverseTo($path);
     }
 
-    public function getRootAsset(): AssetInterface
+    private function lookupRootAsset(): AssetInterface
     {
         if ($this->rootAsset === null) {
             $this->rootAsset = $this->loadRootAsset();
         }
         return $this->rootAsset;
     }
-
     private function loadRootAsset(): AssetInterface
     {
         $manifestElemet = $this->assetManifest->getRootElement();
-        $manifestElemet->setAttribute('realpath', $this->assetDirectory);
-        $manifestElemet->setAttribute('name', $this->authority->getModule());
-        $manifestElemet->setAttribute('assetpath', '');
+        $manifestElemet->setAttribute(self::ATTR_ID, $this->getId());
+        $manifestElemet->setAttribute(self::ATTR_REALPATH, $this->assetDirectory);
+        $manifestElemet->setAttribute(self::ATTR_NAME, $this->authority->getModule());
+        $manifestElemet->setAttribute(self::ATTR_ASSETPATH, '');
         
         return ModuleNodeCreator::getInstance()->create($this, $manifestElemet);
-    }
-
-    public function createUrl(FarahUrlPath $path, FarahUrlArguments $args, FarahUrlStreamIdentifier $fragment): FarahUrl
-    {
-        return FarahUrl::createFromComponents($this->authority, $path, $args, $fragment);
-    }
-
-    public function createModuleNode(LeanElement $element, LeanElement $parent): ModuleNodeInterface
-    {
-        return ModuleNodeCreator::getInstance()->create($this, $element, $parent);
     }
 }
 

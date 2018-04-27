@@ -2,9 +2,10 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Results;
 
-use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
+use Psr\Http\Message\StreamInterface;
+use Slothsoft\Farah\Module\Executables\ExecutableInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlStreamIdentifier;
 
 /**
  *
@@ -13,31 +14,47 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
  */
 interface ResultInterface
 {
-
-    const STREAM_TYPE_DEFAULT = '';
-
-    const STREAM_TYPE_XML = 'xml';
-
-    public function __toString(): string;
-
-    public function getUrl(): FarahUrl;
-
+    public function init(ExecutableInterface $ownerExecutable, FarahUrlStreamIdentifier $type);
+    
+    /**
+     * The Farah URL that represents this result.
+     *
+     * @return string
+     */
     public function getId(): string;
-
-    public function getArguments(): FarahUrlArguments;
-
-    public function exists(): bool;
-
-    public function getLinkedStylesheets(): array;
-
-    public function getLinkedScripts(): array;
-
-    public function createDefaultUrl(): FarahUrl;
-
-    public function createDefaultStreamWrapper(): StreamWrapperInterface;
-
-    public function createXmlUrl(): FarahUrl;
-
-    public function createXmlStreamWrapper(): StreamWrapperInterface;
+    
+    /**
+     * Create a FarahUrl for this result
+     * 
+     * @return FarahUrl
+     */
+    public function createUrl(): FarahUrl;
+    
+    /**
+     * Create a stream of this result.
+     * 
+     * @return StreamInterface
+     */
+    public function lookupStream() : StreamInterface;
+    
+    /**
+     * Determine the filename of this result.
+     * 
+     * @return string
+     */
+    public function lookupFileName() : string;
+    
+    /**
+     * Determine the mime type of this result.
+     * @return string
+     */
+    public function lookupMimeType() : string;
+    
+    /**
+     * Determine the character set of this result
+     * 
+     * @return string A valid character, or the empty string if not applicable.
+     */
+    public function lookupCharset() : string;
 }
 

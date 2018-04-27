@@ -102,7 +102,8 @@ class FarahUrlTest extends TestCase
     public function testRelativeUrlParsing(string $expected, string $ref) {
         $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'farah');
         $path = FarahUrlPath::createFromString('/testing');
-        $url = FarahUrl::createFromReference($ref, $authority, $path);
+        $url = FarahUrl::createFromComponents($authority, $path);
+        $url = FarahUrl::createFromReference($ref, $url);
         $this->assertEquals($expected, (string) $url);
     }
     public function relativeUrlProvider() {

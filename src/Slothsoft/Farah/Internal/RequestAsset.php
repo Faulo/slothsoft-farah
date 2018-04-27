@@ -2,27 +2,28 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Internal;
 
-use Slothsoft\Farah\Kernel;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\Node\Asset\AssetImplementation;
-use Slothsoft\Farah\Module\Results\ResultCatalog;
-use Slothsoft\Farah\Module\Results\ResultInterface;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
+use Slothsoft\Farah\Kernel;
+use Slothsoft\Farah\Module\Executables\ExecutableCreator;
+use Slothsoft\Farah\Module\Executables\ExecutableInterface;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\Node\Asset\AssetBase;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class RequestAsset extends AssetImplementation
+class RequestAsset extends AssetBase
 {
 
-    protected function loadResult(FarahUrl $url): ResultInterface
+    protected function loadExecutable(FarahUrlArguments $args): ExecutableInterface
     {
+        $creator = new ExecutableCreator($this, $args);
         try {
-            return ResultCatalog::createMessageResult($url, Kernel::getCurrentRequest());
+            return $creator->createMessageExecutable(Kernel::getCurrentRequest());
         } catch (ConfigurationRequiredException $e) {
-            return ResultCatalog::createNullResult($url);
+            return $creator->createNullExecutable();
         }
     }
 }

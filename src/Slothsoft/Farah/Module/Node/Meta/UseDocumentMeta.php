@@ -11,7 +11,7 @@ use Slothsoft\Farah\Module\Node\Instruction\UseDocumentInstructionInterface;
  * @author Daniel Schulz
  *        
  */
-class UseDocumentMeta extends MetaImplementation implements UseDocumentInstructionInterface
+class UseDocumentMeta extends MetaBase implements UseDocumentInstructionInterface
 {
     use ReferenceTrait {
         getReferencedAsset as public getReferencedDocumentAsset;

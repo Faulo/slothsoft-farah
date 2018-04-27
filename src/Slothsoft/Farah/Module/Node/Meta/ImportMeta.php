@@ -10,9 +10,13 @@ use Slothsoft\Farah\Module\Node\Instruction\ImportInstructionInterface;
  * @author Daniel Schulz
  *        
  */
-class ImportMeta extends MetaImplementation implements ImportInstructionInterface
+class ImportMeta extends MetaBase implements ImportInstructionInterface
 {
     use ReferenceTrait;
+    
+    public function isImport() : bool {
+        return true;
+    }
 
     public function getImportNodes(): array
     {

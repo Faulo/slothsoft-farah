@@ -2,16 +2,17 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\FarahUrl;
 
+use Ds\Hashable;
+use ArrayIterator;
 use IteratorAggregate;
 use Traversable;
-use ArrayIterator;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class FarahUrlArguments implements IteratorAggregate // TODO: implements Psr\Container\ContainerInterface
+class FarahUrlArguments implements IteratorAggregate, Hashable
 {
 
     public static function createEmpty(): FarahUrlArguments
@@ -99,6 +100,17 @@ class FarahUrlArguments implements IteratorAggregate // TODO: implements Psr\Con
     public function getIterator(): Traversable
     {
         return new ArrayIterator($this->data);
+    }
+    
+    public function isEmpty() : bool {
+        return $this->id === '';
+    }
+    
+    public function equals($obj) : bool {
+        return ($obj instanceof self and ((string) $this === (string) $obj));
+    }
+    public function hash() {
+        return (string) $this;
     }
 }
 

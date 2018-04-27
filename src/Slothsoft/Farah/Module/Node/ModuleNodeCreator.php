@@ -7,8 +7,7 @@ use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Exception\TagNotSupportedException;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Node\Asset\AssetFactory;
-use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\DirectoryAsset\DirectoryAssetFactory;
-use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\Resource\ResourceFactory;
+use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\PhysicalAssetFactory;
 use Slothsoft\Farah\Module\Node\Meta\MetaFactory;
 
 /**
@@ -19,11 +18,11 @@ use Slothsoft\Farah\Module\Node\Meta\MetaFactory;
 class ModuleNodeCreator // TOOD: find a better name maybe
 {
 
-    public static function getInstance(): ModuleNodeCreator
+    public static function getInstance(): self
     {
         static $instance;
         if ($instance === null) {
-            $instance = new ModuleNodeCreator();
+            $instance = new self();
         }
         return $instance;
     }
@@ -33,8 +32,7 @@ class ModuleNodeCreator // TOOD: find a better name maybe
     public function __construct()
     {
         $assetFactory = new AssetFactory();
-        $directoryFactory = new DirectoryAssetFactory();
-        $resourceFactory = new ResourceFactory();
+        $fileFactory = new PhysicalAssetFactory();
         $metaFactory = new MetaFactory();
         
         // assets
@@ -44,11 +42,11 @@ class ModuleNodeCreator // TOOD: find a better name maybe
         $this->factoryMap[Module::TAG_EXTERNAL_RESOURCE] = $assetFactory;
         $this->factoryMap[Module::TAG_CLOSURE] = $assetFactory;
         
-        $this->factoryMap[Module::TAG_DIRECTORY] = $directoryFactory;
-        $this->factoryMap[Module::TAG_RESOURCE_DIRECTORY] = $directoryFactory;
-        $this->factoryMap[Module::TAG_ASSET_ROOT] = $directoryFactory;
-        
-        $this->factoryMap[Module::TAG_RESOURCE] = $resourceFactory;
+        //files
+        $this->factoryMap[Module::TAG_RESOURCE] = $fileFactory;
+        $this->factoryMap[Module::TAG_DIRECTORY] = $fileFactory;
+        $this->factoryMap[Module::TAG_RESOURCE_DIRECTORY] = $fileFactory;
+        $this->factoryMap[Module::TAG_ASSET_ROOT] = $fileFactory;  
         
         // meta
         $this->factoryMap[Module::TAG_IMPORT] = $metaFactory;

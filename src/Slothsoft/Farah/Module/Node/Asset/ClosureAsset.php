@@ -2,9 +2,9 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Node\Asset;
 
+use Slothsoft\Farah\Module\Executables\ExecutableInterface;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\Results\ResultCatalog;
-use Slothsoft\Farah\Module\Results\ResultInterface;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Closure;
 
 /**
@@ -12,7 +12,7 @@ use Closure;
  * @author Daniel Schulz
  *        
  */
-class ClosureAsset extends AssetImplementation
+class ClosureAsset extends AssetBase
 {
 
     private $closure;
@@ -22,9 +22,9 @@ class ClosureAsset extends AssetImplementation
         $this->closure = $closure;
     }
 
-    protected function loadResult(FarahUrl $url): ResultInterface
+    protected function loadExecutable(FarahUrlArguments $args): ExecutableInterface
     {
-        return ResultCatalog::createFromMixed($url, $this->runClosure($url));
+        return $this->runClosure($args);
     }
 
     private function runClosure(FarahUrl $url)

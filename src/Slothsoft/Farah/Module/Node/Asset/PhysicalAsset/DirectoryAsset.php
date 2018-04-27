@@ -1,14 +1,12 @@
 <?php
 declare(strict_types = 1);
-namespace Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\DirectoryAsset;
+namespace Slothsoft\Farah\Module\Node\Asset\PhysicalAsset;
 
-use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\PhysicalAssetImplementation;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverCatalog;
 use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
 
-class DirectoryAssetImplementation extends PhysicalAssetImplementation implements DirectoryAssetInterface
+class DirectoryAsset extends PhysicalAssetBase
 {
-
     protected function loadPathResolver(): PathResolverInterface
     {
         $map = [];

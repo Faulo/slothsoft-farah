@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\FarahUrl;
 
+use Ds\Hashable;
 use Slothsoft\Farah\Exception\MalformedUrlException;
 
 /**
@@ -9,17 +10,17 @@ use Slothsoft\Farah\Exception\MalformedUrlException;
  * @author Daniel Schulz
  *        
  */
-class FarahUrlPath
+class FarahUrlPath implements Hashable
 {
 
     const SEPARATOR = '/';
 
-    public static function createEmpty(): FarahUrlArguments
+    public static function createEmpty(): self
     {
         return self::create('');
     }
 
-    public static function createFromString(string $path, FarahUrlPath $base = null): FarahUrlPath
+    public static function createFromString(string $path, FarahUrlPath $base = null): self
     {
         if ($base and substr($path, 0, 1) !== self::SEPARATOR) {
             return self::create(self::normalize($base . self::SEPARATOR . $path));
@@ -28,11 +29,11 @@ class FarahUrlPath
         }
     }
 
-    private static function create(string $id): FarahUrlPath
+    private static function create(string $id): self
     {
         static $cache = [];
         if (! isset($cache[$id])) {
-            $cache[$id] = new FarahUrlPath($id);
+            $cache[$id] = new self($id);
         }
         return $cache[$id];
     }
@@ -72,6 +73,13 @@ class FarahUrlPath
     public function __toString(): string
     {
         return $this->id;
+    }
+    
+    public function equals($obj) : bool {
+        return ($obj instanceof self and ((string) $this === (string) $obj));
+    }
+    public function hash() {
+        return (string) $this;
     }
 }
 

@@ -2,23 +2,49 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\FarahUrl;
 
+use Ds\Hashable;
 use Psr\Http\Message\UriInterface;
+use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
-use Slothsoft\Farah\Exception\IncompleteUrlException;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class FarahUrl implements UriInterface
+class FarahUrl implements UriInterface, Hashable
 {
 
     const SCHEME_DEFAULT = 'farah';
 
-    public static function createFromComponents(FarahUrlAuthority $authority, FarahUrlPath $path, FarahUrlArguments $args, FarahUrlStreamIdentifier $fragment): FarahUrl
+    /**
+     * @param FarahUrlAuthority|string $authority
+     * @param FarahUrlPath|string $path
+     * @param FarahUrlArguments|string $args
+     * @param FarahUrlStreamIdentifier|string $fragment
+     * @return FarahUrl
+     */
+    public static function createFromComponents(FarahUrlAuthority $authority, $path = null, $args = null, $fragment = null): FarahUrl
     {
+        if ($path === null) {
+            $path = FarahUrlPath::createEmpty();
+        } elseif (is_string($path)) {
+            $path = FarahUrlPath::createFromString($path);
+        }
+        
+        if ($args === null) {
+            $args = FarahUrlArguments::createEmpty();
+        } elseif(is_string($args)) {
+            $args = FarahUrlArguments::createFromQuery($args);
+        }
+        
+        if ($fragment === null) {
+            $fragment = FarahUrlStreamIdentifier::createEmpty();
+        } elseif(is_string($fragment)) {
+            $fragment = FarahUrlStreamIdentifier::createFromString($fragment);
+        }
+        
         $authorityId = (string) $authority;
         $pathId = (string) $path;
         $argsId = (string) $args;
@@ -35,13 +61,14 @@ class FarahUrl implements UriInterface
         return self::create($id, $authority, $path, $args, $fragment);
     }
 
-    public static function createFromReference(string $ref, FarahUrlAuthority $contextAuthority = null, FarahUrlPath $contextPath = null, FarahUrlArguments $contextArguments = null, FarahUrlStreamIdentifier $fragment = null): FarahUrl
+    public static function createFromReference(string $ref, FarahUrl $contextUrl = null): FarahUrl
     {
         $res = parse_url($ref);
         if ($res === false) {
             throw new MalformedUrlException($ref);
         }
-        if ($contextAuthority) {
+        if ($contextUrl) {
+            $contextAuthority = $contextUrl->getAssetAuthority();
             if (! isset($res['scheme'])) {
                 $res['scheme'] = $contextAuthority->getProtocol();
             }
@@ -60,10 +87,15 @@ class FarahUrl implements UriInterface
         }
         
         $authority = FarahUrlAuthority::createFromVendorAndModule($res['user'], $res['host']);
-        $path = FarahUrlPath::createFromString($res['path'] ?? FarahUrlPath::SEPARATOR, $contextPath);
+        
+        $path = FarahUrlPath::createFromString($res['path'] ?? FarahUrlPath::SEPARATOR, $contextUrl ? $contextUrl->getAssetPath() : null);
+        
         $arguments = FarahUrlArguments::createFromQuery($res['query'] ?? '');
-        if ($contextArguments) {
-            $arguments = FarahUrlArguments::createFromMany($arguments, $contextArguments);
+        if ($contextUrl) {
+            $contextArguments = $contextUrl->getArguments();
+            if ($contextArguments !== $arguments and !$contextArguments->isEmpty()) {
+                $arguments = FarahUrlArguments::createFromMany($arguments, $contextArguments);
+            }
         }
         
         $fragment = FarahUrlStreamIdentifier::createFromString($res['fragment'] ?? '');
@@ -230,6 +262,13 @@ class FarahUrl implements UriInterface
     public function getFragment(): string
     {
         return '';
+    }
+    
+    public function equals($obj) : bool {
+        return ($obj instanceof self and ((string) $this === (string) $obj));
+    }
+    public function hash() {
+        return (string) $this;
     }
 }
 

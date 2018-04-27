@@ -42,7 +42,14 @@ class LookupAssetStrategy extends RequestStrategyBase
         if ($uri instanceof FarahUrl) {
             $url = $uri;
         } else {
-            $url = FarahUrl::createFromReference($this->extractFarahUrl($uri->getPath()), FarahUrlAuthority::createFromVendorAndModule(self::DEFAULT_VENDOR, self::DEFAULT_MODULE), null, FarahUrlArguments::createFromValueList($args));
+            $url = FarahUrl::createFromReference(
+                $this->extractFarahUrl($uri->getPath()),
+                FarahUrl::createFromComponents(
+                    FarahUrlAuthority::createFromVendorAndModule(self::DEFAULT_VENDOR, self::DEFAULT_MODULE),
+                    null,
+                    FarahUrlArguments::createFromValueList($args)
+                )
+            );
         }
         
         return $url;

@@ -10,7 +10,7 @@ use Slothsoft\Farah\Module\Node\Instruction\UseScriptInstructionInterface;
  * @author Daniel Schulz
  *        
  */
-class LinkScriptMeta extends MetaImplementation implements UseScriptInstructionInterface
+class LinkScriptMeta extends MetaBase implements UseScriptInstructionInterface
 {
     use ReferenceTrait {
         getReferencedAsset as public getReferencedScriptAsset;

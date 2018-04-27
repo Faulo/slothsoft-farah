@@ -350,17 +350,12 @@ class Dictionary
             $language = $this->currentLang;
         }
         
-        $ref = "$namespace/dictionary/$language"; // TODO: make this less presumptive
-        $url = FarahUrl::createFromReference($ref, $this->currentModule->getAuthority());
+        $ref = "$namespace/dictionary/$language"; // TODO: make this less presuming
+        $url = FarahUrl::createFromReference($ref, $this->currentModule->createUrl());
         $key = (string) $url;
         
         if (! isset($this->langPaths[$key])) {
-            $asset = FarahUrlResolver::resolveToResult($url);
-            if ($asset->exists()) {
-                $doc = $asset->toDocument();
-            } else {
-                $doc = new DOMDocument();
-            }
+            $doc = FarahUrlResolver::resolveToDocument($url);
             $this->langPaths[$key] = DOMHelper::loadXPath($doc, DOMHelper::XPATH_SLOTHSOFT | DOMHelper::XPATH_HTML);
         }
         return $this->langPaths[$key];

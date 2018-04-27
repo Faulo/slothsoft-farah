@@ -2,10 +2,10 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Results;
 
+use GuzzleHttp\Psr7\Stream;
+use Psr\Http\Message\StreamInterface;
+use Slothsoft\Blob\BlobUrl;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
-use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\StreamWrapper\DocumentStreamWrapper;
 use DOMDocument;
 use DOMElement;
 
@@ -14,66 +14,48 @@ use DOMElement;
  * @author Daniel Schulz
  *        
  */
-class DOMWriterResult extends ResultImplementation
+class DOMWriterResult extends ResultBase implements ResultInterfacePlusXml
 {
 
     private $writer;
 
-    public function __construct(FarahUrl $url, DOMWriterInterface $writer)
+    public function __construct(DOMWriterInterface $writer)
     {
-        parent::__construct($url);
-        
         $this->writer = $writer;
     }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
-     */
-    protected function loadDefaultStreamWrapper(): StreamWrapperInterface
+    
+    public function lookupStream() : StreamInterface
     {
-        return new DocumentStreamWrapper($this->writer->toDocument());
+        $resource = BlobUrl::createTemporaryObject();
+        $this->writer->toDocument()->save(BlobUrl::createObjectURL($resource));
+        rewind($resource);
+        return new Stream($resource);
     }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
-     */
-    protected function loadXmlStreamWrapper(): StreamWrapperInterface
+    
+    public function lookupMimeType() : string
     {
-        return new DocumentStreamWrapper($this->writer->toDocument());
+        return 'application/xml';
     }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
-     */
-    public function exists(): bool
+    
+    public function lookupCharset() : string
     {
-        return true;
+        return 'UTF-8';
     }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toElement()
-     */
-    public function toElement(DOMDocument $targetDoc): DOMElement
+    
+    public function lookupFileName() : string
+    {
+        return 'result.xml';
+    }
+    
+    public function toElement(DOMDocument $targetDoc) : DOMElement
     {
         return $this->writer->toElement($targetDoc);
     }
 
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::toDocument()
-     */
-    public function toDocument(): DOMDocument
+    public function toDocument() : DOMDocument
     {
         return $this->writer->toDocument();
     }
+
 }
 

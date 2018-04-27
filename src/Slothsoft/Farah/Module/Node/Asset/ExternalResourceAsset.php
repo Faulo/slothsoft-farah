@@ -5,18 +5,17 @@ namespace Slothsoft\Farah\Module\Node\Asset;
 use Slothsoft\Core\Storage;
 use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\Resource\ResourceInterface;
+use Slothsoft\Farah\Module\Executables\ExecutableInterface;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Node\Enhancements\AssetBuilderTrait;
 use Slothsoft\Farah\Module\Node\Enhancements\MimeTypeTrait;
-use Slothsoft\Farah\Module\Results\ResultInterface;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class ExternalResourceAsset extends AssetImplementation
+class ExternalResourceAsset extends AssetBase
 {
     use AssetBuilderTrait;
     use MimeTypeTrait;
@@ -26,15 +25,15 @@ class ExternalResourceAsset extends AssetImplementation
         return $this->getElementAttribute(Module::ATTR_SRC);
     }
 
-    private function lookupResource(): ResourceInterface
+    private function lookupResource(): AssetInterface
     {
         $contents = (string) Storage::loadExternalFile($this->getSource(), Seconds::DAY);
         return $this->buildResourceFromContents($contents, $this->getName(), $this->getMimeType());
     }
 
-    protected function loadResult(FarahUrl $url): ResultInterface
+    protected function loadExecutable(FarahUrlArguments $args): ExecutableInterface
     {
-        return $this->lookupResource()->createResult($url->getArguments());
+        return $this->lookupResource()->lookupExecutable($args);
     }
 }
 

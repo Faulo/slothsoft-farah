@@ -2,12 +2,14 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\FarahUrl;
 
+use Ds\Hashable;
+
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class FarahUrlStreamIdentifier
+class FarahUrlStreamIdentifier implements Hashable
 {
 
     public static function createEmpty(): FarahUrlStreamIdentifier
@@ -15,9 +17,9 @@ class FarahUrlStreamIdentifier
         return self::create('');
     }
 
-    public static function createFromString(string $path): FarahUrlStreamIdentifier
+    public static function createFromString(string $fragment): FarahUrlStreamIdentifier
     {
-        return self::create($path);
+        return self::create($fragment);
     }
 
     private static function create(string $id): FarahUrlStreamIdentifier
@@ -39,6 +41,13 @@ class FarahUrlStreamIdentifier
     public function __toString(): string
     {
         return $this->id;
+    }
+    
+    public function equals($obj) : bool {
+        return ($obj instanceof self and ((string) $this === (string) $obj));
+    }
+    public function hash() {
+        return (string) $this;
     }
 }
 

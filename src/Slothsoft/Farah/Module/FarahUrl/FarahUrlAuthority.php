@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\FarahUrl;
 
+use Ds\Hashable;
 use Slothsoft\Farah\Exception\IncompleteUrlException;
 
 /**
@@ -9,7 +10,7 @@ use Slothsoft\Farah\Exception\IncompleteUrlException;
  * @author Daniel Schulz
  *        
  */
-class FarahUrlAuthority // TODO: implements Psr\Container\ContainerInterface
+class FarahUrlAuthority implements Hashable
 {
 
     public static function createFromVendorAndModule(string $vendor, string $module): FarahUrlAuthority
@@ -61,6 +62,13 @@ class FarahUrlAuthority // TODO: implements Psr\Container\ContainerInterface
     public function getModule(): string
     {
         return $this->module;
+    }
+    
+    public function equals($obj) : bool {
+        return ($obj instanceof self and ((string) $this === (string) $obj));
+    }
+    public function hash() {
+        return (string) $this;
     }
 }
 

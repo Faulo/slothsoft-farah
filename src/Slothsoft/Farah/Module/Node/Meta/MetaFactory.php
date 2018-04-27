@@ -37,7 +37,7 @@ class MetaFactory extends ModuleNodeFactory
                 return new ParameterMeta();
             case Module::TAG_SOURCE:
             case Module::TAG_OPTIONS:
-                return new MetaImplementation();
+                return new UnknownMeta();
         }
         throw new TagNotSupportedException(DOMHelper::NS_FARAH_MODULE, $element->getTag());
     }

@@ -2,45 +2,45 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Results;
 
-use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
-use Slothsoft\Farah\StreamWrapper\StringStreamWrapper;
+use GuzzleHttp\Psr7\Stream;
+use Psr\Http\Message\StreamInterface;
+use Slothsoft\Blob\BlobUrl;
+use Slothsoft\Core\IO\Writable\DOMWriterDocumentFromElementTrait;
+use DOMDocument;
+use DOMElement;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class NullResult extends ResultImplementation
+class NullResult extends ResultBase implements ResultInterfacePlusXml
 {
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadDefaultStreamWrapper()
-     */
-    protected function loadDefaultStreamWrapper(): StreamWrapperInterface
+    use DOMWriterDocumentFromElementTrait;
+    
+    public function lookupStream() : StreamInterface
     {
-        return new StringStreamWrapper('');
+        return new Stream(BlobUrl::createTemporaryObject());
+    }
+    
+    public function lookupMimeType() : string
+    {
+        return 'text/plain';
+    }
+    
+    public function lookupCharset() : string
+    {
+        return '';
+    }
+    
+    public function lookupFileName() : string
+    {
+        return 'null.txt';
+    }
+    public function toElement(DOMDocument $targetDoc) : DOMElement
+    {
+        return $targetDoc->createElement('null');
     }
 
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultImplementation::loadXmlStreamWrapper()
-     */
-    protected function loadXmlStreamWrapper(): StreamWrapperInterface
-    {
-        return new StringStreamWrapper('<null/>');
-    }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultInterface::exists()
-     */
-    public function exists(): bool
-    {
-        return false;
-    }
 }
 

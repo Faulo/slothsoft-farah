@@ -19,7 +19,7 @@ trait ReferenceTrait {
     protected function getReferencedAsset(): AssetInterface
     {
         if ($this->referencedAsset === null) {
-            $this->referencedAsset = FarahUrlResolver::resolveToAsset(FarahUrl::createFromReference($this->getReference(), $this->getOwnerModule()->getAuthority()));
+            $this->referencedAsset = FarahUrlResolver::resolveToAsset(FarahUrl::createFromReference($this->getReference(), $this->getOwnerModule()->createUrl()));
         }
         return $this->referencedAsset;
     }

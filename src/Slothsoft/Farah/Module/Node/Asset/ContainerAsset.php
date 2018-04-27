@@ -10,7 +10,7 @@ use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
  * @author Daniel Schulz
  *        
  */
-class ContainerAsset extends AssetImplementation
+class ContainerAsset extends AssetBase
 {
 
     protected function loadPathResolver(): PathResolverInterface

@@ -27,6 +27,11 @@ class AssetFactory extends ModuleNodeFactory
         if (! $element->hasAttribute(Module::ATTR_USE)) {
             $element->setAttribute(Module::ATTR_USE, Module::ATTR_USE_MANIFEST);
         }
+        if ($parent) {
+            $element->setAttribute(Module::ATTR_ID, $parent->getAttribute(Module::ATTR_ID) . '/' . $element->getAttribute(Module::ATTR_NAME));
+        } else {
+            assert($element->hasAttribute(Module::ATTR_ID), 'Root element must be supplied with an ID.');
+        }
     }
 
     private function inventElementAssetPath(LeanElement $element, LeanElement $parent): string

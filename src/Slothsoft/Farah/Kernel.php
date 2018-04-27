@@ -1,29 +1,30 @@
 <?php
 declare(strict_types = 1);
-/**
- * *********************************************************************
- * Slothsoft\Farah\Kernel v1.00 19.10.2012 © Daniel Schulz
- *
- * Changelog:
- * v1.00 19.10.2012
- * initial release
- * *********************************************************************
- */
 namespace Slothsoft\Farah;
 
+use Ds\Map;
 use Psr\Http\Message\ServerRequestInterface;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Farah\Configuration\AssetConfigurationField;
+use Slothsoft\Farah\Exception\ModuleNotFoundException;
+use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use Slothsoft\Farah\RequestStrategy\RequestStrategyInterface;
 use Slothsoft\Farah\ResponseStrategy\ResponseStrategyInterface;
+use OutOfBoundsException;
+
 
 class Kernel
 {
-
-    const URL_REQUEST = 'farah://slothsoft@farah/request';
-
-    const URL_SITEMAP = 'farah://slothsoft@farah/sites';
+    public static function getInstance() : self
+    {
+        static $instance;
+        if ($instance === null) {
+            $instance = new self();
+        }
+        return $instance;
+    }
 
     private static function currentSitemap(): ConfigurationField
     {
@@ -101,22 +102,43 @@ class Kernel
         return self::trackingExceptionUris()->getValue();
     }
 
-    private $requestStrategy;
-
-    private $responseStrategy;
-
-    public function __construct(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy)
+    private $modules;
+    private function __construct()
     {
-        $this->requestStrategy = $requestStrategy;
-        $this->responseStrategy = $responseStrategy;
+        return $this->modules = new Map();
     }
 
-    public function handle(ServerRequestInterface $request)
+    public function handle(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy, ServerRequestInterface $request)
     {
         self::setCurrentRequest($request);
         
-        $response = $this->requestStrategy->process($request);
-        $this->responseStrategy->process($response);
+        $response = $requestStrategy->process($request);
+        $responseStrategy->process($response);
+    }
+    
+    /**
+     * @param FarahUrlAuthority|string $authority
+     * @throws ModuleNotFoundException
+     * @return Module
+     */
+    public function lookupModule($authority): Module
+    {
+        try {
+            return $this->modules->get((string) $authority);
+        } catch(OutOfBoundsException $e) {
+            throw new ModuleNotFoundException((string) $authority, null, $e);
+        }
+        
+    }
+    /**
+     * @param Module $module
+     */
+    public function registerModule(Module $module) {
+        $this->modules->put((string) $module->getId(), $module);
+    }
+    
+    private function getDefaultAuthority() : FarahUrlAuthority {
+        return FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'farah');
     }
 }
 

@@ -10,8 +10,11 @@ use Slothsoft\Farah\Module\Node\Instruction\ParameterInstructionInterface;
  * @author Daniel Schulz
  *        
  */
-class ParameterMeta extends MetaImplementation implements ParameterInstructionInterface
+class ParameterMeta extends MetaBase implements ParameterInstructionInterface
 {
+    public function isParameter() : bool {
+        return true;
+    }
 
     public function getParameterName(): string
     {

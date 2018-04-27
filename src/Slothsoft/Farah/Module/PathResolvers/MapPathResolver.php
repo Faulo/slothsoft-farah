@@ -29,13 +29,13 @@ class MapPathResolver implements PathResolverInterface
         if (isset($this->assetMap[$path])) {
             return $this->assetMap[$path];
         } else {
-            assert(preg_match('~^/[^/]+~', $path, $match), "Invalid asset path: $path");
-            
-            $childPath = $match[0];
-            $descendantPath = substr($path, strlen($childPath));
-            
-            if (isset($this->assetMap[$childPath])) {
-                return $descendantPath === '' ? $this->assetMap[$childPath] : $this->assetMap[$childPath]->traverseTo($descendantPath);
+            if (preg_match('~^/[^/]+~', $path, $match)) {
+                $childPath = $match[0];
+                $descendantPath = substr($path, strlen($childPath));
+                
+                if (isset($this->assetMap[$childPath])) {
+                    return $descendantPath === '' ? $this->assetMap[$childPath] : $this->assetMap[$childPath]->traverseTo($descendantPath);
+                }
             }
         }
         throw ExceptionContext::append(new AssetPathNotFoundException($this->asset, $path), [

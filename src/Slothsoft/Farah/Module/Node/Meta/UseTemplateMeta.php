@@ -10,7 +10,7 @@ use Slothsoft\Farah\Module\Node\Instruction\UseTemplateInstructionInterface;
  * @author Daniel Schulz
  *        
  */
-class UseTemplateMeta extends MetaImplementation implements UseTemplateInstructionInterface
+class UseTemplateMeta extends MetaBase implements UseTemplateInstructionInterface
 {
     use ReferenceTrait {
         getReferencedAsset as public getReferencedTemplateAsset;

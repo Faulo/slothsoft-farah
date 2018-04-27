@@ -9,17 +9,21 @@
 	],
 	"type" : "library",
 	"require" : {
+		"guzzlehttp/psr7" : "*",
 		"matthiasmullie/minify" : "*",
 		"php" : ">=7.0",
+		"php-ds/php-ds" : "*",
 		"psr/cache" : "*",
 		"psr/http-message" : "*",
 		"psr/log" : "*",
 		"slothsoft/blob" : "dev-master",
-		"slothsoft/core" : "dev-master",
-		"guzzlehttp/psr7" : "*"
+		"slothsoft/core" : "dev-master"
 	},
 	"require-dev" : {
-		"phpunit/phpunit" : ">=6.5"
+		"phpunit/phpunit" : "*"
+	},
+	"suggest" : {
+		"ext-ds" : "*"
 	},
 	"autoload" : {
 		"psr-0" : {

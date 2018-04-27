@@ -13,6 +13,7 @@ use Throwable;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use Slothsoft\Farah\Exception\PageRedirectionException;
+use Slothsoft\Farah\Module\Results\ResultInterfacePlusXml;
 
 abstract class AbstractSitemapTest extends AbstractTestCase
 {
@@ -31,9 +32,9 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         return $asset;
     }
 
-    protected function getSitesResult(): ResultInterface
+    protected function getSitesResult(): ResultInterfacePlusXml
     {
-        return $this->getSitesAsset()->createResult();
+        return $this->getSitesAsset()->lookupExecutable()->lookupXmlResult();
     }
 
     protected function getSitesDocument(): DOMDocument
@@ -50,7 +51,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
     {
         $ret = [];
         $result = $this->getSitesResult();
-        $url = $result->getUrl();
+        $url = $result->createUrl();
         $document = $result->toDocument();
         $ret[(string) $url] = $url;
         $this->getSitesIncludesCrawl($ret, $url, $document);
@@ -61,12 +62,11 @@ abstract class AbstractSitemapTest extends AbstractTestCase
     {
         $nodeList = $document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_INCLUDE_PAGES);
         foreach ($nodeList as $node) {
-            $url = FarahUrl::createFromReference($node->getAttribute('ref'), $parentUrl->getAssetAuthority(), null, $parentUrl->getArguments());
+            $url = FarahUrl::createFromReference($node->getAttribute('ref'), $parentUrl);
             $ret[(string) $url] = $url;
             trigger_error("<include-pages> is deprecated (referencing $url)", E_USER_DEPRECATED);
             try {
-                $result = FarahUrlResolver::resolveToResult($url);
-                $document = $result->toDocument();
+                $document = FarahUrlResolver::resolveToDocument($url);
                 $this->getSitesIncludesCrawl($ret, $url, $document);
             } catch (Throwable $e) {}
         }
@@ -144,8 +144,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
     public function testIncludeExists($url)
     {
         try {
-            $result = FarahUrlResolver::resolveToResult($url);
-            $document = $result->toDocument();
+            $document = FarahUrlResolver::resolveToDocument($url);
             $this->assertInstanceOf(DOMElement::class, $document->documentElement);
         } catch (Throwable $e) {
             $this->failException($e);
@@ -159,8 +158,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
      */
     public function testIncludeIsValidAccordingToSchema($url)
     {
-        $result = FarahUrlResolver::resolveToResult($url);
-        $document = $result->toDocument();
+        $document = FarahUrlResolver::resolveToDocument($url);
         try {
             $validateResult = $document->schemaValidate(self::SCHEMA_URL);
         } catch (Throwable $e) {

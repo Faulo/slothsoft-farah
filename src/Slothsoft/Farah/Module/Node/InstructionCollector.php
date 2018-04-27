@@ -26,8 +26,8 @@ class InstructionCollector
                 $collector->documentInstructions[] = $node;
                 
                 $asset = $node->getReferencedDocumentAsset();
-                $collector->stylesheetAssets += $asset->lookupLinkedStylesheets();
-                $collector->scriptAssets += $asset->lookupLinkedScripts();
+                $collector->stylesheetAssets += $asset->collectInstructions()->stylesheetAssets;
+                $collector->scriptAssets += $asset->collectInstructions()->scriptAssets;
             }
             if ($node->isUseManifest()) {
                 assert($node instanceof UseManifestInstructionInterface, "To <use-manifest> {get_class($node)}, it must implement UseManifestInstructionInterface.");

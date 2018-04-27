@@ -5,7 +5,6 @@ namespace Slothsoft\Farah\ModuleTests;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
-use Slothsoft\Farah\Module\Node\Asset\AssetImplementation;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 use DOMDocument;
 
@@ -62,10 +61,6 @@ abstract class AbstractManifestTest extends AbstractTestCase
     public function customAssetClassProvider()
     {
         $ret = [];
-        
-        $ret[AssetImplementation::class] = [
-            AssetImplementation::class
-        ];
         
         $manifestDocument = $this->getManifestDocument();
         $nodeList = $manifestDocument->getElementsByTagName('custom-asset');
