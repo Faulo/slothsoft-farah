@@ -2,13 +2,14 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Executables;
 
+use Psr\Http\Message\MessageInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Farah\Module\Executables\Files\BinaryFile;
 use Slothsoft\Farah\Module\Executables\Files\HtmlFile;
 use Slothsoft\Farah\Module\Executables\Files\XmlFile;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Node\InstructionCollector;
 use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
-use Psr\Http\Message\MessageInterface;
 
 class ExecutableCreator
 {
@@ -26,6 +27,10 @@ class ExecutableCreator
     
     public function createNullExecutable() : ExecutableInterface {
         return $this->initExecutable(new NullExecutable());
+    }
+    
+    public function createDOMWriterExecutable(DOMWriterInterface $writer) : ExecutableInterface {
+        return $this->initExecutable(new DOMWriterExecutable($writer));
     }
     
     public function createMessageExecutable(MessageInterface $message) : ExecutableInterface {

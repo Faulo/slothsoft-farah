@@ -56,5 +56,17 @@ interface ResultInterface
      * @return string A valid character, or the empty string if not applicable.
      */
     public function lookupCharset() : string;
+    
+    /**
+     * Determine the time of the last change to this resource, or 0 if undeterminable
+     * @return int
+     */
+    public function lookupChangeTime() : int;
+    
+    /**
+     * Determine a hash for this resource, or the empty string if undeterminable
+     * @return string
+     */
+    public function lookupHash() : string;
 }
 

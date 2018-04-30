@@ -20,7 +20,7 @@ class SitesAsset extends AssetBase
     protected function loadExecutable(FarahUrlArguments $args): ExecutableInterface
     {
         try {
-            return Kernel::getCurrentSitemap()->lookupExecutable($args);
+            return Kernel::getCurrentSitemap()->lookupExecutable();
         } catch (ConfigurationRequiredException $e) {
             $creator = new ExecutableCreator($this, $args);
             return $creator->createNullExecutable();

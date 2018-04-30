@@ -32,5 +32,13 @@ class FilePathResult extends ResultBase
     {
         return basename($this->path);
     }
+    
+    public function lookupChangeTime() : int {
+        return filemtime($this->path);
+    }
+    
+    public function lookupHash() : string {
+        return md5_file($this->path);
+    }
 }
 

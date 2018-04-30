@@ -37,6 +37,15 @@ class NullResult extends ResultBase implements ResultInterfacePlusXml
     {
         return 'null.txt';
     }
+    
+    public function lookupChangeTime() : int {
+        return 0;
+    }
+    
+    public function lookupHash() : string {
+        return '';
+    }
+    
     public function toElement(DOMDocument $targetDoc) : DOMElement
     {
         return $targetDoc->createElement('null');

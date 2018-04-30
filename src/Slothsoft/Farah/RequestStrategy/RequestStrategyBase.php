@@ -32,21 +32,44 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 $result = FarahUrlResolver::resolveToResult($url);
                 
                 $statusCode = StatusCode::STATUS_OK;
+                $headers = [];
                 
                 $fileName = $result->lookupFileName();
                 $fileDisposition = 'inline';
                 $fileMime = $result->lookupMimeType(); //MimeTypeDictionary::guessMime(pathinfo($fileName, PATHINFO_EXTENSION));
                 $fileCharset = $result->lookupCharset(); //'UTF-8';
                 
-                $headers = [];
+                
                 $headers['content-disposition'] = sprintf('%s; filename="%s"; filename*=UTF-8\'\'%s', $fileDisposition, preg_replace('/[^[:print:]]/', '', $fileName), rawurlencode($fileName));
                 $headers['content-type'] = $fileCharset === ''
                     ? $fileMime
                     : "$fileMime; charset=$fileCharset";
-                    
+                
+                
+                $fileTime = $result->lookupChangeTime();
+                if ($fileTime > 0) {
+                    $headers['last-modified'] = gmdate('D, d M Y H:i:s \\G\\M\\T', $fileTime);
+                    $clientTime = (int) strtotime($request->getHeaderLine('if-modified-since'));
+                    if ($clientTime > 0) {
+                        if ($clientTime >= $fileTime) {
+                            throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, $headers);
+                        }
+                    }
+                }
+                
+                
+                $fileHash = $result->lookupHash();
+                if ($fileHash !== '') {
+                    $fileHash = "\"$fileHash\"";
+                    $headers['etag'] = $fileHash;
+                    $clientHash = $request->getHeaderLine('if-none-match');
+                    if ($fileHash === $clientHash) {
+                        throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, $headers);
+                    }
+                }
+                
                 
                 $body = $result->lookupStream();
-                $isSeekable = $body->isSeekable();
                 $resource = $body->detach();
                 
                 $coding = $this->negotiateContentCoding();
@@ -54,23 +77,6 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                     stream_filter_append($resource, $coding->getFilterName(), STREAM_FILTER_READ);
                     $headers['content-encoding'] = $coding->getHttpName();
                     $headers['vary'] = 'accept-encoding';
-                }
-                
-                if ($isSeekable) {
-                    $hash = hash_init('md5');
-                    hash_update_stream($hash, $resource);
-                    $responseTag = '"' . hash_final($hash) . '"';
-                    
-                    $headers['etag'] = $responseTag;
-                    
-                    $requestTag = $request->getHeaderLine('if-none-match');
-                    if ($requestTag === $responseTag) {
-                        throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, [
-                            'etag' => $responseTag
-                        ]);
-                    } else {
-                        rewind($resource);
-                    }
                 }
                 
                 $coding = $this->negotiateTransferCoding();
