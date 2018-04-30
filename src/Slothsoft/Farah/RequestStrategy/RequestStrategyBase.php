@@ -33,12 +33,15 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 
                 $statusCode = StatusCode::STATUS_OK;
                 $headers = [];
+                $headers['vary'] = 'accept-encoding';
                 
                 $fileName = $result->lookupFileName();
                 $fileDisposition = 'inline';
                 $fileMime = $result->lookupMimeType(); //MimeTypeDictionary::guessMime(pathinfo($fileName, PATHINFO_EXTENSION));
                 $fileCharset = $result->lookupCharset(); //'UTF-8';
                 
+                $contentCoding = $this->negotiateContentCoding();
+                $transferCoding = $this->negotiateTransferCoding();
                 
                 $headers['content-disposition'] = sprintf('%s; filename="%s"; filename*=UTF-8\'\'%s', $fileDisposition, preg_replace('/[^[:print:]]/', '', $fileName), rawurlencode($fileName));
                 $headers['content-type'] = $fileCharset === ''
@@ -60,7 +63,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 
                 $fileHash = $result->lookupHash();
                 if ($fileHash !== '') {
-                    $fileHash = "\"$fileHash\"";
+                    $fileHash = "\"$fileHash-$contentCoding\"";
                     $headers['etag'] = $fileHash;
                     $clientHash = $request->getHeaderLine('if-none-match');
                     if ($fileHash === $clientHash) {
@@ -72,17 +75,14 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 $body = $result->lookupStream();
                 $resource = $body->detach();
                 
-                $coding = $this->negotiateContentCoding();
-                if (! $coding->isNoEncoding()) {
-                    stream_filter_append($resource, $coding->getFilterName(), STREAM_FILTER_READ);
-                    $headers['content-encoding'] = $coding->getHttpName();
-                    $headers['vary'] = 'accept-encoding';
+                if (! $contentCoding->isNoEncoding()) {
+                    stream_filter_append($resource, $contentCoding->getFilterName(), STREAM_FILTER_READ);
+                    $headers['content-encoding'] = $contentCoding->getHttpName();
                 }
                 
-                $coding = $this->negotiateTransferCoding();
-                if (! $coding->isNoEncoding()) {
-                    stream_filter_append($resource, $coding->getFilterName(), STREAM_FILTER_READ);
-                    $headers['transfer-encoding'] = $coding->getHttpName();
+                if (! $transferCoding->isNoEncoding()) {
+                    stream_filter_append($resource, $transferCoding->getFilterName(), STREAM_FILTER_READ);
+                    $headers['transfer-encoding'] = $transferCoding->getHttpName();
                 }
                 
                 $body = MessageFactory::createStreamFromResource($resource);
