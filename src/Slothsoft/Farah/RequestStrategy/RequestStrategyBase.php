@@ -33,18 +33,17 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 $result = FarahUrlResolver::resolveToResult($url);
                 
                 $statusCode = StatusCode::STATUS_OK;
+                
                 $headers = [];
                 $headers['vary'] = 'accept-encoding';
                 
-                $fileName = $result->lookupFileName();
                 $fileDisposition = 'inline';
-                $fileMime = $result->lookupMimeType(); //MimeTypeDictionary::guessMime(pathinfo($fileName, PATHINFO_EXTENSION));
-                $fileCharset = $result->lookupCharset(); //'UTF-8';
-                
-                $contentCoding = $this->negotiateContentCoding();
-                $transferCoding = $this->negotiateTransferCoding();
+                $fileName = $result->lookupFileName();
                 
                 $headers['content-disposition'] = sprintf('%s; filename="%s"; filename*=UTF-8\'\'%s', $fileDisposition, preg_replace('/[^[:print:]]/', '', $fileName), rawurlencode($fileName));
+                
+                $fileMime = $result->lookupMimeType();
+                $fileCharset = $result->lookupCharset();
                 $headers['content-type'] = $fileCharset === ''
                     ? $fileMime
                     : "$fileMime; charset=$fileCharset";
@@ -52,27 +51,17 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 $cacheDuration = $this->inventCacheDuration($fileMime);
                 $headers['cache-control'] = "must-revalidate, max-age=$cacheDuration";
                 
+                $contentCoding = $this->negotiateContentCoding();
+                $transferCoding = $this->negotiateTransferCoding();
                 
                 $fileTime = $result->lookupChangeTime();
                 if ($fileTime > 0) {
                     $headers['last-modified'] = gmdate('D, d M Y H:i:s \\G\\M\\T', $fileTime);
-                    $clientTime = (int) strtotime($request->getHeaderLine('if-modified-since'));
-                    if ($clientTime > 0) {
-                        if ($clientTime >= $fileTime) {
-                            throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, $headers);
-                        }
-                    }
                 }
-                
                 
                 $fileHash = $result->lookupHash();
                 if ($fileHash !== '') {
-                    $fileHash = "\"$fileHash-$contentCoding\"";
-                    $headers['etag'] = $fileHash;
-                    $clientHash = $request->getHeaderLine('if-none-match');
-                    if ($fileHash === $clientHash) {
-                        throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, $headers);
-                    }
+                    $headers['etag'] = "\"$fileHash-$contentCoding\"";
                 }
                 
                 
@@ -87,6 +76,22 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 if (! $transferCoding->isNoEncoding()) {
                     stream_filter_append($resource, $transferCoding->getFilterName(), STREAM_FILTER_READ);
                     $headers['transfer-encoding'] = $transferCoding->getHttpName();
+                }
+                
+                if (isset($headers['last-modified']) and $request->hasHeader('if-modified-since')) {
+                    $serverTime = (int) strtotime($headers['last-modified']);
+                    $clientTime = (int) strtotime($request->getHeaderLine('if-modified-since'));
+                    if ($clientTime >= $serverTime) {
+                        throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, $headers);
+                    }
+                }
+                
+                if (isset($headers['etag']) and $request->hasHeader('if-none-match')) {
+                    $serverTag = $headers['etag'];
+                    $clientTag = $request->getHeaderLine('if-none-match');
+                    if ($serverTag === $clientTag) {
+                        throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, $headers);
+                    }
                 }
                 
                 $body = MessageFactory::createStreamFromResource($resource);

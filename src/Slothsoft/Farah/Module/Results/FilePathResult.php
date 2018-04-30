@@ -25,7 +25,7 @@ class FilePathResult extends ResultBase
 
     public function lookupCharset() : string
     {
-        return '';
+        return 'UTF-8';
     }
 
     public function lookupFileName() : string
