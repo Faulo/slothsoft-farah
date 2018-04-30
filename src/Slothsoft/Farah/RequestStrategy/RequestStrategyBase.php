@@ -4,6 +4,7 @@ namespace Slothsoft\Farah\RequestStrategy;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
@@ -47,6 +48,9 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 $headers['content-type'] = $fileCharset === ''
                     ? $fileMime
                     : "$fileMime; charset=$fileCharset";
+                
+                $cacheDuration = $this->inventCacheDuration($fileMime);
+                $headers['cache-control'] = "must-revalidate, max-age=$cacheDuration";
                 
                 
                 $fileTime = $result->lookupChangeTime();
@@ -174,6 +178,22 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         }
         
         return true;
+    }
+    
+    private function inventCacheDuration(string $mimeType) : int {
+        if (strpos($mimeType, 'image/') === 0) {
+            return Seconds::MONTH;
+        }
+        if (strpos($mimeType, 'application/font') === 0) {
+            return Seconds::YEAR;
+        }
+        if (strpos($mimeType, 'application/javascript') === 0) {
+            return Seconds::WEEK;
+        }
+        if (strpos($mimeType, 'text/css') === 0) {
+            return Seconds::WEEK;
+        }
+        return 30;
     }
 }
 
