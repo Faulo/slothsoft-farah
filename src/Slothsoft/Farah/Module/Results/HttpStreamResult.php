@@ -18,13 +18,33 @@ use Generator;
 class HttpStreamResult extends ResultBase 
 {
     private $stream;
+    private $usleep;
     public function __construct(HTTPStream $stream) {
         $this->stream = $stream;
+        
+        $this->usleep = $this->stream->getSleepDuration() * Seconds::USLEEP_FACTOR;
     }
     
     public function lookupStream() : StreamInterface
     {
-        return new PumpStream($this->yieldContent());
+        return new PumpStream(
+            function() {
+                while (!connection_aborted()) {
+                    switch ($this->stream->getStatus()) {
+                        case HTTPStream::STATUS_CONTENT:
+                        case HTTPStream::STATUS_CONTENTDONE:
+                            return $this->stream->getContent();
+                        case HTTPStream::STATUS_RETRY:
+                            break;
+                        case HTTPStream::STATUS_DONE:
+                        case HTTPStream::STATUS_ERROR:
+                            break 2;
+                    }
+                    usleep($this->usleep);
+                }
+                return false;
+            }
+        );
     }
     
     public function lookupMimeType() : string
