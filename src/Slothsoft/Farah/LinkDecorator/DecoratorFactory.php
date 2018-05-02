@@ -35,6 +35,9 @@ class DecoratorFactory
                 return new FarahDecorator($ns);
             case DOMHelper::NS_HTML:
                 return new HtmlDecorator($ns);
+                return new FarahDecorator($ns);
+            case DOMHelper::NS_SVG:
+                return new SvgDecorator($ns);
             default:
                 throw new NamespaceNotSupportedException($ns);
         }
