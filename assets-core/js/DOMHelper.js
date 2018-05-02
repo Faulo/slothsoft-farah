@@ -8,38 +8,22 @@
  * 			initial release
  ******************************************************************************/
 
-var DOMHelper = {
-	loadDocument : function(uri, callback) {
-		try {
-			let req = new XMLHttpRequest();
-			req.open("GET", uri, true);
-			if (req.overrideMimeType) {
-				//req.overrideMimeType("application/xml; charset=UTF-8");
-			}
-			if (callback) {
-				req.addEventListener(
-					"loadend",
-					(eve) => {
-						let retDoc = req.responseXML;
-						if (retDoc) {
-							retDoc.fileURI = uri;
-						} else {
-							retDoc = false;
-							
-							console.log("Could not load XML ressource: %o", uri);
-							console.log(req.responseText);
-						}
-						callback(retDoc);
-					},
-					false
-				);
-			}
-			req.send();
-		} catch (e) {
-			console.log("Could not load XML ressource: %o", uri);
-			console.log("Exception:%o", e);
-		}
-	},
+class DOMHelper {
+	static loadDocument(uri, callback) {
+		fetch(uri)
+			.then((response) => response.text())
+			.then((text) => new DOMParser().parseFromString(text, "application/xml"))
+			.then((document) => {
+				document.fileURI = uri;
+				if (callback) {
+					callback(document);
+				}
+			})
+			.catch((e) => {
+				console.log(`Could not load XML ressource "${uri}"`);
+				console.log(e);
+			});
+	}
 	/*
 	saveDocument : function(uri, doc) {
 		var ret, req;
@@ -72,4 +56,4 @@ var DOMHelper = {
 		return xml;
 	},
 	//*/
-};
+}
