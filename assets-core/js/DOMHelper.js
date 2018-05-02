@@ -1,7 +1,11 @@
 /*******************************************************************************
- * DOMHelper v1.01 08.04.2014 © Daniel Schulz
+ * DOMHelper v1.02 02.05.2018 © Daniel Schulz
  * 
  * 	Changelog:
+ * 		v1.02 02.05.2018
+ * 			class syntax
+ * 			fetch API
+ * 			Promises
  *		v1.01 08.04.2014
  *			console.log
  * 		v1.00 12.09.2012
@@ -9,51 +13,42 @@
  ******************************************************************************/
 
 class DOMHelper {
-	static loadDocument(uri, callback) {
-		fetch(uri)
+	static loadDocument(uri) {
+		return fetch(uri)
 			.then((response) => response.text())
-			.then((text) => new DOMParser().parseFromString(text, "application/xml"))
+			.then(DOMHelper.parse)
 			.then((document) => {
 				document.fileURI = uri;
-				if (callback) {
-					callback(document);
-				}
+				return document;
 			})
 			.catch((e) => {
 				console.log(`Could not load XML ressource "${uri}"`);
 				console.log(e);
 			});
 	}
-	/*
-	saveDocument : function(uri, doc) {
-		var ret, req;
-		try {
-			req = new XMLHttpRequest();
-			req.open("POST", uri, false);
-			//req.setRequestHeader("Content-Type", "application/xml");
-			req.send(doc);
-			ret = req.responseXML;
-		} catch (e) {
-			console.log("Could not save XML ressource: %o", uri);
-			console.log("Exception:%o", e);
-			ret = false;
-		}
-		return ret;
-	},
-	loadXML : function(xml) {
-		var doc, parser;
-		parser = new DOMParser();
-		doc = parser.parseFromString(xml, "application/xml");
-		if (doc.documentElement.namespaceURI === NS.MOZ_ERR_PARSE) {
-			throw ""+doc.documentElement.textContent;
-		}
-		return doc;
-	},
-	saveXML : function(doc) {
-		var xml, serializer;
-		serializer = new XMLSerializer();
-		xml = serializer.serializeToString(doc);
-		return xml;
-	},
-	//*/
+	static saveDocument(uri, doc) {
+		return Promise.resolve()
+			.then(() => doc)
+			.then(DOMHelper.stringify)
+			.then((xml) => new Request(uri, {method: 'POST', body: xml}))
+			.then(fetch)
+			.catch((e) => {
+				console.log(`Could not save XML ressource "${uri}"`);
+				console.log(e);
+			});
+	}
+	static parse(xml) {
+		return Promise.resolve()
+			.then(() => new DOMParser().parseFromString(xml, "application/xml"))
+			.then(document => {
+				if (document.documentElement.namespaceURI === NS.MOZ_ERR_PARSE) {
+					throw new Error(""+document.documentElement.textContent);
+				}
+				return document;
+			});
+	}
+	static stringify(document) {
+		return Promise.resolve()
+			.then(() => new XMLSerializer().serializeToString(document));
+	}
 }
