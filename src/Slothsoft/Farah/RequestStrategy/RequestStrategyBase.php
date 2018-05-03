@@ -15,6 +15,7 @@ use Slothsoft\Farah\Http\TransferCoding;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use Slothsoft\Farah\Security\BannedManager;
+use GuzzleHttp\Psr7\StreamWrapper;
 
 abstract class RequestStrategyBase implements RequestStrategyInterface
 {
@@ -66,7 +67,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 
                 
                 $body = $result->lookupStream();
-                $resource = $body->detach();
+                $resource = StreamWrapper::getResource($body);
                 
                 if (! $contentCoding->isNoEncoding()) {
                     stream_filter_append($resource, $contentCoding->getFilterName(), STREAM_FILTER_READ);
