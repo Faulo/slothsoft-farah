@@ -22,7 +22,7 @@ class HttpStreamResult extends ResultBase
     public function __construct(HTTPStream $stream) {
         $this->stream = $stream;
         
-        $this->usleep = $this->stream->getSleepDuration() * Seconds::USLEEP_FACTOR;
+        $this->usleep = (int) ($this->stream->getSleepDuration() * Seconds::USLEEP_FACTOR);
     }
     
     public function lookupStream() : StreamInterface

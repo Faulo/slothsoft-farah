@@ -67,7 +67,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 
                 
                 $body = $result->lookupStream();
-                $resource = StreamWrapper::getResource($body);
+                //$resource = StreamWrapper::getResource($body);
                 
                 if (! $contentCoding->isNoEncoding()) {
                     stream_filter_append($resource, $contentCoding->getFilterName(), STREAM_FILTER_READ);
@@ -95,7 +95,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                     }
                 }
                 
-                $body = MessageFactory::createStreamFromResource($resource);
+                //$body = MessageFactory::createStreamFromResource($resource);
             } catch (ModuleNotFoundException $e) {
                 throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_NOT_FOUND, $e);
             } catch (AssetPathNotFoundException $e) {

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\ResponseStrategy;
 
 use Psr\Http\Message\ResponseInterface;
+use Slothsoft\Core\IO\Memory;
 
 class SendHeaderAndBodyStrategy extends ResponseStrategyBase
 {

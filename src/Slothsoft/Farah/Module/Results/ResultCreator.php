@@ -18,6 +18,10 @@ class ResultCreator
         $this->ownerExecutable = $ownerExecutable;
         $this->type = $type;
     }
+    protected function initResult(ResultInterface $result) : ResultInterface {
+        $result->init($this->ownerExecutable, $this->type);
+        return $result;
+    }
     
     public function createNullResult(): ResultInterface
     {
