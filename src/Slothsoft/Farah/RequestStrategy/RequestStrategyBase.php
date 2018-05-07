@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\RequestStrategy;
 
+use GuzzleHttp\Psr7\LimitStream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slothsoft\Core\Calendar\Seconds;
@@ -62,6 +63,30 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 if (! $contentCoding->isNoEncoding()) {
                     $body = $contentCoding->encodeStream($body);
                     $headers['content-encoding'] = (string) $contentCoding;
+                }
+                
+                if ($isBufferable) {
+                    $bodyLength = $body->getSize();
+                    if ($bodyLength !== null) {
+                        $headers['accept-ranges'] = 'bytes';
+                        if ($request->hasHeader('range')) {
+                            if (preg_match('/^bytes=(\d*)-(\d*)(.*)$/', $request->getHeaderLine('range'), $match)) {
+                                if (strlen($match[3])) {
+                                    throw new HttpStatusException('', StatusCode::STATUS_REQUESTED_RANGE_NOT_SATISFIABLE, null, $headers);
+                                }
+                                $rangeStart = strlen($match[1]) ? (float) $match[1] : 0;
+                                $rangeEnd = strlen($match[2]) ? (float) $match[2] + 1 : $bodyLength;
+                                
+                                $headers['content-range'] = sprintf(
+                                    'bytes %1$.0f-%2$.0f/%3$.0f', 
+                                    $rangeStart,
+                                    $rangeEnd - 1,
+                                    $bodyLength
+                                );
+                                $body = new LimitStream($body, $rangeEnd - $rangeStart, $rangeEnd);
+                            }
+                        }
+                    }
                 }
                 
                 $transferCoding = $this->negotiateTransferCoding();
