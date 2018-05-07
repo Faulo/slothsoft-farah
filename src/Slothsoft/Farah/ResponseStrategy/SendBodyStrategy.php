@@ -4,7 +4,6 @@ namespace Slothsoft\Farah\ResponseStrategy;
 
 use Psr\Http\Message\ResponseInterface;
 use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
-use Slothsoft\Core\IO\Memory;
 
 class SendBodyStrategy extends ResponseStrategyBase
 {
@@ -13,7 +12,7 @@ class SendBodyStrategy extends ResponseStrategyBase
 
     private $chunkSize;
 
-    public function __construct(string $destination, int $chunkSize = Memory::ONE_KILOBYTE)
+    public function __construct(string $destination, int $chunkSize)
     {
         $this->destination = $destination;
         $this->chunkSize = $chunkSize;
@@ -31,21 +30,6 @@ class SendBodyStrategy extends ResponseStrategyBase
             $input->close();
             fclose($output);
         }
-//         $input = $response->getBody()->detach();
-//         $output = fopen($this->destination, StreamWrapperInterface::MODE_CREATE_WRITEONLY);
-        
-//         if (is_resource($input) and is_resource($output)) {
-//             if ($this->chunkSize === null) {
-//                 stream_copy_to_stream($input, $output);
-//             } else {
-//                 while (! feof($input)) {
-//                     fwrite($output, fread($input, $this->chunkSize));
-//                 }
-//             }
-            
-//             fclose($input);
-//             fclose($output);
-//         }
     }
 }
 

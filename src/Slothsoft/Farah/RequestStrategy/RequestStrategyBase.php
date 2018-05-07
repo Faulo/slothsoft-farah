@@ -15,7 +15,6 @@ use Slothsoft\Farah\Http\TransferCoding;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use Slothsoft\Farah\Security\BannedManager;
-use GuzzleHttp\Psr7\StreamWrapper;
 
 abstract class RequestStrategyBase implements RequestStrategyInterface
 {
@@ -52,32 +51,30 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 $cacheDuration = $this->inventCacheDuration($fileMime);
                 $headers['cache-control'] = "must-revalidate, max-age=$cacheDuration";
                 
-                $contentCoding = $this->negotiateContentCoding();
-                $transferCoding = $this->negotiateTransferCoding();
-                
                 $fileTime = $result->lookupChangeTime();
                 if ($fileTime > 0) {
                     $headers['last-modified'] = gmdate('D, d M Y H:i:s \\G\\M\\T', $fileTime);
                 }
                 
                 $fileHash = $result->lookupHash();
+                $body = $result->lookupStream();
+                
+                $contentCoding = $this->negotiateContentCoding();
+                if (! $contentCoding->isNoEncoding()) {
+                    $body = $contentCoding->encodeStream($body);
+                    $headers['content-encoding'] = (string) $contentCoding;
+                }
+                
+                $transferCoding = $this->negotiateTransferCoding();
+                if (! $transferCoding->isNoEncoding()) {
+                    $body = $transferCoding->encodeStream($body);
+                    $headers['transfer-encoding'] = (string) $transferCoding;
+                }
+                
                 if ($fileHash !== '') {
                     $headers['etag'] = "\"$fileHash-$contentCoding\"";
                 }
                 
-                
-                $body = $result->lookupStream();
-                //$resource = StreamWrapper::getResource($body);
-                
-                if (! $contentCoding->isNoEncoding()) {
-                    stream_filter_append($resource, $contentCoding->getFilterName(), STREAM_FILTER_READ);
-                    $headers['content-encoding'] = $contentCoding->getHttpName();
-                }
-                
-                if (! $transferCoding->isNoEncoding()) {
-                    stream_filter_append($resource, $transferCoding->getFilterName(), STREAM_FILTER_READ);
-                    $headers['transfer-encoding'] = $transferCoding->getHttpName();
-                }
                 
                 if (isset($headers['last-modified']) and $request->hasHeader('if-modified-since')) {
                     $serverTime = (int) strtotime($headers['last-modified']);
@@ -94,8 +91,6 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                         throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, $headers);
                     }
                 }
-                
-                //$body = MessageFactory::createStreamFromResource($resource);
             } catch (ModuleNotFoundException $e) {
                 throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_NOT_FOUND, $e);
             } catch (AssetPathNotFoundException $e) {
@@ -143,8 +138,8 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
     private function negotiateContentCoding(): ContentCoding
     {
         $accept = $this->request->getHeaderLine('accept-encoding');
-        foreach (ContentCoding::values() as $coding) {
-            if ($coding->isAvailable() and strpos($accept, $coding->getHttpName()) !== false) {
+        foreach (ContentCoding::getEncodings() as $coding) {
+            if (strpos($accept, (string) $coding) !== false) {
                 return $coding;
             }
         }
@@ -157,8 +152,8 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         if (version_compare($this->request->getProtocolVersion(), '1.1', '>=')) {
             $accept .= ', chunked'; // HTTP 1.1 must accept chunked encoding
         }
-        foreach (TransferCoding::values() as $coding) {
-            if ($coding->isAvailable() and strpos($accept, $coding->getHttpName()) !== false) {
+        foreach (TransferCoding::getEncodings() as $coding) {
+            if (strpos($accept, (string) $coding) !== false) {
                 return $coding;
             }
         }

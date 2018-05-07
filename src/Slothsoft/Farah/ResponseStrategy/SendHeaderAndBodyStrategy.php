@@ -15,7 +15,7 @@ class SendHeaderAndBodyStrategy extends ResponseStrategyBase
             $header->process($response);
             flush();
             
-            $body = new SendBodyStrategy('php://output');
+            $body = new SendBodyStrategy('php://output', Memory::ONE_KILOBYTE);
             $body->process($response);
             flush();
         }

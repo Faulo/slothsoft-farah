@@ -8,7 +8,7 @@ use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Node\Asset\ExternalResourceAsset;
 use Slothsoft\Farah\Module\Node\Asset\FragmentAsset;
-use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\Resource\ResourceInterface;
+use Slothsoft\Farah\Module\Node\Asset\PhysicalAsset\ResourceAsset;
 
 trait AssetBuilderTrait {
 
@@ -44,7 +44,7 @@ trait AssetBuilderTrait {
         return $this->createChildNode($element);
     }
 
-    protected function buildResourceFromContents(string $contents, string $name, string $type)
+    protected function buildResourceFromContents(string $contents, string $name, string $type) : ResourceAsset
     {
         $path = $name;
         if ($extension = MimeTypeDictionary::guessExtension($type)) {
@@ -53,7 +53,7 @@ trait AssetBuilderTrait {
         return $this->buildResourceFromFile(HTTPFile::createFromString($contents, $path), $name, $type);
     }
 
-    protected function buildResourceFromFile(HTTPFile $file, string $name, string $type): ResourceInterface
+    protected function buildResourceFromFile(HTTPFile $file, string $name, string $type): ResourceAsset
     {
         $tag = Module::TAG_RESOURCE;
         
