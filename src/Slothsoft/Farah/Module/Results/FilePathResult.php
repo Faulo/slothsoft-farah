@@ -40,5 +40,9 @@ class FilePathResult extends ResultBase
     public function lookupHash() : string {
         return md5_file($this->path);
     }
+    
+    public function lookupIsBufferable() : bool {
+        return true;
+    }
 }
 

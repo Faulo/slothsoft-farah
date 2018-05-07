@@ -4,6 +4,7 @@ namespace Slothsoft\Farah\Streams;
 
 use GuzzleHttp\Psr7\StreamDecoratorTrait;
 use Psr\Http\Message\StreamInterface;
+use BadMethodCallException;
 
 class WaitingStream implements StreamInterface
 {
@@ -17,6 +18,11 @@ class WaitingStream implements StreamInterface
         $this->stream = $stream;
         $this->usleep = $waitInMicroseconds;
         $this->heartbeat = $heartbeat;
+    }
+    
+    
+    public function isReadable() {
+        return true;
     }
     
     public function read($length)
@@ -37,6 +43,24 @@ class WaitingStream implements StreamInterface
             }
         }
         return '';
+    }
+    
+    public function isSeekable() {
+        return false;
+    }
+    
+    public function seek($offset, $whence = SEEK_SET)
+    {
+        throw new BadMethodCallException('Cannot seek a WaitingStream.');
+    }
+    
+    public function isWritable() {
+        return false;
+    }
+    
+    public function write($string)
+    {
+        throw new BadMethodCallException('Cannot write a WaitingStream.');
     }
 }
 

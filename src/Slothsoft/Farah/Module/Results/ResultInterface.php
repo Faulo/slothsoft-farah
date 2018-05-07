@@ -68,5 +68,11 @@ interface ResultInterface
      * @return string
      */
     public function lookupHash() : string;
+    
+    /**
+     * Determine whether or not intermediate filters are allowed to buffer this result, or should always flush immediately.
+     * @return bool
+     */
+    public function lookupIsBufferable() : bool;
 }
 

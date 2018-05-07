@@ -54,6 +54,10 @@ class DOMWriterResult extends ResultBase implements ResultInterfacePlusXml
         return md5_file($this->toResourceUrl());
     }
     
+    public function lookupIsBufferable() : bool {
+        return true;
+    }
+    
     public function toElement(DOMDocument $targetDoc) : DOMElement
     {
         return $this->writer->toElement($targetDoc);

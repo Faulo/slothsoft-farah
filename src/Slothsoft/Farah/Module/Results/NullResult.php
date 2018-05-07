@@ -46,6 +46,10 @@ class NullResult extends ResultBase implements ResultInterfacePlusXml
         return '';
     }
     
+    public function lookupIsBufferable() : bool {
+        return true;
+    }
+    
     public function toElement(DOMDocument $targetDoc) : DOMElement
     {
         return $targetDoc->createElement('null');

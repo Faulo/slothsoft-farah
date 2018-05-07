@@ -57,9 +57,10 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 }
                 
                 $fileHash = $result->lookupHash();
+                $isBufferable = $result->lookupIsBufferable();
                 $body = $result->lookupStream();
                 
-                $contentCoding = $this->negotiateContentCoding();
+                $contentCoding = $this->negotiateContentCoding($isBufferable);
                 if (! $contentCoding->isNoEncoding()) {
                     $body = $contentCoding->encodeStream($body);
                     $headers['content-encoding'] = (string) $contentCoding;
@@ -135,12 +136,14 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
 
     abstract protected function createUrl(ServerRequestInterface $request): FarahUrl;
 
-    private function negotiateContentCoding(): ContentCoding
+    private function negotiateContentCoding(bool $allowUnbuffered): ContentCoding
     {
-        $accept = $this->request->getHeaderLine('accept-encoding');
-        foreach (ContentCoding::getEncodings() as $coding) {
-            if (strpos($accept, (string) $coding) !== false) {
-                return $coding;
+        if ($allowUnbuffered) {
+            $accept = $this->request->getHeaderLine('accept-encoding');
+            foreach (ContentCoding::getEncodings() as $coding) {
+                if (strpos($accept, (string) $coding) !== false) {
+                    return $coding;
+                }
             }
         }
         return ContentCoding::identity();

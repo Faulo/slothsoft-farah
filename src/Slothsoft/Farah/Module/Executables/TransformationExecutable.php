@@ -66,12 +66,7 @@ class TransformationExecutable extends ExecutableBase implements DOMWriterInterf
         $resultCreator = new ResultCreator($this, $type);
         return $resultCreator->createDOMWriterResult($writer);
     }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Slothsoft\Farah\Module\Results\ResultBase::toDocument()
-     */
+    
     public function toDocument(): DOMDocument
     {
         if ($this->resultDoc === null) {
