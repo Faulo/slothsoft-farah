@@ -13,8 +13,9 @@ use Slothsoft\Farah\Module\Node\Instruction\ImportInstructionInterface;
 class ImportMeta extends MetaBase implements ImportInstructionInterface
 {
     use ReferenceTrait;
-    
-    public function isImport() : bool {
+
+    public function isImport(): bool
+    {
         return true;
     }
 

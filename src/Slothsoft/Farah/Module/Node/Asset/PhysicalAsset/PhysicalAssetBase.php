@@ -23,14 +23,14 @@ class PhysicalAssetBase extends AssetBase implements PhysicalAssetInterface
         return $this->getElementAttribute(Module::ATTR_REALPATH);
     }
 
-    public function isDirectory() : bool
+    public function isDirectory(): bool
     {
         return is_dir($this->getRealPath());
     }
-    public function isFile() : bool
+
+    public function isFile(): bool
     {
         return is_file($this->getRealPath());
     }
-
 }
 

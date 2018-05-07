@@ -12,30 +12,31 @@ use Slothsoft\Farah\Module\Module;
  */
 interface ModuleNodeInterface
 {
+
     public function __toString(): string;
 
     public function init(Module $ownerModule, LeanElement $element);
-    
-    public function getElementTag() : string;
+
+    public function getElementTag(): string;
 
     public function getChildren(): array;
 
     public function createChildNode(LeanElement $element): ModuleNodeInterface;
-    
+
     /**
      * if true, $this must implement ImportInstructionInterface
-     * 
+     *
      * @return bool
      */
     public function isImport(): bool;
-    
+
     /**
      * if true, $this must implement ParameterInstructionInterface
      *
      * @return bool
      */
     public function isParameter(): bool;
-    
+
     /**
      * if true, $this must implement UseManifestInstructionInterface
      *
@@ -56,7 +57,7 @@ interface ModuleNodeInterface
      * @return bool
      */
     public function isUseTemplate(): bool;
-    
+
     /**
      * if true, $this must implement UseStylesheetInstructionInterface
      *

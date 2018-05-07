@@ -10,7 +10,7 @@ use DOMElement;
 class BinaryFile extends FileBase
 {
     use DOMWriterDocumentFromElementTrait;
-    
+
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
         return FileSystem::asNode($this->getPath(), $targetDoc);

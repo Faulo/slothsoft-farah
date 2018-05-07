@@ -44,7 +44,7 @@ trait AssetBuilderTrait {
         return $this->createChildNode($element);
     }
 
-    protected function buildResourceFromContents(string $contents, string $name, string $type) : ResourceAsset
+    protected function buildResourceFromContents(string $contents, string $name, string $type): ResourceAsset
     {
         $path = $name;
         if ($extension = MimeTypeDictionary::guessExtension($type)) {

@@ -2,7 +2,9 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Streams\Filters;
 
-class ChunkedFilteredStream extends FilteredStreamBase {
+class ChunkedFilteredStream extends FilteredStreamBase
+{
+
     protected function processHeader(): string
     {
         return '';
@@ -10,9 +12,7 @@ class ChunkedFilteredStream extends FilteredStreamBase {
 
     protected function processPayload(string $data): string
     {
-        return $data === ''
-            ? ''
-            : dechex(strlen($data)) . "\r\n" . $data . "\r\n";
+        return $data === '' ? '' : dechex(strlen($data)) . "\r\n" . $data . "\r\n";
     }
 
     protected function processFooter(): string

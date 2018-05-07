@@ -28,7 +28,7 @@ use Throwable;
 class TransformationExecutable extends ExecutableBase implements DOMWriterInterface
 {
     use DOMWriterElementFromDocumentTrait;
-    
+
     const TAG_ROOT = 'fragment';
 
     const TAG_DOCUMENT = 'document';
@@ -50,12 +50,12 @@ class TransformationExecutable extends ExecutableBase implements DOMWriterInterf
         $this->name = $name;
         $this->collector = $collector;
     }
-    
+
     protected function loadResult(FarahUrlStreamIdentifier $type): ResultInterface
     {
         $writer = $this;
         if ($type === self::resultIsDefault()) {
-            //default result is the root transformation, so we gotta add all <link> and <script> elements
+            // default result is the root transformation, so we gotta add all <link> and <script> elements
             $stylesheets = $this->getLinkedStylesheets();
             $scripts = $this->getLinkedScripts();
             if ($stylesheets or $scripts) {
@@ -66,12 +66,13 @@ class TransformationExecutable extends ExecutableBase implements DOMWriterInterf
         $resultCreator = new ResultCreator($this, $type);
         return $resultCreator->createDOMWriterResult($writer);
     }
-    
+
     public function toDocument(): DOMDocument
     {
         if ($this->resultDoc === null) {
             $this->resultDoc = new DOMDocument();
-            $dataNode = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, $this->getOwnerAsset()->getElementTag());
+            $dataNode = $this->resultDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, $this->getOwnerAsset()
+                ->getElementTag());
             $dataNode->setAttribute(self::ATTR_NAME, $this->name);
             $dataNode->setAttribute(self::ATTR_ID, $this->getId());
             
@@ -113,7 +114,8 @@ class TransformationExecutable extends ExecutableBase implements DOMWriterInterf
         
         $element = $this->createElement(self::TAG_DOCUMENT, $instruction->getReferencedDocumentAlias(), $asset->getId());
         try {
-            $result = $asset->lookupExecutable($this->getArguments())->lookupXmlResult();
+            $result = $asset->lookupExecutable($this->getArguments())
+                ->lookupXmlResult();
             $element->appendChild($result->toElement($this->resultDoc));
         } catch (Throwable $exception) {
             ExceptionContext::append($exception, [
@@ -141,22 +143,23 @@ class TransformationExecutable extends ExecutableBase implements DOMWriterInterf
         
         return $element;
     }
-    
+
     private function getLinkedStylesheets(): array
     {
         return array_values($this->getOwnerAsset()->collectInstructions()->stylesheetAssets);
     }
-    
+
     private function getLinkedScripts(): array
     {
         return array_values($this->getOwnerAsset()->collectInstructions()->scriptAssets);
     }
-    
-    private function guessFileName(DOMDocument $document) : string {
-        return $this->name .'.'. $this->guessExtension((string) $document->documentElement->namespaceURI);
+
+    private function guessFileName(DOMDocument $document): string
+    {
+        return $this->name . '.' . $this->guessExtension((string) $document->documentElement->namespaceURI);
     }
 
-    private function guessExtension(string $namespaceURI) : string
+    private function guessExtension(string $namespaceURI): string
     {
         switch ($namespaceURI) {
             case DOMHelper::NS_HTML:

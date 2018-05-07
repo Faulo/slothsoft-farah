@@ -10,22 +10,25 @@ use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
 interface ModuleInterface
 {
+
     /**
      * The Farah URL that represents this module.
-     * 
+     *
      * @return string
      */
-    public function getId() : string;
-    
+    public function getId(): string;
+
     /**
+     *
      * @param FarahUrlPath|string $path
      * @param FarahUrlArguments|string $args
      * @param FarahUrlStreamIdentifier|string $fragment
      * @return FarahUrl
      */
     public function createUrl($path = null, $args = null, $fragment = null): FarahUrl;
-    
+
     /**
+     *
      * @param FarahUrlPath|string $path
      * @return AssetInterface
      */

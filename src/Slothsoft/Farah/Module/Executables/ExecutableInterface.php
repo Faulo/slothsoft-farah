@@ -11,16 +11,16 @@ use Slothsoft\Farah\Module\Results\ResultInterfacePlusXml;
 
 interface ExecutableInterface
 {
-    
+
     public function init(AssetInterface $ownerAsset, FarahUrlArguments $args);
-    
+
     /**
      * The Farah URL that represents this operation.
      *
      * @return string
      */
     public function getId(): string;
-    
+
     /**
      * Create a FarahUrl for this operation, with stream set as supplied.
      *
@@ -28,16 +28,17 @@ interface ExecutableInterface
      * @return FarahUrl
      */
     public function createUrl($fragment = null): FarahUrl;
-    
+
     /**
      * Create the result of this executable, in the representation type specified.
-     * 
+     *
      * @param FarahUrlStreamIdentifier|string $type
      * @return ResultInterface
      */
-    public function lookupResult($type) : ResultInterface;
-    
-    public function lookupDefaultResult() : ResultInterface;
-    public function lookupXmlResult() : ResultInterfacePlusXml;
+    public function lookupResult($type): ResultInterface;
+
+    public function lookupDefaultResult(): ResultInterface;
+
+    public function lookupXmlResult(): ResultInterfacePlusXml;
 }
 

@@ -8,19 +8,22 @@ use DOMElement;
 
 class DOMWriterExecutable extends ExecutableDOMWriterBase
 {
+
     private $writer;
-    public function __construct(DOMWriterInterface $writer) {
+
+    public function __construct(DOMWriterInterface $writer)
+    {
         $this->writer = $writer;
     }
-    public function toElement(DOMDocument $targetDoc) : DOMElement
+
+    public function toElement(DOMDocument $targetDoc): DOMElement
     {
         return $this->writer->toElement($targetDoc);
     }
 
-    public function toDocument() : DOMDocument
+    public function toDocument(): DOMDocument
     {
         return $this->writer->toDocument();
     }
-
 }
 

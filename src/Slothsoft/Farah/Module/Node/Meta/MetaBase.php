@@ -11,11 +11,14 @@ use Slothsoft\Farah\Module\Node\ModuleNodeBase;
  */
 abstract class MetaBase extends ModuleNodeBase implements MetaInterface
 {
-    public function isImport() : bool {
+
+    public function isImport(): bool
+    {
         return false;
     }
-    
-    public function isParameter() : bool {
+
+    public function isParameter(): bool
+    {
         return false;
     }
 

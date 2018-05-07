@@ -12,12 +12,12 @@ use Slothsoft\Farah\Module\ParameterFilters\ParameterFilterInterface;
 class ResourceAsset extends PhysicalAssetBase
 {
     use MimeTypeTrait;
-    
+
     protected function loadParameterFilter(): ParameterFilterInterface
     {
         return new DenyAllFilter();
     }
-    
+
     protected function loadExecutable(FarahUrlArguments $args): ExecutableInterface
     {
         $creator = new ExecutableCreator($this, $args);
@@ -32,7 +32,7 @@ class ResourceAsset extends PhysicalAssetBase
                     return $creator->createXmlFile($this->getRealPath());
                 } else {
                     return $creator->createBinaryFile($this->getRealPath());
-                }        
+                }
         }
     }
 }

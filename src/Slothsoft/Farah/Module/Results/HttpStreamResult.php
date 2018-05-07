@@ -15,62 +15,72 @@ use Generator;
  * @author Daniel Schulz
  *        
  */
-class HttpStreamResult extends ResultBase 
+class HttpStreamResult extends ResultBase
 {
+
     private $stream;
+
     private $usleep;
-    public function __construct(HTTPStream $stream) {
+
+    public function __construct(HTTPStream $stream)
+    {
         $this->stream = $stream;
         
         $this->usleep = (int) ($this->stream->getSleepDuration() * Seconds::USLEEP_FACTOR);
     }
-    
-    public function lookupStream() : StreamInterface
+
+    public function lookupStream(): StreamInterface
     {
-        return new PumpStream(
-            function() {
-                while (!connection_aborted()) {
-                    switch ($this->stream->getStatus()) {
-                        case HTTPStream::STATUS_CONTENT:
-                        case HTTPStream::STATUS_CONTENTDONE:
-                            return $this->stream->getContent();
-                        case HTTPStream::STATUS_RETRY:
-                            break;
-                        case HTTPStream::STATUS_DONE:
-                        case HTTPStream::STATUS_ERROR:
-                            break 2;
-                    }
-                    usleep($this->usleep);
+        return new PumpStream(function () {
+            while (! connection_aborted()) {
+                switch ($this->stream->getStatus()) {
+                    case HTTPStream::STATUS_CONTENT:
+                    case HTTPStream::STATUS_CONTENTDONE:
+                        return $this->stream->getContent();
+                    case HTTPStream::STATUS_RETRY:
+                        break;
+                    case HTTPStream::STATUS_DONE:
+                    case HTTPStream::STATUS_ERROR:
+                        break 2;
                 }
-                return false;
+                usleep($this->usleep);
             }
-        );
+            return false;
+        });
     }
-    
-    public function lookupMimeType() : string
+
+    public function lookupMimeType(): string
     {
         return $this->stream->getMime();
     }
-    
-    public function lookupCharset() : string
+
+    public function lookupCharset(): string
     {
         return $this->stream->getEncoding();
     }
-    
-    public function lookupFileName() : string
+
+    public function lookupFileName(): string
     {
         return 'null.txt';
     }
-    
-    public function lookupChangeTime() : int {
+
+    public function lookupChangeTime(): int
+    {
         return 0;
     }
-    
-    public function lookupHash() : string {
+
+    public function lookupHash(): string
+    {
         return '';
     }
     
-    private function yieldContent() : Generator {
+    public function lookupIsBufferable(): bool
+    {
+        return false;
+    }
+
+    private function yieldContent(): Generator
+    {
         yield '';
         $intervalTime = 0;
         $timeoutTime = 0;
@@ -99,7 +109,7 @@ class HttpStreamResult extends ResultBase
                         }
                         yield $content;
                     }
-                    // fallthrouuugh /o/
+                // fallthrouuugh /o/
                 case HTTPStream::STATUS_DONE:
                 case HTTPStream::STATUS_ERROR:
                     break 2;

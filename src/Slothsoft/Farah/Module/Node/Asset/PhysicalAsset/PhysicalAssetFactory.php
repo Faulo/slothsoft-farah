@@ -30,7 +30,7 @@ class PhysicalAssetFactory extends AssetFactory
             $element->setAttribute(Module::ATTR_REALPATH, $this->inventElementRealPath($element, $parent));
         }
     }
-    
+
     private function inventElementPath(LeanElement $element): string
     {
         $path = $element->getAttribute(Module::ATTR_NAME);
@@ -41,7 +41,7 @@ class PhysicalAssetFactory extends AssetFactory
         }
         return $path;
     }
-    
+
     private function inventElementRealPath(LeanElement $element, LeanElement $parent): string
     {
         return $parent->getAttribute(Module::ATTR_REALPATH) . DIRECTORY_SEPARATOR . $element->getAttribute(Module::ATTR_PATH);

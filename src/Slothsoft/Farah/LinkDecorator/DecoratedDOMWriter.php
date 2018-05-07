@@ -8,16 +8,21 @@ use DOMElement;
 
 class DecoratedDOMWriter implements DOMWriterInterface
 {
+
     private $source;
+
     private $stylesheets;
+
     private $scripts;
-    public function __construct(DOMWriterInterface $source, array $stylesheets, array $scripts) {
+
+    public function __construct(DOMWriterInterface $source, array $stylesheets, array $scripts)
+    {
         $this->source = $source;
         $this->stylesheets = $stylesheets;
         $this->scripts = $scripts;
     }
-    
-    public function toElement(DOMDocument $targetDoc) : DOMElement
+
+    public function toElement(DOMDocument $targetDoc): DOMElement
     {
         $element = $this->source->toElement($targetDoc);
         $decorator = DecoratorFactory::createForElement($element);
@@ -26,7 +31,7 @@ class DecoratedDOMWriter implements DOMWriterInterface
         return $element;
     }
 
-    public function toDocument() : DOMDocument
+    public function toDocument(): DOMDocument
     {
         $document = $this->source->toDocument();
         $decorator = DecoratorFactory::createForDocument($document);

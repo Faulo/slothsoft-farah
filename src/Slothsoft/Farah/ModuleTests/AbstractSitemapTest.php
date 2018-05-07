@@ -34,7 +34,9 @@ abstract class AbstractSitemapTest extends AbstractTestCase
 
     protected function getSitesResult(): ResultInterfacePlusXml
     {
-        return $this->getSitesAsset()->lookupExecutable()->lookupXmlResult();
+        return $this->getSitesAsset()
+            ->lookupExecutable()
+            ->lookupXmlResult();
     }
 
     protected function getSitesDocument(): DOMDocument

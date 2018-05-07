@@ -12,23 +12,20 @@ trait MimeTypeTrait {
     {
         return $this->getElementAttribute(Module::ATTR_TYPE, '*/*');
     }
-    
-    public function createChildResourceAsset(string $name, string $path) : PhysicalAssetInterface {        
+
+    public function createChildResourceAsset(string $name, string $path): PhysicalAssetInterface
+    {
         if (is_dir($this->getRealPath() . DIRECTORY_SEPARATOR . $path)) {
-            $element = LeanElement::createOneFromArray(
-                Module::TAG_RESOURCE_DIRECTORY, [
-                    Module::ATTR_NAME => $name,
-                    Module::ATTR_PATH => $name,
-                    Module::ATTR_TYPE => $this->getMimeType()
-                ]
-            );
+            $element = LeanElement::createOneFromArray(Module::TAG_RESOURCE_DIRECTORY, [
+                Module::ATTR_NAME => $name,
+                Module::ATTR_PATH => $name,
+                Module::ATTR_TYPE => $this->getMimeType()
+            ]);
         } else {
-            $element = LeanElement::createOneFromArray(
-                Module::TAG_RESOURCE, [
-                    Module::ATTR_NAME => $name,
-                    Module::ATTR_TYPE => $this->getMimeType()
-                ]
-            );
+            $element = LeanElement::createOneFromArray(Module::TAG_RESOURCE, [
+                Module::ATTR_NAME => $name,
+                Module::ATTR_TYPE => $this->getMimeType()
+            ]);
         }
         return $this->createChildNode($element);
     }

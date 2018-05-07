@@ -27,22 +27,22 @@ class FarahUrlResolver
     {
         return self::resolveToModule($url)->lookupAsset($url->getAssetPath());
     }
-    
+
     public static function resolveToExecutable(FarahUrl $url): ExecutableInterface
     {
         return self::resolveToAsset($url)->lookupExecutable($url->getArguments());
     }
-    
+
     public static function resolveToResult(FarahUrl $url): ResultInterface
     {
         return self::resolveToExecutable($url)->lookupResult($url->getStreamIdentifier());
     }
-    
+
     public static function resolveToStream(FarahUrl $url): StreamInterface
     {
         return self::resolveToResult($url)->lookupStream();
     }
-    
+
     public static function resolveToDocument(FarahUrl $url): DOMDocument
     {
         return self::resolveToExecutable($url)->lookupXmlResult()->toDocument();

@@ -17,43 +17,45 @@ use DOMElement;
 class NullResult extends ResultBase implements ResultInterfacePlusXml
 {
     use DOMWriterDocumentFromElementTrait;
-    
-    public function lookupStream() : StreamInterface
+
+    public function lookupStream(): StreamInterface
     {
         return new Stream(BlobUrl::createTemporaryObject());
     }
-    
-    public function lookupMimeType() : string
+
+    public function lookupMimeType(): string
     {
         return 'text/plain';
     }
-    
-    public function lookupCharset() : string
+
+    public function lookupCharset(): string
     {
         return '';
     }
-    
-    public function lookupFileName() : string
+
+    public function lookupFileName(): string
     {
         return 'null.txt';
     }
-    
-    public function lookupChangeTime() : int {
+
+    public function lookupChangeTime(): int
+    {
         return 0;
     }
-    
-    public function lookupHash() : string {
+
+    public function lookupHash(): string
+    {
         return '';
     }
-    
-    public function lookupIsBufferable() : bool {
+
+    public function lookupIsBufferable(): bool
+    {
         return true;
     }
-    
-    public function toElement(DOMDocument $targetDoc) : DOMElement
+
+    public function toElement(DOMDocument $targetDoc): DOMElement
     {
         return $targetDoc->createElement('null');
     }
-
 }
 

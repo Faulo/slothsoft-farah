@@ -8,9 +8,9 @@ use DOMDocument;
 class XmlFile extends FileBase
 {
     use DOMWriterElementFromDocumentTrait;
-    
+
     private $resultDoc;
-    
+
     public function toDocument(): DOMDocument
     {
         if ($this->resultDoc === null) {

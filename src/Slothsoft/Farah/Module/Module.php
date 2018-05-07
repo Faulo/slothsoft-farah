@@ -125,7 +125,7 @@ class Module implements ModuleInterface
     const FILE_MANIFEST = 'manifest.xml';
 
     private $authority;
-    
+
     private $id;
 
     private $assetDirectory;
@@ -144,12 +144,12 @@ class Module implements ModuleInterface
         $this->assetManifest = new XmlManifest($this->assetDirectory . DIRECTORY_SEPARATOR . self::FILE_MANIFEST);
         $this->assets = new Map();
     }
-    
-    public function getId() : string
+
+    public function getId(): string
     {
         return $this->id;
     }
-    
+
     public function createUrl($path = null, $args = null, $fragment = null): FarahUrl
     {
         return FarahUrl::createFromComponents($this->authority, $path, $args, $fragment);
@@ -158,12 +158,14 @@ class Module implements ModuleInterface
     public function lookupAsset($path): AssetInterface
     {
         $path = (string) $path;
-        if (!$this->assets->hasKey($path)) {
+        if (! $this->assets->hasKey($path)) {
             $this->assets->put($path, $this->loadAsset($path));
         }
         return $this->assets->get($path);
     }
-    private function loadAsset(string $path) : AssetInterface {
+
+    private function loadAsset(string $path): AssetInterface
+    {
         return $this->lookupRootAsset()->traverseTo($path);
     }
 
@@ -174,6 +176,7 @@ class Module implements ModuleInterface
         }
         return $this->rootAsset;
     }
+
     private function loadRootAsset(): AssetInterface
     {
         $manifestElemet = $this->assetManifest->getRootElement();

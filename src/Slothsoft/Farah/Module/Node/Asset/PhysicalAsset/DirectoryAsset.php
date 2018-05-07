@@ -7,6 +7,7 @@ use Slothsoft\Farah\Module\PathResolvers\PathResolverInterface;
 
 class DirectoryAsset extends PhysicalAssetBase
 {
+
     protected function loadPathResolver(): PathResolverInterface
     {
         $map = [];

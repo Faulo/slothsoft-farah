@@ -24,7 +24,7 @@ class SendBodyStrategy extends ResponseStrategyBase
         $output = fopen($this->destination, StreamWrapperInterface::MODE_CREATE_WRITEONLY);
         
         if (is_resource($output)) {
-            while (!$input->eof()) {
+            while (! $input->eof()) {
                 fwrite($output, $input->read($this->chunkSize));
             }
             $input->close();

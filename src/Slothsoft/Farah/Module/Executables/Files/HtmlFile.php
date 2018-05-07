@@ -8,9 +8,9 @@ use DOMDocument;
 class HtmlFile extends FileBase
 {
     use DOMWriterElementFromDocumentTrait;
-    
+
     private $resultDoc;
-    
+
     public function toDocument(): DOMDocument
     {
         if ($this->resultDoc === null) {

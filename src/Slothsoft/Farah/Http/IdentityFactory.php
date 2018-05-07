@@ -6,14 +6,18 @@ use Slothsoft\Core\IO\Writable\FilteredStreamWriterInterface;
 
 class IdentityFactory implements FilteredStreamWriterInterface
 {
-    public static function getInstance() : self {
+
+    public static function getInstance(): self
+    {
         static $instance;
         if ($instance === null) {
             $instance = new self();
         }
         return $instance;
     }
-    public function toFilteredStream(StreamInterface $stream) : StreamInterface {
+
+    public function toFilteredStream(StreamInterface $stream): StreamInterface
+    {
         return $stream;
     }
 }

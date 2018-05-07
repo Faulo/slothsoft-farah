@@ -49,7 +49,9 @@ class Domain
     {
         if (! $this->document) {
             
-            $this->document = $this->asset->lookupExecutable()->lookupXmlResult()->toDocument();
+            $this->document = $this->asset->lookupExecutable()
+                ->lookupXmlResult()
+                ->toDocument();
             $this->xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT | DOMHelper::XPATH_PHP);
             $this->domainNode = $this->document->documentElement;
             
@@ -161,14 +163,7 @@ class Domain
         $args += $this->findParameters($dataNode);
         $ref = $dataNode->getAttribute('ref');
         
-        return FarahUrl::createFromReference(
-            $ref,
-            FarahUrl::createFromComponents(
-                FarahUrlAuthority::createFromVendorAndModule($vendorName, $moduleName), 
-                null, 
-                FarahUrlArguments::createFromValueList($args)
-            )
-        );
+        return FarahUrl::createFromReference($ref, FarahUrl::createFromComponents(FarahUrlAuthority::createFromVendorAndModule($vendorName, $moduleName), null, FarahUrlArguments::createFromValueList($args)));
     }
 
     private function path2expr(string $path, string $elementName = '*'): string

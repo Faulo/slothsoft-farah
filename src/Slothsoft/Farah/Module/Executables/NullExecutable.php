@@ -8,11 +8,11 @@ use Slothsoft\Farah\Module\Results\ResultCreator;
 
 class NullExecutable extends ExecutableBase
 {
-    protected function loadResult(FarahUrlStreamIdentifier $type) : ResultInterface
+
+    protected function loadResult(FarahUrlStreamIdentifier $type): ResultInterface
     {
         $creator = new ResultCreator($this, $type);
         return $creator->createNullResult();
     }
-
 }
 

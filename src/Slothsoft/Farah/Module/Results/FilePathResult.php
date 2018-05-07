@@ -9,39 +9,46 @@ use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 
 class FilePathResult extends ResultBase
 {
+
     private $path;
-    public function __construct(string $path) {
+
+    public function __construct(string $path)
+    {
         $this->path = $path;
     }
-    public function lookupStream() : StreamInterface
+
+    public function lookupStream(): StreamInterface
     {
         return new LazyOpenStream($this->path, StreamWrapperInterface::MODE_OPEN_READONLY);
     }
 
-    public function lookupMimeType() : string
+    public function lookupMimeType(): string
     {
         return MimeTypeDictionary::guessMime(pathinfo($this->path, PATHINFO_EXTENSION));
     }
 
-    public function lookupCharset() : string
+    public function lookupCharset(): string
     {
         return 'UTF-8';
     }
 
-    public function lookupFileName() : string
+    public function lookupFileName(): string
     {
         return basename($this->path);
     }
-    
-    public function lookupChangeTime() : int {
+
+    public function lookupChangeTime(): int
+    {
         return filemtime($this->path);
     }
-    
-    public function lookupHash() : string {
+
+    public function lookupHash(): string
+    {
         return md5_file($this->path);
     }
-    
-    public function lookupIsBufferable() : bool {
+
+    public function lookupIsBufferable(): bool
+    {
         return true;
     }
 }

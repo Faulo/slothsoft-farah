@@ -10,7 +10,6 @@ use Slothsoft\Farah\StreamWrapper\FarahStreamWrapperFactory;
 use Slothsoft\Farah\Streams\Filters\ChunkedFilteredStreamFactory;
 use Slothsoft\Farah\Streams\Filters\ZlibFilteredStreamFactory;
 
-
 StreamWrapperRegistrar::registerStreamWrapper('farah', new FarahStreamWrapperFactory());
 
 Kernel::getInstance()->registerModule(new Module(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'core'), dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets-core'));

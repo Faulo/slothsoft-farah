@@ -6,10 +6,13 @@ use Psr\Http\Message\StreamInterface;
 
 class ZlibFilteredStream extends FilteredStreamBase
 {
+
     private $zlibCoding;
+
     private $compressor;
-    
-    public function __construct(StreamInterface $stream, int $zlibCoding) {
+
+    public function __construct(StreamInterface $stream, int $zlibCoding)
+    {
         parent::__construct($stream);
         $this->zlibCoding = $zlibCoding;
     }

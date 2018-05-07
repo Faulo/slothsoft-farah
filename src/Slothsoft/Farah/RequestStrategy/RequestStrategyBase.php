@@ -44,9 +44,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 
                 $fileMime = $result->lookupMimeType();
                 $fileCharset = $result->lookupCharset();
-                $headers['content-type'] = $fileCharset === ''
-                    ? $fileMime
-                    : "$fileMime; charset=$fileCharset";
+                $headers['content-type'] = $fileCharset === '' ? $fileMime : "$fileMime; charset=$fileCharset";
                 
                 $cacheDuration = $this->inventCacheDuration($fileMime);
                 $headers['cache-control'] = "must-revalidate, max-age=$cacheDuration";
@@ -75,7 +73,6 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 if ($fileHash !== '') {
                     $headers['etag'] = "\"$fileHash-$contentCoding\"";
                 }
-                
                 
                 if (isset($headers['last-modified']) and $request->hasHeader('if-modified-since')) {
                     $serverTime = (int) strtotime($headers['last-modified']);
@@ -183,8 +180,9 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         
         return true;
     }
-    
-    private function inventCacheDuration(string $mimeType) : int {
+
+    private function inventCacheDuration(string $mimeType): int
+    {
         if (strpos($mimeType, 'image/') === 0) {
             return Seconds::MONTH;
         }

@@ -18,7 +18,7 @@ abstract class AbstractFilteredStreamTest extends TestCase
     private $inputStream;
 
     private $expectedResult;
-    
+
     private $factory;
 
     public function setUp()

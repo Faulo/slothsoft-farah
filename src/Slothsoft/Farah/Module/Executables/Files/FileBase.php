@@ -9,16 +9,21 @@ use Slothsoft\Farah\Module\Results\ResultInterface;
 
 abstract class FileBase extends ExecutableDOMWriterBase
 {
+
     private $path;
-    public function __construct(string $path) {
+
+    public function __construct(string $path)
+    {
         $this->path = $path;
     }
-    
-    protected function getPath() {
+
+    protected function getPath()
+    {
         return $this->path;
     }
-    
-    protected function loadResult(FarahUrlStreamIdentifier $type) : ResultInterface {
+
+    protected function loadResult(FarahUrlStreamIdentifier $type): ResultInterface
+    {
         $resultCreator = new ResultCreator($this, $type);
         if ($type === self::resultIsXml()) {
             return $resultCreator->createDOMWriterResult($this);

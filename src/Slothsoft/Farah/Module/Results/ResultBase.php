@@ -13,21 +13,23 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrlStreamIdentifier;
  */
 abstract class ResultBase implements ResultInterface
 {
+
     private $ownerExecutable;
+
     private $type;
-    
+
     public function init(ExecutableInterface $ownerExecutable, FarahUrlStreamIdentifier $type)
     {
         $this->ownerExecutable = $ownerExecutable;
         $this->type = $type;
     }
-    
-    public function getId() : string
+
+    public function getId(): string
     {
         return (string) $this->createUrl();
     }
-    
-    public function createUrl() : FarahUrl
+
+    public function createUrl(): FarahUrl
     {
         return $this->ownerExecutable->createUrl($this->type);
     }

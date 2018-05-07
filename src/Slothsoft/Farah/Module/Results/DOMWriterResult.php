@@ -19,62 +19,66 @@ class DOMWriterResult extends ResultBase implements ResultInterfacePlusXml
 {
 
     private $writer;
+
     private $resourceUrl;
 
     public function __construct(DOMWriterInterface $writer)
     {
         $this->writer = $writer;
     }
-    
-    public function lookupStream() : StreamInterface
+
+    public function lookupStream(): StreamInterface
     {
         return new LazyOpenStream($this->toResourceUrl(), StreamWrapperInterface::MODE_OPEN_READONLY);
     }
-    
-    public function lookupMimeType() : string
+
+    public function lookupMimeType(): string
     {
         return 'application/xml';
     }
-    
-    public function lookupCharset() : string
+
+    public function lookupCharset(): string
     {
         return 'UTF-8';
     }
-    
-    public function lookupFileName() : string
+
+    public function lookupFileName(): string
     {
         return 'result.xml';
     }
-    
-    public function lookupChangeTime() : int {
+
+    public function lookupChangeTime(): int
+    {
         return 0;
     }
-    
-    public function lookupHash() : string {
+
+    public function lookupHash(): string
+    {
         return md5_file($this->toResourceUrl());
     }
-    
-    public function lookupIsBufferable() : bool {
+
+    public function lookupIsBufferable(): bool
+    {
         return true;
     }
-    
-    public function toElement(DOMDocument $targetDoc) : DOMElement
+
+    public function toElement(DOMDocument $targetDoc): DOMElement
     {
         return $this->writer->toElement($targetDoc);
     }
 
-    public function toDocument() : DOMDocument
+    public function toDocument(): DOMDocument
     {
         return $this->writer->toDocument();
     }
-    
-    private function toResourceUrl() {
+
+    private function toResourceUrl()
+    {
         if ($this->resourceUrl === null) {
             $this->resourceUrl = BlobUrl::createTemporaryURL();
             $this->writer->toDocument()->save($this->resourceUrl);
         }
         return $this->resourceUrl;
     }
-
 }
 

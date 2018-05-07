@@ -12,7 +12,9 @@ use Slothsoft\Farah\Module\Node\Instruction\ParameterInstructionInterface;
  */
 class ParameterMeta extends MetaBase implements ParameterInstructionInterface
 {
-    public function isParameter() : bool {
+
+    public function isParameter(): bool
+    {
         return true;
     }
 

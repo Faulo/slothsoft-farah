@@ -39,45 +39,52 @@ abstract class AbstractModuleTest extends AbstractTestCase
         }
         return $module;
     }
-    protected function getModuleProperty(string $name) {
+
+    protected function getModuleProperty(string $name)
+    {
         $module = $this->getModule();
-        $getProperty = function(string $name) {
+        $getProperty = function (string $name) {
             return $this->$name;
         };
         $getProperty = $getProperty->bindTo($module, get_class($module));
         return $getProperty($name);
     }
-    
+
     protected function getModuleId(): FarahUrl
     {
         return $this->getModule()->getId();
     }
+
     protected function getModuleUrl(): FarahUrl
     {
         return $this->getModule()->createUrl();
     }
+
     protected function getModuleAuthority(): AssetInterface
     {
         return $this->getModuleProperty('authority');
     }
+
     protected function getModuleRootAsset(): AssetInterface
     {
         return $this->getModule()->lookupAsset('/');
     }
+
     protected function getAssetDirectory(): string
     {
         return $this->getModuleProperty('assetDirectory');
     }
+
     protected function getModuleAssetManifest(): ManifestInterface
     {
         return $this->getModuleProperty('assetManifest');
     }
+
     protected function getModuleAssets(): Traversable
     {
         return $this->getModuleProperty('assets');
     }
-    
-    
+
     protected function getManifestRoot(): LeanElement
     {
         return $this->getModuleAssetManifest()->getRootElement();

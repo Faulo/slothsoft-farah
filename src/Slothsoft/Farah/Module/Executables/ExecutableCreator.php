@@ -13,46 +13,56 @@ use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
 class ExecutableCreator
 {
+
     private $ownerAsset;
+
     private $type;
-    public function __construct(AssetInterface $ownerAsset, FarahUrlArguments $args) {
+
+    public function __construct(AssetInterface $ownerAsset, FarahUrlArguments $args)
+    {
         $this->ownerAsset = $ownerAsset;
         $this->args = $args;
     }
-    
-    protected function initExecutable(ExecutableInterface $executable) : ExecutableInterface {
+
+    protected function initExecutable(ExecutableInterface $executable): ExecutableInterface
+    {
         $executable->init($this->ownerAsset, $this->args);
         return $executable;
     }
-    
-    public function createNullExecutable() : ExecutableInterface {
+
+    public function createNullExecutable(): ExecutableInterface
+    {
         return $this->initExecutable(new NullExecutable());
     }
-    
-    public function createDOMWriterExecutable(DOMWriterInterface $writer) : ExecutableInterface {
+
+    public function createDOMWriterExecutable(DOMWriterInterface $writer): ExecutableInterface
+    {
         return $this->initExecutable(new DOMWriterExecutable($writer));
     }
-    
-    public function createMessageExecutable(MessageInterface $message) : ExecutableInterface {
+
+    public function createMessageExecutable(MessageInterface $message): ExecutableInterface
+    {
         return $this->initExecutable(new NullExecutable());
     }
-    
-    public function createTransformationExecutable(string $name, InstructionCollector $collector) : ExecutableInterface {
+
+    public function createTransformationExecutable(string $name, InstructionCollector $collector): ExecutableInterface
+    {
         return $this->initExecutable(new TransformationExecutable($name, $collector));
     }
-    
-    public function createXmlFile(string $pathToFile) : ExecutableInterface {
+
+    public function createXmlFile(string $pathToFile): ExecutableInterface
+    {
         return $this->initExecutable(new XmlFile($pathToFile));
     }
-    
-    public function createHtmlFile(string $pathToFile) : ExecutableInterface {
+
+    public function createHtmlFile(string $pathToFile): ExecutableInterface
+    {
         return $this->initExecutable(new HtmlFile($pathToFile));
     }
-    
-    public function createBinaryFile(string $pathToFile) : ExecutableInterface {
+
+    public function createBinaryFile(string $pathToFile): ExecutableInterface
+    {
         return $this->initExecutable(new BinaryFile($pathToFile));
     }
-    
-    
 }
 

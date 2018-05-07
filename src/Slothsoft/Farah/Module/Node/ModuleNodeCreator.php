@@ -42,11 +42,11 @@ class ModuleNodeCreator // TOOD: find a better name maybe
         $this->factoryMap[Module::TAG_EXTERNAL_RESOURCE] = $assetFactory;
         $this->factoryMap[Module::TAG_CLOSURE] = $assetFactory;
         
-        //files
+        // files
         $this->factoryMap[Module::TAG_RESOURCE] = $fileFactory;
         $this->factoryMap[Module::TAG_DIRECTORY] = $fileFactory;
         $this->factoryMap[Module::TAG_RESOURCE_DIRECTORY] = $fileFactory;
-        $this->factoryMap[Module::TAG_ASSET_ROOT] = $fileFactory;  
+        $this->factoryMap[Module::TAG_ASSET_ROOT] = $fileFactory;
         
         // meta
         $this->factoryMap[Module::TAG_IMPORT] = $metaFactory;

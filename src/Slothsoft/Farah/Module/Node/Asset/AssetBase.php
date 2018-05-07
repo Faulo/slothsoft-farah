@@ -35,16 +35,16 @@ abstract class AssetBase extends ModuleNodeBase implements AssetInterface, UseDo
     private $parameterFilter;
 
     private $instructionCollector;
-    
+
     private $assetChildren;
-    
+
     private $manifestArguments;
-    
+
     public final function __toString(): string
     {
         return $this->getId();
     }
-    
+
     public final function getId(): string
     {
         return $this->getElementAttribute(Module::ATTR_ID);
@@ -59,31 +59,27 @@ abstract class AssetBase extends ModuleNodeBase implements AssetInterface, UseDo
     {
         return $this->getElementAttribute(Module::ATTR_ASSETPATH);
     }
-    
+
     public final function getUse(): string
     {
         return $this->getElementAttribute(Module::ATTR_USE);
     }
-    
+
     public final function getAssetChildren(): array
     {
         if ($this->assetChildren === null) {
-            $this->assetChildren = array_filter(
-                $this->getChildren(),
-                function (ModuleNodeInterface $node) {
-                    return $node instanceof AssetInterface;
-                },
-                ARRAY_FILTER_USE_BOTH
-            );
+            $this->assetChildren = array_filter($this->getChildren(), function (ModuleNodeInterface $node) {
+                return $node instanceof AssetInterface;
+            }, ARRAY_FILTER_USE_BOTH);
         }
         return $this->assetChildren;
     }
-    
-    
+
     public final function traverseTo(string $path): AssetInterface
     {
         return $this->getPathResolver()->resolvePath($path);
     }
+
     protected final function getPathResolver(): PathResolverInterface
     {
         if ($this->pathResolver === null) {
@@ -91,12 +87,12 @@ abstract class AssetBase extends ModuleNodeBase implements AssetInterface, UseDo
         }
         return $this->pathResolver;
     }
+
     protected function loadPathResolver(): PathResolverInterface
     {
         return PathResolverCatalog::createNullPathResolver($this);
     }
 
-    
     public final function applyParameterFilter(FarahUrlArguments $args): FarahUrlArguments
     {
         $valueList = $args->getValueList();
@@ -116,6 +112,7 @@ abstract class AssetBase extends ModuleNodeBase implements AssetInterface, UseDo
         }
         return $hasChanged ? FarahUrlArguments::createFromValueList($valueList) : $args;
     }
+
     protected final function getParameterFilter(): ParameterFilterInterface
     {
         if ($this->parameterFilter === null) {
@@ -123,12 +120,12 @@ abstract class AssetBase extends ModuleNodeBase implements AssetInterface, UseDo
         }
         return $this->parameterFilter;
     }
+
     protected function loadParameterFilter(): ParameterFilterInterface
     {
         return new AllowAllFilter();
     }
 
-    
     public final function createUrl($args = null, $fragment = null): FarahUrl
     {
         return $this->getOwnerModule()->createUrl($this->getAssetPath(), $args, $fragment);
@@ -136,9 +133,7 @@ abstract class AssetBase extends ModuleNodeBase implements AssetInterface, UseDo
 
     public final function lookupExecutable(FarahUrlArguments $args = null): ExecutableInterface
     {
-        $args = $args
-            ? FarahUrlArguments::createFromMany($args, $this->getManifestArguments())
-            : $this->getManifestArguments();
+        $args = $args ? FarahUrlArguments::createFromMany($args, $this->getManifestArguments()) : $this->getManifestArguments();
         $args = $this->applyParameterFilter($args);
         $id = (string) $args;
         if (! isset($this->executables[$id])) {
@@ -146,13 +141,13 @@ abstract class AssetBase extends ModuleNodeBase implements AssetInterface, UseDo
         }
         return $this->executables[$id];
     }
-    
+
     protected function loadExecutable(FarahUrlArguments $args): ExecutableInterface
     {
         $resultCreator = new ExecutableCreator($this, $args);
         return $resultCreator->createTransformationExecutable($this->getName(), $this->collectInstructions());
     }
-    
+
     protected final function getManifestArguments(): FarahUrlArguments
     {
         if ($this->manifestArguments === null) {
@@ -160,7 +155,7 @@ abstract class AssetBase extends ModuleNodeBase implements AssetInterface, UseDo
         }
         return $this->manifestArguments;
     }
-    
+
     protected function loadManifestArguments(): FarahUrlArguments
     {
         $data = [];
@@ -184,12 +179,14 @@ abstract class AssetBase extends ModuleNodeBase implements AssetInterface, UseDo
     {
         return InstructionCollector::createFromAsset($this);
     }
-    
-    public function isImport() : bool {
+
+    public function isImport(): bool
+    {
         return false;
     }
-    
-    public function isParameter() : bool {
+
+    public function isParameter(): bool
+    {
         return false;
     }
 
@@ -217,32 +214,32 @@ abstract class AssetBase extends ModuleNodeBase implements AssetInterface, UseDo
     {
         return strpos($this->getUse(), Module::ATTR_USE_SCRIPT) !== false;
     }
-    
+
     public function getReferencedDocumentAsset(): AssetInterface
     {
         return $this;
     }
-    
+
     public function getReferencedDocumentAlias(): string
     {
         return $this->getName();
     }
-    
+
     public function getReferencedManifestAsset(): AssetInterface
     {
         return $this;
     }
-    
+
     public function getReferencedTemplateAsset(): AssetInterface
     {
         return $this;
     }
-    
+
     public function getReferencedStylesheetAsset(): AssetInterface
     {
         return $this;
     }
-    
+
     public function getReferencedScriptAsset(): AssetInterface
     {
         return $this;

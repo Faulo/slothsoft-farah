@@ -14,10 +14,10 @@ use Slothsoft\Farah\RequestStrategy\RequestStrategyInterface;
 use Slothsoft\Farah\ResponseStrategy\ResponseStrategyInterface;
 use OutOfBoundsException;
 
-
 class Kernel
 {
-    public static function getInstance() : self
+
+    public static function getInstance(): self
     {
         static $instance;
         if ($instance === null) {
@@ -103,6 +103,7 @@ class Kernel
     }
 
     private $modules;
+
     private function __construct()
     {
         return $this->modules = new Map();
@@ -115,8 +116,9 @@ class Kernel
         $response = $requestStrategy->process($request);
         $responseStrategy->process($response);
     }
-    
+
     /**
+     *
      * @param FarahUrlAuthority|string $authority
      * @throws ModuleNotFoundException
      * @return Module
@@ -125,19 +127,22 @@ class Kernel
     {
         try {
             return $this->modules->get((string) $authority);
-        } catch(OutOfBoundsException $e) {
+        } catch (OutOfBoundsException $e) {
             throw new ModuleNotFoundException((string) $authority, null, $e);
         }
-        
     }
+
     /**
+     *
      * @param Module $module
      */
-    public function registerModule(Module $module) {
+    public function registerModule(Module $module)
+    {
         $this->modules->put((string) $module->getId(), $module);
     }
-    
-    private function getDefaultAuthority() : FarahUrlAuthority {
+
+    private function getDefaultAuthority(): FarahUrlAuthority
+    {
         return FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'farah');
     }
 }

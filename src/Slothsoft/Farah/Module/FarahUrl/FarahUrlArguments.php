@@ -101,15 +101,19 @@ class FarahUrlArguments implements IteratorAggregate, Hashable
     {
         return new ArrayIterator($this->data);
     }
-    
-    public function isEmpty() : bool {
+
+    public function isEmpty(): bool
+    {
         return $this->id === '';
     }
-    
-    public function equals($obj) : bool {
+
+    public function equals($obj): bool
+    {
         return ($obj instanceof self and ((string) $this === (string) $obj));
     }
-    public function hash() {
+
+    public function hash()
+    {
         return (string) $this;
     }
 }

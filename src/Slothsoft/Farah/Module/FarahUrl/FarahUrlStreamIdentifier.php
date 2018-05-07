@@ -42,11 +42,14 @@ class FarahUrlStreamIdentifier implements Hashable
     {
         return $this->id;
     }
-    
-    public function equals($obj) : bool {
+
+    public function equals($obj): bool
+    {
         return ($obj instanceof self and ((string) $this === (string) $obj));
     }
-    public function hash() {
+
+    public function hash()
+    {
         return (string) $this;
     }
 }

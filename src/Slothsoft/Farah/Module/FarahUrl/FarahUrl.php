@@ -19,6 +19,7 @@ class FarahUrl implements UriInterface, Hashable
     const SCHEME_DEFAULT = 'farah';
 
     /**
+     *
      * @param FarahUrlAuthority|string $authority
      * @param FarahUrlPath|string $path
      * @param FarahUrlArguments|string $args
@@ -35,13 +36,13 @@ class FarahUrl implements UriInterface, Hashable
         
         if ($args === null) {
             $args = FarahUrlArguments::createEmpty();
-        } elseif(is_string($args)) {
+        } elseif (is_string($args)) {
             $args = FarahUrlArguments::createFromQuery($args);
         }
         
         if ($fragment === null) {
             $fragment = FarahUrlStreamIdentifier::createEmpty();
-        } elseif(is_string($fragment)) {
+        } elseif (is_string($fragment)) {
             $fragment = FarahUrlStreamIdentifier::createFromString($fragment);
         }
         
@@ -93,7 +94,7 @@ class FarahUrl implements UriInterface, Hashable
         $arguments = FarahUrlArguments::createFromQuery($res['query'] ?? '');
         if ($contextUrl) {
             $contextArguments = $contextUrl->getArguments();
-            if ($contextArguments !== $arguments and !$contextArguments->isEmpty()) {
+            if ($contextArguments !== $arguments and ! $contextArguments->isEmpty()) {
                 $arguments = FarahUrlArguments::createFromMany($arguments, $contextArguments);
             }
         }
@@ -263,11 +264,14 @@ class FarahUrl implements UriInterface, Hashable
     {
         return '';
     }
-    
-    public function equals($obj) : bool {
+
+    public function equals($obj): bool
+    {
         return ($obj instanceof self and ((string) $this === (string) $obj));
     }
-    public function hash() {
+
+    public function hash()
+    {
         return (string) $this;
     }
 }
