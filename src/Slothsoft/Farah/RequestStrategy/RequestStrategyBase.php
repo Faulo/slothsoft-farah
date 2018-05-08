@@ -2,9 +2,9 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\RequestStrategy;
 
-use GuzzleHttp\Psr7\LimitStream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\HttpStatusException;
@@ -17,13 +17,12 @@ use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use Slothsoft\Farah\Security\BannedManager;
 use Slothsoft\Farah\Streams\StreamHelper;
-use Slothsoft\Core\MimeTypeDictionary;
 
 abstract class RequestStrategyBase implements RequestStrategyInterface
 {
-
+    
     private $request;
-
+    
     public function process(ServerRequestInterface $request): ResponseInterface
     {
         try {
@@ -101,20 +100,20 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                             if (strlen($match[3])) {
                                 throw new HttpStatusException('', StatusCode::STATUS_REQUESTED_RANGE_NOT_SATISFIABLE, null, $headers);
                             }
-                            $rangeStart = strlen($match[1]) ? (float) $match[1] : 0;
-                            $rangeEnd = strlen($match[2]) ? (float) $match[2] + 1 : $bodyLength;
+                            $rangeStart = strlen($match[1]) ? (int) $match[1] : 0;
+                            $rangeEnd = strlen($match[2]) ? (int) $match[2] + 1 : $bodyLength;
                             
                             $statusCode = StatusCode::STATUS_PARTIAL_CONTENT;
                             $headers['content-range'] = sprintf(
-                                'bytes %1$.0f-%2$.0f/%3$.0f', 
+                                'bytes %1$d-%2$d/%3$d',
                                 $rangeStart,
                                 $rangeEnd - 1,
                                 $bodyLength
-                            );
+                                );
                             
-                            $bodyLength = $bodyLength - $rangeStart;
+                            $bodyLength = $rangeEnd - $rangeStart;
                             
-                            $body = new LimitStream($body, $bodyLength, $rangeStart);
+                            $body = StreamHelper::sliceStream($body, $rangeStart, $bodyLength);
                         }
                     }
                     $headers['content-length'] = $bodyLength;
@@ -147,12 +146,12 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         }
         
         if (! $this->shouldIncludeBody($this->request->getMethod(), $statusCode)) {
-            $body->detach();
+            $body = null;
         }
         
         return MessageFactory::createServerResponse($statusCode, $headers, $body);
     }
-
+    
     private function validateRequest()
     {
         $clientIp = $this->request->getServerParams()['REMOTE_ADDR'] ?? '';
@@ -176,9 +175,9 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
             throw new HttpStatusException("HTTP Method '{$this->request->getMethod()}' is not supported by this implementation.", StatusCode::STATUS_METHOD_NOT_ALLOWED);
         }
     }
-
+    
     abstract protected function createUrl(ServerRequestInterface $request): FarahUrl;
-
+    
     private function negotiateContentCoding(string $preferred): ContentCoding
     {
         $accept = $this->request->getHeaderLine('accept-encoding');
@@ -190,7 +189,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         }
         return ContentCoding::identity();
     }
-
+    
     private function negotiateTransferCoding(string $preferred): TransferCoding
     {
         $accept = $this->request->getHeaderLine('te');
@@ -205,7 +204,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         }
         return TransferCoding::identity();
     }
-
+    
     private function shouldIncludeBody(string $method, int $statusCode): bool
     {
         switch ($method) {
@@ -226,7 +225,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         
         return true;
     }
-
+    
     private function inventCacheDuration(string $mimeType): int
     {
         if (strpos($mimeType, 'image/') === 0) {

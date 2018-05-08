@@ -20,7 +20,7 @@ abstract class MessageFactory
         return ServerRequest::fromGlobals();
     }
 
-    public static function createServerResponse(int $statusCode, array $headers, StreamInterface $stream): ResponseInterface
+    public static function createServerResponse(int $statusCode, array $headers, StreamInterface $stream = null): ResponseInterface
     {
         return new Response($statusCode, $headers, $stream);
     }
