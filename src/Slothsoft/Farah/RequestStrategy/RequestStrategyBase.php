@@ -76,6 +76,10 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                     }
                 }
                 
+                if ($fileHash !== '') {
+                    $headers['etag'] = "\"$fileHash\"";
+                }
+                
                 $bodyLength = $body->getSize();
                 
                 if ($bodyLength === null and $isBufferable) {
@@ -91,7 +95,6 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                         $headers['transfer-encoding'] = (string) $transferCoding;
                     }
                 } else {
-                    $headers['content-length'] = $bodyLength;
                     $headers['accept-ranges'] = 'bytes';
                     if ($request->hasHeader('range')) {
                         if (preg_match('/^bytes=(\d*)-(\d*)(.*)$/', $request->getHeaderLine('range'), $match)) {
@@ -101,20 +104,20 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                             $rangeStart = strlen($match[1]) ? (float) $match[1] : 0;
                             $rangeEnd = strlen($match[2]) ? (float) $match[2] + 1 : $bodyLength;
                             
+                            $statusCode = StatusCode::STATUS_PARTIAL_CONTENT;
                             $headers['content-range'] = sprintf(
                                 'bytes %1$.0f-%2$.0f/%3$.0f', 
                                 $rangeStart,
                                 $rangeEnd - 1,
                                 $bodyLength
-                                );
-                            file_put_contents(__FILE__ . '.txt', print_r($headers, true));
-                            $body = new LimitStream($body, $bodyLength - $rangeStart, $rangeStart);
+                            );
+                            
+                            $bodyLength = $bodyLength - $rangeStart;
+                            
+                            $body = new LimitStream($body, $bodyLength, $rangeStart);
                         }
                     }
-                }
-                
-                if ($fileHash !== '') {
-                    $headers['etag'] = "\"$fileHash\"";
+                    $headers['content-length'] = $bodyLength;
                 }
                 
                 if (isset($headers['last-modified']) and $request->hasHeader('if-modified-since')) {
