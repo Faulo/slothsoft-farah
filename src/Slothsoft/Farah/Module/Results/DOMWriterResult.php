@@ -19,7 +19,7 @@ class DOMWriterResult extends ResultBase implements ResultInterfacePlusXml
 {
 
     private $writer;
-
+    
     private $resourceUrl;
 
     public function __construct(DOMWriterInterface $writer)
@@ -71,7 +71,7 @@ class DOMWriterResult extends ResultBase implements ResultInterfacePlusXml
     {
         return $this->writer->toDocument();
     }
-
+    
     private function toResourceUrl()
     {
         if ($this->resourceUrl === null) {

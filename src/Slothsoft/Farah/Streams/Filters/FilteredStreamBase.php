@@ -2,10 +2,12 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Streams\Filters;
 
+use GuzzleHttp\Psr7\CachingStream;
 use GuzzleHttp\Psr7\StreamDecoratorTrait;
-use RuntimeException;
 use Psr\Http\Message\StreamInterface;
 use Slothsoft\Core\IO\Memory;
+use BadMethodCallException;
+use RuntimeException;
 
 abstract class FilteredStreamBase implements StreamInterface
 {
@@ -25,7 +27,7 @@ abstract class FilteredStreamBase implements StreamInterface
 
     public function __construct(StreamInterface $stream)
     {
-        $this->stream = $stream;
+        $this->stream = new CachingStream($stream);
         $this->state = static::STATE_OPENING;
     }
 
@@ -65,7 +67,27 @@ abstract class FilteredStreamBase implements StreamInterface
 
     public function isSeekable()
     {
-        return false;
+        return $this->stream->isSeekable();
+    }
+    
+    public function getSize() {
+        if ($this->isSeekable()) {
+            $ret = strlen($this->getContents());
+            $this->rewind();
+            return $ret;
+        } else {
+            return null;
+        }
+    }
+    
+    public function seek($offset, $whence = SEEK_SET)
+    {
+        if ($offset === 0 and $whence === SEEK_SET) {
+            $this->stream->rewind();
+            $this->state = static::STATE_OPENING;
+        } else {
+            throw new BadMethodCallException('FilteredStreams only support full rewind.');
+        }
     }
 
     abstract protected function processHeader(): string;

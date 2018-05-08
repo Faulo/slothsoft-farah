@@ -16,6 +16,8 @@ use Slothsoft\Farah\Http\TransferCoding;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use Slothsoft\Farah\Security\BannedManager;
+use Slothsoft\Farah\Streams\StreamHelper;
+use Slothsoft\Core\MimeTypeDictionary;
 
 abstract class RequestStrategyBase implements RequestStrategyInterface
 {
@@ -36,7 +38,6 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 $statusCode = StatusCode::STATUS_OK;
                 
                 $headers = [];
-                $headers['vary'] = 'accept-encoding';
                 
                 $fileDisposition = 'inline';
                 $fileName = $result->lookupFileName();
@@ -57,46 +58,63 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 
                 $fileHash = $result->lookupHash();
                 $isBufferable = $result->lookupIsBufferable();
+                $isCompressable = $isBufferable; //$result->lookupIsCompressable();
                 $body = $result->lookupStream();
                 
-                $contentCoding = $this->negotiateContentCoding($isBufferable);
-                if (! $contentCoding->isNoEncoding()) {
-                    $body = $contentCoding->encodeStream($body);
-                    $headers['content-encoding'] = (string) $contentCoding;
-                }
-                
-                if ($isBufferable) {
-                    $bodyLength = $body->getSize();
-                    if ($bodyLength !== null) {
-                        $headers['accept-ranges'] = 'bytes';
-                        if ($request->hasHeader('range')) {
-                            if (preg_match('/^bytes=(\d*)-(\d*)(.*)$/', $request->getHeaderLine('range'), $match)) {
-                                if (strlen($match[3])) {
-                                    throw new HttpStatusException('', StatusCode::STATUS_REQUESTED_RANGE_NOT_SATISFIABLE, null, $headers);
-                                }
-                                $rangeStart = strlen($match[1]) ? (float) $match[1] : 0;
-                                $rangeEnd = strlen($match[2]) ? (float) $match[2] + 1 : $bodyLength;
-                                
-                                $headers['content-range'] = sprintf(
-                                    'bytes %1$.0f-%2$.0f/%3$.0f', 
-                                    $rangeStart,
-                                    $rangeEnd - 1,
-                                    $bodyLength
-                                );
-                                $body = new LimitStream($body, $rangeEnd - $rangeStart, $rangeEnd);
-                            }
+                if ($isCompressable) {
+                    $preferredCompressions = $this->inventPreferredCompressions($fileMime);
+                    if (strlen($preferredCompressions)) {
+                        $contentCoding = $this->negotiateContentCoding($preferredCompressions);
+                        $headers['vary'] = 'accept-encoding';
+                        if ($fileHash !== '') {
+                            $fileHash .= "-$contentCoding";
+                        }
+                        if (! $contentCoding->isNoEncoding()) {
+                            $body = $contentCoding->encodeStream($body);
+                            $headers['content-encoding'] = (string) $contentCoding;
                         }
                     }
                 }
                 
-                $transferCoding = $this->negotiateTransferCoding();
-                if (! $transferCoding->isNoEncoding()) {
-                    $body = $transferCoding->encodeStream($body);
-                    $headers['transfer-encoding'] = (string) $transferCoding;
+                $bodyLength = $body->getSize();
+                
+                if ($bodyLength === null and $isBufferable) {
+                    $body = StreamHelper::cacheStream($body);
+                    $bodyLength = $body->getSize();
+                }
+                
+                if ($bodyLength === null) {
+                    //we don't know the length of the response, so we better figure out a safe transfer coding
+                    $transferCoding = $this->negotiateTransferCoding('chunked');
+                    if (! $transferCoding->isNoEncoding()) {
+                        $body = $transferCoding->encodeStream($body);
+                        $headers['transfer-encoding'] = (string) $transferCoding;
+                    }
+                } else {
+                    $headers['content-length'] = $bodyLength;
+                    $headers['accept-ranges'] = 'bytes';
+                    if ($request->hasHeader('range')) {
+                        if (preg_match('/^bytes=(\d*)-(\d*)(.*)$/', $request->getHeaderLine('range'), $match)) {
+                            if (strlen($match[3])) {
+                                throw new HttpStatusException('', StatusCode::STATUS_REQUESTED_RANGE_NOT_SATISFIABLE, null, $headers);
+                            }
+                            $rangeStart = strlen($match[1]) ? (float) $match[1] : 0;
+                            $rangeEnd = strlen($match[2]) ? (float) $match[2] + 1 : $bodyLength;
+                            
+                            $headers['content-range'] = sprintf(
+                                'bytes %1$.0f-%2$.0f/%3$.0f', 
+                                $rangeStart,
+                                $rangeEnd - 1,
+                                $bodyLength
+                                );
+                            file_put_contents(__FILE__ . '.txt', print_r($headers, true));
+                            $body = new LimitStream($body, $bodyLength - $rangeStart, $rangeStart);
+                        }
+                    }
                 }
                 
                 if ($fileHash !== '') {
-                    $headers['etag'] = "\"$fileHash-$contentCoding\"";
+                    $headers['etag'] = "\"$fileHash\"";
                 }
                 
                 if (isset($headers['last-modified']) and $request->hasHeader('if-modified-since')) {
@@ -158,27 +176,27 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
 
     abstract protected function createUrl(ServerRequestInterface $request): FarahUrl;
 
-    private function negotiateContentCoding(bool $allowUnbuffered): ContentCoding
+    private function negotiateContentCoding(string $preferred): ContentCoding
     {
-        if ($allowUnbuffered) {
-            $accept = $this->request->getHeaderLine('accept-encoding');
-            foreach (ContentCoding::getEncodings() as $coding) {
-                if (strpos($accept, (string) $coding) !== false) {
-                    return $coding;
-                }
+        $accept = $this->request->getHeaderLine('accept-encoding');
+        foreach (ContentCoding::getEncodings() as $coding) {
+            $name = (string) $coding;
+            if (strpos($preferred, $name) !== false and strpos($accept, $name) !== false) {
+                return $coding;
             }
         }
         return ContentCoding::identity();
     }
 
-    private function negotiateTransferCoding(): TransferCoding
+    private function negotiateTransferCoding(string $preferred): TransferCoding
     {
         $accept = $this->request->getHeaderLine('te');
         if (version_compare($this->request->getProtocolVersion(), '1.1', '>=')) {
             $accept .= ', chunked'; // HTTP 1.1 must accept chunked encoding
         }
         foreach (TransferCoding::getEncodings() as $coding) {
-            if (strpos($accept, (string) $coding) !== false) {
+            $name = (string) $coding;
+            if (strpos($preferred, $name) !== false and strpos($accept, $name) !== false) {
                 return $coding;
             }
         }
@@ -221,6 +239,10 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
             return Seconds::WEEK;
         }
         return 30;
+    }
+    
+    private function inventPreferredCompressions(string $mimeType) : string {
+        return MimeTypeDictionary::guessCompressions($mimeType);
     }
 }
 
