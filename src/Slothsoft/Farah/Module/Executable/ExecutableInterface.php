@@ -9,8 +9,8 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 
 interface ExecutableInterface
 {
-    
-    public function getUrlArguments() : FarahUrlArguments;
+
+    public function getUrlArguments(): FarahUrlArguments;
 
     /**
      * Create a FarahUrl for this operation, with stream set as supplied.

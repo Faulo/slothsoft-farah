@@ -96,7 +96,7 @@ class Kernel
     {
         return self::trackingExceptionUris()->getValue();
     }
-    
+
     public function handle(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy, ServerRequestInterface $request)
     {
         self::setCurrentRequest($request);

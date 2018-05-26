@@ -16,11 +16,11 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ProxyResultBuilder;
  */
 class SitesBuilder implements ExecutableBuilderStrategyInterface
 {
+
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
     {
         $asset = Kernel::getCurrentSitemap();
         $resultBuilder = new ProxyResultBuilder($asset->lookupExecutable());
         return new ExecutableStrategies($resultBuilder);
     }
-    
 }

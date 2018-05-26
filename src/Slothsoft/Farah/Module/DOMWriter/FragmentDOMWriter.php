@@ -12,25 +12,30 @@ use DOMElement;
 class FragmentDOMWriter implements DOMWriterInterface
 {
     use DOMWriterDocumentFromElementTrait;
-    
+
     /**
+     *
      * @var AssetInterface
      */
     private $asset;
-    
+
     /**
+     *
      * @var DOMWriterInterface[]
      */
     private $children;
-    
-    public function __construct(AssetInterface $asset) {
+
+    public function __construct(AssetInterface $asset)
+    {
         $this->asset = $asset;
         $this->children = [];
     }
-    public function appendChild(DOMWriterInterface $child) {
+
+    public function appendChild(DOMWriterInterface $child)
+    {
         $this->children[] = $child;
     }
-    
+
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
         $element = $this->asset->getManifestElement();

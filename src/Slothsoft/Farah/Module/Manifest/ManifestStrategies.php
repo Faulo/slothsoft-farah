@@ -7,9 +7,13 @@ use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\AssetBuilderStrategyInt
 
 class ManifestStrategies
 {
+
     public $treeLoader;
+
     public $assetBuilder;
-    public function __construct(TreeLoaderStrategyInterface $treeLoader, AssetBuilderStrategyInterface $assetBuilder) {
+
+    public function __construct(TreeLoaderStrategyInterface $treeLoader, AssetBuilderStrategyInterface $assetBuilder)
+    {
         $this->treeLoader = $treeLoader;
         $this->assetBuilder = $assetBuilder;
     }

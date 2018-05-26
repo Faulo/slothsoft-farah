@@ -8,10 +8,10 @@ use Slothsoft\Farah\Module\Result\ResultStrategies;
 
 class NullResultBuilder implements ResultBuilderStrategyInterface
 {
-    public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type) : ResultStrategies
+
+    public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
     {
         return new ResultStrategies(NullStreamBuilder());
     }
-
 }
 

@@ -4,11 +4,12 @@ namespace Slothsoft\Farah\Module\Asset\InstructionStrategy;
 
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 
-
-class UseDocumentInstruction extends NullInstruction {
+class UseDocumentInstruction extends NullInstruction
+{
     use InstructionFromReferenceAttributeTrait;
-    
-    public function isUseDocument(AssetInterface $context) : bool {
+
+    public function isUseDocument(AssetInterface $context): bool
+    {
         return true;
     }
 }

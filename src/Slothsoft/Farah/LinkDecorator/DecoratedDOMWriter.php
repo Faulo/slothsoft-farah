@@ -12,11 +12,13 @@ class DecoratedDOMWriter implements DOMWriterInterface
     private $source;
 
     /**
+     *
      * @var iterable
      */
     private $stylesheets;
 
     /**
+     *
      * @var iterable
      */
     private $scripts;

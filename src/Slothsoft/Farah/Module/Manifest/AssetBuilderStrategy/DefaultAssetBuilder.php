@@ -31,13 +31,14 @@ use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 
 class DefaultAssetBuilder implements AssetBuilderStrategyInterface
 {
+
     public function normalizeElement(LeanElement $element, ?Leanelement $parent = null): void
     {
         $tag = $element->getTag();
-        if (!$element->hasAttribute('name')) {
+        if (! $element->hasAttribute('name')) {
             $element->setAttribute('name', uniqid('asset-'));
         }
-        if (!$element->hasAttribute('path')) {
+        if (! $element->hasAttribute('path')) {
             $path = $element->getAttribute('name');
             if ($tag === Manifest::TAG_RESOURCE and $element->hasAttribute('type')) {
                 $extension = MimeTypeDictionary::guessExtension($element->getAttribute('type'));
@@ -48,22 +49,20 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface
             $element->setAttribute('path', $path);
         }
         if ($parent) {
-            if (!$element->hasAttribute('assetpath')) {
+            if (! $element->hasAttribute('assetpath')) {
                 $element->setAttribute('assetpath', $parent->getAttribute('assetpath') . '/' . $element->getAttribute('name'));
             }
-            if (!$element->hasAttribute('realpath')) {
+            if (! $element->hasAttribute('realpath')) {
                 $element->setAttribute('realpath', $parent->getAttribute('realpath') . DIRECTORY_SEPARATOR . $element->getAttribute('path'));
             }
         }
-        
-        
         
         $executableBuilder = FromManifestExecutableBuilder::class;
         $pathResolver = FromManifestPathResolver::class;
         $parameterFilter = AllowAllParameterFilter::class;
         $instruction = FromManifestInstruction::class;
         
-        switch($tag) {
+        switch ($tag) {
             case Manifest::TAG_CUSTOM_ASSET:
                 $executableBuilder = NullExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
@@ -111,70 +110,68 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface
                 break;
         }
         
-        if (!$element->hasAttribute('use')) {
+        if (! $element->hasAttribute('use')) {
             $element->setAttribute('use', 'manifest');
         }
         
-        if (!$element->hasAttribute('executable-builder')) {
+        if (! $element->hasAttribute('executable-builder')) {
             $element->setAttribute('executable-builder', $executableBuilder);
         }
         
-        if (!$element->hasAttribute('path-resolver')) {
+        if (! $element->hasAttribute('path-resolver')) {
             $element->setAttribute('path-resolver', $pathResolver);
         }
         
-        if (!$element->hasAttribute('parameter-filter')) {
+        if (! $element->hasAttribute('parameter-filter')) {
             $element->setAttribute('parameter-filter', $parameterFilter);
         }
         
-        if (!$element->hasAttribute('instruction')) {
+        if (! $element->hasAttribute('instruction')) {
             $element->setAttribute('instruction', $instruction);
         }
-        
         
         foreach ($element->getChildren() as $child) {
             $this->normalizeElement($child, $element);
         }
     }
-    
+
     private static $services = [];
-    public function buildAssetStrategies(ManifestInterface $ownerManifest, LeanElement $element) : AssetStrategies
+
+    public function buildAssetStrategies(ManifestInterface $ownerManifest, LeanElement $element): AssetStrategies
     {
-        return new AssetStrategies(
-            $this->newExecutableBuilder($element->getAttribute('executable-builder')),
-            $this->newPathResolver($element->getAttribute('path-resolver')),
-            $this->newParameterFilter($element->getAttribute('parameter-filter')),
-            $this->newInstruction($element->getAttribute('instruction'))
-        );
+        return new AssetStrategies($this->newExecutableBuilder($element->getAttribute('executable-builder')), $this->newPathResolver($element->getAttribute('path-resolver')), $this->newParameterFilter($element->getAttribute('parameter-filter')), $this->newInstruction($element->getAttribute('instruction')));
     }
-    
-    private function newExecutableBuilder(string $className) : ExecutableBuilderStrategyInterface {
-        if (!isset(static::$services[$className])) {
-            static::$services[$className] = new $className();
-        }
-        return static::$services[$className];
-    }
-    
-    private function newPathResolver(string $className) : PathResolverStrategyInterface {
-        if (!isset(static::$services[$className])) {
-            static::$services[$className] = new $className();
-        }
-        return static::$services[$className];
-    }
-    
-    private function newParameterFilter(string $className) : ParameterFilterStrategyInterface {
-        if (!isset(static::$services[$className])) {
-            static::$services[$className] = new $className();
-        }
-        return static::$services[$className];
-    }
-    
-    private function newInstruction(string $className) : InstructionStrategyInterface {
-        if (!isset(static::$services[$className])) {
+
+    private function newExecutableBuilder(string $className): ExecutableBuilderStrategyInterface
+    {
+        if (! isset(static::$services[$className])) {
             static::$services[$className] = new $className();
         }
         return static::$services[$className];
     }
 
+    private function newPathResolver(string $className): PathResolverStrategyInterface
+    {
+        if (! isset(static::$services[$className])) {
+            static::$services[$className] = new $className();
+        }
+        return static::$services[$className];
+    }
+
+    private function newParameterFilter(string $className): ParameterFilterStrategyInterface
+    {
+        if (! isset(static::$services[$className])) {
+            static::$services[$className] = new $className();
+        }
+        return static::$services[$className];
+    }
+
+    private function newInstruction(string $className): InstructionStrategyInterface
+    {
+        if (! isset(static::$services[$className])) {
+            static::$services[$className] = new $className();
+        }
+        return static::$services[$className];
+    }
 }
 

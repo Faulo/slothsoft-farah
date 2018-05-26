@@ -10,18 +10,20 @@ use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\XmlTreeLoader;
 
 abstract class AbstractXmlTreeLoaderTest extends AbstractTreeLoaderTest
 {
-    protected static function getTreeLoader() : TreeLoaderStrategyInterface {
+
+    protected static function getTreeLoader(): TreeLoaderStrategyInterface
+    {
         return new XmlTreeLoader();
     }
 
     const SCHEMA_URL = 'farah://slothsoft@farah/schema/module/1.0';
 
-    protected function getManifestPath() : string
+    protected function getManifestPath(): string
     {
         return static::getManifestDirectory() . DIRECTORY_SEPARATOR . 'manifest.xml';
     }
 
-    public function testSchemaExists() : string
+    public function testSchemaExists(): string
     {
         $path = static::SCHEMA_URL;
         $this->assertFileExists($path, 'Schema file not found!');
@@ -32,7 +34,7 @@ abstract class AbstractXmlTreeLoaderTest extends AbstractTreeLoaderTest
      *
      * @depends testSchemaExists
      */
-    public function testSchemaIsValidXml(string $path) : DOMDocument
+    public function testSchemaIsValidXml(string $path): DOMDocument
     {
         $dom = new DOMHelper();
         $document = $dom->load($path);
@@ -42,7 +44,7 @@ abstract class AbstractXmlTreeLoaderTest extends AbstractTreeLoaderTest
 
     /**
      */
-    public function testManifestExists() : string
+    public function testManifestExists(): string
     {
         $path = $this->getManifestPath();
         $this->assertFileExists($path, 'Asset file not found!');
@@ -53,7 +55,7 @@ abstract class AbstractXmlTreeLoaderTest extends AbstractTreeLoaderTest
      *
      * @depends testManifestExists
      */
-    public function testManifestIsValidXml(string $path) : DOMDocument
+    public function testManifestIsValidXml(string $path): DOMDocument
     {
         $dom = new DOMHelper();
         $document = $dom->load($path);
@@ -66,7 +68,7 @@ abstract class AbstractXmlTreeLoaderTest extends AbstractTreeLoaderTest
      * @depends testManifestIsValidXml
      * @depends testSchemaIsValidXml
      */
-    public function testManifestIsValidAccordingToSchema($manifestDocument, $schemaDocument) : DOMDocument
+    public function testManifestIsValidAccordingToSchema($manifestDocument, $schemaDocument): DOMDocument
     {
         try {
             $validateResult = $manifestDocument->schemaValidate($schemaDocument->documentURI);

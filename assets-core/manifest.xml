@@ -6,23 +6,23 @@
 	
     <fragment name="api">
 	    <fragment name="DOM">
-	      <link-script ref="js/DOM"/>
-	      <link-script ref="js/DOMHelper"/>
+	      <link-script ref="/js/DOM"/>
+	      <link-script ref="/js/DOMHelper"/>
 	      <import ref="/api/HTML5"/>
 	      <import ref="/api/XPath"/>
 	      <import ref="/api/XSLT"/>
 	    </fragment>
 	    <fragment name="HTML5">
-	      <link-script ref="js/HTML5"/>
-	      <link-stylesheet ref="css/HTML5"/>
+	      <link-script ref="/js/HTML5"/>
+	      <link-stylesheet ref="/css/HTML5"/>
 	    </fragment>
 	    <fragment name="XPath">
-	      <link-script ref="js/NS"/>
-	      <link-script ref="js/XPath"/>
+	      <link-script ref="/js/NS"/>
+	      <link-script ref="/js/XPath"/>
 	    </fragment>
 	    <fragment name="XSLT">
-	      <link-script ref="js/NS"/>
-	      <link-script ref="js/XSLT"/>
+	      <link-script ref="/js/NS"/>
+	      <link-script ref="/js/XSLT"/>
 	    </fragment>
     </fragment>
 	

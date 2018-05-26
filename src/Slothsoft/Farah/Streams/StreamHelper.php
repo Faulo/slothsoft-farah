@@ -9,7 +9,9 @@ use Slothsoft\Core\IO\Memory;
 
 class StreamHelper
 {
-    public static function cacheStream(StreamInterface $input, $chunkSize = Memory::ONE_KILOBYTE) : StreamInterface {
+
+    public static function cacheStream(StreamInterface $input, $chunkSize = Memory::ONE_KILOBYTE): StreamInterface
+    {
         $cache = BlobUrl::createTemporaryObject();
         while (! $input->eof()) {
             fwrite($cache, $input->read($chunkSize));
@@ -17,8 +19,9 @@ class StreamHelper
         rewind($cache);
         return new Stream($cache);
     }
-    
-    public static function sliceStream(StreamInterface $input, int $offset, int $length) : StreamInterface {
+
+    public static function sliceStream(StreamInterface $input, int $offset, int $length): StreamInterface
+    {
         $input = self::cacheStream($input);
         $cache = BlobUrl::createTemporaryObject();
         $input->seek($offset);

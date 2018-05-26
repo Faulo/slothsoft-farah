@@ -13,19 +13,21 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 class DocumentDOMWriter implements DOMWriterInterface
 {
     use DOMWriterDocumentFromElementTrait;
-    
+
     /**
+     *
      * @var AssetInterface
      */
     private $asset;
-    
+
     private $args;
-    
-    public function __construct(AssetInterface $asset, FarahUrlArguments $args) {
+
+    public function __construct(AssetInterface $asset, FarahUrlArguments $args)
+    {
         $this->asset = $asset;
         $this->args = $args;
     }
-    
+
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
         $element = $this->asset->getManifestElement();
@@ -37,12 +39,14 @@ class DocumentDOMWriter implements DOMWriterInterface
         $node->setAttribute('href', str_replace('farah://', '/getAsset.php/', $url));
         $node->setAttribute('type', $element->getTag());
         
-        $node->appendChild($this->getDocumentContent()->toElement($targetDoc));
+        $node->appendChild($this->getDocumentContent()
+            ->toElement($targetDoc));
         
         return $node;
     }
-    
-    private function getDocumentContent() : DOMWriterInterface {
+
+    private function getDocumentContent(): DOMWriterInterface
+    {
         $valueAsset = $this->asset->getReferencedInstructionAsset();
         $executable = $valueAsset->lookupExecutable($this->args);
         return $executable->lookupXmlResult();

@@ -8,7 +8,6 @@ use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\ManifestElementBuilder;
 
-
 /**
  *
  * @author Daniel Schulz
@@ -16,7 +15,8 @@ use Slothsoft\Farah\Module\Asset\ManifestElementBuilder;
  */
 class FromFilesystemPathResolver implements PathResolverStrategyInterface
 {
-    public function loadChildren(AssetInterface $context) : iterable
+
+    public function loadChildren(AssetInterface $context): iterable
     {
         $element = $context->getManifestElement();
         $desiredMime = $element->getAttribute('type', '*/*');
@@ -37,7 +37,7 @@ class FromFilesystemPathResolver implements PathResolverStrategyInterface
             }
         }
     }
-    
+
     public function resolvePath(AssetInterface $context, string $name): LeanElement
     {
         $element = $context->getManifestElement();

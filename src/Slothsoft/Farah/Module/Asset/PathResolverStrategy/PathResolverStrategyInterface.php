@@ -7,17 +7,20 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 interface PathResolverStrategyInterface
 {
+
     /**
+     *
      * @param AssetInterface $context
      * @return LeanElement[]
      */
-    public function loadChildren(AssetInterface $context) : iterable;
-    
+    public function loadChildren(AssetInterface $context): iterable;
+
     /**
+     *
      * @param AssetInterface $context
      * @param string $name
      * @return LeanElement
      */
-    public function resolvePath(AssetInterface $context, string $name) : LeanElement;
+    public function resolvePath(AssetInterface $context, string $name): LeanElement;
 }
 

@@ -12,16 +12,18 @@ use DOMElement;
 class ManifestDOMWriter implements DOMWriterInterface
 {
     use DOMWriterDocumentFromElementTrait;
-    
+
     /**
+     *
      * @var AssetInterface
      */
     private $asset;
-    
-    public function __construct(AssetInterface $asset) {
+
+    public function __construct(AssetInterface $asset)
+    {
         $this->asset = $asset;
     }
-    
+
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
         $element = $this->asset->getManifestElement();

@@ -11,22 +11,25 @@ use DOMDocument;
 class TransformationDOMWriter implements DOMWriterInterface
 {
     use DOMWriterElementFromDocumentTrait;
-    
+
     /**
+     *
      * @var DOMWriterInterface
      */
     private $source;
-    
+
     /**
+     *
      * @var DOMWriterInterface
      */
     private $template;
-    
-    public function __construct(DOMWriterInterface $source, DOMWriterInterface $template) {
+
+    public function __construct(DOMWriterInterface $source, DOMWriterInterface $template)
+    {
         $this->source = $source;
         $this->template = $template;
     }
-    
+
     public function toDocument(): DOMDocument
     {
         $dom = new DOMHelper();
@@ -39,6 +42,5 @@ class TransformationDOMWriter implements DOMWriterInterface
         
         return $resultDoc;
     }
-
 }
 

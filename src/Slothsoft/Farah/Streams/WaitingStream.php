@@ -9,26 +9,29 @@ use BadMethodCallException;
 class WaitingStream implements StreamInterface
 {
     use StreamDecoratorTrait;
-    
+
     private $stream;
+
     private $usleep;
+
     private $heartbeat;
+
     public function __construct(StreamInterface $stream, int $waitInMicroseconds, array $heartbeat = null)
     {
         $this->stream = $stream;
         $this->usleep = $waitInMicroseconds;
         $this->heartbeat = $heartbeat;
     }
-    
-    
-    public function isReadable() {
+
+    public function isReadable()
+    {
         return true;
     }
-    
+
     public function read($length)
     {
         $timeWaited = 0;
-        while (!$this->stream->eof()) {
+        while (! $this->stream->eof()) {
             $content = $this->stream->read($length);
             if ($content !== '') {
                 return $content;
@@ -44,20 +47,22 @@ class WaitingStream implements StreamInterface
         }
         return '';
     }
-    
-    public function isSeekable() {
+
+    public function isSeekable()
+    {
         return false;
     }
-    
+
     public function seek($offset, $whence = SEEK_SET)
     {
         throw new BadMethodCallException('Cannot seek a WaitingStream.');
     }
-    
-    public function isWritable() {
+
+    public function isWritable()
+    {
         return false;
     }
-    
+
     public function write($string)
     {
         throw new BadMethodCallException('Cannot write a WaitingStream.');

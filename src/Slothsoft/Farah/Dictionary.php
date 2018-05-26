@@ -74,6 +74,7 @@ class Dictionary
     const XPATH_DICT_REPLACE = '.';
 
     /**
+     *
      * @var FarahUrl
      */
     protected $currentModule;

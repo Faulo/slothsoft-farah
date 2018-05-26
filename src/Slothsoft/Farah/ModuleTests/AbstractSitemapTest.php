@@ -9,7 +9,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Result\ResultInterface;
-use Slothsoft\Farah\Module\Results\ResultInterfacePlusXml;
+use Slothsoft\Farah\Module\Result\ResultInterfacePlusXml;
 use Slothsoft\Farah\Sites\Domain;
 use DOMDocument;
 use DOMElement;

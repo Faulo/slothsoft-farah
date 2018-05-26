@@ -2,10 +2,13 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Container;
 
-interface ContainerInterface 
+interface ContainerInterface
 {
-    public function put($id, $entry) : void;
+
+    public function put($id, $entry): void;
+
     public function get($id): object;
-    public function has($id) : bool;
+
+    public function has($id): bool;
 }
 

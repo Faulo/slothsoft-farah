@@ -20,9 +20,9 @@ use Slothsoft\Farah\Streams\StreamHelper;
 
 abstract class RequestStrategyBase implements RequestStrategyInterface
 {
-    
+
     private $request;
-    
+
     public function process(ServerRequestInterface $request): ResponseInterface
     {
         try {
@@ -57,7 +57,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 
                 $fileHash = $result->lookupHash();
                 $isBufferable = $result->lookupIsBufferable();
-                $isCompressable = $isBufferable; //$result->lookupIsCompressable();
+                $isCompressable = $isBufferable; // $result->lookupIsCompressable();
                 $body = $result->lookupStream();
                 
                 if ($isCompressable) {
@@ -87,7 +87,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 }
                 
                 if ($bodyLength === null) {
-                    //we don't know the length of the response, so we better figure out a safe transfer coding
+                    // we don't know the length of the response, so we better figure out a safe transfer coding
                     $transferCoding = $this->negotiateTransferCoding('chunked');
                     if (! $transferCoding->isNoEncoding()) {
                         $body = $transferCoding->encodeStream($body);
@@ -104,12 +104,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                             $rangeEnd = strlen($match[2]) ? (int) $match[2] + 1 : $bodyLength;
                             
                             $statusCode = StatusCode::STATUS_PARTIAL_CONTENT;
-                            $headers['content-range'] = sprintf(
-                                'bytes %1$d-%2$d/%3$d',
-                                $rangeStart,
-                                $rangeEnd - 1,
-                                $bodyLength
-                                );
+                            $headers['content-range'] = sprintf('bytes %1$d-%2$d/%3$d', $rangeStart, $rangeEnd - 1, $bodyLength);
                             
                             $bodyLength = $rangeEnd - $rangeStart;
                             
@@ -151,7 +146,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         
         return MessageFactory::createServerResponse($statusCode, $headers, $body);
     }
-    
+
     private function validateRequest()
     {
         $clientIp = $this->request->getServerParams()['REMOTE_ADDR'] ?? '';
@@ -175,9 +170,9 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
             throw new HttpStatusException("HTTP Method '{$this->request->getMethod()}' is not supported by this implementation.", StatusCode::STATUS_METHOD_NOT_ALLOWED);
         }
     }
-    
+
     abstract protected function createUrl(ServerRequestInterface $request): FarahUrl;
-    
+
     private function negotiateContentCoding(string $preferred): ContentCoding
     {
         $accept = $this->request->getHeaderLine('accept-encoding');
@@ -189,7 +184,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         }
         return ContentCoding::identity();
     }
-    
+
     private function negotiateTransferCoding(string $preferred): TransferCoding
     {
         $accept = $this->request->getHeaderLine('te');
@@ -204,7 +199,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         }
         return TransferCoding::identity();
     }
-    
+
     private function shouldIncludeBody(string $method, int $statusCode): bool
     {
         switch ($method) {
@@ -225,7 +220,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         
         return true;
     }
-    
+
     private function inventCacheDuration(string $mimeType): int
     {
         if (strpos($mimeType, 'image/') === 0) {
@@ -242,8 +237,9 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         }
         return 30;
     }
-    
-    private function inventPreferredCompressions(string $mimeType) : string {
+
+    private function inventPreferredCompressions(string $mimeType): string
+    {
         return MimeTypeDictionary::guessCompressions($mimeType);
     }
 }

@@ -7,6 +7,7 @@ use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 
 interface TreeLoaderStrategyInterface
 {
+
     public function loadTree(?ManifestInterface $context, string $manifestDirectory): LeanElement;
 }
 

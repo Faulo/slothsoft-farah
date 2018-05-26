@@ -9,7 +9,9 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\TransformationResult
 
 class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterface
 {
-    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args) : ExecutableStrategies {
+
+    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
+    {
         $resultBuilder = new TransformationResultBuilder($context);
         return new ExecutableStrategies($resultBuilder);
     }

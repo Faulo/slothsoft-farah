@@ -9,22 +9,21 @@ use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterf
 
 class AssetStrategies
 {
+
     public $executableBuilder;
+
     public $pathResolver;
+
     public $parameterFilter;
+
     public $instruction;
-    
-    public function __construct(
-        ExecutableBuilderStrategyInterface $executableBuilder,
-        PathResolverStrategyInterface $pathResolver,
-        ParameterFilterStrategyInterface $parameterFilter,
-        InstructionStrategyInterface $instruction
-        ) {
+
+    public function __construct(ExecutableBuilderStrategyInterface $executableBuilder, PathResolverStrategyInterface $pathResolver, ParameterFilterStrategyInterface $parameterFilter, InstructionStrategyInterface $instruction)
+    {
         $this->executableBuilder = $executableBuilder;
         $this->pathResolver = $pathResolver;
         $this->parameterFilter = $parameterFilter;
         $this->instruction = $instruction;
     }
-    
 }
 

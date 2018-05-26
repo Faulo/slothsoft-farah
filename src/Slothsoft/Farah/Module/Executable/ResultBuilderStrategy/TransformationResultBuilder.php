@@ -17,23 +17,30 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 
 class TransformationResultBuilder implements ResultBuilderStrategyInterface
 {
-    private static function resultIsDefault() : FarahUrlStreamIdentifier {
+
+    private static function resultIsDefault(): FarahUrlStreamIdentifier
+    {
         return FarahUrlStreamIdentifier::createFromString('');
     }
-    private static function resultIsXslSource() : FarahUrlStreamIdentifier {
+
+    private static function resultIsXslSource(): FarahUrlStreamIdentifier
+    {
         return FarahUrlStreamIdentifier::createFromString('xsl-source');
     }
-    private static function resultIsXslTemplate() : FarahUrlStreamIdentifier {
+
+    private static function resultIsXslTemplate(): FarahUrlStreamIdentifier
+    {
         return FarahUrlStreamIdentifier::createFromString('xsl-template');
     }
-    
+
     private $asset;
-    
+
     public function __construct(AssetInterface $asset)
     {
         $this->asset = $asset;
     }
-    public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type) : ResultStrategies
+
+    public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
     {
         $instructions = $this->asset->getUseInstructions();
         
@@ -61,7 +68,7 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface
             if ($type === static::resultIsDefault()) {
                 // default result is the root transformation, so we gotta add all <link> and <script> elements
                 $instructions = $this->asset->getLinkInstructions();
-                if (!($instructions->stylesheetAssets->isEmpty() and $instructions->scriptAssets->isEmpty())) {
+                if (! ($instructions->stylesheetAssets->isEmpty() and $instructions->scriptAssets->isEmpty())) {
                     $writer = new DecoratedDOMWriter($writer, $instructions->stylesheetAssets, $instructions->scriptAssets);
                 }
             }

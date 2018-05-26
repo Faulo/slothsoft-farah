@@ -69,8 +69,9 @@ abstract class FilteredStreamBase implements StreamInterface
     {
         return $this->stream->isSeekable();
     }
-    
-    public function getSize() {
+
+    public function getSize()
+    {
         if ($this->isSeekable()) {
             $ret = strlen($this->getContents());
             $this->rewind();
@@ -79,7 +80,7 @@ abstract class FilteredStreamBase implements StreamInterface
             return null;
         }
     }
-    
+
     public function seek($offset, $whence = SEEK_SET)
     {
         if ($offset === 0 and $whence === SEEK_SET) {

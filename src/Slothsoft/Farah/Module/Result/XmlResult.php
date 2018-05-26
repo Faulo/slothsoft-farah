@@ -10,13 +10,13 @@ use DOMDocument;
 class XmlResult extends Result implements DOMWriterInterface
 {
     use DOMWriterElementFromDocumentTrait;
-    
+
     public function toDocument(): DOMDocument
     {
         $stream = $this->lookupStream();
         $doc = new DOMDocument();
         $success = $doc->loadXML($stream->getContents());
-        if (!$success) {
+        if (! $success) {
             throw new MalformedDocumentException((string) $this->createUrl());
         }
         return $doc;

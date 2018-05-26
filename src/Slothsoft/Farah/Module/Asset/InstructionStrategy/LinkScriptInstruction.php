@@ -4,10 +4,12 @@ namespace Slothsoft\Farah\Module\Asset\InstructionStrategy;
 
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 
-class LinkScriptInstruction extends NullInstruction {
+class LinkScriptInstruction extends NullInstruction
+{
     use InstructionFromReferenceAttributeTrait;
-    
-    public function isLinkScript(AssetInterface $context) : bool {
+
+    public function isLinkScript(AssetInterface $context): bool
+    {
         return true;
     }
 }

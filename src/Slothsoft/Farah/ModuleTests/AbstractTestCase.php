@@ -12,7 +12,7 @@ class AbstractTestCase extends TestCase
     {
         $this->fail(sprintf('%s: %s', basename(get_class($e)), $e->getMessage()));
     }
-    
+
     protected function getObjectProperty(object $target, string $name)
     {
         $getProperty = function (string $name) {
@@ -21,7 +21,7 @@ class AbstractTestCase extends TestCase
         $getProperty = $getProperty->bindTo($target, get_class($target));
         return $getProperty($name);
     }
-    
+
     protected function getObjectMethod(object $target, string $name, ...$args)
     {
         $getProperty = function (string $name, $args) {

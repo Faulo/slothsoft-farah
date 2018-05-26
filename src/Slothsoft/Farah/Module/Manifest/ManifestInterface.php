@@ -36,27 +36,28 @@ interface ManifestInterface
      * @return AssetInterface
      */
     public function lookupAsset($path): AssetInterface;
-    
+
     /**
+     *
      * @param LeanElement $element
      * @return AssetInterface
      */
     public function createAsset(LeanElement $element): AssetInterface;
-    
+
     /**
      * Set any missing attributes according to the AssetBuilderStrategy.
      *
      * @param LeanElement $parent
      * @param LeanElement $child
      */
-    public function normalizeManifestElement(LeanElement $parent, LeanElement $child) : void;
-    
+    public function normalizeManifestElement(LeanElement $parent, LeanElement $child): void;
+
     /*
      * Set any missing attributes in the whole tree according to the AssetBuilderStrategy.
      *
      * @param LeanElement $parent
      * @param LeanElement $child
      */
-    public function normalizeManifestTree(LeanElement $root) : void;
+    public function normalizeManifestTree(LeanElement $root): void;
 }
 

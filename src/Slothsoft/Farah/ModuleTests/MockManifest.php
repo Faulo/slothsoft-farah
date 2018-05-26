@@ -9,6 +9,7 @@ use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 
 class MockManifest implements ManifestInterface
 {
+
     public function normalizeManifestElement(LeanElement $parent, LeanElement $child): void
     {}
 
@@ -26,6 +27,5 @@ class MockManifest implements ManifestInterface
 
     public function normalizeManifestTree(LeanElement $root): void
     {}
-
 }
 

@@ -18,7 +18,7 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface
 {
 
     private $writer;
-    
+
     private $resourceUrl;
 
     public function __construct(DOMWriterInterface $writer)
@@ -60,7 +60,7 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface
     {
         return true;
     }
-    
+
     private function toResourceUrl()
     {
         if ($this->resourceUrl === null) {

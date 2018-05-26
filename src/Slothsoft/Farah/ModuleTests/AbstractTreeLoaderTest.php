@@ -13,9 +13,9 @@ use DOMDocument;
 
 abstract class AbstractTreeLoaderTest extends AbstractTestCase
 {
-    
-    abstract protected static function getTreeLoader() : TreeLoaderStrategyInterface;
-    
+
+    abstract protected static function getTreeLoader(): TreeLoaderStrategyInterface;
+
     abstract protected static function getManifestDirectory(): string;
 
     protected function getManifestRoot(): LeanElement
@@ -27,11 +27,8 @@ abstract class AbstractTreeLoaderTest extends AbstractTestCase
     {
         return $this->getManifestRoot()->toDocument();
     }
-    
-    
-    
 
-    public function testHasRootElement() : void
+    public function testHasRootElement(): void
     {
         $this->assertInstanceOf(LeanElement::class, $this->getManifestRoot());
     }
@@ -42,89 +39,99 @@ abstract class AbstractTreeLoaderTest extends AbstractTestCase
      */
     public function testRootElementIsAssets()
     {
-        $this->assertEquals($this->getManifestRoot()->getTag(), Manifest::TAG_ASSET_ROOT);
+        $this->assertEquals($this->getManifestRoot()
+            ->getTag(), Manifest::TAG_ASSET_ROOT);
     }
 
     /**
      *
      * @dataProvider customPathResolverProvider
      */
-    public function testClassImplementsPathResolverStrategy(string $className) : void
+    public function testClassImplementsPathResolverStrategy(string $className): void
     {
         $this->assertNotNull($className);
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(PathResolverStrategyInterface::class, new $className());
     }
-    
-    public function customPathResolverProvider() : iterable
+
+    public function customPathResolverProvider(): iterable
     {
         foreach ($this->getAllAttributeValues('path-resolver') as $className) {
-            yield $className => [$className];
+            yield $className => [
+                $className
+            ];
         }
     }
-    
+
     /**
      *
      * @dataProvider customExecutableBuilderProvider
      */
-    public function testClassImplementsExecutableBuilderStrategy(string $className) : void
+    public function testClassImplementsExecutableBuilderStrategy(string $className): void
     {
         $this->assertNotNull($className);
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(ExecutableBuilderStrategyInterface::class, new $className());
     }
-    
-    public function customExecutableBuilderProvider() : iterable
+
+    public function customExecutableBuilderProvider(): iterable
     {
         foreach ($this->getAllAttributeValues('executable-builder') as $className) {
-            yield $className => [$className];
+            yield $className => [
+                $className
+            ];
         }
     }
-    
+
     /**
      *
      * @dataProvider customInstructionProvider
      */
-    public function testClassImplementsInstructionStrategy(string $className) : void
+    public function testClassImplementsInstructionStrategy(string $className): void
     {
         $this->assertNotNull($className);
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(InstructionStrategyInterface::class, new $className());
     }
-    
-    public function customInstructionProvider() : iterable
+
+    public function customInstructionProvider(): iterable
     {
         foreach ($this->getAllAttributeValues('instruction') as $className) {
-            yield $className => [$className];
+            yield $className => [
+                $className
+            ];
         }
     }
-    
+
     /**
      *
      * @dataProvider customParameterFilterProvider
      */
-    public function testClassImplementsParameterFilterStrategy(string $className) : void
+    public function testClassImplementsParameterFilterStrategy(string $className): void
     {
         $this->assertNotNull($className);
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(ParameterFilterStrategyInterface::class, new $className());
     }
-    
-    public function customParameterFilterProvider() : iterable
+
+    public function customParameterFilterProvider(): iterable
     {
         foreach ($this->getAllAttributeValues('parameter-filter') as $className) {
-            yield $className => [$className];
+            yield $className => [
+                $className
+            ];
         }
     }
-    
-    private function getAllAttributeValues(string $attributeName) : iterable {
+
+    private function getAllAttributeValues(string $attributeName): iterable
+    {
         $attributes = [];
         $manifestDocument = $this->getManifestDocument();
         $nodeList = $manifestDocument->getElementsByTagName('*');
         foreach ($nodeList as $node) {
             if ($node->hasAttribute($attributeName)) {
                 $attributeValue = $node->getAttribute($attributeName);
-                if (!isset($attributes[$attributeValue])) {
+                if (! isset($attributes[$attributeValue])) {
                     $attributes[$attributeValue] = true;
                     yield $attributeValue;
                 }

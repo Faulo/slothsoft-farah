@@ -9,34 +9,42 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 
 class Result implements ResultInterface
 {
+
     private $ownerExecutable;
+
     private $type;
+
     private $strategies;
-    
+
     private $hash;
+
     private $mimeType;
+
     private $charset;
+
     private $fileName;
+
     private $changeTime;
+
     private $isBufferable;
-    
-    public function __construct(ExecutableInterface $ownerExecutable, FarahUrlStreamIdentifier $type, ResultStrategies $strategies) {
+
+    public function __construct(ExecutableInterface $ownerExecutable, FarahUrlStreamIdentifier $type, ResultStrategies $strategies)
+    {
         $this->ownerExecutable = $ownerExecutable;
         $this->type = $type;
         $this->strategies = $strategies;
     }
-    
+
     public function createUrl(): FarahUrl
     {
         return $this->ownerExecutable->createUrl($this->type);
     }
-    
-    
+
     public function lookupStream(): StreamInterface
     {
         return $this->strategies->streamBuilder->buildStream($this);
     }
-    
+
     public function lookupHash(): string
     {
         if ($this->hash === null) {
@@ -84,7 +92,5 @@ class Result implements ResultInterface
         }
         return $this->changeTime;
     }
-
-
 }
 

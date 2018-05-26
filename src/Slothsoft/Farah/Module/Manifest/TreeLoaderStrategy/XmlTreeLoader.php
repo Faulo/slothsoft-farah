@@ -9,6 +9,7 @@ use Throwable;
 
 class XmlTreeLoader implements TreeLoaderStrategyInterface
 {
+
     public function loadTree(?ManifestInterface $context, string $manifestDirectory): LeanElement
     {
         $xmlFile = $manifestDirectory . DIRECTORY_SEPARATOR . 'manifest.xml';
@@ -17,12 +18,15 @@ class XmlTreeLoader implements TreeLoaderStrategyInterface
         if (file_exists($tmpFile)) {
             if (filemtime($tmpFile) > filemtime($xmlFile)) {
                 try {
-                    $element = unserialize(file_get_contents($tmpFile), ['allowed_classes' => [LeanElement::class]]);
+                    $element = unserialize(file_get_contents($tmpFile), [
+                        'allowed_classes' => [
+                            LeanElement::class
+                        ]
+                    ]);
                     if ($element) {
-                        //return $element;
+                        // return $element;
                     }
-                } catch(Throwable $e) {
-                }
+                } catch (Throwable $e) {}
             }
         }
         

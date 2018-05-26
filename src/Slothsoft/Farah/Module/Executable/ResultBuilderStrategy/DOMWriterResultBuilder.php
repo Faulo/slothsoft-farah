@@ -10,15 +10,18 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 
 class DOMWriterResultBuilder implements ResultBuilderStrategyInterface
 {
+
     private $writer;
-    public function __construct(DOMWriterInterface $writer) {
+
+    public function __construct(DOMWriterInterface $writer)
+    {
         $this->writer = $writer;
     }
-    public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type) : ResultStrategies
+
+    public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
     {
         $streamBuilder = new DOMWriterStreamBuilder($writer);
         return new ResultStrategies($streamBuilder);
     }
-
 }
 

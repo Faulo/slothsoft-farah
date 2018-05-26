@@ -21,10 +21,10 @@ class FarahUrlAuthority implements Hashable
         }
         return self::create($id, $vendor, $module);
     }
-    
+
     public static function createFromHttpAuthority(string $authority): FarahUrlAuthority
     {
-        list($vendor, $module) = explode('@', $authority);
+        list ($vendor, $module) = explode('@', $authority);
         return self::createFromVendorAndModule($vendor, $module);
     }
 

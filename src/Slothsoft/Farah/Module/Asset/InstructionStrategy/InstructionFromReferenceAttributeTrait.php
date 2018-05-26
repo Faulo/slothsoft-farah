@@ -8,7 +8,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 trait InstructionFromReferenceAttributeTrait
 {
-    
+
     public function getReferencedAsset(AssetInterface $context): AssetInterface
     {
         $ref = $context->getManifestElement()->getAttribute('ref');

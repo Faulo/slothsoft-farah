@@ -12,6 +12,7 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
  */
 interface StreamBuilderStrategyInterface
 {
+
     /**
      * Create a stream of this result.
      *

@@ -10,14 +10,17 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileWriterStreamBuilder;
 
 class FileResultBuilder implements ResultBuilderStrategyInterface
 {
+
     private $file;
-    public function __construct(HTTPFile $file) {
+
+    public function __construct(HTTPFile $file)
+    {
         $this->file = $file;
     }
-    public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type) : ResultStrategies
+
+    public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
     {
         return new ResultStrategies(new FileWriterStreamBuilder($this->file));
     }
-    
 }
 

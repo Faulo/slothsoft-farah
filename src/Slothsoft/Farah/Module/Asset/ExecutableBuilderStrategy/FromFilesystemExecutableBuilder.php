@@ -10,7 +10,9 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\FileResultBuilder;
 
 class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterface
 {
-    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args) : ExecutableStrategies {
+
+    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
+    {
         $path = $context->getManifestElement()->getAttribute('realpath');
         $resultBuilder = new FileResultBuilder(HTTPFile::createFromPath($path));
         return new ExecutableStrategies($resultBuilder);

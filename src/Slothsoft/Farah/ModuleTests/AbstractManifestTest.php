@@ -16,47 +16,50 @@ use DOMElement;
 use Throwable;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 
-
-
 abstract class AbstractManifestTest extends AbstractTestCase
 {
+
     abstract protected static function getManifestAuthority(): FarahUrlAuthority;
 
-    protected function getManifest() : ManifestInterface {
+    protected function getManifest(): ManifestInterface
+    {
         static $manifest;
         if ($manifest === null) {
             $manifest = Module::resolveToManifest($this->getManifestUrl());
         }
         return $manifest;
     }
-    
-    protected function getManifestUrl() : FarahUrl {
+
+    protected function getManifestUrl(): FarahUrl
+    {
         return FarahUrl::createFromComponents(static::getManifestAuthority());
     }
-    
-    protected function getManifestAsset() : AssetInterface {
+
+    protected function getManifestAsset(): AssetInterface
+    {
         return $this->getManifest()->lookupAsset('/');
     }
-    
+
     protected function getManifestDocument(): DOMDocument
     {
         return $this->getManifestMethod('getRootElement')->toDocument();
     }
-    
-    protected function getManifestProperty(string $name) {
+
+    protected function getManifestProperty(string $name)
+    {
         return $this->getObjectProperty($this->getManifest(), $name);
     }
-    
-    protected function getManifestMethod(string $name) {
+
+    protected function getManifestMethod(string $name)
+    {
         return $this->getObjectMethod($this->getManifest(), $name);
     }
-    
-    
+
     /**
      *
      * @dataProvider assetReferenceProvider
      */
-    public function testAssetReferenceIsValid(string $ref, FarahUrl $context) : void
+    public function testAssetReferenceIsValid(string $ref, FarahUrl $context): void
     {
         try {
             FarahUrl::createFromReference($ref, $context);
@@ -67,21 +70,29 @@ abstract class AbstractManifestTest extends AbstractTestCase
             $this->failException($e);
         }
     }
-    public function assetReferenceProvider() : iterable
+
+    public function assetReferenceProvider(): iterable
     {
         foreach ($this->getReferencedAssetReferences() as $context => $path) {
-            yield (string) $path => [$path, $context];
+            yield (string) $path => [
+                $path,
+                $context
+            ];
         }
     }
-    public function assetReferenceUrlProvider() : iterable
+
+    public function assetReferenceUrlProvider(): iterable
     {
         foreach ($this->getReferencedAssetReferences() as $context => $ref) {
             try {
                 $url = FarahUrl::createFromReference($ref, $context);
-                yield (string) $url => [$url];
+                yield (string) $url => [
+                    $url
+                ];
             } catch (Throwable $e) {}
         }
     }
+
     private function getReferencedAssetReferences(): iterable
     {
         $manifestDocument = $this->getManifestDocument();
@@ -92,7 +103,9 @@ abstract class AbstractManifestTest extends AbstractTestCase
             }
         }
     }
-    private function getContextUrlForManifestNode(DOMElement $node) : FarahUrl {
+
+    private function getContextUrlForManifestNode(DOMElement $node): FarahUrl
+    {
         $path = [];
         while ($node->parentNode instanceof DOMElement) {
             if ($node->hasAttribute('name')) {
@@ -107,12 +120,12 @@ abstract class AbstractManifestTest extends AbstractTestCase
         $path = FarahUrlPath::createFromString($path);
         return $this->getManifestUrl()->withAssetPath($path);
     }
-    
+
     /**
      *
      * @dataProvider assetReferenceUrlProvider
      */
-    public function testReferencedModuleExists(FarahUrl $url) : void
+    public function testReferencedModuleExists(FarahUrl $url): void
     {
         try {
             Module::resolveToManifest($url);
@@ -121,11 +134,12 @@ abstract class AbstractManifestTest extends AbstractTestCase
             $this->failException($e);
         }
     }
+
     /**
      *
      * @dataProvider assetReferenceUrlProvider
      */
-    public function testReferencedAssetExists(FarahUrl $url) : void
+    public function testReferencedAssetExists(FarahUrl $url): void
     {
         try {
             Module::resolveToAsset($url);
@@ -136,12 +150,12 @@ abstract class AbstractManifestTest extends AbstractTestCase
             $this->failException($e);
         }
     }
-    
+
     /**
      *
      * @dataProvider assetReferenceUrlProvider
      */
-    public function testReferencedExecutableExists(FarahUrl $url) : void
+    public function testReferencedExecutableExists(FarahUrl $url): void
     {
         try {
             Module::resolveToExecutable($url);
@@ -154,11 +168,12 @@ abstract class AbstractManifestTest extends AbstractTestCase
             $this->failException($e);
         }
     }
+
     /**
      *
      * @dataProvider assetReferenceUrlProvider
      */
-    public function testReferencedResultExists(FarahUrl $url) : void
+    public function testReferencedResultExists(FarahUrl $url): void
     {
         try {
             Module::resolveToResult($url);
@@ -171,22 +186,24 @@ abstract class AbstractManifestTest extends AbstractTestCase
             $this->failException($e);
         }
     }
-    
-    
-    
-    public function assetLocalUrlProvider() : iterable
+
+    public function assetLocalUrlProvider(): iterable
     {
         foreach ($this->getLocalAssetPaths() as $path) {
             try {
                 $url = $this->getManifest()->createUrl($path);
-                yield (string) $url => [$url];
+                yield (string) $url => [
+                    $url
+                ];
             } catch (Throwable $e) {}
         }
     }
+
     private function getLocalAssetPaths(): iterable
     {
         return $this->buildPathIndex($this->getManifestAsset());
     }
+
     private function buildPathIndex(AssetInterface $asset): iterable
     {
         yield $asset->getUrlPath();
@@ -196,12 +213,12 @@ abstract class AbstractManifestTest extends AbstractTestCase
             }
         }
     }
-    
+
     /**
      *
      * @dataProvider assetLocalUrlProvider
      */
-    public function testLocalAssetExists(FarahUrl $url) : void
+    public function testLocalAssetExists(FarahUrl $url): void
     {
         try {
             Module::resolveToAsset($url);
@@ -212,11 +229,12 @@ abstract class AbstractManifestTest extends AbstractTestCase
             $this->failException($e);
         }
     }
+
     /**
      *
      * @dataProvider assetLocalUrlProvider
      */
-    public function testLocalExecutableExists(FarahUrl $url) : void
+    public function testLocalExecutableExists(FarahUrl $url): void
     {
         try {
             Module::resolveToExecutable($url);
@@ -229,11 +247,12 @@ abstract class AbstractManifestTest extends AbstractTestCase
             $this->failException($e);
         }
     }
+
     /**
      *
      * @dataProvider assetLocalUrlProvider
      */
-    public function testLocalResultExists(FarahUrl $url) : void
+    public function testLocalResultExists(FarahUrl $url): void
     {
         try {
             Module::resolveToResult($url);
@@ -246,12 +265,13 @@ abstract class AbstractManifestTest extends AbstractTestCase
             $this->failException($e);
         }
     }
+
     /**
      *
      * @depends      testLocalResultExists
      * @dataProvider assetLocalUrlProvider
      */
-    public function testLocalResultIsValidAccordingToSchema(FarahUrl $url) : void
+    public function testLocalResultIsValidAccordingToSchema(FarahUrl $url): void
     {
         $asset = Module::resolveToAsset($url);
         $executable = $asset->lookupExecutable();

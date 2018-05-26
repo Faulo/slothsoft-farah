@@ -13,40 +13,45 @@ use Slothsoft\Farah\Module\Result\XmlResult;
 
 class Executable implements ExecutableInterface
 {
+
     const RESULT_IS_DEFAULT = '';
-    
+
     public final function resultIsDefault(): FarahUrlStreamIdentifier
     {
         return FarahUrlStreamIdentifier::createFromString(self::RESULT_IS_DEFAULT);
     }
-    
+
     const RESULT_IS_XML = 'xml';
-    
+
     public final function resultIsXml(): FarahUrlStreamIdentifier
     {
         return FarahUrlStreamIdentifier::createFromString(self::RESULT_IS_XML);
     }
-    
+
     /**
+     *
      * @var AssetInterface
      */
     private $ownerAsset;
-    
+
     /**
+     *
      * @var FarahUrlArguments
      */
     private $args;
-    
+
     /**
+     *
      * @var ExecutableStrategies
      */
     private $strategies;
-    
+
     /**
+     *
      * @var ResultContainer
      */
     private $results;
-    
+
     public function __construct(AssetInterface $ownerAsset, FarahUrlArguments $args, ExecutableStrategies $strategies)
     {
         $this->ownerAsset = $ownerAsset;
@@ -54,10 +59,12 @@ class Executable implements ExecutableInterface
         $this->strategies = $strategies;
         $this->results = new ResultContainer();
     }
-    
-    public function getUrlArguments() : FarahUrlArguments {
+
+    public function getUrlArguments(): FarahUrlArguments
+    {
         return $this->args;
     }
+
     public function lookupResult($type): ResultInterface
     {
         if (is_string($type)) {
@@ -68,7 +75,9 @@ class Executable implements ExecutableInterface
         }
         return $this->results->get($type);
     }
-    private function createResult(FarahUrlStreamIdentifier $type) : ResultInterface {
+
+    private function createResult(FarahUrlStreamIdentifier $type): ResultInterface
+    {
         $strategies = $this->strategies->resultBuilder->buildResultStrategies($this, $type);
         
         if ($type === static::resultIsXml()) {
@@ -79,7 +88,7 @@ class Executable implements ExecutableInterface
         
         return $result;
     }
-    
+
     public function lookupDefaultResult(): ResultInterface
     {
         return $this->lookupResult($this->resultIsDefault());

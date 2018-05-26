@@ -13,115 +13,120 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 class Manifest implements ManifestInterface
 {
+
     // asset tags
     const TAG_FRAGMENT = 'fragment';
-    
+
     const TAG_CONTAINER = 'container';
-    
+
     const TAG_EXTERNAL_RESOURCE = 'external-resource';
-    
+
     const TAG_CUSTOM_ASSET = 'custom-asset';
-    
+
     // runtime-only asset tags
     const TAG_DOCUMENT = 'document';
-    
+
     const TAG_ERROR = 'error';
-    
+
     const TAG_CLOSURE = 'closure';
-    
+
     // physical asset tags
     const TAG_ASSET_ROOT = 'assets';
-    
+
     const TAG_RESOURCE = 'resource';
-    
+
     const TAG_DIRECTORY = 'directory';
-    
+
     const TAG_RESOURCE_DIRECTORY = 'resource-directory';
-    
+
     const TAG_TEMPLATE_RESOURCE = 'template-resource';
-    
+
     // meta tags
     const TAG_SOURCE = 'source';
-    
+
     const TAG_OPTIONS = 'options';
-    
+
     const TAG_PARAM = 'param';
-    
+
     // instruction tags
     const TAG_IMPORT = 'import';
-    
+
     const TAG_USE_DOCUMENT = 'use-document';
-    
+
     const TAG_USE_TEMPLATE = 'use-template';
-    
+
     const TAG_USE_MANIFEST = 'use-manifest';
-    
+
     const TAG_LINK_STYLESHEET = 'link-stylesheet';
-    
+
     const TAG_LINK_SCRIPT = 'link-script';
-    
+
     const ATTR_NAME = 'name';
-    
+
     const ATTR_ID = 'url';
-    
+
     const ATTR_HREF = 'href';
-    
+
     const ATTR_SRC = 'src';
-    
+
     const ATTR_ALIAS = 'as';
-    
+
     const ATTR_PATH = 'path';
-    
+
     const ATTR_TYPE = 'type';
-    
+
     const ATTR_REALPATH = 'realpath';
-    
+
     const ATTR_ASSETPATH = 'assetpath';
-    
+
     const ATTR_REFERENCE = 'ref';
-    
+
     const ATTR_USE = 'use';
-    
+
     const ATTR_USE_MANIFEST = 'manifest';
-    
+
     const ATTR_USE_DOCUMENT = 'document';
-    
+
     const ATTR_USE_TEMPLATE = 'template';
-    
+
     const ATTR_USE_STYLESHEET = 'stylesheet';
-    
+
     const ATTR_USE_SCRIPT = 'script';
-    
+
     const ATTR_PARAM_KEY = 'name';
-    
+
     const ATTR_PARAM_VAL = 'value';
-    
+
     const EVENT_USE_DOCUMENT = 'use-document';
-    
+
     const EVENT_USE_TEMPLATE = 'use-template';
-    
+
     const EVENT_USE_SCRIPT = 'use-script';
-    
+
     const EVENT_USE_STYLESHEET = 'use-stylesheet';
-    
+
     const EVENT_SET_PARAMETER = 'set-parameter';
-    
+
     const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
-    
+
     const FILE_MANIFEST = 'manifest.xml';
-    
+
     private $ownerKernel;
+
     private $authority;
+
     private $manifestDirectory;
+
     private $strategies;
-    
+
     private $assets;
+
     private $rootElement;
+
     private $rootAsset;
-    
-    public function __construct(
-            Module $ownerKernel, FarahUrlAuthority $authority, string $manifestDirectory,
-            ManifestStrategies $strategies) {
+
+    public function __construct(Module $ownerKernel, FarahUrlAuthority $authority, string $manifestDirectory, ManifestStrategies $strategies)
+    {
         $this->ownerKernel = $ownerKernel;
         $this->authority = $authority;
         $this->manifestDirectory = $manifestDirectory;
@@ -129,38 +134,40 @@ class Manifest implements ManifestInterface
         
         $this->assets = new AssetContainer();
     }
-    
-    public function getId(): string {
+
+    public function getId(): string
+    {
         return (string) $this->authority;
     }
-    
+
     public function createUrl($path = null, $args = null, $fragment = null): FarahUrl
     {
         return FarahUrl::createFromComponents($this->authority, $path, $args, $fragment);
     }
-    
+
     public function lookupAsset($path): AssetInterface
     {
         if (is_string($path)) {
             $path = FarahUrlPath::createFromString($path);
         }
         if (! $this->assets->has($path)) {
-            $this->assets->put($path, $this->getRootAsset()->traverseTo((string) $path));
+            $this->assets->put($path, $this->getRootAsset()
+                ->traverseTo((string) $path));
         }
         return $this->assets->get($path);
     }
-    
-    public function normalizeElement(LeanElement $parent, LeanElement $element) : void
+
+    public function normalizeElement(LeanElement $parent, LeanElement $element): void
     {
         $this->strategies->assetBuilder->normalizeTree($parent, $element);
     }
-    
+
     public function createAsset(LeanElement $element): AssetInterface
     {
         $strategies = $this->strategies->assetBuilder->buildAssetStrategies($this, $element);
         return new Asset($this, $element, FarahUrlPath::createFromString($element->getAttribute('assetpath')), $strategies);
     }
-    
+
     private function getRootAsset(): AssetInterface
     {
         if ($this->rootAsset === null) {
@@ -168,7 +175,7 @@ class Manifest implements ManifestInterface
         }
         return $this->rootAsset;
     }
-    
+
     private function getRootElement(): LeanElement
     {
         if ($this->rootElement === null) {
@@ -176,23 +183,28 @@ class Manifest implements ManifestInterface
         }
         return $this->rootElement;
     }
-    
-    public function normalizeManifestElement(LeanElement $parent, LeanElement $child) : void {
+
+    public function normalizeManifestElement(LeanElement $parent, LeanElement $child): void
+    {
         $this->strategies->assetBuilder->normalizeElement($child, $parent);
     }
-    public function normalizeManifestTree(LeanElement $root) : void {
+
+    public function normalizeManifestTree(LeanElement $root): void
+    {
         foreach ($this->getManifestAttributes() as $key => $val) {
             $root->setAttribute($key, $val);
         }
         $this->strategies->assetBuilder->normalizeElement($root);
     }
-    private function getManifestAttributes() : array {
+
+    private function getManifestAttributes(): array
+    {
         return [
             static::ATTR_ID => $this->getId(),
             static::ATTR_NAME => $this->authority->getModule(),
             static::ATTR_ASSETPATH => '',
             static::ATTR_PATH => '',
-            static::ATTR_REALPATH => $this->manifestDirectory,
+            static::ATTR_REALPATH => $this->manifestDirectory
         ];
     }
 }

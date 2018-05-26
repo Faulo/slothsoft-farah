@@ -9,11 +9,14 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\ProxyStreamBuilder;
 
 class ProxyResultBuilder implements ResultBuilderStrategyInterface
 {
+
     private $proxy;
-    public function __construct(ExecutableInterface $proxy) {
+
+    public function __construct(ExecutableInterface $proxy)
+    {
         $this->proxy = $proxy;
     }
-    
+
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
     {
         $streamBuilder = new ProxyStreamBuilder($this->proxy->lookupResult($type));
