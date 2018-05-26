@@ -10,7 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Slothsoft\Core\IO\HTTPFile;
 use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 abstract class MessageFactory
 {

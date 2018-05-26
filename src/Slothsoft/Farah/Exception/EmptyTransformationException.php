@@ -2,13 +2,12 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Exception;
 
-use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
 
 class EmptyTransformationException extends \RuntimeException
 {
 
-    public function __construct(AssetInterface $template)
+    public function __construct()
     {
-        parent::__construct("Transformation template {$template->getId()} resulted in an empty document!");
+        parent::__construct("Template transformation resulted in an empty document!");
     }
 }

@@ -2,9 +2,9 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\LinkDecorator;
 
-use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
-use DOMDocument;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\Module\Asset\AssetInterface;
+use DOMDocument;
 
 /**
  *

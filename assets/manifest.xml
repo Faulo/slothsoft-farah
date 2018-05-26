@@ -5,13 +5,13 @@
     <directory name="sitemap-generator">
       <resource name="template" type="application/xslt+xml" use="template"/>
       <resource name="prettify" type="application/xslt+xml"/>
-      <use-document ref="sites"/>
+      <use-document ref="/sites"/>
     </directory>
    <directory name="schema">
        <resource-directory name="dictionary" type="application/x-xsd+xml"/>
        <resource-directory name="module" type="application/x-xsd+xml"/>
        <resource-directory name="sitemap" type="application/x-xsd+xml"/>
    </directory>
-   <custom-asset name="sites" class="Slothsoft\Farah\Internal\SitesAsset"/>
-   <custom-asset name="request" class="Slothsoft\Farah\Internal\RequestAsset"/>
+   <custom-asset name="sites" executable-builder="Slothsoft\Farah\Internal\SitesBuilder"/>
+   <custom-asset name="request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder"/>
  </assets>

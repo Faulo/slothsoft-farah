@@ -4,14 +4,13 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\Configuration\ConfigurationField;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMXPath;
-use Slothsoft\Core\Configuration\ConfigurationField;
 
 class Dictionary
 {
@@ -74,6 +73,9 @@ class Dictionary
 
     const XPATH_DICT_REPLACE = '.';
 
+    /**
+     * @var FarahUrl
+     */
     protected $currentModule;
 
     protected $currentLang;
@@ -172,7 +174,7 @@ class Dictionary
     }
 
     /* public functions */
-    public function translateDoc(DOMDocument $doc, Module $context)
+    public function translateDoc(DOMDocument $doc, FarahUrl $context)
     {
         $this->currentModule = $context;
         
@@ -276,11 +278,6 @@ class Dictionary
         return $ret;
     }
 
-    public function setModule(Module $module)
-    {
-        $this->currentModule = $module;
-    }
-
     public function getLang()
     {
         return $this->currentLang;
@@ -342,7 +339,7 @@ class Dictionary
     protected function getLangPath($namespace = null, $language = null)
     {
         if ($namespace === null) {
-            $namespace = $this->currentModule->getId();
+            $namespace = (string) $this->currentModule;
         } else {
             $namespace = "farah://$namespace";
         }
@@ -351,11 +348,11 @@ class Dictionary
         }
         
         $ref = "$namespace/dictionary/$language"; // TODO: make this less presuming
-        $url = FarahUrl::createFromReference($ref, $this->currentModule->createUrl());
+        $url = FarahUrl::createFromReference($ref, $this->currentModule);
         $key = (string) $url;
         
         if (! isset($this->langPaths[$key])) {
-            $doc = FarahUrlResolver::resolveToDocument($url);
+            $doc = Module::resolveToDocument($url);
             $this->langPaths[$key] = DOMHelper::loadXPath($doc, DOMHelper::XPATH_SLOTHSOFT | DOMHelper::XPATH_HTML);
         }
         return $this->langPaths[$key];

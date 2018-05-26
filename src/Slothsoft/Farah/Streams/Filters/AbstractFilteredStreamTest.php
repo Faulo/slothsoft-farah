@@ -21,7 +21,7 @@ abstract class AbstractFilteredStreamTest extends TestCase
 
     private $factory;
 
-    public function setUp()
+    public function setUp() : void
     {
         $input = $this->getInput();
         $this->inputStream = stream_for($input);

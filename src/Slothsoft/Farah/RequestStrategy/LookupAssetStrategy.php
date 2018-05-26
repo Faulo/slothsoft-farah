@@ -4,9 +4,9 @@ namespace Slothsoft\Farah\RequestStrategy;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Slothsoft\Core\Configuration\ConfigurationField;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 
 class LookupAssetStrategy extends RequestStrategyBase
 {
@@ -57,6 +57,9 @@ class LookupAssetStrategy extends RequestStrategyBase
         if (strpos($path, 'farah://') !== 0) {
             $path = "farah://$path";
         }
+        
+        $path = urldecode($path);
+        
         return $path;
     }
 }

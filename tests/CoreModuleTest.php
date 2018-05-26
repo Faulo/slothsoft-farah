@@ -1,15 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\ModuleTests\AbstractModuleTest;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\ModuleTests\AbstractManifestTest;
 
-class CoreModuleTest extends AbstractModuleTest
+class CoreModuleTest extends AbstractManifestTest
 {
-
-    protected static function loadModule(): Module
-    {
-        return new Module(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'core'), dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets-core');
+    protected static function getManifestAuthority() : FarahUrlAuthority {
+        return FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'core');
     }
 }

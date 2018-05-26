@@ -4,8 +4,8 @@ namespace Slothsoft\Farah\StreamWrapper;
 
 use Slothsoft\Core\StreamWrapper\Psr7StreamWrapper;
 use Slothsoft\Core\StreamWrapper\StreamWrapperFactoryInterface;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\Module;
 
 /**
  *
@@ -19,7 +19,7 @@ class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface
     {
         $url = FarahUrl::createFromReference($url);
         
-        $stream = FarahUrlResolver::resolveToStream($url);
+        $stream = Module::resolveToStream($url);
         
         return new Psr7StreamWrapper($stream);
     }
@@ -28,7 +28,7 @@ class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface
     {
         $url = FarahUrl::createFromReference($url);
         
-        $stream = FarahUrlResolver::resolveToStream($url);
+        $stream = Module::resolveToStream($url);
         
         return $stream->getMetadata();
     }

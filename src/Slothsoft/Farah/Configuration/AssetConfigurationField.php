@@ -2,11 +2,11 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Configuration;
 
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
-use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
-use InvalidArgumentException;
 use Slothsoft\Core\Configuration\ConfigurationField;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Asset\AssetInterface;
+use InvalidArgumentException;
 
 class AssetConfigurationField extends ConfigurationField
 {
@@ -23,7 +23,7 @@ class AssetConfigurationField extends ConfigurationField
             $newValue = FarahUrl::createFromReference($newValue);
         }
         if ($newValue instanceof FarahUrl) {
-            $newValue = FarahUrlResolver::resolveToAsset($newValue);
+            $newValue = Module::resolveToAsset($newValue);
         }
         if (! ($newValue instanceof AssetInterface)) {
             throw new InvalidArgumentException("Value must be a valid asset reference: $newValue");

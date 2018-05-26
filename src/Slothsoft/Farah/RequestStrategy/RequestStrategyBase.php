@@ -9,12 +9,12 @@ use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\ContentCoding;
 use Slothsoft\Farah\Http\MessageFactory;
 use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Http\TransferCoding;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
+use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Security\BannedManager;
 use Slothsoft\Farah\Streams\StreamHelper;
 
@@ -32,7 +32,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
             $url = $this->createUrl($request);
             
             try {
-                $result = FarahUrlResolver::resolveToResult($url);
+                $result = Module::resolveToResult($url);
                 
                 $statusCode = StatusCode::STATUS_OK;
                 

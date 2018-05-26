@@ -7,8 +7,8 @@ use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\PageNotFoundException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\StatusCode;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Sites\Domain;
 
 class LookupPageStrategy extends RequestStrategyBase
@@ -43,7 +43,7 @@ class LookupPageStrategy extends RequestStrategyBase
         $pageNode->setAttribute('current', '1');
         
         if (! $pageNode->hasAttribute('ref')) {
-            throw new HttpStatusException('', StatusCode::STATUS_NOT_IMPLEMENTED);
+            throw new HttpStatusException("The URL $uri does not contain an asset.\n{$pageNode->ownerDocument->saveXML($pageNode)}", StatusCode::STATUS_NOT_IMPLEMENTED);
         }
         
         $url = $this->domain->lookupAssetUrl($pageNode, $args);

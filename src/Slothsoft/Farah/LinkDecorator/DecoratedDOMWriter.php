@@ -11,11 +11,17 @@ class DecoratedDOMWriter implements DOMWriterInterface
 
     private $source;
 
+    /**
+     * @var iterable
+     */
     private $stylesheets;
 
+    /**
+     * @var iterable
+     */
     private $scripts;
 
-    public function __construct(DOMWriterInterface $source, array $stylesheets, array $scripts)
+    public function __construct(DOMWriterInterface $source, iterable $stylesheets, iterable $scripts)
     {
         $this->source = $source;
         $this->stylesheets = $stylesheets;

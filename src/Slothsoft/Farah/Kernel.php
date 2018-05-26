@@ -2,17 +2,12 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
-use Ds\Map;
 use Psr\Http\Message\ServerRequestInterface;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Farah\Configuration\AssetConfigurationField;
-use Slothsoft\Farah\Exception\ModuleNotFoundException;
-use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
-use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\RequestStrategy\RequestStrategyInterface;
 use Slothsoft\Farah\ResponseStrategy\ResponseStrategyInterface;
-use OutOfBoundsException;
 
 class Kernel
 {
@@ -101,49 +96,13 @@ class Kernel
     {
         return self::trackingExceptionUris()->getValue();
     }
-
-    private $modules;
-
-    private function __construct()
-    {
-        return $this->modules = new Map();
-    }
-
+    
     public function handle(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy, ServerRequestInterface $request)
     {
         self::setCurrentRequest($request);
         
         $response = $requestStrategy->process($request);
         $responseStrategy->process($response);
-    }
-
-    /**
-     *
-     * @param FarahUrlAuthority|string $authority
-     * @throws ModuleNotFoundException
-     * @return Module
-     */
-    public function lookupModule($authority): Module
-    {
-        try {
-            return $this->modules->get((string) $authority);
-        } catch (OutOfBoundsException $e) {
-            throw new ModuleNotFoundException((string) $authority, null, $e);
-        }
-    }
-
-    /**
-     *
-     * @param Module $module
-     */
-    public function registerModule(Module $module)
-    {
-        $this->modules->put((string) $module->getId(), $module);
-    }
-
-    private function getDefaultAuthority(): FarahUrlAuthority
-    {
-        return FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'farah');
     }
 }
 

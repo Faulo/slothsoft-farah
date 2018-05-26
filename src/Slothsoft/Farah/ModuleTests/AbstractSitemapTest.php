@@ -4,16 +4,16 @@ namespace Slothsoft\Farah\ModuleTests;
 
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Kernel;
-use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
-use Slothsoft\Farah\Module\Results\ResultInterface;
+use Slothsoft\Farah\Exception\PageRedirectionException;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Result\ResultInterface;
+use Slothsoft\Farah\Module\Results\ResultInterfacePlusXml;
 use Slothsoft\Farah\Sites\Domain;
 use DOMDocument;
 use DOMElement;
 use Throwable;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
-use Slothsoft\Farah\Exception\PageRedirectionException;
-use Slothsoft\Farah\Module\Results\ResultInterfacePlusXml;
 
 abstract class AbstractSitemapTest extends AbstractTestCase
 {
@@ -68,7 +68,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
             $ret[(string) $url] = $url;
             trigger_error("<include-pages> is deprecated (referencing $url)", E_USER_DEPRECATED);
             try {
-                $document = FarahUrlResolver::resolveToDocument($url);
+                $document = Module::resolveToDocument($url);
                 $this->getSitesIncludesCrawl($ret, $url, $document);
             } catch (Throwable $e) {}
         }
@@ -146,7 +146,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
     public function testIncludeExists($url)
     {
         try {
-            $document = FarahUrlResolver::resolveToDocument($url);
+            $document = Module::resolveToDocument($url);
             $this->assertInstanceOf(DOMElement::class, $document->documentElement);
         } catch (Throwable $e) {
             $this->failException($e);
@@ -160,7 +160,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
      */
     public function testIncludeIsValidAccordingToSchema($url)
     {
-        $document = FarahUrlResolver::resolveToDocument($url);
+        $document = Module::resolveToDocument($url);
         try {
             $validateResult = $document->schemaValidate(self::SCHEMA_URL);
         } catch (Throwable $e) {
@@ -203,7 +203,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
             $this->assertEquals($node, $this->getDomain()
                 ->lookupPageNode($path));
             $url = $this->getDomain()->lookupAssetUrl($node);
-            $this->assertInstanceOf(ResultInterface::class, FarahUrlResolver::resolveToResult($url));
+            $this->assertInstanceOf(ResultInterface::class, Module::resolveToResult($url));
         } else {
             $this->expectException(PageRedirectionException::class);
             $this->getDomain()->lookupPageNode($path);

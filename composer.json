@@ -1,50 +1,52 @@
 {
-	"name" : "slothsoft/farah",
-	"description" : "Files and Resources and Hypertext: A content management system.",
-	"license" : "WTFPL",
-	"authors" : [{
-			"name" : "Daniel Schulz",
-			"email" : "info.slothsoft@gmail.com"
-		}
-	],
-	"type" : "library",
-	"require" : {
-		"guzzlehttp/psr7" : "*",
-		"matthiasmullie/minify" : "*",
-		"php" : ">=7.0",
-		"php-ds/php-ds" : "*",
-		"psr/cache" : "*",
-		"psr/http-message" : "*",
-		"psr/log" : "*",
-		"slothsoft/blob" : "dev-master",
-		"slothsoft/core" : "dev-master"
-	},
-	"require-dev" : {
-		"phpunit/phpunit" : "*"
-	},
-	"suggest" : {
-		"ext-ds" : "*"
-	},
-	"autoload" : {
-		"psr-0" : {
-			"Slothsoft\\Farah\\" : "src/"
-		},
-		"files" : [
-			"src/autoload.php",
-			"src/registerModule.php"
-		]
-	},
-	"keywords" : [
-		"farah-abstract",
-		"farah-module",
-		"slothsoft"
-	],
-	"classmap-authoritative" : false,
-	"autoload-dev" : {
-		"classmap" : [
-			"tests/"
-		]
-	},
-	"minimum-stability" : "dev",
-	"prefer-stable" : true
+    "name": "slothsoft/farah",
+    "description": "Files and Resources and Hypertext: A content management system.",
+    "license": "WTFPL",
+    "authors": [
+        {
+            "name": "Daniel Schulz",
+            "email": "info.slothsoft@gmail.com"
+        }
+    ],
+    "type": "library",
+    "require": {
+        "guzzlehttp/psr7": "^1.4",
+        "matthiasmullie/minify": "^1.3",
+        "php": "^7.2",
+        "php-ds/php-ds": "^1.2",
+        "psr/cache": "^1.0",
+        "psr/container": "^1.0",
+        "psr/http-message": "^1.0",
+        "psr/log": "^1.0",
+        "slothsoft/blob": "dev-master",
+        "slothsoft/core": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    },
+    "suggest": {
+        "ext-ds": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Slothsoft\\Farah\\": "src/"
+        },
+        "files": [
+            "src/autoload.php",
+            "src/registerModule.php"
+        ]
+    },
+    "keywords": [
+        "farah-abstract",
+        "farah-module",
+        "slothsoft"
+    ],
+    "classmap-authoritative": false,
+    "autoload-dev": {
+        "classmap": [
+            "tests/"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

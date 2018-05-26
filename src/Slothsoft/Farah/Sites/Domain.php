@@ -6,11 +6,11 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Exception\EmptySitemapException;
 use Slothsoft\Farah\Exception\PageNotFoundException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlArguments;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlAuthority;
-use Slothsoft\Farah\Module\FarahUrl\FarahUrlResolver;
-use Slothsoft\Farah\Module\Node\Asset\AssetInterface;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Asset\AssetInterface;
 use DOMDocument;
 use DOMElement;
 
@@ -75,7 +75,7 @@ class Domain
             }
             foreach ($dataNodeList as $dataNode) {
                 $url = $this->lookupAssetUrl($dataNode);
-                $result = FarahUrlResolver::resolveToResult($url);
+                $result = Module::resolveToResult($url);
                 $node = $result->toElement($this->document);
                 while ($node->hasChildNodes()) {
                     $dataNode->parentNode->insertBefore($node->firstChild, $dataNode);
