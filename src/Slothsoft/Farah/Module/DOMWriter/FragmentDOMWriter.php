@@ -45,7 +45,7 @@ class FragmentDOMWriter implements DOMWriterInterface
         $node->setAttribute('name', $element->getAttribute('name'));
         $node->setAttribute('url', $url);
         $node->setAttribute('href', str_replace('farah://', '/getAsset.php/', $url));
-        $node->setAttribute('type', $element->getTag());
+        $node->setAttribute('tag', $element->getTag());
         
         foreach ($this->children as $child) {
             $node->appendChild($child->toElement($targetDoc));

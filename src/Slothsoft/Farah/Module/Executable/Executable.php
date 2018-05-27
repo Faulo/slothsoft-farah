@@ -9,6 +9,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Result\Result;
 use Slothsoft\Farah\Module\Result\ResultContainer;
 use Slothsoft\Farah\Module\Result\ResultInterface;
+use Slothsoft\Farah\Module\Result\ResultInterfacePlusXml;
 use Slothsoft\Farah\Module\Result\XmlResult;
 
 class Executable implements ExecutableInterface
@@ -16,14 +17,14 @@ class Executable implements ExecutableInterface
 
     const RESULT_IS_DEFAULT = '';
 
-    public final function resultIsDefault(): FarahUrlStreamIdentifier
+    public static function resultIsDefault(): FarahUrlStreamIdentifier
     {
         return FarahUrlStreamIdentifier::createFromString(self::RESULT_IS_DEFAULT);
     }
 
     const RESULT_IS_XML = 'xml';
 
-    public final function resultIsXml(): FarahUrlStreamIdentifier
+    public static function resultIsXml(): FarahUrlStreamIdentifier
     {
         return FarahUrlStreamIdentifier::createFromString(self::RESULT_IS_XML);
     }
@@ -91,12 +92,12 @@ class Executable implements ExecutableInterface
 
     public function lookupDefaultResult(): ResultInterface
     {
-        return $this->lookupResult($this->resultIsDefault());
+        return $this->lookupResult(static::resultIsDefault());
     }
 
-    public function lookupXmlResult(): ResultInterface
+    public function lookupXmlResult(): ResultInterfacePlusXml
     {
-        return $this->lookupResult($this->resultIsXml());
+        return $this->lookupResult(static::resultIsXml());
     }
 
     public function createUrl($fragment = null): FarahUrl

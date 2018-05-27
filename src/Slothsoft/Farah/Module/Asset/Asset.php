@@ -107,7 +107,9 @@ class Asset implements AssetInterface
                 }
             }
         } else {
-            return $this->assetChildren;
+            foreach ($this->assetChildren as $asset) {
+                yield $asset;
+            }
         }
     }
 
@@ -234,7 +236,10 @@ class Asset implements AssetInterface
     {
         $instructions = new LinkInstructionCollection();
         foreach ($this->getAssetChildren() as $asset) {
-            $instructions->mergeWith($asset->getLinkInstructions());
+            if ($asset->isUseDocumentInstruction()) {
+                $instructions->mergeWith($asset->getReferencedInstructionAsset()
+                    ->getLinkInstructions());
+            }
             if ($asset->isLinkStylesheetInstruction()) {
                 $instructions->stylesheetAssets[] = $asset->getReferencedInstructionAsset();
             }

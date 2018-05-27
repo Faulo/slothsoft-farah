@@ -3,14 +3,16 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy;
 
 use Slothsoft\Farah\Dictionary;
+use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\LinkDecorator\DecoratedDOMWriter;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
-use Slothsoft\Farah\Module\DOMWriter\ManifestDOMWriter;
-use Slothsoft\Farah\Module\DOMWriter\DocumentDOMWriter;
+use Slothsoft\Farah\Module\DOMWriter\AssetDocumentDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\FragmentDOMWriter;
+use Slothsoft\Farah\Module\DOMWriter\AssetManifestDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TransformationDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TranslationDOMWriter;
+use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
@@ -20,7 +22,7 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface
 
     private static function resultIsDefault(): FarahUrlStreamIdentifier
     {
-        return FarahUrlStreamIdentifier::createFromString('');
+        return Executable::resultIsDefault();
     }
 
     private static function resultIsXslSource(): FarahUrlStreamIdentifier
@@ -51,18 +53,18 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface
             $writer = new FragmentDOMWriter($this->asset);
             
             foreach ($instructions->manifestAssets as $asset) {
-                $writer->appendChild(new ManifestDOMWriter($asset));
+                $writer->appendChild(new AssetManifestDOMWriter($asset));
             }
             
             foreach ($instructions->documentAssets as $asset) {
-                $writer->appendChild(new DocumentDOMWriter($asset, $context->getUrlArguments()));
+                $writer->appendChild(new AssetDocumentDOMWriter($asset, $context->getUrlArguments()));
             }
             
             if ($instructions->templateAsset and $type !== static::resultIsXslSource()) {
                 $executable = $instructions->templateAsset->lookupExecutable($context->getUrlArguments());
                 $result = $executable->lookupXmlResult();
                 $writer = new TransformationDOMWriter($writer, $result);
-                $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $context->createUrl());
+                $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $instructions->templateAsset->createUrl()->withAssetPath(FarahUrlPath::createEmpty()));
             }
             
             if ($type === static::resultIsDefault()) {

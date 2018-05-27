@@ -63,10 +63,10 @@ class Result implements ResultInterface
 
     public function lookupCharset(): string
     {
-        if ($this->mimeType === null) {
-            $this->mimeType = $this->strategies->streamBuilder->buildStreamMimeType($this);
+        if ($this->charset === null) {
+            $this->charset = $this->strategies->streamBuilder->buildStreamCharset($this);
         }
-        return $this->mimeType;
+        return $this->charset;
     }
 
     public function lookupIsBufferable(): bool

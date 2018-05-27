@@ -35,7 +35,7 @@ class SvgDecorator implements LinkDecoratorInterface
     public function linkStylesheets(AssetInterface ...$stylesheets)
     {
         foreach ($stylesheets as $assetId => $asset) {
-            $assetId = $asset->getId();
+            $assetId = (string) $asset->createUrl();
             $assetHref = str_replace('farah://', '/getAsset.php/', $assetId);
             
             $node = $this->targetDocument->createProcessingInstruction('xml-stylesheet', sprintf('type="text/css" href="%s"', $assetHref));
@@ -46,7 +46,7 @@ class SvgDecorator implements LinkDecoratorInterface
     public function linkScripts(AssetInterface ...$scripts)
     {
         foreach ($scripts as $asset) {
-            $assetId = $asset->getId();
+            $assetId = (string) $asset->createUrl();
             $assetHref = str_replace('farah://', '/getAsset.php/', $assetId);
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
             $node->setAttributeNS(DOMHelper::NS_XLINK, 'xlink:href', $assetHref);

@@ -24,7 +24,7 @@ class XmlTreeLoader implements TreeLoaderStrategyInterface
                         ]
                     ]);
                     if ($element) {
-                        // return $element;
+                        return $element;
                     }
                 } catch (Throwable $e) {}
             }

@@ -34,7 +34,7 @@ class HtmlDecorator implements LinkDecoratorInterface
     public function linkStylesheets(AssetInterface ...$stylesheets)
     {
         foreach ($stylesheets as $assetId => $asset) {
-            $assetId = $asset->getId();
+            $assetId = (string) $asset->createUrl();
             $assetHref = str_replace('farah://', '/getAsset.php/', $assetId);
             $node = $this->targetDocument->createElementNS($this->namespace, 'link');
             $node->setAttribute('href', $assetHref);
@@ -47,7 +47,7 @@ class HtmlDecorator implements LinkDecoratorInterface
     public function linkScripts(AssetInterface ...$scripts)
     {
         foreach ($scripts as $asset) {
-            $assetId = $asset->getId();
+            $assetId = (string) $asset->createUrl();
             $assetHref = str_replace('farah://', '/getAsset.php/', $assetId);
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
             $node->setAttribute('src', $assetHref);

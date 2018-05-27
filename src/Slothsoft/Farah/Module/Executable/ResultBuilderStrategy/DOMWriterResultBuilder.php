@@ -20,7 +20,7 @@ class DOMWriterResultBuilder implements ResultBuilderStrategyInterface
 
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
     {
-        $streamBuilder = new DOMWriterStreamBuilder($writer);
+        $streamBuilder = new DOMWriterStreamBuilder($this->writer);
         return new ResultStrategies($streamBuilder);
     }
 }
