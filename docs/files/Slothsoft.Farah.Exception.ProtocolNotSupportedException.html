@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+        <script type="text/javascript">
+        function loadExternalCodeSnippets() {
+            Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+                var src = pre.getAttribute('data-src');
+                var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+                var language = 'php';
+
+                var code = document.createElement('code');
+                code.className = 'language-' + language;
+
+                pre.textContent = '';
+
+                code.textContent = 'Loading…';
+
+                pre.appendChild(code);
+
+                var xhr = new XMLHttpRequest();
+
+                xhr.open('GET', src, true);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+
+                        if (xhr.status < 400 && xhr.responseText) {
+                            code.textContent = xhr.responseText;
+
+                            Prism.highlightElement(code);
+                        }
+                        else if (xhr.status >= 400) {
+                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                        }
+                        else {
+                            code.textContent = '✖ Error: File does not exist or is empty';
+                        }
+                    }
+                };
+
+                xhr.send(null);
+            });
+        }
+
+        $(document).ready(function(){
+            loadExternalCodeSnippets();
+        });
+        $('#source-view').on('shown', function () {
+            loadExternalCodeSnippets();
+        })
+    </script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/Slothsoft.html">\Slothsoft</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">1643</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">3</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-899317890"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-899317890" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-322887859"></a>
+                                <a href="../namespaces/Slothsoft.html" style="margin-left: 30px; padding-left: 0">Slothsoft</a>
+            </div>
+            <div id="namespace-322887859" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1057050783"></a>
+                                <a href="../namespaces/Slothsoft.Farah.html" style="margin-left: 30px; padding-left: 0">Farah</a>
+            </div>
+            <div id="namespace-1057050783" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1639285922"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Configuration.html" style="margin-left: 30px; padding-left: 0">Configuration</a>
+            </div>
+            <div id="namespace-1639285922" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Configuration.AssetConfigurationField.html">AssetConfigurationField</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1647205786"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Container.html" style="margin-left: 30px; padding-left: 0">Container</a>
+            </div>
+            <div id="namespace-1647205786" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Container.ContainerInterface.html">ContainerInterface</a></li>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-296443301"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Exception.html" style="margin-left: 30px; padding-left: 0">Exception</a>
+            </div>
+            <div id="namespace-296443301" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.AssetPathNotFoundException.html">AssetPathNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.EmptySitemapException.html">EmptySitemapException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.EmptyTransformationException.html">EmptyTransformationException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.ExceptionContext.html">ExceptionContext</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.HttpStatusException.html">HttpStatusException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.IncompleteUrlException.html">IncompleteUrlException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.MalformedDocumentException.html">MalformedDocumentException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.MalformedUrlException.html">MalformedUrlException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.ModuleNotFoundException.html">ModuleNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.NamespaceNotSupportedException.html">NamespaceNotSupportedException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.PageNotFoundException.html">PageNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.PageRedirectionException.html">PageRedirectionException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.ProtocolNotSupportedException.html">ProtocolNotSupportedException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.ResultTypeNotSupportedException.html">ResultTypeNotSupportedException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.StreamTimedOutException.html">StreamTimedOutException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.StreamTypeNotSupportedException.html">StreamTypeNotSupportedException</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Exception.TagNotSupportedException.html">TagNotSupportedException</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1331341612"></a>
+                                <a href="../namespaces/Slothsoft.Farah.FarahUrl.html" style="margin-left: 30px; padding-left: 0">FarahUrl</a>
+            </div>
+            <div id="namespace-1331341612" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.FarahUrl.FarahUrlArguments.html">FarahUrlArguments</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.FarahUrl.FarahUrlAuthority.html">FarahUrlAuthority</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.FarahUrl.FarahUrlPath.html">FarahUrlPath</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.FarahUrl.FarahUrlStreamIdentifier.html">FarahUrlStreamIdentifier</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-482448069"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Http.html" style="margin-left: 30px; padding-left: 0">Http</a>
+            </div>
+            <div id="namespace-482448069" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Http.CodingInterface.html">CodingInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Http.ContentCoding.html">ContentCoding</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Http.IdentityFactory.html">IdentityFactory</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Http.MessageFactory.html">MessageFactory</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Http.TransferCoding.html">TransferCoding</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1372400698"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Internal.html" style="margin-left: 30px; padding-left: 0">Internal</a>
+            </div>
+            <div id="namespace-1372400698" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Internal.RequestBuilder.html">RequestBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Internal.SitesBuilder.html">SitesBuilder</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2064373475"></a>
+                                <a href="../namespaces/Slothsoft.Farah.LinkDecorator.html" style="margin-left: 30px; padding-left: 0">LinkDecorator</a>
+            </div>
+            <div id="namespace-2064373475" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.LinkDecorator.LinkDecoratorInterface.html">LinkDecoratorInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.LinkDecorator.DecoratedDOMWriter.html">DecoratedDOMWriter</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.LinkDecorator.DecoratorFactory.html">DecoratorFactory</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.LinkDecorator.FarahDecorator.html">FarahDecorator</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.LinkDecorator.HtmlDecorator.html">HtmlDecorator</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.LinkDecorator.SvgDecorator.html">SvgDecorator</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2063164041"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.html" style="margin-left: 30px; padding-left: 0">Module</a>
+            </div>
+            <div id="namespace-2063164041" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-889692225"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.Asset.html" style="margin-left: 30px; padding-left: 0">Asset</a>
+            </div>
+            <div id="namespace-889692225" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-490890431"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.Asset.ExecutableBuilderStrategy.html" style="margin-left: 30px; padding-left: 0">ExecutableBuilderStrategy</a>
+            </div>
+            <div id="namespace-490890431" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Module.Asset.ExecutableBuilderStrategy.ExecutableBuilderStrategyInterface.html">ExecutableBuilderStrategyInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.ExecutableBuilderStrategy.FromFilesystemExecutableBuilder.html">FromFilesystemExecutableBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.ExecutableBuilderStrategy.FromManifestExecutableBuilder.html">FromManifestExecutableBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.ExecutableBuilderStrategy.FromReferenceExecutableBuilder.html">FromReferenceExecutableBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.ExecutableBuilderStrategy.NullExecutableBuilder.html">NullExecutableBuilder</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-403047083"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.Asset.InstructionStrategy.html" style="margin-left: 30px; padding-left: 0">InstructionStrategy</a>
+            </div>
+            <div id="namespace-403047083" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Module.Asset.InstructionStrategy.InstructionStrategyInterface.html">InstructionStrategyInterface</a></li>
+                                                                            <li class="trait"><a href="../classes/Slothsoft.Farah.Module.Asset.InstructionStrategy.InstructionFromReferenceAttributeTrait.html">InstructionFromReferenceAttributeTrait</a></li>
+                                                                            <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.InstructionStrategy.FromManifestInstruction.html">FromManifestInstruction</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.InstructionStrategy.ImportChildrenInstruction.html">ImportChildrenInstruction</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.InstructionStrategy.ImportSelfInstruction.html">ImportSelfInstruction</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.InstructionStrategy.LinkScriptInstruction.html">LinkScriptInstruction</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.InstructionStrategy.LinkStylesheetInstruction.html">LinkStylesheetInstruction</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.InstructionStrategy.NullInstruction.html">NullInstruction</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.InstructionStrategy.UseDocumentInstruction.html">UseDocumentInstruction</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.InstructionStrategy.UseManifestInstruction.html">UseManifestInstruction</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.InstructionStrategy.UseTemplateInstruction.html">UseTemplateInstruction</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-222561938"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.Asset.ParameterFilterStrategy.html" style="margin-left: 30px; padding-left: 0">ParameterFilterStrategy</a>
+            </div>
+            <div id="namespace-222561938" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Module.Asset.ParameterFilterStrategy.ParameterFilterStrategyInterface.html">ParameterFilterStrategyInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.ParameterFilterStrategy.AllowAllParameterFilter.html">AllowAllParameterFilter</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.ParameterFilterStrategy.DenyAllParameterFilter.html">DenyAllParameterFilter</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.ParameterFilterStrategy.MapParameterFilter.html">MapParameterFilter</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2114760958"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.Asset.PathResolverStrategy.html" style="margin-left: 30px; padding-left: 0">PathResolverStrategy</a>
+            </div>
+            <div id="namespace-2114760958" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Module.Asset.PathResolverStrategy.PathResolverStrategyInterface.html">PathResolverStrategyInterface</a></li>
+                                                                            <li class="trait"><a href="../classes/Slothsoft.Farah.Module.Asset.PathResolverStrategy.LoadChildrenFromManifestTrait.html">LoadChildrenFromManifestTrait</a></li>
+                                                    <li class="trait"><a href="../classes/Slothsoft.Farah.Module.Asset.PathResolverStrategy.ResolvePathFromManifestTrait.html">ResolvePathFromManifestTrait</a></li>
+                                                                            <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.PathResolverStrategy.CatchAllPathResolver.html">CatchAllPathResolver</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.PathResolverStrategy.FromFilesystemPathResolver.html">FromFilesystemPathResolver</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.PathResolverStrategy.FromManifestPathResolver.html">FromManifestPathResolver</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.PathResolverStrategy.NullPathResolver.html">NullPathResolver</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Module.Asset.AssetInterface.html">AssetInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.Asset.html">Asset</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.AssetContainer.html">AssetContainer</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.AssetStrategies.html">AssetStrategies</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.LinkInstructionCollection.html">LinkInstructionCollection</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.ManifestElementBuilder.html">ManifestElementBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Asset.UseInstructionCollection.html">UseInstructionCollection</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-190517415"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.DOMWriter.html" style="margin-left: 30px; padding-left: 0">DOMWriter</a>
+            </div>
+            <div id="namespace-190517415" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.DOMWriter.AssetDocumentDOMWriter.html">AssetDocumentDOMWriter</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.DOMWriter.AssetManifestDOMWriter.html">AssetManifestDOMWriter</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.DOMWriter.FragmentDOMWriter.html">FragmentDOMWriter</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.DOMWriter.TransformationDOMWriter.html">TransformationDOMWriter</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.DOMWriter.TranslationDOMWriter.html">TranslationDOMWriter</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-406154737"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.Executable.html" style="margin-left: 30px; padding-left: 0">Executable</a>
+            </div>
+            <div id="namespace-406154737" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-876147562"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.html" style="margin-left: 30px; padding-left: 0">ResultBuilderStrategy</a>
+            </div>
+            <div id="namespace-876147562" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1550561643"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.Files.html" style="margin-left: 30px; padding-left: 0">Files</a>
+            </div>
+            <div id="namespace-1550561643" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.Files.AbstractFileResultBuilder.html">AbstractFileResultBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.Files.Base64FileResultBuilder.html">Base64FileResultBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.Files.HtmlFileResultBuilder.html">HtmlFileResultBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.Files.TextFileResultBuilder.html">TextFileResultBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.Files.XmlFileResultBuilder.html">XmlFileResultBuilder</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.ResultBuilderStrategyInterface.html">ResultBuilderStrategyInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.DOMWriterResultBuilder.html">DOMWriterResultBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.FileWriterResultBuilder.html">FileWriterResultBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.NullResultBuilder.html">NullResultBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.ProxyResultBuilder.html">ProxyResultBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.ResultBuilderStrategy.TransformationResultBuilder.html">TransformationResultBuilder</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Module.Executable.ExecutableInterface.html">ExecutableInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.Executable.html">Executable</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.ExecutableContainer.html">ExecutableContainer</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Executable.ExecutableStrategies.html">ExecutableStrategies</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-53336038"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.Manifest.html" style="margin-left: 30px; padding-left: 0">Manifest</a>
+            </div>
+            <div id="namespace-53336038" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Module.Manifest.ManifestInterface.html">ManifestInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Manifest.Manifest.html">Manifest</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Manifest.ManifestContainer.html">ManifestContainer</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Manifest.ManifestStrategies.html">ManifestStrategies</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-782348101"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.Result.html" style="margin-left: 30px; padding-left: 0">Result</a>
+            </div>
+            <div id="namespace-782348101" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1219317548"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Module.Result.StreamBuilderStrategy.html" style="margin-left: 30px; padding-left: 0">StreamBuilderStrategy</a>
+            </div>
+            <div id="namespace-1219317548" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Module.Result.StreamBuilderStrategy.StreamBuilderStrategyInterface.html">StreamBuilderStrategyInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Result.StreamBuilderStrategy.DOMWriterStreamBuilder.html">DOMWriterStreamBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Result.StreamBuilderStrategy.FileWriterStreamBuilder.html">FileWriterStreamBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Result.StreamBuilderStrategy.NullStreamBuilder.html">NullStreamBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Result.StreamBuilderStrategy.ProxyStreamBuilder.html">ProxyStreamBuilder</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Module.Result.ResultInterface.html">ResultInterface</a></li>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.Module.Result.ResultInterfacePlusXml.html">ResultInterfacePlusXml</a></li>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Result.Result.html">Result</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Result.ResultContainer.html">ResultContainer</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Result.ResultStrategies.html">ResultStrategies</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Result.XmlResult.html">XmlResult</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Module.Module.html">Module</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1293476574"></a>
+                                <a href="../namespaces/Slothsoft.Farah.ModuleTests.html" style="margin-left: 30px; padding-left: 0">ModuleTests</a>
+            </div>
+            <div id="namespace-1293476574" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.ModuleTests.AbstractManifestTest.html">AbstractManifestTest</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.ModuleTests.AbstractSitemapTest.html">AbstractSitemapTest</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.ModuleTests.AbstractTestCase.html">AbstractTestCase</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.ModuleTests.AbstractTreeLoaderTest.html">AbstractTreeLoaderTest</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.ModuleTests.AbstractXmlTreeLoaderTest.html">AbstractXmlTreeLoaderTest</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.ModuleTests.MockManifest.html">MockManifest</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-579425289"></a>
+                                <a href="../namespaces/Slothsoft.Farah.RequestStrategy.html" style="margin-left: 30px; padding-left: 0">RequestStrategy</a>
+            </div>
+            <div id="namespace-579425289" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.RequestStrategy.RequestStrategyInterface.html">RequestStrategyInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.RequestStrategy.LookupAssetStrategy.html">LookupAssetStrategy</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.RequestStrategy.LookupPageStrategy.html">LookupPageStrategy</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.RequestStrategy.RequestStrategyBase.html">RequestStrategyBase</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1713350859"></a>
+                                <a href="../namespaces/Slothsoft.Farah.ResponseStrategy.html" style="margin-left: 30px; padding-left: 0">ResponseStrategy</a>
+            </div>
+            <div id="namespace-1713350859" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Slothsoft.Farah.ResponseStrategy.ResponseStrategyInterface.html">ResponseStrategyInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.ResponseStrategy.ResponseStrategyBase.html">ResponseStrategyBase</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.ResponseStrategy.SendBodyStrategy.html">SendBodyStrategy</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.ResponseStrategy.SendHeaderAndBodyStrategy.html">SendHeaderAndBodyStrategy</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.ResponseStrategy.SendHeaderStrategy.html">SendHeaderStrategy</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-645621123"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Security.html" style="margin-left: 30px; padding-left: 0">Security</a>
+            </div>
+            <div id="namespace-645621123" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Security.BannedManager.html">BannedManager</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1859892663"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Sites.html" style="margin-left: 30px; padding-left: 0">Sites</a>
+            </div>
+            <div id="namespace-1859892663" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Sites.Domain.html">Domain</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-67414761"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Streams.html" style="margin-left: 30px; padding-left: 0">Streams</a>
+            </div>
+            <div id="namespace-67414761" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-932740453"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Streams.Filters.html" style="margin-left: 30px; padding-left: 0">Filters</a>
+            </div>
+            <div id="namespace-932740453" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Streams.Filters.AbstractFilteredStreamTest.html">AbstractFilteredStreamTest</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Streams.Filters.ChunkedFilteredStream.html">ChunkedFilteredStream</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Streams.Filters.ChunkedFilteredStreamFactory.html">ChunkedFilteredStreamFactory</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Streams.Filters.FilteredStreamBase.html">FilteredStreamBase</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Streams.Filters.ZlibFilteredStream.html">ZlibFilteredStream</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Streams.Filters.ZlibFilteredStreamFactory.html">ZlibFilteredStreamFactory</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Streams.GeneratorStream.html">GeneratorStream</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Streams.StreamHelper.html">StreamHelper</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Streams.WaitingStream.html">WaitingStream</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1877624984"></a>
+                                <a href="../namespaces/Slothsoft.Farah.StreamWrapper.html" style="margin-left: 30px; padding-left: 0">StreamWrapper</a>
+            </div>
+            <div id="namespace-1877624984" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.StreamWrapper.DocumentStreamWrapper.html">DocumentStreamWrapper</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.StreamWrapper.FarahStreamWrapperFactory.html">FarahStreamWrapperFactory</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.StreamWrapper.StringStreamWrapper.html">StringStreamWrapper</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-360055556"></a>
+                                <a href="../namespaces/Slothsoft.Farah.Tracking.html" style="margin-left: 30px; padding-left: 0">Tracking</a>
+            </div>
+            <div id="namespace-360055556" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Tracking.Archive.html">Archive</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Tracking.LogTable.html">LogTable</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Tracking.Manager.html">Manager</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Tracking.Tick.html">Tick</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Tracking.View.html">View</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Cache.html">Cache</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Dictionary.html">Dictionary</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.HTTPCommand.html">HTTPCommand</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.HTTPEvent.html">HTTPEvent</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.HTTPRequest.html">HTTPRequest</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.HTTPResponse.html">HTTPResponse</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Kernel.html">Kernel</a></li>
+                                                    <li class="class"><a href="../classes/Slothsoft.Farah.Session.html">Session</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content file">
+                    <nav>
+                                                                    </nav>
+
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+                    <h1><small></small>ProtocolNotSupportedException.php</h1>
+                    <p><em></em></p>
+                    
+
+                    
+                    
+                                        <h2>Classes</h2>
+                    <table class="table table-hover">
+                                            <tr>
+                            <td><a href="../classes/Slothsoft.Farah.Exception.ProtocolNotSupportedException.html">ProtocolNotSupportedException</a></td>
+                            <td><em></em></td>
+                        </tr>
+                                        </table>
+                                    </div>
+
+                <aside class="span4 detailsbar">
+                    <dl>
+                                                    <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">\Default</div></dd>
+                        
+                        
+                    </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                            </table>
+
+                </aside>
+            </div>
+
+            
+            
+        </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label"></h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Slothsoft\Farah\Exception\ProtocolNotSupportedException.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/Slothsoft.html">\Slothsoft</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on May 28th, 2018 at 17:17.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>
