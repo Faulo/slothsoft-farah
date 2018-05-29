@@ -6,7 +6,9 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 class LinkStylesheetInstruction extends NullInstruction
 {
-    use InstructionFromReferenceAttributeTrait;
+    use InstructionFromReferenceAttributeTrait {
+        getReferencedAsset as public getLinkAsset;
+    }
 
     public function isLinkStylesheet(AssetInterface $context): bool
     {

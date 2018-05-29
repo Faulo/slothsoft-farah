@@ -47,7 +47,7 @@ class AssetDocumentDOMWriter implements DOMWriterInterface
 
     private function getDocumentContent(): DOMWriterInterface
     {
-        $valueAsset = $this->asset->getReferencedInstructionAsset();
+        $valueAsset = $this->asset->getUseInstructionAsset();
         $executable = $valueAsset->lookupExecutable($this->args);
         return $executable->lookupXmlResult();
     }

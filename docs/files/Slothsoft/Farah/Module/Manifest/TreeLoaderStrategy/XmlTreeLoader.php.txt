@@ -10,15 +10,16 @@ use Throwable;
 class XmlTreeLoader implements TreeLoaderStrategyInterface
 {
 
-    public function loadTree(?ManifestInterface $context, string $manifestDirectory): LeanElement
+    public function loadTree(ManifestInterface $context): LeanElement
     {
-        $xmlFile = $manifestDirectory . DIRECTORY_SEPARATOR . 'manifest.xml';
-        $tmpFile = $manifestDirectory . DIRECTORY_SEPARATOR . 'manifest.tmp';
+        $xmlFile = $context->createManifestFile('manifest.xml');
         
-        if (file_exists($tmpFile)) {
-            if (filemtime($tmpFile) > filemtime($xmlFile)) {
+        $tmpFile = $context->createCacheFile('manifest.tmp');
+        
+        if ($tmpFile->isFile()) {
+            if ($tmpFile->getMTime() > $xmlFile->getMTime()) {
                 try {
-                    $element = unserialize(file_get_contents($tmpFile), [
+                    $element = unserialize(file_get_contents((string) $tmpFile), [
                         'allowed_classes' => [
                             LeanElement::class
                         ]
@@ -31,10 +32,10 @@ class XmlTreeLoader implements TreeLoaderStrategyInterface
         }
         
         $dom = new DOMHelper();
-        $element = LeanElement::createTreeFromDOMDocument($dom->loadDocument($xmlFile));
+        $element = LeanElement::createTreeFromDOMDocument($dom->loadDocument($xmlFile->getRealPath()));
         if ($context) {
             $context->normalizeManifestTree($element);
-            file_put_contents($tmpFile, serialize($element));
+            file_put_contents((string) $tmpFile, serialize($element));
         }
         return $element;
     }

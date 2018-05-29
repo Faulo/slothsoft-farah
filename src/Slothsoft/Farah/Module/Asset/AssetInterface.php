@@ -78,7 +78,9 @@ interface AssetInterface
 
     public function isLinkScriptInstruction(): bool;
 
-    public function getReferencedInstructionAsset(): AssetInterface;
+    public function getImportInstructionAsset(): AssetInterface;
+    public function getUseInstructionAsset(): AssetInterface;
+    public function getLinkInstructionAsset(): AssetInterface;
 
     /**
      * Find all use instructions (manifest, document, and template) among the immediate children.
@@ -95,18 +97,17 @@ interface AssetInterface
     public function getLinkInstructions(): LinkInstructionCollection;
 
     /**
-     * Remove or add parameters from $args as defined by this asset's parameter filter.
-     *
-     * @param FarahUrlArguments $args
-     * @return FarahUrlArguments
-     */
-    public function applyParameterFilter(FarahUrlArguments $args): FarahUrlArguments;
-
-    /**
      * Set any missing attributes according to the manifest's AssetBuilderStrategy.
      *
      * @param LeanElement $child
      */
     public function normalizeManifestElement(LeanElement $child): void;
+    
+    /**
+     * Get the parameters supplied by this assets's ParameterSupplierStrategy.
+     * 
+     * @return iterable
+     */
+    public function getSuppliedParameters() : iterable;
 }
 

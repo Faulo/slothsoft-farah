@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Asset\InstructionStrategy;
 
+use Slothsoft\Farah\Exception\UndefinedBehaviorException;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 class NullInstruction implements InstructionStrategyInterface
@@ -36,15 +37,26 @@ class NullInstruction implements InstructionStrategyInterface
     {
         return false;
     }
-
+    
     public function isLinkScript(AssetInterface $context): bool
     {
         return false;
     }
-
-    public function getReferencedAsset(AssetInterface $context): AssetInterface
+    
+    public function getLinkAsset(AssetInterface $context): AssetInterface
     {
-        return null;
+        throw new UndefinedBehaviorException();
     }
+
+    public function getImportAsset(AssetInterface $context): AssetInterface
+    {
+        throw new UndefinedBehaviorException();
+    }
+
+    public function getUseAsset(AssetInterface $context): AssetInterface
+    {
+        throw new UndefinedBehaviorException();
+    }
+
 }
 

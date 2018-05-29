@@ -6,7 +6,9 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 class UseTemplateInstruction extends NullInstruction
 {
-    use InstructionFromReferenceAttributeTrait;
+    use InstructionFromReferenceAttributeTrait {
+        getReferencedAsset as public getUseAsset;
+    }
 
     public function isUseTemplate(AssetInterface $context): bool
     {

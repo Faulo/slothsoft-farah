@@ -10,6 +10,7 @@ use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\Asset;
 use Slothsoft\Farah\Module\Asset\AssetContainer;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
+use SplFileInfo;
 
 class Manifest implements ManifestInterface
 {
@@ -167,6 +168,17 @@ class Manifest implements ManifestInterface
         $strategies = $this->strategies->assetBuilder->buildAssetStrategies($this, $element);
         return new Asset($this, $element, FarahUrlPath::createFromString($element->getAttribute('assetpath')), $strategies);
     }
+    
+    public function createManifestFile(string $fileName) : SplFileInfo {
+        return new SplFileInfo($this->manifestDirectory . DIRECTORY_SEPARATOR . $fileName);
+    }
+    public function createCacheFile(string $fileName, $path = null, $args = null, $fragment = null) : SplFileInfo {
+        return $this->ownerKernel->createCachedFile($fileName, $this->createUrl($path, $args, $fragment));
+    }
+    public function createDataFile(string $fileName, $path = null, $args = null, $fragment = null) : SplFileInfo {
+        return $this->ownerKernel->createCachedFile($fileName, $this->createUrl($path, $args, $fragment));
+    }
+    
 
     private function getRootAsset(): AssetInterface
     {
@@ -179,7 +191,7 @@ class Manifest implements ManifestInterface
     private function getRootElement(): LeanElement
     {
         if ($this->rootElement === null) {
-            $this->rootElement = $this->strategies->treeLoader->loadTree($this, $this->manifestDirectory);
+            $this->rootElement = $this->strategies->treeLoader->loadTree($this);
         }
         return $this->rootElement;
     }

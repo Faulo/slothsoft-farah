@@ -8,6 +8,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
+use SplFileInfo;
 
 interface ManifestInterface
 {
@@ -43,6 +44,32 @@ interface ManifestInterface
      * @return AssetInterface
      */
     public function createAsset(LeanElement $element): AssetInterface;
+    
+    /**
+     * Returns a handle for a file inside the asset directory of this manifest.
+     *
+     * @param string $fileName
+     * @return SplFileInfo
+     */
+    public function createManifestFile(string $fileName) : SplFileInfo;
+    
+    /**
+     * @param string $fileName
+     * @param FarahUrlPath|string $path
+     * @param FarahUrlArguments|string $args
+     * @param FarahUrlStreamIdentifier|string $fragment
+     * @return SplFileInfo
+     */
+    public function createCacheFile(string $fileName, $path = null, $args = null, $fragment = null) : SplFileInfo;
+    
+    /**
+     * @param string $fileName
+     * @param FarahUrlPath|string $path
+     * @param FarahUrlArguments|string $args
+     * @param FarahUrlStreamIdentifier|string $fragment
+     * @return SplFileInfo
+     */
+    public function createDataFile(string $fileName, $path = null, $args = null, $fragment = null) : SplFileInfo;
 
     /**
      * Set any missing attributes according to the AssetBuilderStrategy.

@@ -2,14 +2,15 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
 
-class MapParameterFilter implements ParameterFilterStrategyInterface
+abstract class AbstractMapParameterFilter implements ParameterFilterStrategyInterface
 {
+    abstract protected function loadMap() : array;
 
     private $map;
 
-    public function __construct(array $map)
+    public function __construct()
     {
-        $this->map = $map;
+        $this->map = $this->loadMap();
     }
 
     public function isAllowedName(string $name): bool

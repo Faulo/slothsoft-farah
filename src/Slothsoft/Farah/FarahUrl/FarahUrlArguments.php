@@ -105,6 +105,16 @@ class FarahUrlArguments implements IteratorAggregate, Hashable
     {
         return $this->id === '';
     }
+    
+    public function withArguments(FarahUrlArguments $args) {
+        if ($this->isEmpty()) {
+            return $args;
+        }
+        if ($args->isEmpty()) {
+            return $this;
+        }
+        return self::createFromMany($args, $this);
+    }
 
     public function equals($obj): bool
     {

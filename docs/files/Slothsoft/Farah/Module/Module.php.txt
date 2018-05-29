@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
 use Psr\Http\Message\StreamInterface;
+use Slothsoft\Core\ServerEnvironment;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
@@ -17,6 +18,7 @@ use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\XmlTreeLoader;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use DOMDocument;
 use OutOfBoundsException;
+use SplFileInfo;
 
 class Module
 {
@@ -84,6 +86,32 @@ class Module
     public static function resolveToStream(FarahUrl $url): StreamInterface
     {
         return static::resolveToResult($url)->lookupStream();
+    }
+    
+    public function createCachedFile(string $fileName, FarahUrl $context) : SplFileInfo {
+        $path = $this->buildPath(ServerEnvironment::getCacheDirectory(), $context);
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+        return new \SplFileInfo($path . DIRECTORY_SEPARATOR . $fileName);
+    }
+    public function createDataFile(string $fileName, FarahUrl $context) : SplFileInfo {
+        $path = $this->buildPath(ServerEnvironment::getDataDirectory(), $context);
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+        return new \SplFileInfo($path . DIRECTORY_SEPARATOR . $fileName);
+    }
+    private function buildPath(string $rootDirectory, FarahUrl $context) : string {
+        $rootDirectory .= DIRECTORY_SEPARATOR . $context->getAssetAuthority()->getVendor();
+        $rootDirectory .= DIRECTORY_SEPARATOR . $context->getAssetAuthority()->getModule();
+        $rootDirectory .= $context->getAssetPath();
+        $rootDirectory .= DIRECTORY_SEPARATOR . md5((string) $context->getArguments());
+        $fragment = (string) $context->getStreamIdentifier();
+        if ($fragment !== '') {
+            $rootDirectory .= "-$fragment";
+        }
+        return $rootDirectory;
     }
 
     private $manifests;

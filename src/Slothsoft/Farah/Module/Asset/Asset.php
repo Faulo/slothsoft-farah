@@ -89,22 +89,19 @@ class Asset implements AssetInterface
             $this->assetChildren = new Vector();
             foreach ($this->strategies->pathResolver->loadChildren($this) as $childPath) {
                 $childAsset = $this->traverseTo($childPath);
-                if ($childAsset->isImportChildrenInstruction() or $childAsset->isImportSelfInstruction()) {
-                    $importedAsset = $childAsset->getReferencedInstructionAsset();
-                    if ($childAsset->isImportSelfInstruction()) {
+                if ($childAsset->isImportSelfInstruction()) {
+                    $importedAsset = $childAsset->getImportInstructionAsset();
+                    yield $importedAsset;
+                    $this->assetChildren[] = $importedAsset;
+                }
+                if ($childAsset->isImportChildrenInstruction()) {
+                    foreach ($childAsset->getImportInstructionAsset()->getAssetChildren() as $importedAsset) {
                         yield $importedAsset;
                         $this->assetChildren[] = $importedAsset;
                     }
-                    if ($childAsset->isImportChildrenInstruction()) {
-                        foreach ($importedAsset->getAssetChildren() as $importedChildAsset) {
-                            yield $importedChildAsset;
-                            $this->assetChildren[] = $importedChildAsset;
-                        }
-                    }
-                } else {
-                    yield $childAsset;
-                    $this->assetChildren[] = $childAsset;
                 }
+                yield $childAsset;
+                $this->assetChildren[] = $childAsset;
             }
         } else {
             foreach ($this->assetChildren as $asset) {
@@ -145,12 +142,50 @@ class Asset implements AssetInterface
     public function lookupExecutable(FarahUrlArguments $args = null): ExecutableInterface
     {
         if ($args === null) {
-            $args = FarahUrlArguments::createEmpty();
+            $args = $this->getManifestArguments();
+        } else {
+            $args = $this->getManifestArguments()->withArguments($args);
         }
+        $args = $this->applyParameterFilter($args);
         if (! $this->executables->has($args)) {
             $this->executables->put($args, $this->createExecutable($args));
         }
         return $this->executables->get($args);
+    }
+    private function getManifestArguments(): FarahUrlArguments
+    {
+        $data = [];
+        foreach ($this->getSuppliedParameters() as $key => $val) {
+            $data[$key] = $val;
+        }
+        foreach ($this->getAssetChildren() as $child) {
+            foreach ($child->getSuppliedParameters() as $key => $val) {
+                $data[$key] = $val;
+            }
+        }
+        return FarahUrlArguments::createFromValueList($data);
+    }
+    public function getSuppliedParameters() : iterable {
+        return $this->strategies->parameterSupplier->supplyParameters($this);
+    }
+    private function applyParameterFilter(FarahUrlArguments $args): FarahUrlArguments
+    {
+        $valueList = $args->getValueList();
+        $hasChanged = false;
+        $filter = $this->strategies->parameterFilter;
+        foreach ($valueList as $name => $value) {
+            if (! $filter->isAllowedName($name)) {
+                unset($valueList[$name]);
+                $hasChanged = true;
+            }
+        }
+        foreach ($filter->getDefaultMap() as $name => $value) {
+            if (! isset($valueList[$name])) {
+                $valueList[$name] = $value;
+                $hasChanged = true;
+            }
+        }
+        return $hasChanged ? FarahUrlArguments::createFromValueList($valueList) : $args;
     }
 
     private function createExecutable(FarahUrlArguments $args)
@@ -194,9 +229,17 @@ class Asset implements AssetInterface
         return $this->strategies->instruction->isLinkStylesheet($this);
     }
 
-    public function getReferencedInstructionAsset(): AssetInterface
+    public function getImportInstructionAsset(): AssetInterface
     {
-        return $this->strategies->instruction->getReferencedAsset($this);
+        return $this->strategies->instruction->getImportAsset($this);
+    }
+    public function getUseInstructionAsset(): AssetInterface
+    {
+        return $this->strategies->instruction->getUseAsset($this);
+    }
+    public function getLinkInstructionAsset(): AssetInterface
+    {
+        return $this->strategies->instruction->getLinkAsset($this);
     }
 
     public function getUseInstructions(): UseInstructionCollection
@@ -235,26 +278,25 @@ class Asset implements AssetInterface
     private function collectLinkInstructions(): LinkInstructionCollection
     {
         $instructions = new LinkInstructionCollection();
+        if ($this->isUseDocumentInstruction()) {
+            $refAsset = $this->getUseInstructionAsset();
+            if ($refAsset !== $this) {
+                $instructions->mergeWith($refAsset->getLinkInstructions());
+            }
+        }
         foreach ($this->getAssetChildren() as $asset) {
             if ($asset->isUseDocumentInstruction()) {
-                $instructions->mergeWith($asset->getReferencedInstructionAsset()
-                    ->getLinkInstructions());
+                $instructions->mergeWith($asset->getLinkInstructions());
             }
             if ($asset->isLinkStylesheetInstruction()) {
-                $instructions->stylesheetAssets[] = $asset->getReferencedInstructionAsset();
+                $instructions->stylesheetAssets[] = $asset->getLinkInstructionAsset();
             }
             if ($asset->isLinkScriptInstruction()) {
-                $instructions->scriptAssets[] = $asset->getReferencedInstructionAsset();
+                $instructions->scriptAssets[] = $asset->getLinkInstructionAsset();
             }
         }
         return $instructions;
     }
-
-    public function applyParameterFilter(FarahUrlArguments $args): FarahUrlArguments
-    {
-        return $args;
-    }
-
     public function normalizeManifestElement(LeanElement $child): void
     {
         $this->ownerManifest->normalizeManifestElement($this->manifestElement, $child);

@@ -17,6 +17,9 @@ class FromManifestInstruction implements InstructionStrategyInterface
         return $context->getManifestElement()->getAttribute('import', '') === 'children';
     }
 
+    
+    
+    
     public function isUseManifest(AssetInterface $context): bool
     {
         return $context->getManifestElement()->getAttribute('use', '') === 'manifest';
@@ -32,17 +35,31 @@ class FromManifestInstruction implements InstructionStrategyInterface
         return $context->getManifestElement()->getAttribute('use', '') === 'template';
     }
 
+    
+    
     public function isLinkStylesheet(AssetInterface $context): bool
     {
         return $context->getManifestElement()->getAttribute('link', '') === 'stylesheet';
     }
-
+    
     public function isLinkScript(AssetInterface $context): bool
     {
         return $context->getManifestElement()->getAttribute('link', '') === 'script';
     }
 
-    public function getReferencedAsset(AssetInterface $context): AssetInterface
+    
+    
+    
+    
+    public function getImportAsset(AssetInterface $context): AssetInterface
+    {
+        return $context;
+    }
+    public function getUseAsset(AssetInterface $context): AssetInterface
+    {
+        return $context;
+    }
+    public function getLinkAsset(AssetInterface $context): AssetInterface
     {
         return $context;
     }

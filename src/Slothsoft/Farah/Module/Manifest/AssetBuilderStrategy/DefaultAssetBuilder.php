@@ -8,7 +8,6 @@ use Slothsoft\Farah\Module\Asset\AssetStrategies;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromFilesystemExecutableBuilder;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromManifestExecutableBuilder;
-use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromReferenceExecutableBuilder;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\NullExecutableBuilder;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\FromManifestInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\ImportChildrenInstruction;
@@ -22,12 +21,18 @@ use Slothsoft\Farah\Module\Asset\InstructionStrategy\UseTemplateInstruction;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\AllowAllParameterFilter;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\DenyAllParameterFilter;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\ParameterFilterStrategyInterface;
+use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\FromManifestParameterSupplier;
+use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\NullParameterSupplier;
+use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\ParameterSupplierStrategyInterface;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\FromFilesystemPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\FromManifestPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\NullPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\FromReferenceParameterSupplier;
+use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\UseInstructionExecutableBuilder;
+use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\LinkInstructionExecutableBuilder;
 
 class DefaultAssetBuilder implements AssetBuilderStrategyInterface
 {
@@ -66,48 +71,58 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface
         $executableBuilder = FromManifestExecutableBuilder::class;
         $pathResolver = FromManifestPathResolver::class;
         $parameterFilter = AllowAllParameterFilter::class;
+        $parameterSupplier = NullParameterSupplier::class;
         $instruction = FromManifestInstruction::class;
         
         switch ($tag) {
+            case Manifest::TAG_PARAM:
+                $executableBuilder = NullExecutableBuilder::class;
+                $pathResolver = NullPathResolver::class;
+                $parameterFilter = DenyAllParameterFilter::class;
+                $parameterSupplier = FromManifestParameterSupplier::class;
+                $instruction = NullInstruction::class;
+                break;
             case Manifest::TAG_CUSTOM_ASSET:
                 $executableBuilder = NullExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
                 $parameterFilter = DenyAllParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
                 $instruction = NullInstruction::class;
                 break;
             case Manifest::TAG_IMPORT:
-                $executableBuilder = FromReferenceExecutableBuilder::class;
+                $executableBuilder = NullExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
                 $instruction = ImportChildrenInstruction::class;
                 break;
             case Manifest::TAG_USE_DOCUMENT:
-                $executableBuilder = FromReferenceExecutableBuilder::class;
-                $pathResolver = NullPathResolver::class;
+                $executableBuilder = UseInstructionExecutableBuilder::class;
+                //$pathResolver = NullPathResolver::class;
+                $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = UseDocumentInstruction::class;
                 break;
-            case Manifest::TAG_USE_TEMPLATE:
-                $executableBuilder = FromReferenceExecutableBuilder::class;
-                $pathResolver = NullPathResolver::class;
-                $instruction = UseTemplateInstruction::class;
-                break;
             case Manifest::TAG_USE_MANIFEST:
-                $executableBuilder = FromReferenceExecutableBuilder::class;
-                $pathResolver = NullPathResolver::class;
+                $executableBuilder = UseInstructionExecutableBuilder::class;
+                //$pathResolver = NullPathResolver::class;
                 $instruction = UseManifestInstruction::class;
                 break;
+            case Manifest::TAG_USE_TEMPLATE:
+                $executableBuilder = UseInstructionExecutableBuilder::class;
+                //$pathResolver = NullPathResolver::class;
+                $instruction = UseTemplateInstruction::class;
+                break;
             case Manifest::TAG_LINK_STYLESHEET:
-                $executableBuilder = FromReferenceExecutableBuilder::class;
-                $pathResolver = NullPathResolver::class;
+                $executableBuilder = LinkInstructionExecutableBuilder::class;
+                //$pathResolver = NullPathResolver::class;
                 $instruction = LinkStylesheetInstruction::class;
                 break;
             case Manifest::TAG_LINK_SCRIPT:
-                $executableBuilder = FromReferenceExecutableBuilder::class;
-                $pathResolver = NullPathResolver::class;
+                $executableBuilder = LinkInstructionExecutableBuilder::class;
+                //$pathResolver = NullPathResolver::class;
                 $instruction = LinkScriptInstruction::class;
                 break;
             case Manifest::TAG_RESOURCE:
                 $executableBuilder = FromFilesystemExecutableBuilder::class;
-                $pathResolver = NullPathResolver::class;
+                //$pathResolver = NullPathResolver::class;
                 $parameterFilter = DenyAllParameterFilter::class;
                 break;
             case Manifest::TAG_RESOURCE_DIRECTORY:
@@ -132,6 +147,10 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface
             $element->setAttribute('parameter-filter', $parameterFilter);
         }
         
+        if (! $element->hasAttribute('parameter-supplier')) {
+            $element->setAttribute('parameter-supplier', $parameterSupplier);
+        }
+        
         if (! $element->hasAttribute('instruction')) {
             $element->setAttribute('instruction', $instruction);
         }
@@ -145,7 +164,13 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface
 
     public function buildAssetStrategies(ManifestInterface $ownerManifest, LeanElement $element): AssetStrategies
     {
-        return new AssetStrategies($this->newExecutableBuilder($element->getAttribute('executable-builder')), $this->newPathResolver($element->getAttribute('path-resolver')), $this->newParameterFilter($element->getAttribute('parameter-filter')), $this->newInstruction($element->getAttribute('instruction')));
+        return new AssetStrategies(
+            $this->newExecutableBuilder($element->getAttribute('executable-builder')),
+            $this->newPathResolver($element->getAttribute('path-resolver')),
+            $this->newParameterFilter($element->getAttribute('parameter-filter')),
+            $this->newParameterSupplier($element->getAttribute('parameter-supplier')),
+            $this->newInstruction($element->getAttribute('instruction'))
+        );
     }
 
     private function newExecutableBuilder(string $className): ExecutableBuilderStrategyInterface
@@ -163,8 +188,16 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface
         }
         return static::$services[$className];
     }
-
+    
     private function newParameterFilter(string $className): ParameterFilterStrategyInterface
+    {
+        if (! isset(static::$services[$className])) {
+            static::$services[$className] = new $className();
+        }
+        return static::$services[$className];
+    }
+    
+    private function newParameterSupplier(string $className): ParameterSupplierStrategyInterface
     {
         if (! isset(static::$services[$className])) {
             static::$services[$className] = new $className();
