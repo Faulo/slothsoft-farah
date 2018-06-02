@@ -217,7 +217,6 @@ This namespace defines elements to identify assets in a Farah module.
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="asset-reference">
-					<xsd:attribute name="as" type="farahUrlPathSegment" use="optional" />
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>
@@ -251,7 +250,6 @@ This namespace defines elements to identify assets in a Farah module.
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="meta">
-					<xsd:attribute name="name" type="farahUrlArgumentName" use="required" />
 					<xsd:attribute name="value" type="farahUrlArgumentValue" use="optional" />
 					<xsd:attribute name="scope" type="xsd:normalizedString" use="optional" />
 					<xsd:attribute name="type" type="xsd:normalizedString" use="optional" />
@@ -295,15 +293,16 @@ This namespace defines elements to identify assets in a Farah module.
 
 	<!-- element types -->
 	<xsd:complexType name="module-node" abstract="true">
+		<xsd:attribute name="name" type="farahUrlPathSegment" use="optional" />
 		<xsd:attribute name="executable-builder" type="phpClass" use="optional" />
 		<xsd:attribute name="path-resolver" type="phpClass" use="optional" />
 		<xsd:attribute name="parameter-filter" type="phpClass" use="optional" />
+		<xsd:attribute name="parameter-supplier" type="phpClass" use="optional" />
 		<xsd:attribute name="instruction" type="phpClass" use="optional" />
 	</xsd:complexType>
 	<xsd:complexType name="virtual-asset" abstract="true">
 		<xsd:complexContent>
 			<xsd:extension base="module-node">
-				<xsd:attribute name="name" type="farahUrlPathSegment" use="required" />
 				<xsd:attribute name="assetpath" type="farahUrlPath" use="optional" />
 				<xsd:attribute name="use" type="assetUses" use="optional" />
 			</xsd:extension>

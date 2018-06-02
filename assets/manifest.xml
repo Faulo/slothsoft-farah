@@ -5,7 +5,7 @@
     <directory name="sitemap-generator">
       <resource name="template" type="application/xslt+xml" use="template"/>
       <resource name="prettify" type="application/xslt+xml"/>
-      <use-document ref="/sites"/>
+      <use-document ref="/sites" name="sites"/>
     </directory>
    <directory name="schema">
        <resource-directory name="dictionary" type="application/x-xsd+xml"/>

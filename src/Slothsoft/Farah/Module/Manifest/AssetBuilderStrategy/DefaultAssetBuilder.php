@@ -41,13 +41,7 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface
     {
         $tag = $element->getTag();
         if (! $element->hasAttribute('name')) {
-            if ($element->hasAttribute('as')) {
-                $element->setAttribute('name', $element->getAttribute('as'));
-            } elseif ($element->hasAttribute('ref')) {
-                $element->setAttribute('name', basename(parse_url($element->getAttribute('ref'), PHP_URL_PATH)));
-            } else {
-                $element->setAttribute('name', uniqid('asset-'));
-            }
+            $element->setAttribute('name', uniqid('asset-'));
         }
         if (! $element->hasAttribute('path')) {
             $path = $element->getAttribute('name');

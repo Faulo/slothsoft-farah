@@ -37,7 +37,7 @@ class TransformationDOMWriter implements DOMWriterInterface
         $resultDoc = $dom->transformToDocument($this->source, $this->template);
         
         if (! $resultDoc->documentElement) {
-            throw new EmptyTransformationException();
+            throw new EmptyTransformationException($this->source->toDocument()->documentElement->getAttribute('url'));
         }
         
         return $resultDoc;
