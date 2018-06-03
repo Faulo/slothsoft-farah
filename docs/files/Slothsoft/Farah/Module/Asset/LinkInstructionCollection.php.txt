@@ -9,13 +9,13 @@ class LinkInstructionCollection
 
     /**
      *
-     * @var AssetInterface[]
+     * @var Set
      */
     public $stylesheetAssets;
 
     /**
      *
-     * @var AssetInterface[]
+     * @var Set
      */
     public $scriptAssets;
 

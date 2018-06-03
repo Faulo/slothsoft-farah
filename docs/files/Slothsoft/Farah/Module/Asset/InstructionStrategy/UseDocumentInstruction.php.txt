@@ -6,7 +6,9 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 class UseDocumentInstruction extends NullInstruction
 {
-    use InstructionFromReferenceAttributeTrait;
+    use InstructionFromReferenceAttributeTrait {
+        getReferencedAsset as public getUseAsset;
+    }
 
     public function isUseDocument(AssetInterface $context): bool
     {

@@ -6,7 +6,9 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 class ImportChildrenInstruction extends NullInstruction
 {
-    use InstructionFromReferenceAttributeTrait;
+    use InstructionFromReferenceAttributeTrait {
+        getReferencedAsset as public getImportAsset;
+    }
 
     public function isImportChildren(AssetInterface $context): bool
     {
