@@ -2,301 +2,140 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\ModuleTests;
 
-use Slothsoft\Farah\Exception\AssetPathNotFoundException;
-use Slothsoft\Farah\Exception\MalformedUrlException;
-use Slothsoft\Farah\Exception\ModuleNotFoundException;
-use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
-use Slothsoft\Farah\FarahUrl\FarahUrl;
-use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
-use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\Asset\AssetInterface;
-use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use Slothsoft\Core\XML\LeanElement;
+use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
+use Slothsoft\Farah\Module\Asset\InstructionStrategy\InstructionStrategyInterface;
+use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\ParameterFilterStrategyInterface;
+use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 use DOMDocument;
-use DOMElement;
-use Throwable;
-use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 
 abstract class AbstractManifestTest extends AbstractTestCase
 {
 
-    abstract protected static function getManifestAuthority(): FarahUrlAuthority;
+    abstract protected static function loadTree(): LeanElement;
 
-    protected function getManifest(): ManifestInterface
+    protected function getManifestRoot(): LeanElement
     {
-        static $manifest;
-        if ($manifest === null) {
-            $manifest = Module::resolveToManifest($this->getManifestUrl());
+        static $rootElement;
+        if ($rootElement === null) {
+            $rootElement = static::loadTree();
         }
-        return $manifest;
-    }
-
-    protected function getManifestUrl(): FarahUrl
-    {
-        return FarahUrl::createFromComponents(static::getManifestAuthority());
-    }
-
-    protected function getManifestAsset(): AssetInterface
-    {
-        return $this->getManifest()->lookupAsset('/');
+        return $rootElement;
     }
 
     protected function getManifestDocument(): DOMDocument
     {
-        return $this->getManifestMethod('getRootElement')->toDocument();
+        return $this->getManifestRoot()->toDocument();
     }
 
-    protected function getManifestProperty(string $name)
+    public function testHasRootElement(): void
     {
-        return $this->getObjectProperty($this->getManifest(), $name);
-    }
-
-    protected function getManifestMethod(string $name)
-    {
-        return $this->getObjectMethod($this->getManifest(), $name);
+        $this->assertInstanceOf(LeanElement::class, $this->getManifestRoot());
     }
 
     /**
      *
-     * @dataProvider assetReferenceProvider
+     * @depends testHasRootElement
      */
-    public function testAssetReferenceIsValid(string $ref, FarahUrl $context): void
+    public function testRootElementIsAssets()
     {
-        try {
-            FarahUrl::createFromReference($ref, $context);
-            $this->assertTrue(true);
-        } catch (MalformedUrlException $e) {
-            $this->failException($e);
-        } catch (ProtocolNotSupportedException $e) {
-            $this->failException($e);
-        }
+        $this->assertEquals($this->getManifestRoot()
+            ->getTag(), Manifest::TAG_ASSET_ROOT);
     }
 
-    public function assetReferenceProvider(): iterable
+    /**
+     *
+     * @dataProvider customPathResolverProvider
+     */
+    public function testClassImplementsPathResolverStrategy(string $className): void
     {
-        foreach ($this->getReferencedAssetReferences() as $context => $path) {
-            yield (string) $path => [
-                $path,
-                $context
+        $this->assertNotNull($className);
+        $this->assertTrue(class_exists($className));
+        $this->assertInstanceOf(PathResolverStrategyInterface::class, new $className());
+    }
+
+    public function customPathResolverProvider(): iterable
+    {
+        foreach ($this->getAllAttributeValues('path-resolver') as $className) {
+            yield $className => [
+                $className
             ];
         }
     }
 
-    public function assetReferenceUrlProvider(): iterable
+    /**
+     *
+     * @dataProvider customExecutableBuilderProvider
+     */
+    public function testClassImplementsExecutableBuilderStrategy(string $className): void
     {
-        foreach ($this->getReferencedAssetReferences() as $context => $ref) {
-            try {
-                $url = FarahUrl::createFromReference($ref, $context);
-                yield (string) $url => [
-                    $url
-                ];
-            } catch (Throwable $e) {}
+        $this->assertNotNull($className);
+        $this->assertTrue(class_exists($className));
+        $this->assertInstanceOf(ExecutableBuilderStrategyInterface::class, new $className());
+    }
+
+    public function customExecutableBuilderProvider(): iterable
+    {
+        foreach ($this->getAllAttributeValues('executable-builder') as $className) {
+            yield $className => [
+                $className
+            ];
         }
     }
 
-    private function getReferencedAssetReferences(): iterable
+    /**
+     *
+     * @dataProvider customInstructionProvider
+     */
+    public function testClassImplementsInstructionStrategy(string $className): void
     {
+        $this->assertNotNull($className);
+        $this->assertTrue(class_exists($className));
+        $this->assertInstanceOf(InstructionStrategyInterface::class, new $className());
+    }
+
+    public function customInstructionProvider(): iterable
+    {
+        foreach ($this->getAllAttributeValues('instruction') as $className) {
+            yield $className => [
+                $className
+            ];
+        }
+    }
+
+    /**
+     *
+     * @dataProvider customParameterFilterProvider
+     */
+    public function testClassImplementsParameterFilterStrategy(string $className): void
+    {
+        $this->assertNotNull($className);
+        $this->assertTrue(class_exists($className));
+        $this->assertInstanceOf(ParameterFilterStrategyInterface::class, new $className());
+    }
+
+    public function customParameterFilterProvider(): iterable
+    {
+        foreach ($this->getAllAttributeValues('parameter-filter') as $className) {
+            yield $className => [
+                $className
+            ];
+        }
+    }
+
+    private function getAllAttributeValues(string $attributeName): iterable
+    {
+        $attributes = [];
         $manifestDocument = $this->getManifestDocument();
         $nodeList = $manifestDocument->getElementsByTagName('*');
         foreach ($nodeList as $node) {
-            if ($node->hasAttribute('ref')) {
-                yield $this->getContextUrlForManifestNode($node) => $node->getAttribute('ref');
-            }
-        }
-    }
-
-    private function getContextUrlForManifestNode(DOMElement $node): FarahUrl
-    {
-        $path = [];
-        while ($node->parentNode instanceof DOMElement) {
-            if ($node->hasAttribute('name')) {
-                $path[] = $node->getAttribute('name');
-            } else {
-                $path[] = '*';
-            }
-            $node = $node->parentNode;
-        }
-        $path = array_reverse($path);
-        $path = implode('/', $path);
-        $path = FarahUrlPath::createFromString($path);
-        return $this->getManifestUrl()->withAssetPath($path);
-    }
-
-    /**
-     *
-     * @dataProvider assetReferenceUrlProvider
-     */
-    public function testReferencedModuleExists(FarahUrl $url): void
-    {
-        try {
-            Module::resolveToManifest($url);
-            $this->assertTrue(true);
-        } catch (ModuleNotFoundException $e) {
-            $this->failException($e);
-        }
-    }
-
-    /**
-     *
-     * @dataProvider assetReferenceUrlProvider
-     */
-    public function testReferencedAssetExists(FarahUrl $url): void
-    {
-        try {
-            Module::resolveToAsset($url);
-            $this->assertTrue(true);
-        } catch (ModuleNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (AssetPathNotFoundException $e) {
-            $this->failException($e);
-        }
-    }
-
-    /**
-     *
-     * @dataProvider assetReferenceUrlProvider
-     */
-    public function testReferencedExecutableExists(FarahUrl $url): void
-    {
-        try {
-            Module::resolveToExecutable($url);
-            $this->assertTrue(true);
-        } catch (ModuleNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (AssetPathNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (Throwable $e) {
-            $this->failException($e);
-        }
-    }
-
-    /**
-     *
-     * @dataProvider assetReferenceUrlProvider
-     */
-    public function testReferencedResultExists(FarahUrl $url): void
-    {
-        try {
-            Module::resolveToResult($url);
-            $this->assertTrue(true);
-        } catch (ModuleNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (AssetPathNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (Throwable $e) {
-            $this->failException($e);
-        }
-    }
-
-    public function assetLocalUrlProvider(): iterable
-    {
-        foreach ($this->getLocalAssetPaths() as $path) {
-            try {
-                $url = $this->getManifest()->createUrl($path);
-                yield (string) $url => [
-                    $url
-                ];
-            } catch (Throwable $e) {}
-        }
-    }
-
-    private function getLocalAssetPaths(): iterable
-    {
-        return $this->buildPathIndex($this->getManifestAsset());
-    }
-
-    private function buildPathIndex(AssetInterface $asset): iterable
-    {
-        yield $asset->getUrlPath();
-        foreach ($asset->getAssetChildren() as $childAsset) {
-            foreach ($this->buildPathIndex($childAsset) as $url) {
-                yield $url;
-            }
-        }
-    }
-
-    /**
-     *
-     * @dataProvider assetLocalUrlProvider
-     */
-    public function testLocalAssetExists(FarahUrl $url): void
-    {
-        try {
-            Module::resolveToAsset($url);
-            $this->assertTrue(true);
-        } catch (ModuleNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (AssetPathNotFoundException $e) {
-            $this->failException($e);
-        }
-    }
-
-    /**
-     *
-     * @dataProvider assetLocalUrlProvider
-     */
-    public function testLocalExecutableExists(FarahUrl $url): void
-    {
-        try {
-            Module::resolveToExecutable($url);
-            $this->assertTrue(true);
-        } catch (ModuleNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (AssetPathNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (Throwable $e) {
-            $this->failException($e);
-        }
-    }
-
-    /**
-     *
-     * @dataProvider assetLocalUrlProvider
-     */
-    public function testLocalResultExists(FarahUrl $url): void
-    {
-        try {
-            Module::resolveToResult($url);
-            $this->assertTrue(true);
-        } catch (ModuleNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (AssetPathNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (Throwable $e) {
-            $this->failException($e);
-        }
-    }
-
-    /**
-     *
-     * @depends      testLocalResultExists
-     * @dataProvider assetLocalUrlProvider
-     */
-    public function testLocalResultIsValidAccordingToSchema(FarahUrl $url): void
-    {
-        $asset = Module::resolveToAsset($url);
-        $executable = $asset->lookupExecutable();
-        $result = $executable->lookupXmlResult();
-        
-        $document = $result->toDocument();
-        $node = $document->documentElement;
-        
-        $this->assertInstanceOf(DOMElement::class, $node);
-        $ns = $node->namespaceURI;
-        $version = $node->getAttribute('version');
-        if ($ns !== null and $version !== '') {
-            if (strpos($ns, 'http://schema.slothsoft.net/') === 0) {
-                $schema = explode('/', substr($ns, strlen('http://schema.slothsoft.net/')));
-                $this->assertEquals(2, count($schema), "Invalid slothsoft schema: $ns");
-                
-                $url = "farah://slothsoft@$schema[0]/schema/$schema[1]/$version";
-                
-                try {
-                    $validateResult = $document->schemaValidate($url);
-                } catch (Throwable $e) {
-                    $validateResult = false;
-                    $this->failException($e);
+            if ($node->hasAttribute($attributeName)) {
+                $attributeValue = $node->getAttribute($attributeName);
+                if (! isset($attributes[$attributeValue])) {
+                    $attributes[$attributeValue] = true;
+                    yield $attributeValue;
                 }
-                $this->assertTrue($validateResult, 'Slothsoft document did not pass its own vaidation!');
             }
         }
     }

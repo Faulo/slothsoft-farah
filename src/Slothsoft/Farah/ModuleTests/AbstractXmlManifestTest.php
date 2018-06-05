@@ -3,25 +3,27 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\ModuleTests;
 
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\XML\LeanElement;
 use DOMDocument;
 use Throwable;
-use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\TreeLoaderStrategyInterface;
-use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\XmlTreeLoader;
 
-abstract class AbstractXmlTreeLoaderTest extends AbstractTreeLoaderTest
+abstract class AbstractXmlManifestTest extends AbstractManifestTest
 {
-
-    protected static function getTreeLoader(): TreeLoaderStrategyInterface
+    abstract protected static function getManifestDirectory() : string;
+    
+    protected static function getManifestFile(): string
     {
-        return new XmlTreeLoader();
+        return static::getManifestDirectory() . DIRECTORY_SEPARATOR . 'manifest.xml';
+    }
+    
+    protected static function loadTree(): LeanElement
+    {
+        return LeanElement::createTreeFromDOMDocument(DOMHelper::loadDocument(static::getManifestFile()));
     }
 
     const SCHEMA_URL = 'farah://slothsoft@farah/schema/module/1.0';
 
-    protected function getManifestPath(): string
-    {
-        return static::getManifestDirectory() . DIRECTORY_SEPARATOR . 'manifest.xml';
-    }
+    
 
     public function testSchemaExists(): string
     {
@@ -46,7 +48,7 @@ abstract class AbstractXmlTreeLoaderTest extends AbstractTreeLoaderTest
      */
     public function testManifestExists(): string
     {
-        $path = $this->getManifestPath();
+        $path = $this->getManifestFile();
         $this->assertFileExists($path, 'Asset file not found!');
         return $path;
     }
@@ -80,5 +82,4 @@ abstract class AbstractXmlTreeLoaderTest extends AbstractTreeLoaderTest
         return $manifestDocument;
     }
 }
-
 

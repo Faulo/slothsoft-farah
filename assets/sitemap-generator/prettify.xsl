@@ -49,13 +49,13 @@
           <xsl:when test="$fileType='sitemap'"><xsl:call-template name="sitemapTable"/></xsl:when>
           <xsl:otherwise><xsl:call-template name="siteindexTable"/></xsl:otherwise>
         </xsl:choose>
-		<textarea cols="120" rows="{count(//sitemap:url) + 1}">
-			<xsl:for-each select="//sitemap:url">
-				<xsl:value-of select="concat('start /b /wait curl &quot;', sitemap:loc, '?dnt&quot; -o curl.sitemap.xhtml')"/>
-				<xsl:text>
-</xsl:text>
-			</xsl:for-each>
-		</textarea>
+<!-- 		<textarea cols="120" rows="{count(//sitemap:url) + 1}"> -->
+<!-- 			<xsl:for-each select="//sitemap:url"> -->
+<!-- 				<xsl:value-of select="concat('start /b /wait curl &quot;', sitemap:loc, '?dnt&quot; -o curl.sitemap.xhtml')"/> -->
+<!-- 				<xsl:text> -->
+<!-- </xsl:text> -->
+<!-- 			</xsl:for-each> -->
+<!-- 		</textarea> -->
       </body>
     </html>
   </xsl:template>
@@ -65,7 +65,7 @@
     <div id="information">
       <p>Number of sitemaps in this index: <xsl:value-of select="count(sitemap:sitemapindex/sitemap:sitemap)"></xsl:value-of></p>
     </div>
-    <table class="tablesorter siteindex">
+    <table class="tablesorter siteindex" border="1">
       <thead>
         <tr>
           <th>Sitemap URL</th>
