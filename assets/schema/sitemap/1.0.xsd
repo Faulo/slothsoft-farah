@@ -106,6 +106,8 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 					use="optional" />
 				<xsd:attribute name="url" type="xsd:anyURI"
 					use="optional" />
+				<xsd:attribute name="current" fixed="1"
+					use="optional" />
 				<xsd:anyAttribute namespace="##other"
 					processContents="lax" />
 			</xsd:restriction>
