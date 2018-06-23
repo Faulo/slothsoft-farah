@@ -6,6 +6,12 @@ use Ds\Set;
 
 class UseInstructionCollection
 {
+    
+    /**
+     *
+     * @var AssetInterface
+     */
+    public $rootAsset;
 
     /**
      *
@@ -27,6 +33,7 @@ class UseInstructionCollection
 
     public function __construct()
     {
+        $this->rootAsset = null;
         $this->documentAssets = new Set();
         $this->manifestAssets = new Set();
         $this->templateAsset = null;
