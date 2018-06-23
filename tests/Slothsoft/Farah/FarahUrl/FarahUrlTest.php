@@ -171,5 +171,18 @@ class FarahUrlTest extends TestCase
         }
         return $ret;
     }
+    
+    /**
+     *
+     */
+    public function testFileModifiedTime()
+    {
+        $assetsPath = realpath('assets/xsl/module.xsl');
+        $assetsUrl = 'farah://slothsoft@farah/xsl/module';
+        
+        $expected = filemtime($assetsPath);
+        $actual = filemtime($assetsUrl);
+        $this->assertEquals($expected, $actual);
+    }
 }
 

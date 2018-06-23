@@ -24,7 +24,7 @@ class Result implements ResultInterface
 
     private $fileName;
 
-    private $changeTime;
+    private $fileStat;
 
     private $isBufferable;
 
@@ -76,7 +76,15 @@ class Result implements ResultInterface
         }
         return $this->isBufferable;
     }
-
+    
+    public function lookupFileStatistics(): array
+    {
+        if ($this->fileStat === null) {
+            $this->fileStat = $this->strategies->streamBuilder->buildStreamFileStatistics($this);
+        }
+        return $this->fileStat;
+    }
+    
     public function lookupFileName(): string
     {
         if ($this->fileName === null) {
@@ -84,13 +92,13 @@ class Result implements ResultInterface
         }
         return $this->fileName;
     }
-
-    public function lookupChangeTime(): int
-    {
-        if ($this->changeTime === null) {
-            $this->changeTime = $this->strategies->streamBuilder->buildStreamChangeTime($this);
-        }
-        return $this->changeTime;
+    
+    public function lookupFileChangeTime() : int {
+        return $this->lookupFileStatistics()['mtime'] ?? 0;
+    }
+    
+    public function lookupFileSize() : int {
+        return $this->lookupFileStatistics()['size'] ?? 0;
     }
 }
 

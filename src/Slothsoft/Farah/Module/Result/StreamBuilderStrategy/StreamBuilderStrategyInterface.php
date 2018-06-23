@@ -19,7 +19,15 @@ interface StreamBuilderStrategyInterface
      * @return StreamInterface
      */
     public function buildStream(ResultInterface $context): StreamInterface;
-
+    
+    
+    /**
+     * Determine all available stats of this resource, as a call to stat() would.
+     *
+     * @return array
+     */
+    public function buildStreamFileStatistics(ResultInterface $context): array;
+    
     /**
      * Determine the filename of this result.
      *
@@ -40,13 +48,6 @@ interface StreamBuilderStrategyInterface
      * @return string A valid character, or the empty string if not applicable.
      */
     public function buildStreamCharset(ResultInterface $context): string;
-
-    /**
-     * Determine the time of the last change to this resource, or 0 if undeterminable
-     *
-     * @return int
-     */
-    public function buildStreamChangeTime(ResultInterface $context): int;
 
     /**
      * Determine a hash for this resource, or the empty string if undeterminable

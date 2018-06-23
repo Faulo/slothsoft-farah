@@ -37,12 +37,25 @@ class LookupAssetStrategy extends RequestStrategyBase
     protected function createUrl(ServerRequestInterface $request): FarahUrl
     {
         $uri = $request->getUri();
-        $args = $request->getQueryParams();
+        $body = $request->getParsedBody();
+        $params = $request->getQueryParams();
+        
+        if (is_array($body)) {
+            $args = $body + $params;
+        } else {
+            $args = $params;
+        }
         
         if ($uri instanceof FarahUrl) {
             $url = $uri;
         } else {
-            $url = FarahUrl::createFromReference($this->extractFarahUrl($uri->getPath()), FarahUrl::createFromComponents(FarahUrlAuthority::createFromVendorAndModule(self::DEFAULT_VENDOR, self::DEFAULT_MODULE), null, FarahUrlArguments::createFromValueList($args)));
+            $urlAuthority = FarahUrlAuthority::createFromVendorAndModule(self::DEFAULT_VENDOR, self::DEFAULT_MODULE);
+            $urlPath = null;
+            $urlArgs = FarahUrlArguments::createFromValueList($args);
+            
+            $url = FarahUrl::createFromReference(
+                $this->extractFarahUrl($uri->getPath()),
+                FarahUrl::createFromComponents($urlAuthority, $urlPath, $urlArgs));
         }
         
         return $url;

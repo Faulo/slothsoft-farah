@@ -50,7 +50,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 $cacheDuration = $this->inventCacheDuration($fileMime);
                 $headers['cache-control'] = "must-revalidate, max-age=$cacheDuration";
                 
-                $fileTime = $result->lookupChangeTime();
+                $fileTime = $result->lookupFileStatistics()['mtime'] ?? 0;
                 if ($fileTime > 0) {
                     $headers['last-modified'] = gmdate('D, d M Y H:i:s \\G\\M\\T', $fileTime);
                 }

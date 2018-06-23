@@ -41,9 +41,9 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
         return $this->writer->toFile()->getName();
     }
 
-    public function buildStreamChangeTime(ResultInterface $context): int
+    public function buildStreamFileStatistics(ResultInterface $context): array
     {
-        return filemtime($this->toResourceUrl());
+        return stat($this->toResourceUrl());
     }
 
     public function buildStreamHash(ResultInterface $context): string
