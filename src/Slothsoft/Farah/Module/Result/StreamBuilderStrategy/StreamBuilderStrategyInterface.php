@@ -19,15 +19,14 @@ interface StreamBuilderStrategyInterface
      * @return StreamInterface
      */
     public function buildStream(ResultInterface $context): StreamInterface;
-    
-    
+
     /**
      * Determine all available stats of this resource, as a call to stat() would.
      *
      * @return array
      */
     public function buildStreamFileStatistics(ResultInterface $context): array;
-    
+
     /**
      * Determine the filename of this result.
      *

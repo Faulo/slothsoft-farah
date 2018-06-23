@@ -6,6 +6,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 interface ParameterSupplierStrategyInterface
 {
-    public function supplyParameters(AssetInterface $context) : iterable;
+
+    public function supplyParameters(AssetInterface $context): iterable;
 }
 

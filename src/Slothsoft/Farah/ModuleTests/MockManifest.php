@@ -28,6 +28,7 @@ class MockManifest implements ManifestInterface
 
     public function normalizeManifestTree(LeanElement $root): void
     {}
+
     public function createManifestFile(string $fileName): SplFileInfo
     {}
 
@@ -36,6 +37,5 @@ class MockManifest implements ManifestInterface
 
     public function createDataFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo
     {}
-
 }
 

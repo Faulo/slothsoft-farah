@@ -105,8 +105,9 @@ class FarahUrlArguments implements IteratorAggregate, Hashable
     {
         return $this->id === '';
     }
-    
-    public function withArguments(FarahUrlArguments $args) {
+
+    public function withArguments(FarahUrlArguments $args)
+    {
         if ($this->isEmpty()) {
             return $args;
         }

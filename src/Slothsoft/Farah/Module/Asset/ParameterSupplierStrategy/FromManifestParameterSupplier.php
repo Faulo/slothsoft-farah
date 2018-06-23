@@ -6,6 +6,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 class FromManifestParameterSupplier implements ParameterSupplierStrategyInterface
 {
+
     public function supplyParameters(AssetInterface $context): iterable
     {
         $element = $context->getManifestElement();

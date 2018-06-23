@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
-	xmlns="http://www.w3.org/1999/xhtml"
+<xsl:stylesheet version="1.0" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	
+
 	<xsl:template match="/data">
-		<xsl:variable name="cols" select="*[@data-cms-name = 'ipLog']/col"/>
-		<xsl:variable name="logs" select="*[@data-cms-name = 'ipLog']/log"/>
-		<xsl:variable name="pages" select="*[@data-cms-name = 'ipLog']/page"/>
-		<xsl:variable name="groups" select="*[@data-cms-name = 'ipLog']/groupList"/>
-		<xsl:variable name="languages" select="*[@data-cms-name = 'ipLog']/language"/>
-		<xsl:variable name="langRegistry" select="*[@data-cms-name = 'language-registry']/registry/language"/>
-		<xsl:variable name="regionRegistry" select="*[@data-cms-name = 'language-registry']/registry/region"/>
-		<xsl:variable name="encodingList" select="*[@data-cms-name = 'ipLog']/encoding"/>
-		<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
-		<xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz'"/>
+		<xsl:variable name="cols" select="*[@data-cms-name = 'ipLog']/col" />
+		<xsl:variable name="logs" select="*[@data-cms-name = 'ipLog']/log" />
+		<xsl:variable name="pages" select="*[@data-cms-name = 'ipLog']/page" />
+		<xsl:variable name="groups" select="*[@data-cms-name = 'ipLog']/groupList" />
+		<xsl:variable name="languages" select="*[@data-cms-name = 'ipLog']/language" />
+		<xsl:variable name="langRegistry" select="*[@data-cms-name = 'language-registry']/registry/language" />
+		<xsl:variable name="regionRegistry" select="*[@data-cms-name = 'language-registry']/registry/region" />
+		<xsl:variable name="encodingList" select="*[@data-cms-name = 'ipLog']/encoding" />
+		<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
+		<xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz'" />
 		<html>
 			<head>
 				<title>IP Log</title>
@@ -115,65 +114,42 @@ tr[id] > td:nth-child(3) > input, tr[id] > td:nth-child(4) > input {
 			</head>
 			<body>
 				<header>
-					<!--
-					<nav class="language">
-						<xsl:for-each select="$languages">
-							<xsl:variable name="langNode" select="$langRegistry[subtag = current()/@lang]"/>
-							<xsl:variable name="regionNode" select="$regionRegistry[subtag = current()/@region]"/>
-							<a href="{@uri}" class="{@active}">
-								<xsl:if test="$langNode">
-									<xsl:attribute name="title">
-										<xsl:value-of select="$langNode/description"/>
-										<xsl:text> (</xsl:text>
-										<xsl:value-of select="$regionNode/description"/>
-										<xsl:text>)</xsl:text>
-									</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="substring-before(@code, '-')"/>
-								<br/>
-								<xsl:value-of select="substring-after(@code, '-')"/>
-							</a>
-						</xsl:for-each>
-					</nav>
-					<nav class="encoding">
-						<xsl:for-each select="$encodingList">
-							<a href="{@uri}" class="{@active}">
-								<xsl:value-of select="@code"/>
-							</a>
-						</xsl:for-each>
-					</nav>
-					<nav class="page">
-						<xsl:for-each select="$pages">
-							<xsl:if test="position() &lt; 100 or position() = last()">
-								<a href="{@uri}" class="{@active}"><xsl:value-of select="position()"/></a>
-							</xsl:if>
-						</xsl:for-each>
-					</nav>
-					-->
+					<!-- <nav class="language"> <xsl:for-each select="$languages"> <xsl:variable name="langNode" select="$langRegistry[subtag 
+						= current()/@lang]"/> <xsl:variable name="regionNode" select="$regionRegistry[subtag = current()/@region]"/> <a href="{@uri}" 
+						class="{@active}"> <xsl:if test="$langNode"> <xsl:attribute name="title"> <xsl:value-of select="$langNode/description"/> 
+						<xsl:text> (</xsl:text> <xsl:value-of select="$regionNode/description"/> <xsl:text>)</xsl:text> </xsl:attribute> </xsl:if> 
+						<xsl:value-of select="substring-before(@code, '-')"/> <br/> <xsl:value-of select="substring-after(@code, '-')"/> </a> </xsl:for-each> 
+						</nav> <nav class="encoding"> <xsl:for-each select="$encodingList"> <a href="{@uri}" class="{@active}"> <xsl:value-of select="@code"/> 
+						</a> </xsl:for-each> </nav> <nav class="page"> <xsl:for-each select="$pages"> <xsl:if test="position() &lt; 100 or position() 
+						= last()"> <a href="{@uri}" class="{@active}"><xsl:value-of select="position()"/></a> </xsl:if> </xsl:for-each> </nav> -->
 					<xsl:for-each select="$groups">
 						<nav>
 							<xsl:for-each select="group">
-								<a href="{@uri}" class="{@active}"><xsl:value-of select="."/></a>
+								<a href="{@uri}" class="{@active}">
+									<xsl:value-of select="." />
+								</a>
 							</xsl:for-each>
 						</nav>
 					</xsl:for-each>
 				</header>
 				<form action="{$groups[last()]/group[1]/@uri}" method="POST">
-					<button type="submit"/>
+					<button type="submit" />
 					<table>
 						<thead>
 							<tr>
-								<td/>
+								<td />
 								<xsl:for-each select="$cols">
-									<th data-col="{.}" title="{.}"><xsl:value-of select="."/></th>
+									<th data-col="{.}" title="{.}">
+										<xsl:value-of select="." />
+									</th>
 								</xsl:for-each>
 							</tr>
 							<tr>
-								<td/>
+								<td />
 								<xsl:for-each select="$cols">
 									<th data-col="{.}">
 										<xsl:if test="@searchable">
-											<input name="{@form-key}" value="{@form-val}"/>
+											<input name="{@form-key}" value="{@form-val}" />
 										</xsl:if>
 									</th>
 								</xsl:for-each>
@@ -181,8 +157,8 @@ tr[id] > td:nth-child(3) > input, tr[id] > td:nth-child(4) > input {
 						</thead>
 						<tbody>
 							<xsl:for-each select="$logs">
-								<xsl:variable name="log" select="."/>
-								<tr><!--  id="row-{@id}" -->
+								<xsl:variable name="log" select="." />
+								<tr><!-- id="row-{@id}" -->
 									<td>
 										<a href="http://{$log/@*[name() = 'HTTP_HOST']}{$log/@*[name() = 'REQUEST_URI']}">🔗</a>
 										<xsl:text>&#160;</xsl:text>
@@ -190,8 +166,8 @@ tr[id] > td:nth-child(3) > input, tr[id] > td:nth-child(4) > input {
 									</td>
 									<xsl:for-each select="$cols">
 										<td>
-											<xsl:variable name="val" select="string($log/@*[name() = current()])"/>
-											<input value="{$val}"/>
+											<xsl:variable name="val" select="string($log/@*[name() = current()])" />
+											<input value="{$val}" />
 										</td>
 									</xsl:for-each>
 								</tr>

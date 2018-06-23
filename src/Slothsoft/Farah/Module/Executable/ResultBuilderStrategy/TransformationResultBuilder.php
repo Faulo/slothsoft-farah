@@ -33,8 +33,9 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface
     {
         return FarahUrlStreamIdentifier::createFromString('xsl-template');
     }
-    
+
     private $getUseInstructions;
+
     private $getLinkInstructions;
 
     public function __construct(callable $getUseInstructions, callable $getLinkInstructions)

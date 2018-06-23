@@ -1,12 +1,9 @@
 <?xml version="1.0"?>
-<xsd:schema 
-	targetNamespace="http://schema.slothsoft.net/farah/module"
-	xmlns="http://schema.slothsoft.net/farah/module" 
-	xmlns:sfm="http://schema.slothsoft.net/farah/module"
-	xmlns:ssv="http://schema.slothsoft.net/schema/versioning"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/module"
+	xmlns="http://schema.slothsoft.net/farah/module" xmlns:sfm="http://schema.slothsoft.net/farah/module"
+	xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
-	
+
 	<xsd:annotation>
 		<xsd:appinfo>
 			<ssv:info version="1.0">
@@ -27,7 +24,7 @@ This namespace defines elements to identify assets in a Farah module.
 			</ssv:info>
 		</xsd:appinfo>
 	</xsd:annotation>
-	
+
 	<xsd:attributeGroup name="schemaVersion">
 		<xsd:attribute name="version" type="xsd:token" use="required" fixed="1.0">
 			<xsd:annotation>
@@ -91,9 +88,9 @@ This namespace defines elements to identify assets in a Farah module.
 			<xsd:element ref="options" />
 		</xsd:choice>
 	</xsd:group>
-	
-	
-	
+
+
+
 	<!-- root element -->
 	<xsd:element name="assets">
 		<xsd:complexType>
@@ -153,7 +150,7 @@ This namespace defines elements to identify assets in a Farah module.
 	<xsd:element name="closure">
 		<xsd:complexType>
 			<xsd:complexContent>
-				<xsd:extension base="virtual-asset"/>
+				<xsd:extension base="virtual-asset" />
 			</xsd:complexContent>
 		</xsd:complexType>
 	</xsd:element>
@@ -389,15 +386,15 @@ This namespace defines elements to identify assets in a Farah module.
 	</xsd:simpleType>
 
 	<xsd:simpleType name="assetUses">
-		<xsd:list itemType="assetUse"/>
+		<xsd:list itemType="assetUse" />
 	</xsd:simpleType>
 	<xsd:simpleType name="assetUse">
 		<xsd:restriction base="xsd:token">
-			<xsd:enumeration value="document"/>
-			<xsd:enumeration value="template"/>
-			<xsd:enumeration value="manifest"/>
-			<xsd:enumeration value="script"/>
-			<xsd:enumeration value="stylesheet"/>
+			<xsd:enumeration value="document" />
+			<xsd:enumeration value="template" />
+			<xsd:enumeration value="manifest" />
+			<xsd:enumeration value="script" />
+			<xsd:enumeration value="stylesheet" />
 		</xsd:restriction>
 	</xsd:simpleType>
 </xsd:schema>

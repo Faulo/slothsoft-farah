@@ -28,7 +28,7 @@ class SitesBuilder implements ExecutableBuilderStrategyInterface
                 return Kernel::getCurrentSitemap()->lookupExecutable()
                     ->lookupXmlResult()
                     ->toDocument();
-            } catch(ConfigurationRequiredException $e) {
+            } catch (ConfigurationRequiredException $e) {
                 $doc = new DOMDocument();
                 $node = $doc->createElementNS(DOMHelper::NS_FARAH_SITES, 'domain');
                 $node->textContent = $e->getMessage();

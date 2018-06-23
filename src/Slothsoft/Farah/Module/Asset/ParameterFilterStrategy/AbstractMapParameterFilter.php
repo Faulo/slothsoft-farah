@@ -4,7 +4,8 @@ namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
 
 abstract class AbstractMapParameterFilter implements ParameterFilterStrategyInterface
 {
-    abstract protected function loadMap() : array;
+
+    abstract protected function loadMap(): array;
 
     private $map;
 

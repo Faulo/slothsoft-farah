@@ -1,12 +1,9 @@
 <?xml version="1.0"?>
-<xsd:schema 
-	targetNamespace="http://schema.slothsoft.net/farah/dictionary"
-	xmlns="http://schema.slothsoft.net/farah/dictionary" 
-	xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
-	xmlns:ssv="http://schema.slothsoft.net/schema/versioning"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/dictionary"
+	xmlns="http://schema.slothsoft.net/farah/dictionary" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
+	xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
-	
+
 	<xsd:annotation>
 		<xsd:appinfo>
 			<ssv:info version="1.0">
@@ -27,7 +24,7 @@ This namespace defines elements to describe a dictionary, that is, a language-de
 			</ssv:info>
 		</xsd:appinfo>
 	</xsd:annotation>
-	
+
 	<xsd:attributeGroup name="schemaVersion">
 		<xsd:attribute name="version" type="xsd:token" use="required" fixed="0.1">
 			<xsd:annotation>
@@ -41,7 +38,7 @@ This namespace defines elements to describe a dictionary, that is, a language-de
 			<xsd:sequence>
 				<xsd:any minOccurs="0" />
 			</xsd:sequence>
-			<xsd:attributeGroup ref="schemaVersion"/>
+			<xsd:attributeGroup ref="schemaVersion" />
 		</xsd:complexType>
 	</xsd:element>
 

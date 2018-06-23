@@ -31,7 +31,9 @@ class AssetDocumentDOMWriter implements DOMWriterInterface
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
         $element = $this->asset->getManifestElement();
-        $url = (string) $this->asset->createUrl();
+        $executable = $this->asset->lookupExecutable($this->args);
+        
+        $url = (string) $executable->createUrl();
         
         $node = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, 'asset-document');
         $node->setAttribute('name', $element->getAttribute('name'));
@@ -39,17 +41,10 @@ class AssetDocumentDOMWriter implements DOMWriterInterface
         $node->setAttribute('href', str_replace('farah://', '/getAsset.php/', $url));
         $node->setAttribute('tag', $element->getTag());
         
-        $node->appendChild($this->getDocumentContent()
+        $node->appendChild($executable->lookupXmlResult()
             ->toElement($targetDoc));
         
         return $node;
-    }
-
-    private function getDocumentContent(): DOMWriterInterface
-    {
-        $valueAsset = $this->asset->getUseInstructionAsset();
-        $executable = $valueAsset->lookupExecutable($this->args);
-        return $executable->lookupXmlResult();
     }
 }
 

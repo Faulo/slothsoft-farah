@@ -37,7 +37,7 @@ class ProxyStreamBuilder implements StreamBuilderStrategyInterface
 
     public function buildStreamFileStatistics(ResultInterface $context): array
     {
-        return $this->proxy->lookupFileStat();
+        return $this->proxy->lookupFileStatistics();
     }
 
     public function buildStreamHash(ResultInterface $context): string

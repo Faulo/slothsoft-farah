@@ -25,29 +25,29 @@ interface ResultInterface
      *
      * @return StreamInterface
      */
-    public function lookupStream(): StreamInterface;    
-    
+    public function lookupStream(): StreamInterface;
+
     /**
      * Determine all available statistics of this result, as a call to stat() would.
      *
      * @return array
      */
     public function lookupFileStatistics(): array;
-    
+
     /**
      * Look up the time of the last change to this result, or 0 if undeterminable.
      *
      * @return int
      */
     public function lookupFileChangeTime(): int;
-    
+
     /**
      * Look up the size of this result, or 0 if undeterminable.
      *
      * @return int
      */
     public function lookupFileSize(): int;
-    
+
     /**
      * Determine the filename of this result.
      *

@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <assets xmlns="http://schema.slothsoft.net/farah/module">
-   <resource-directory name="xsl" type="application/xslt+xml"/>
-   
-    <directory name="sitemap-generator">
-      <resource name="template" type="application/xslt+xml" use="template"/>
-      <resource name="prettify" type="application/xslt+xml"/>
-      <use-document ref="/sites" name="sites"/>
-    </directory>
-   <directory name="schema">
-       <resource-directory name="dictionary" type="application/x-xsd+xml"/>
-       <resource-directory name="module" type="application/x-xsd+xml"/>
-       <resource-directory name="sitemap" type="application/x-xsd+xml"/>
-   </directory>
-   <custom-asset name="sites" executable-builder="Slothsoft\Farah\Internal\SitesBuilder"/>
-   <custom-asset name="request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder"/>
- </assets>
+	<resource-directory name="xsl" type="application/xslt+xml" />
+
+	<directory name="sitemap-generator">
+		<resource name="template" type="application/xslt+xml" use="template" />
+		<resource name="prettify" type="application/xslt+xml" />
+		<use-document ref="/sites" name="sites" />
+	</directory>
+	<directory name="schema">
+		<resource-directory name="dictionary" type="application/x-xsd+xml" />
+		<resource-directory name="module" type="application/x-xsd+xml" />
+		<resource-directory name="sitemap" type="application/x-xsd+xml" />
+	</directory>
+	<custom-asset name="sites" executable-builder="Slothsoft\Farah\Internal\SitesBuilder" />
+	<custom-asset name="request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder" />
+</assets>

@@ -168,17 +168,21 @@ class Manifest implements ManifestInterface
         $strategies = $this->strategies->assetBuilder->buildAssetStrategies($this, $element);
         return new Asset($this, $element, FarahUrlPath::createFromString($element->getAttribute('assetpath')), $strategies);
     }
-    
-    public function createManifestFile(string $fileName) : SplFileInfo {
+
+    public function createManifestFile(string $fileName): SplFileInfo
+    {
         return new SplFileInfo($this->manifestDirectory . DIRECTORY_SEPARATOR . $fileName);
     }
-    public function createCacheFile(string $fileName, $path = null, $args = null, $fragment = null) : SplFileInfo {
+
+    public function createCacheFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo
+    {
         return $this->ownerKernel->createCachedFile($fileName, $this->createUrl($path, $args, $fragment));
     }
-    public function createDataFile(string $fileName, $path = null, $args = null, $fragment = null) : SplFileInfo {
+
+    public function createDataFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo
+    {
         return $this->ownerKernel->createCachedFile($fileName, $this->createUrl($path, $args, $fragment));
     }
-    
 
     private function getRootAsset(): AssetInterface
     {

@@ -7,15 +7,13 @@ main, header, footer, section, nav, article, aside, details, summary, menuitem, 
 details {
 	display: block;
 }
-details > summary {
+
+details>summary {
 	display: list-item;
 }
-details > summary h1,
-details > summary h2,
-details > summary h3,
-details > summary h4,
-details > summary h5,
-details > summary h6 {
+
+details>summary h1, details>summary h2, details>summary h3, details>summary h4,
+	details>summary h5, details>summary h6 {
 	display: inline;
 }
 /*

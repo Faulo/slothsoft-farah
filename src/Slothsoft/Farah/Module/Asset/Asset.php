@@ -139,8 +139,9 @@ class Asset implements AssetInterface
     {
         return $this->urlPath;
     }
-    
-    public function getFileInfo(): SplFileInfo {
+
+    public function getFileInfo(): SplFileInfo
+    {
         return new SplFileInfo($this->manifestElement->getAttribute('realpath'));
     }
 
@@ -149,7 +150,8 @@ class Asset implements AssetInterface
         if ($args === null) {
             $args = $this->getManifestArguments();
         } else {
-            $args = $this->getManifestArguments()->withArguments($args);
+            // $args = $this->getManifestArguments()->withArguments($args);
+            $args = $args->withArguments($this->getManifestArguments());
         }
         $args = $this->applyParameterFilter($args);
         if (! $this->executables->has($args)) {
@@ -157,6 +159,7 @@ class Asset implements AssetInterface
         }
         return $this->executables->get($args);
     }
+
     private function getManifestArguments(): FarahUrlArguments
     {
         $data = [];
@@ -164,15 +167,20 @@ class Asset implements AssetInterface
             $data[$key] = $val;
         }
         foreach ($this->getAssetChildren() as $child) {
-            foreach ($child->getSuppliedParameters() as $key => $val) {
-                $data[$key] = $val;
+            if ($child->isParameterSupplierInstruction()) {
+                foreach ($child->getSuppliedParameters() as $key => $val) {
+                    $data[$key] = $val;
+                }
             }
         }
         return FarahUrlArguments::createFromValueList($data);
     }
-    public function getSuppliedParameters() : iterable {
+
+    public function getSuppliedParameters(): iterable
+    {
         return $this->strategies->parameterSupplier->supplyParameters($this);
     }
+
     private function applyParameterFilter(FarahUrlArguments $args): FarahUrlArguments
     {
         $valueList = $args->getValueList();
@@ -234,19 +242,26 @@ class Asset implements AssetInterface
         return $this->strategies->instruction->isLinkStylesheet($this);
     }
 
+    public function isParameterSupplierInstruction(): bool
+    {
+        return $this->strategies->instruction->isParameterSupplier($this);
+    }
+
     public function getImportInstructionAsset(): AssetInterface
     {
         return $this->strategies->instruction->getImportAsset($this);
     }
+
     public function getUseInstructionAsset(): AssetInterface
     {
         return $this->strategies->instruction->getUseAsset($this);
     }
+
     public function getLinkInstructionAsset(): AssetInterface
     {
         return $this->strategies->instruction->getLinkAsset($this);
     }
-    
+
     public function normalizeManifestElement(LeanElement $child): void
     {
         $this->ownerManifest->normalizeManifestElement($this->manifestElement, $child);

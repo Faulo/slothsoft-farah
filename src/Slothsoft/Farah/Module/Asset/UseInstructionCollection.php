@@ -6,7 +6,7 @@ use Ds\Set;
 
 class UseInstructionCollection
 {
-    
+
     /**
      *
      * @var AssetInterface

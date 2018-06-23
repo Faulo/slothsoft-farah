@@ -22,10 +22,10 @@ class RequestBuilder implements ExecutableBuilderStrategyInterface
 
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
     {
-        $closure = function(DOMDocument $targetDoc) : DOMElement{
+        $closure = function (DOMDocument $targetDoc): DOMElement {
             $request = Kernel::getCurrentRequest();
             $node = $targetDoc->createElement('request');
-            $node->setAttribute('lang', 'en-us'); //@TODO
+            $node->setAttribute('lang', 'en-us'); // @TODO
             return $node;
         };
         $writer = new ElementClosureDOMWriter($closure);

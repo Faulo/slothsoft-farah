@@ -36,12 +36,17 @@ class NullInstruction implements InstructionStrategyInterface
     {
         return false;
     }
-    
+
     public function isLinkScript(AssetInterface $context): bool
     {
         return false;
     }
-    
+
+    public function isParameterSupplier(AssetInterface $context): bool
+    {
+        return false;
+    }
+
     public function getLinkAsset(AssetInterface $context): AssetInterface
     {
         return $context;
@@ -56,6 +61,5 @@ class NullInstruction implements InstructionStrategyInterface
     {
         return $context;
     }
-
 }
 

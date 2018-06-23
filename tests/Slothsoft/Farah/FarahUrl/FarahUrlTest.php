@@ -171,9 +171,8 @@ class FarahUrlTest extends TestCase
         }
         return $ret;
     }
-    
+
     /**
-     *
      */
     public function testFileModifiedTime()
     {

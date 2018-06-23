@@ -12,7 +12,7 @@ class NullStreamBuilder implements StreamBuilderStrategyInterface
 
     public function buildStream(ResultInterface $context): StreamInterface
     {
-        //return new Stream(BlobUrl::createTemporaryObject());
+        // return new Stream(BlobUrl::createTemporaryObject());
         throw new HttpStatusException('', StatusCode::STATUS_NO_CONTENT);
     }
 

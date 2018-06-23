@@ -87,22 +87,27 @@ class Module
     {
         return static::resolveToResult($url)->lookupStream();
     }
-    
-    public function createCachedFile(string $fileName, FarahUrl $context) : SplFileInfo {
+
+    public function createCachedFile(string $fileName, FarahUrl $context): SplFileInfo
+    {
         $path = $this->buildPath(ServerEnvironment::getCacheDirectory(), $context);
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             mkdir($path, 0777, true);
         }
         return new \SplFileInfo($path . DIRECTORY_SEPARATOR . $fileName);
     }
-    public function createDataFile(string $fileName, FarahUrl $context) : SplFileInfo {
+
+    public function createDataFile(string $fileName, FarahUrl $context): SplFileInfo
+    {
         $path = $this->buildPath(ServerEnvironment::getDataDirectory(), $context);
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             mkdir($path, 0777, true);
         }
         return new \SplFileInfo($path . DIRECTORY_SEPARATOR . $fileName);
     }
-    private function buildPath(string $rootDirectory, FarahUrl $context) : string {
+
+    private function buildPath(string $rootDirectory, FarahUrl $context): string
+    {
         $rootDirectory .= DIRECTORY_SEPARATOR . $context->getAssetAuthority()->getVendor();
         $rootDirectory .= DIRECTORY_SEPARATOR . $context->getAssetAuthority()->getModule();
         $rootDirectory .= $context->getAssetPath();

@@ -1,14 +1,10 @@
 <?xml version="1.0"?>
 <xsd:schema targetNamespace="http://schema.slothsoft.net/farah/sitemap"
-	xmlns="http://schema.slothsoft.net/farah/sitemap" 
-	xmlns:sfs="http://schema.slothsoft.net/farah/sitemap"
-	xmlns:sfm="http://schema.slothsoft.net/farah/module" 
-	xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
-	xmlns:ssv="http://schema.slothsoft.net/schema/versioning"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-	elementFormDefault="qualified" attributeFormDefault="unqualified"
-	version="1.0">
-	
+	xmlns="http://schema.slothsoft.net/farah/sitemap" xmlns:sfs="http://schema.slothsoft.net/farah/sitemap"
+	xmlns:sfm="http://schema.slothsoft.net/farah/module" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
+	xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+
 	<xsd:annotation>
 		<xsd:appinfo>
 			<ssv:info version="1.0">
@@ -32,8 +28,9 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 		</xsd:appinfo>
 	</xsd:annotation>
 
-	<xsd:import namespace="http://schema.slothsoft.net/farah/module" schemaLocation="farah://slothsoft@farah/schema/module/1.0"/>
-	
+	<xsd:import namespace="http://schema.slothsoft.net/farah/module"
+		schemaLocation="farah://slothsoft@farah/schema/module/1.0" />
+
 	<xsd:attributeGroup name="schemaVersion">
 		<xsd:attribute name="version" type="xsd:token" use="required" fixed="1.0">
 			<xsd:annotation>
@@ -51,7 +48,7 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 						<xsd:element ref="include-pages" />
 						<xsd:element ref="sfm:param" />
 					</xsd:choice>
-					<xsd:attributeGroup ref="schemaVersion"/>
+					<xsd:attributeGroup ref="schemaVersion" />
 				</xsd:restriction>
 			</xsd:complexContent>
 		</xsd:complexType>
@@ -71,8 +68,7 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 
 	<xsd:element name="include-pages">
 		<xsd:complexType>
-			<xsd:attribute name="ref" type="xsd:normalizedString"
-				use="required" />
+			<xsd:attribute name="ref" type="xsd:normalizedString" use="required" />
 		</xsd:complexType>
 	</xsd:element>
 
@@ -84,32 +80,19 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 					<xsd:element ref="include-pages" />
 					<xsd:element ref="sfm:param" />
 				</xsd:choice>
-				<xsd:attribute name="name" type="xsd:normalizedString"
-					use="optional" />
-				<xsd:attribute name="title" type="xsd:normalizedString"
-					use="optional" />
-				<xsd:attribute name="ref" type="xsd:normalizedString"
-					use="optional" />
-				<xsd:attribute name="redirect" type="xsd:normalizedString"
-					use="optional" />
-				<xsd:attribute name="ext" type="xsd:normalizedString"
-					use="optional" />
-				<xsd:attribute name="vendor" type="xsd:normalizedString"
-					use="optional" />
-				<xsd:attribute name="module" type="xsd:normalizedString"
-					use="optional" />
-				<xsd:attribute name="status-active" type="xsd:normalizedString"
-					use="optional" />
-				<xsd:attribute name="status-public" type="xsd:normalizedString"
-					use="optional" />
-				<xsd:attribute name="uri" type="xsd:anyURI"
-					use="optional" />
-				<xsd:attribute name="url" type="xsd:anyURI"
-					use="optional" />
-				<xsd:attribute name="current" fixed="1"
-					use="optional" />
-				<xsd:anyAttribute namespace="##other"
-					processContents="lax" />
+				<xsd:attribute name="name" type="xsd:normalizedString" use="optional" />
+				<xsd:attribute name="title" type="xsd:normalizedString" use="optional" />
+				<xsd:attribute name="ref" type="xsd:normalizedString" use="optional" />
+				<xsd:attribute name="redirect" type="xsd:normalizedString" use="optional" />
+				<xsd:attribute name="ext" type="xsd:normalizedString" use="optional" />
+				<xsd:attribute name="vendor" type="xsd:normalizedString" use="optional" />
+				<xsd:attribute name="module" type="xsd:normalizedString" use="optional" />
+				<xsd:attribute name="status-active" type="xsd:normalizedString" use="optional" />
+				<xsd:attribute name="status-public" type="xsd:normalizedString" use="optional" />
+				<xsd:attribute name="uri" type="xsd:anyURI" use="optional" />
+				<xsd:attribute name="url" type="xsd:anyURI" use="optional" />
+				<xsd:attribute name="current" fixed="1" use="optional" />
+				<xsd:anyAttribute namespace="##other" processContents="lax" />
 			</xsd:restriction>
 		</xsd:complexContent>
 	</xsd:complexType>

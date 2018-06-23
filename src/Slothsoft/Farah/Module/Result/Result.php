@@ -76,7 +76,7 @@ class Result implements ResultInterface
         }
         return $this->isBufferable;
     }
-    
+
     public function lookupFileStatistics(): array
     {
         if ($this->fileStat === null) {
@@ -84,7 +84,7 @@ class Result implements ResultInterface
         }
         return $this->fileStat;
     }
-    
+
     public function lookupFileName(): string
     {
         if ($this->fileName === null) {
@@ -92,12 +92,14 @@ class Result implements ResultInterface
         }
         return $this->fileName;
     }
-    
-    public function lookupFileChangeTime() : int {
+
+    public function lookupFileChangeTime(): int
+    {
         return $this->lookupFileStatistics()['mtime'] ?? 0;
     }
-    
-    public function lookupFileSize() : int {
+
+    public function lookupFileSize(): int
+    {
         return $this->lookupFileStatistics()['size'] ?? 0;
     }
 }

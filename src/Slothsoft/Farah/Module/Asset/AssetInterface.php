@@ -49,16 +49,17 @@ interface AssetInterface
      * @return FarahUrl
      */
     public function createUrl($args = null, $fragment = null): FarahUrl;
-    
+
     /**
      * Get the FarahUrlPath for this asset.
      *
      * @return FarahUrlPath|NULL
      */
     public function getUrlPath(): FarahUrlPath;
-    
+
     /**
-     * Get the filesystem entry for this asset. This might be a file, a directory, or it might not physically exist.
+     * Get the filesystem entry for this asset.
+     * This might be a file, a directory, or it might not physically exist.
      *
      * @return FarahUrlPath|NULL
      */
@@ -86,8 +87,12 @@ interface AssetInterface
 
     public function isLinkScriptInstruction(): bool;
 
+    public function isParameterSupplierInstruction(): bool;
+
     public function getImportInstructionAsset(): AssetInterface;
+
     public function getUseInstructionAsset(): AssetInterface;
+
     public function getLinkInstructionAsset(): AssetInterface;
 
     /**
@@ -96,12 +101,12 @@ interface AssetInterface
      * @param LeanElement $child
      */
     public function normalizeManifestElement(LeanElement $child): void;
-    
+
     /**
      * Get the parameters supplied by this assets's ParameterSupplierStrategy.
-     * 
+     *
      * @return iterable
      */
-    public function getSuppliedParameters() : iterable;
+    public function getSuppliedParameters(): iterable;
 }
 

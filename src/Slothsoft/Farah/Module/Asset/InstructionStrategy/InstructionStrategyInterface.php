@@ -10,21 +10,23 @@ interface InstructionStrategyInterface
     public function isImportSelf(AssetInterface $context): bool;
 
     public function isImportChildren(AssetInterface $context): bool;
-    
-    public function getImportAsset(AssetInterface $context) : AssetInterface;
+
+    public function getImportAsset(AssetInterface $context): AssetInterface;
 
     public function isUseManifest(AssetInterface $context): bool;
 
     public function isUseTemplate(AssetInterface $context): bool;
 
     public function isUseDocument(AssetInterface $context): bool;
-    
-    public function getUseAsset(AssetInterface $context) : AssetInterface;
+
+    public function getUseAsset(AssetInterface $context): AssetInterface;
 
     public function isLinkStylesheet(AssetInterface $context): bool;
 
     public function isLinkScript(AssetInterface $context): bool;
-    
-    public function getLinkAsset(AssetInterface $context) : AssetInterface;
+
+    public function getLinkAsset(AssetInterface $context): AssetInterface;
+
+    public function isParameterSupplier(AssetInterface $context): bool;
 }
 

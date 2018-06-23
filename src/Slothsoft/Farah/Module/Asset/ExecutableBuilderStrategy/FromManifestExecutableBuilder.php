@@ -15,7 +15,7 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
     {
         $rootAsset = $context;
-        $getUseInstructions = function() use ($rootAsset) : UseInstructionCollection {
+        $getUseInstructions = function () use ($rootAsset): UseInstructionCollection {
             $instructions = new UseInstructionCollection();
             $instructions->rootAsset = $rootAsset;
             foreach ($rootAsset->getAssetChildren() as $asset) {
@@ -31,7 +31,7 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
             }
             return $instructions;
         };
-        $getLinkInstructions = function(?AssetInterface $currentAsset = null) use ($rootAsset, &$getLinkInstructions) : LinkInstructionCollection {
+        $getLinkInstructions = function (?AssetInterface $currentAsset = null) use ($rootAsset, &$getLinkInstructions): LinkInstructionCollection {
             if ($currentAsset === null) {
                 $currentAsset = $rootAsset;
             }
