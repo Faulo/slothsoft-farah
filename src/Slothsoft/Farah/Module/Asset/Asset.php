@@ -241,62 +241,7 @@ class Asset implements AssetInterface
     {
         return $this->strategies->instruction->getLinkAsset($this);
     }
-
-    public function getUseInstructions(): UseInstructionCollection
-    {
-        if ($this->useInstructions === null) {
-            $this->useInstructions = $this->collectUseInstructions();
-        }
-        return $this->useInstructions;
-    }
-
-    private function collectUseInstructions(): UseInstructionCollection
-    {
-        $instructions = new UseInstructionCollection();
-        foreach ($this->getAssetChildren() as $asset) {
-            if ($asset->isUseManifestInstruction()) {
-                $instructions->manifestAssets[] = $asset;
-            }
-            if ($asset->isUseDocumentInstruction()) {
-                $instructions->documentAssets[] = $asset;
-            }
-            if ($asset->isUseTemplateInstruction()) {
-                $instructions->templateAsset = $asset;
-            }
-        }
-        return $instructions;
-    }
-
-    public function getLinkInstructions(): LinkInstructionCollection
-    {
-        if ($this->linkInstructions === null) {
-            $this->linkInstructions = $this->collectLinkInstructions();
-        }
-        return $this->linkInstructions;
-    }
-
-    private function collectLinkInstructions(): LinkInstructionCollection
-    {
-        $instructions = new LinkInstructionCollection();
-        if ($this->isUseDocumentInstruction()) {
-            $refAsset = $this->getUseInstructionAsset();
-            if ($refAsset !== $this) {
-                $instructions->mergeWith($refAsset->getLinkInstructions());
-            }
-        }
-        foreach ($this->getAssetChildren() as $asset) {
-            if ($asset->isUseDocumentInstruction()) {
-                $instructions->mergeWith($asset->getLinkInstructions());
-            }
-            if ($asset->isLinkStylesheetInstruction()) {
-                $instructions->stylesheetAssets[] = $asset->getLinkInstructionAsset();
-            }
-            if ($asset->isLinkScriptInstruction()) {
-                $instructions->scriptAssets[] = $asset->getLinkInstructionAsset();
-            }
-        }
-        return $instructions;
-    }
+    
     public function normalizeManifestElement(LeanElement $child): void
     {
         $this->ownerManifest->normalizeManifestElement($this->manifestElement, $child);

@@ -83,20 +83,6 @@ interface AssetInterface
     public function getLinkInstructionAsset(): AssetInterface;
 
     /**
-     * Find all use instructions (manifest, document, and template) among the immediate children.
-     *
-     * @return UseInstructionCollection
-     */
-    public function getUseInstructions(): UseInstructionCollection;
-
-    /**
-     * Find all link instructions (stylesheet and script) among all descendants and referenced assets.
-     *
-     * @return LinkInstructionCollection
-     */
-    public function getLinkInstructions(): LinkInstructionCollection;
-
-    /**
      * Set any missing attributes according to the manifest's AssetBuilderStrategy.
      *
      * @param LeanElement $child

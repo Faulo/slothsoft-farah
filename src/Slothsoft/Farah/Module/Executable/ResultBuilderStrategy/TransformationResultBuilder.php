@@ -6,10 +6,9 @@ use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\LinkDecorator\DecoratedDOMWriter;
-use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\DOMWriter\AssetDocumentDOMWriter;
-use Slothsoft\Farah\Module\DOMWriter\FragmentDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\AssetManifestDOMWriter;
+use Slothsoft\Farah\Module\DOMWriter\FragmentDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TransformationDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TranslationDOMWriter;
 use Slothsoft\Farah\Module\Executable\Executable;
@@ -34,23 +33,25 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface
     {
         return FarahUrlStreamIdentifier::createFromString('xsl-template');
     }
+    
+    private $getUseInstructions;
+    private $getLinkInstructions;
 
-    private $asset;
-
-    public function __construct(AssetInterface $asset)
+    public function __construct(callable $getUseInstructions, callable $getLinkInstructions)
     {
-        $this->asset = $asset;
+        $this->getUseInstructions = $getUseInstructions;
+        $this->getLinkInstructions = $getLinkInstructions;
     }
 
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
     {
-        $instructions = $this->asset->getUseInstructions();
+        $instructions = ($this->getUseInstructions)();
         
         if ($instructions->templateAsset and $type === static::resultIsXslTemplate()) {
             $executable = $instructions->templateAsset->lookupExecutable($context->getUrlArguments());
             $writer = $executable->lookupXmlResult();
         } else {
-            $writer = new FragmentDOMWriter($this->asset);
+            $writer = new FragmentDOMWriter($instructions->rootAsset);
             
             foreach ($instructions->manifestAssets as $asset) {
                 $writer->appendChild(new AssetManifestDOMWriter($asset));
@@ -69,7 +70,7 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface
             
             if ($type === static::resultIsDefault()) {
                 // default result is the root transformation, so we gotta add all <link> and <script> elements
-                $instructions = $this->asset->getLinkInstructions();
+                $instructions = ($this->getLinkInstructions)();
                 if (! ($instructions->stylesheetAssets->isEmpty() and $instructions->scriptAssets->isEmpty())) {
                     $writer = new DecoratedDOMWriter($writer, $instructions->stylesheetAssets, $instructions->scriptAssets);
                 }
