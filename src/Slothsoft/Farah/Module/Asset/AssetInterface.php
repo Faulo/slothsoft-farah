@@ -8,6 +8,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
+use SplFileInfo;
 
 /**
  *
@@ -48,13 +49,20 @@ interface AssetInterface
      * @return FarahUrl
      */
     public function createUrl($args = null, $fragment = null): FarahUrl;
-
+    
     /**
-     * Get the FarahUrlPath for this asset, if applicable
+     * Get the FarahUrlPath for this asset.
      *
      * @return FarahUrlPath|NULL
      */
     public function getUrlPath(): FarahUrlPath;
+    
+    /**
+     * Get the filesystem entry for this asset. This might be a file, a directory, or it might not physically exist.
+     *
+     * @return FarahUrlPath|NULL
+     */
+    public function getFileInfo(): SplFileInfo;
 
     /**
      * Create the executable for this asset, with the arguments supplied.

@@ -24,7 +24,14 @@ class LookupPageStrategy extends RequestStrategyBase
     protected function createUrl(ServerRequestInterface $request): FarahUrl
     {
         $uri = $request->getUri();
-        $args = $request->getQueryParams();
+        $body = $request->getParsedBody();
+        $params = $request->getQueryParams();
+        
+        if (is_array($body)) {
+            $args = $body + $params;
+        } else {
+            $args = $params;
+        }
         
         try {
             $pageNode = $this->domain->lookupPageNode($uri->getPath());

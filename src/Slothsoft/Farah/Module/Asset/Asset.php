@@ -7,10 +7,11 @@ use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
+use Slothsoft\Farah\Module\Executable\Executable;
+use Slothsoft\Farah\Module\Executable\ExecutableContainer;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
-use Slothsoft\Farah\Module\Executable\ExecutableContainer;
-use Slothsoft\Farah\Module\Executable\Executable;
+use SplFileInfo;
 
 class Asset implements AssetInterface
 {
@@ -137,6 +138,10 @@ class Asset implements AssetInterface
     public function getUrlPath(): FarahUrlPath
     {
         return $this->urlPath;
+    }
+    
+    public function getFileInfo(): SplFileInfo {
+        return new SplFileInfo($this->manifestElement->getAttribute('realpath'));
     }
 
     public function lookupExecutable(FarahUrlArguments $args = null): ExecutableInterface

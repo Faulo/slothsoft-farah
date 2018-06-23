@@ -46,9 +46,9 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface
         return 'result.xml';
     }
 
-    public function buildStreamChangeTime(ResultInterface $context): int
+    public function buildStreamFileStatistics(ResultInterface $context): array
     {
-        return 0;
+        return [];
     }
 
     public function buildStreamHash(ResultInterface $context): string

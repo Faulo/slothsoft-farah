@@ -28,9 +28,9 @@ class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface
     {
         $url = FarahUrl::createFromReference($url);
         
-        $stream = Module::resolveToStream($url);
+        $result = Module::resolveToResult($url);
         
-        return $stream->getMetadata();
+        return $result->lookupFileStatistics();
     }
 }
 
