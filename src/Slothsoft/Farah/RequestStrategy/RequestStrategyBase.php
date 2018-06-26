@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
+use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
@@ -32,33 +33,56 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
             $url = $this->createUrl($request);
             
             try {
-                $result = Module::resolveToResult($url);
-                
+                try {
+                    $result = Module::resolveToResult($url);
+                    $fileDisposition = 'inline';
+                    $fileName = $result->lookupFileName();
+                    $fileMime = $result->lookupMimeType();
+                    $fileCharset = $result->lookupCharset();
+                    $fileTime = $result->lookupFileStatistics()['mtime'] ?? 0;
+                    $fileHash = $result->lookupHash();
+                    $isBufferable = $result->lookupIsBufferable();
+                    $isCompressable = $isBufferable; // $result->lookupIsCompressable();
+                    $body = $result->lookupStream();
+                } catch(HttpDownloadException $e) {
+                    $result = $e->getResult();
+                    $fileDisposition = 'download';
+                    $fileName = $result->lookupFileName();
+                    $fileMime = $result->lookupMimeType();
+                    $fileCharset = $result->lookupCharset();
+                    $fileTime = $result->lookupFileStatistics()['mtime'] ?? 0;
+                    $fileHash = $result->lookupHash();
+                    $isBufferable = $result->lookupIsBufferable();
+                    $isCompressable = $isBufferable; // $result->lookupIsCompressable();
+                    $body = $result->lookupStream();
+                }
                 $statusCode = StatusCode::STATUS_OK;
                 
                 $headers = [];
                 
-                $fileDisposition = 'inline';
-                $fileName = $result->lookupFileName();
+                
+                if ($fileName === '') {
+                    $fileName = uniqid();
+                }
                 
                 $headers['content-disposition'] = sprintf('%s; filename="%s"; filename*=UTF-8\'\'%s', $fileDisposition, preg_replace('/[^[:print:]]/', '', $fileName), rawurlencode($fileName));
                 
-                $fileMime = $result->lookupMimeType();
-                $fileCharset = $result->lookupCharset();
+                
+                if ($fileMime === '') {
+                    $fileMime = 'application/octet-stream';
+                }
+                
                 $headers['content-type'] = $fileCharset === '' ? $fileMime : "$fileMime; charset=$fileCharset";
                 
                 $cacheDuration = $this->inventCacheDuration($fileMime);
                 $headers['cache-control'] = "must-revalidate, max-age=$cacheDuration";
                 
-                $fileTime = $result->lookupFileStatistics()['mtime'] ?? 0;
+                
                 if ($fileTime > 0) {
                     $headers['last-modified'] = gmdate('D, d M Y H:i:s \\G\\M\\T', $fileTime);
                 }
                 
-                $fileHash = $result->lookupHash();
-                $isBufferable = $result->lookupIsBufferable();
-                $isCompressable = $isBufferable; // $result->lookupIsCompressable();
-                $body = $result->lookupStream();
+                
                 
                 if ($isCompressable) {
                     $preferredCompressions = $this->inventPreferredCompressions($fileMime);

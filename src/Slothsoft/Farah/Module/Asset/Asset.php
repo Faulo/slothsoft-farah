@@ -4,6 +4,8 @@ namespace Slothsoft\Farah\Module\Asset;
 
 use Ds\Vector;
 use Slothsoft\Core\XML\LeanElement;
+use Slothsoft\Farah\Exception\HttpDownloadAssetException;
+use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
@@ -12,6 +14,7 @@ use Slothsoft\Farah\Module\Executable\ExecutableContainer;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use SplFileInfo;
+use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 
 class Asset implements AssetInterface
 {
@@ -203,8 +206,14 @@ class Asset implements AssetInterface
 
     private function createExecutable(FarahUrlArguments $args)
     {
-        $strategies = $this->strategies->executableBuilder->buildExecutableStrategies($this, $args);
-        return new Executable($this, $args, $strategies);
+        try {
+            $strategies = $this->strategies->executableBuilder->buildExecutableStrategies($this, $args);
+            return new Executable($this, $args, $strategies);
+        } catch(HttpDownloadAssetException $e) {
+            $strategies = $e->getStrategies();
+            $executable = new Executable($this, $args, $strategies);
+            throw new HttpDownloadException($executable->lookupResult(FarahUrlStreamIdentifier::createEmpty()));
+        }
     }
 
     public function isImportSelfInstruction(): bool
