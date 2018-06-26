@@ -12,7 +12,7 @@ class HtmlFileResultBuilder extends AbstractFileResultBuilder
     public function toDocument(): DOMDocument
     {
         $doc = new DOMDocument();
-        $doc->loadHTMLFile($this->file->getPath());
+        $doc->loadHTMLFile((string) $this->file);
         return $doc;
     }
 }

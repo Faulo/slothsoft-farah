@@ -12,8 +12,6 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface
 {
     private $file;
     
-    private $realpath;
-    
     public function __construct(SplFileInfo $file)
     {
         $this->file = $file;
@@ -21,7 +19,7 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface
     
     public function buildStream(ResultInterface $context): StreamInterface
     {
-        return new LazyOpenStream($this->getPath(), StreamWrapperInterface::MODE_OPEN_READONLY);
+        return new LazyOpenStream((string) $this->file, StreamWrapperInterface::MODE_OPEN_READONLY);
     }
     
     public function buildStreamMimeType(ResultInterface $context): string
@@ -41,25 +39,17 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface
     
     public function buildStreamFileStatistics(ResultInterface $context): array
     {
-        return stat($this->getPath());
+        return stat((string) $this->file);
     }
     
     public function buildStreamHash(ResultInterface $context): string
     {
-        return md5_file($this->getPath());
+        return md5_file((string) $this->file);
     }
     
     public function buildStreamIsBufferable(ResultInterface $context): bool
     {
         return true;
-    }
-    
-    private function getPath() : string
-    {
-        if ($this->realpath === null) {
-            $this->realpath = $this->file->getRealPath();
-        }
-        return $this->realpath;
     }
 }
 

@@ -12,7 +12,7 @@ class XmlFileResultBuilder extends AbstractFileResultBuilder
     public function toDocument(): DOMDocument
     {
         $doc = new DOMDocument();
-        $doc->load($this->file->getPath());
+        $doc->load((string) $this->file);
         return $doc;
     }
 }

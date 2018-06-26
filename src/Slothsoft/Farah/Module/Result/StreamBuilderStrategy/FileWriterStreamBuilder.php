@@ -8,13 +8,14 @@ use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 use Slothsoft\Farah\Module\Result\ResultInterface;
+use SplFileInfo;
 
 class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
 {
 
     private $writer;
 
-    private $resourceUrl;
+    private $file;
 
     public function __construct(FileWriterInterface $writer)
     {
@@ -23,32 +24,32 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
 
     public function buildStream(ResultInterface $context): StreamInterface
     {
-        return new LazyOpenStream($this->toResourceUrl(), StreamWrapperInterface::MODE_OPEN_READONLY);
+        return new LazyOpenStream((string) $this->getFile(), StreamWrapperInterface::MODE_OPEN_READONLY);
     }
-
+    
     public function buildStreamMimeType(ResultInterface $context): string
     {
-        return MimeTypeDictionary::guessMime(pathinfo($this->buildStreamFileName($context), PATHINFO_EXTENSION));
+        return MimeTypeDictionary::guessMime($this->getFile()->getExtension());
     }
-
+    
     public function buildStreamCharset(ResultInterface $context): string
     {
         return 'UTF-8';
     }
-
+    
     public function buildStreamFileName(ResultInterface $context): string
     {
-        return $this->writer->toFile()->getName();
+        return $this->getFile()->getFilename();
     }
-
+    
     public function buildStreamFileStatistics(ResultInterface $context): array
     {
-        return stat($this->toResourceUrl());
+        return stat((string) $this->getFile());
     }
-
+    
     public function buildStreamHash(ResultInterface $context): string
     {
-        return md5_file($this->toResourceUrl());
+        return md5_file((string) $this->getFile());
     }
 
     public function buildStreamIsBufferable(ResultInterface $context): bool
@@ -56,11 +57,11 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
         return true;
     }
 
-    private function toResourceUrl()
+    private function getFile() : SplFileInfo
     {
-        if ($this->resourceUrl === null) {
-            $this->resourceUrl = $this->writer->toFile()->getPath();
+        if ($this->file === null) {
+            $this->file = $this->writer->toFile();
         }
-        return $this->resourceUrl;
+        return $this->file;
     }
 }

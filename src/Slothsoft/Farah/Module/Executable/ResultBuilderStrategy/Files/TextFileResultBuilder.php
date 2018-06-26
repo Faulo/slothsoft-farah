@@ -13,7 +13,7 @@ class TextFileResultBuilder extends AbstractFileResultBuilder
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
         $element = $targetDoc->createElement('text');
-        $element->textContent = $this->file->getContents();
+        $element->textContent = file_get_contents((string) $this->file);
         return $element;
     }
 }
