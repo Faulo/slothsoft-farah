@@ -19,6 +19,7 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
 use DOMDocument;
 use OutOfBoundsException;
 use SplFileInfo;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 
 class Module
 {
@@ -77,10 +78,15 @@ class Module
     {
         return static::resolveToExecutable($url)->lookupResult($url->getStreamIdentifier());
     }
+    
+    public static function resolveToDOMWriter(FarahUrl $url): DOMWriterInterface
+    {
+        return static::resolveToExecutable($url)->lookupXmlResult();
+    }
 
     public static function resolveToDocument(FarahUrl $url): DOMDocument
     {
-        return static::resolveToExecutable($url)->lookupXmlResult()->toDocument();
+        return static::resolveToDOMWriter($url)->toDocument();
     }
 
     public static function resolveToStream(FarahUrl $url): StreamInterface
