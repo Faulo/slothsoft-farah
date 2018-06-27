@@ -26,27 +26,27 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
     {
         return new LazyOpenStream((string) $this->getFile(), StreamWrapperInterface::MODE_OPEN_READONLY);
     }
-    
+
     public function buildStreamMimeType(ResultInterface $context): string
     {
         return MimeTypeDictionary::guessMime($this->getFile()->getExtension());
     }
-    
+
     public function buildStreamCharset(ResultInterface $context): string
     {
         return 'UTF-8';
     }
-    
+
     public function buildStreamFileName(ResultInterface $context): string
     {
         return $this->getFile()->getFilename();
     }
-    
+
     public function buildStreamFileStatistics(ResultInterface $context): array
     {
         return stat((string) $this->getFile());
     }
-    
+
     public function buildStreamHash(ResultInterface $context): string
     {
         return md5_file((string) $this->getFile());
@@ -57,7 +57,7 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
         return true;
     }
 
-    private function getFile() : SplFileInfo
+    private function getFile(): SplFileInfo
     {
         if ($this->file === null) {
             $this->file = $this->writer->toFile();

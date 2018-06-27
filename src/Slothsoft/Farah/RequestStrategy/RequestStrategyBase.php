@@ -44,7 +44,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                     $isBufferable = $result->lookupIsBufferable();
                     $isCompressable = $isBufferable; // $result->lookupIsCompressable();
                     $body = $result->lookupStream();
-                } catch(HttpDownloadException $e) {
+                } catch (HttpDownloadException $e) {
                     $result = $e->getResult();
                     $fileDisposition = 'download';
                     $fileName = $result->lookupFileName();
@@ -60,13 +60,11 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 
                 $headers = [];
                 
-                
                 if ($fileName === '') {
                     $fileName = uniqid();
                 }
                 
                 $headers['content-disposition'] = sprintf('%s; filename="%s"; filename*=UTF-8\'\'%s', $fileDisposition, preg_replace('/[^[:print:]]/', '', $fileName), rawurlencode($fileName));
-                
                 
                 if ($fileMime === '') {
                     $fileMime = 'application/octet-stream';
@@ -77,12 +75,9 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 $cacheDuration = $this->inventCacheDuration($fileMime);
                 $headers['cache-control'] = "must-revalidate, max-age=$cacheDuration";
                 
-                
                 if ($fileTime > 0) {
                     $headers['last-modified'] = gmdate('D, d M Y H:i:s \\G\\M\\T', $fileTime);
                 }
-                
-                
                 
                 if ($isCompressable) {
                     $preferredCompressions = $this->inventPreferredCompressions($fileMime);

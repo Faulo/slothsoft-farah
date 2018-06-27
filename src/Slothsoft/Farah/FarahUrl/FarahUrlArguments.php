@@ -105,17 +105,19 @@ class FarahUrlArguments implements IteratorAggregate, Hashable
     {
         return $this->id === '';
     }
-    
-    public function withArgument(string $key, $val) : FarahUrlArguments
+
+    public function withArgument(string $key, $val): FarahUrlArguments
     {
         if (isset($this->data[$key]) and $this->data[$key] === $val) {
             return $this;
         } else {
-            return self::createFromValueList([$key => $val] + $this->data);
+            return self::createFromValueList([
+                $key => $val
+            ] + $this->data);
         }
     }
-    
-    public function withArguments(FarahUrlArguments $args) : FarahUrlArguments
+
+    public function withArguments(FarahUrlArguments $args): FarahUrlArguments
     {
         if ($this->isEmpty()) {
             return $args;

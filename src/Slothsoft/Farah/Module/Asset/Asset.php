@@ -209,7 +209,7 @@ class Asset implements AssetInterface
         try {
             $strategies = $this->strategies->executableBuilder->buildExecutableStrategies($this, $args);
             return new Executable($this, $args, $strategies);
-        } catch(HttpDownloadAssetException $e) {
+        } catch (HttpDownloadAssetException $e) {
             $strategies = $e->getStrategies();
             $executable = new Executable($this, $args, $strategies);
             throw new HttpDownloadException($executable->lookupResult(FarahUrlStreamIdentifier::createEmpty()));

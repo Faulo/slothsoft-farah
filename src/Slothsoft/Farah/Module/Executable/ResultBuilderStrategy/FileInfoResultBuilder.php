@@ -11,13 +11,14 @@ use SplFileInfo;
 
 class FileInfoResultBuilder implements ResultBuilderStrategyInterface
 {
+
     private $file;
-    
+
     public function __construct(SplFileInfo $file)
     {
         $this->file = $file;
     }
-    
+
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
     {
         if ($type === Executable::resultIsXml()) {

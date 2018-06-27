@@ -78,7 +78,7 @@ class Module
     {
         return static::resolveToExecutable($url)->lookupResult($url->getStreamIdentifier());
     }
-    
+
     public static function resolveToDOMWriter(FarahUrl $url): DOMWriterInterface
     {
         return static::resolveToExecutable($url)->lookupXmlResult();

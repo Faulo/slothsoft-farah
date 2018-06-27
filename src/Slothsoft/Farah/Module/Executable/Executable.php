@@ -89,7 +89,7 @@ class Executable implements ExecutableInterface
                 $result = new Result($this, $type, $strategies);
             }
             return $result;
-        } catch(HttpDownloadExecutableException $e) {
+        } catch (HttpDownloadExecutableException $e) {
             $strategies = $e->getStrategies();
             $result = new Result($this, $type, $strategies);
             throw new HttpDownloadException($result);
