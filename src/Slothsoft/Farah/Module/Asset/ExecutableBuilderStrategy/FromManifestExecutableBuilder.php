@@ -15,18 +15,18 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
     {
         $rootAsset = $context;
-        $getUseInstructions = function () use ($rootAsset): UseInstructionCollection {
+        $getUseInstructions = function () use ($rootAsset, $args): UseInstructionCollection {
             $instructions = new UseInstructionCollection();
-            $instructions->rootAsset = $rootAsset;
+            $instructions->rootUrl = $rootAsset->createUrl($args);
             foreach ($rootAsset->getAssetChildren() as $asset) {
                 if ($asset->isUseManifestInstruction()) {
-                    $instructions->manifestAssets[] = $asset;
+                    $instructions->manifestUrls[] = $asset->createUrl($args);
                 }
                 if ($asset->isUseDocumentInstruction()) {
-                    $instructions->documentAssets[] = $asset;
+                    $instructions->documentUrls[] = $asset->createUrl($args);
                 }
                 if ($asset->isUseTemplateInstruction()) {
-                    $instructions->templateAsset = $asset;
+                    $instructions->templateUrl = $asset->createUrl($args);;
                 }
             }
             return $instructions;

@@ -5,35 +5,35 @@ namespace Slothsoft\Farah\Module\DOMWriter;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterDocumentFromElementTrait;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
-use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use DOMDocument;
 use DOMElement;
 
 class AssetManifestDOMWriter implements DOMWriterInterface
 {
     use DOMWriterDocumentFromElementTrait;
-
+    
     /**
      *
-     * @var AssetInterface
+     * @var FarahUrl
      */
-    private $asset;
-
-    public function __construct(AssetInterface $asset)
+    private $url;
+    
+    public function __construct(FarahUrl $url)
     {
-        $this->asset = $asset;
+        $this->url = $url;
     }
-
+    
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
-        $element = $this->asset->getManifestElement();
-        $url = (string) $this->asset->createUrl();
+        $id = (string) $this->url;
+        $name = basename((string) $this->url->getAssetPath());
+        $href = str_replace('farah://', '/getAsset.php/', $id);
         
-        $node = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, 'asset-manifest');
-        $node->setAttribute('name', $element->getAttribute('name'));
-        $node->setAttribute('url', $url);
-        $node->setAttribute('href', str_replace('farah://', '/getAsset.php/', $url));
-        $node->setAttribute('tag', $element->getTag());
+        $node = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, 'sfm:asset-manifest');
+        $node->setAttribute('name', $name);
+        $node->setAttribute('url', $id);
+        $node->setAttribute('href', $href);
         
         return $node;
     }

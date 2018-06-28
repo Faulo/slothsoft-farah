@@ -65,7 +65,7 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface
     {
         if ($this->resourceUrl === null) {
             $this->resourceUrl = BlobUrl::createTemporaryURL();
-            $this->writer->toDocument()->save($this->resourceUrl);
+            $this->writer->toDocument()->save($this->resourceUrl, LIBXML_NSCLEAN);
         }
         return $this->resourceUrl;
     }

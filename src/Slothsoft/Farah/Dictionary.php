@@ -177,7 +177,7 @@ class Dictionary
     /* public functions */
     public function translateDoc(DOMDocument $doc, FarahUrl $context)
     {
-        $this->currentModule = $context;
+        $this->currentModule = FarahUrl::createFromComponents($context->getAssetAuthority());
         
         $ret = 0;
         $xpath = DOMHelper::loadXPath($doc, DOMHelper::XPATH_NS_ALL);
@@ -340,7 +340,7 @@ class Dictionary
     protected function getLangPath($namespace = null, $language = null)
     {
         if ($namespace === null) {
-            $namespace = (string) $this->currentModule;
+            $namespace = '';
         } else {
             $namespace = "farah://$namespace";
         }
@@ -349,6 +349,7 @@ class Dictionary
         }
         
         $ref = "$namespace/dictionary/$language"; // TODO: make this less presuming
+        
         $url = FarahUrl::createFromReference($ref, $this->currentModule);
         $key = (string) $url;
         

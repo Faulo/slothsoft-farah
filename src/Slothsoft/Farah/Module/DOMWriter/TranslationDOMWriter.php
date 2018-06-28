@@ -41,6 +41,7 @@ class TranslationDOMWriter implements DOMWriterInterface
     {
         $document = $this->source->toDocument();
         $this->dict->translateDoc($document, $this->context);
+        
         return $document;
     }
 }

@@ -5,10 +5,10 @@ namespace Slothsoft\Farah\Module\DOMWriter;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterDocumentFromElementTrait;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
-use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\Module;
 use DOMDocument;
 use DOMElement;
-use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 
 class AssetDocumentDOMWriter implements DOMWriterInterface
 {
@@ -16,35 +16,34 @@ class AssetDocumentDOMWriter implements DOMWriterInterface
 
     /**
      *
-     * @var AssetInterface
+     * @var FarahUrl
      */
-    private $asset;
+    private $url;
 
-    private $args;
-
-    public function __construct(AssetInterface $asset, FarahUrlArguments $args)
+    public function __construct(FarahUrl $url)
     {
-        $this->asset = $asset;
-        $this->args = $args;
+        $this->url = $url;
     }
 
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
-        $element = $this->asset->getManifestElement();
-        $executable = $this->asset->lookupExecutable($this->args);
+        $childNode = Module::resolveToDOMWriter($this->url)->toElement($targetDoc);
+    
+        $ns = $childNode->namespaceURI;
+        $name = basename((string) $this->url->getAssetPath());
+        $id = htmlentities((string) $this->url, ENT_XML1);
+        $href = str_replace('farah://', '/getAsset.php/', $id);
         
-        $url = (string) $executable->createUrl();
+        $xml = sprintf(
+            '<sfm:asset-document xmlns:sfm="%s" xmlns="%s" name="%s" url="%s" href="%s"/>',
+            DOMHelper::NS_FARAH_MODULE, $ns, $name, $id, $href
+        );
         
-        $node = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, 'asset-document');
-        $node->setAttribute('name', $element->getAttribute('name'));
-        $node->setAttribute('url', $url);
-        $node->setAttribute('href', str_replace('farah://', '/getAsset.php/', $url));
-        $node->setAttribute('tag', $element->getTag());
+        $fragment = $targetDoc->createDocumentFragment();
+        $fragment->appendXML($xml);
+        $fragment->lastChild->appendChild($childNode);
         
-        $node->appendChild($executable->lookupXmlResult()
-            ->toElement($targetDoc));
-        
-        return $node;
+        return $fragment->removeChild($fragment->lastChild);
     }
 }
 

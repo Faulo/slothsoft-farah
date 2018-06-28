@@ -11,32 +11,32 @@ class UseInstructionCollection
      *
      * @var AssetInterface
      */
-    public $rootAsset;
+    public $rootUrl;
 
     /**
      *
      * @var AssetInterface[]
      */
-    public $documentAssets;
+    public $documentUrl;
 
     /**
      *
      * @var AssetInterface[]
      */
-    public $manifestAssets;
+    public $manifestUrl;
 
     /**
      *
      * @var AssetInterface
      */
-    public $templateAsset;
+    public $templateUrl;
 
     public function __construct()
     {
-        $this->rootAsset = null;
-        $this->documentAssets = new Set();
-        $this->manifestAssets = new Set();
-        $this->templateAsset = null;
+        $this->rootUrl = null;
+        $this->documentUrls = new Set();
+        $this->manifestUrls = new Set();
+        $this->templateUrl = null;
     }
 }
 
