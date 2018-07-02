@@ -70,8 +70,8 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface
             if ($type === static::resultIsDefault()) {
                 // default result is the root transformation, so we gotta add all <link> and <script> elements
                 $instructions = ($this->getLinkInstructions)();
-                if (! ($instructions->stylesheetAssets->isEmpty() and $instructions->scriptAssets->isEmpty())) {
-                    $writer = new DecoratedDOMWriter($writer, $instructions->stylesheetAssets, $instructions->scriptAssets);
+                if (! ($instructions->stylesheetUrls->isEmpty() and $instructions->scriptUrls->isEmpty())) {
+                    $writer = new DecoratedDOMWriter($writer, $instructions->stylesheetUrls, $instructions->scriptUrls);
                 }
             }
         }

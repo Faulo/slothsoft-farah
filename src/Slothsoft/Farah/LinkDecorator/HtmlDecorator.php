@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\LinkDecorator;
 
-use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use DOMDocument;
 
 /**
@@ -31,26 +31,26 @@ class HtmlDecorator implements LinkDecoratorInterface
         $this->rootNode = $document->getElementsByTagNameNS($this->namespace, 'head')->item(0) ?? $document->documentElement;
     }
 
-    public function linkStylesheets(AssetInterface ...$stylesheets)
+    public function linkStylesheets(FarahUrl ...$stylesheets)
     {
-        foreach ($stylesheets as $assetId => $asset) {
-            $assetId = (string) $asset->createUrl();
-            $assetHref = str_replace('farah://', '/getAsset.php/', $assetId);
+        foreach ($stylesheets as $url) {
+            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            
             $node = $this->targetDocument->createElementNS($this->namespace, 'link');
-            $node->setAttribute('href', $assetHref);
+            $node->setAttribute('href', $href);
             $node->setAttribute('rel', 'stylesheet');
             $node->setAttribute('type', 'text/css');
             $this->rootNode->appendChild($node);
         }
     }
 
-    public function linkScripts(AssetInterface ...$scripts)
+    public function linkScripts(FarahUrl ...$scripts)
     {
-        foreach ($scripts as $asset) {
-            $assetId = (string) $asset->createUrl();
-            $assetHref = str_replace('farah://', '/getAsset.php/', $assetId);
+        foreach ($scripts as $url) {
+            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
-            $node->setAttribute('src', $assetHref);
+            $node->setAttribute('src', $href);
             $node->setAttribute('defer', 'defer');
             // "The type attribute is unnecessary for JavaScript resources."
             // $node->setAttribute('type', 'application/javascript');

@@ -89,12 +89,6 @@ interface AssetInterface
 
     public function isParameterSupplierInstruction(): bool;
 
-    public function getImportInstructionAsset(): AssetInterface;
-
-    public function getUseInstructionAsset(): AssetInterface;
-
-    public function getLinkInstructionAsset(): AssetInterface;
-
     /**
      * Set any missing attributes according to the manifest's AssetBuilderStrategy.
      *

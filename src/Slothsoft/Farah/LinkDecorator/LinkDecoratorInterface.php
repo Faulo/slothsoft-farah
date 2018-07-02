@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\LinkDecorator;
 
-use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use DOMDocument;
 
 /**
@@ -17,8 +17,8 @@ interface LinkDecoratorInterface
 
     public function setTarget(DOMDocument $document);
 
-    public function linkStylesheets(AssetInterface ...$stylesheets);
+    public function linkStylesheets(FarahUrl ...$stylesheets);
 
-    public function linkScripts(AssetInterface ...$scripts);
+    public function linkScripts(FarahUrl ...$scripts);
 }
 

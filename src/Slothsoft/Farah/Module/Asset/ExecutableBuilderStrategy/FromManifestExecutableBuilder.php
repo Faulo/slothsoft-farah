@@ -3,11 +3,12 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy;
 
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
+use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\TransformationResultBuilder;
-use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
-use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
 
 class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterface
 {
@@ -26,31 +27,26 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
                     $instructions->documentUrls[] = $asset->createUrl($args);
                 }
                 if ($asset->isUseTemplateInstruction()) {
-                    $instructions->templateUrl = $asset->createUrl($args);;
+                    $instructions->templateUrl = $asset->createUrl($args);
                 }
             }
             return $instructions;
         };
-        $getLinkInstructions = function (?AssetInterface $currentAsset = null) use ($rootAsset, &$getLinkInstructions): LinkInstructionCollection {
+        $getLinkInstructions = function (?AssetInterface $currentAsset = null) use ($rootAsset, $args, &$getLinkInstructions): LinkInstructionCollection {
             if ($currentAsset === null) {
                 $currentAsset = $rootAsset;
             }
             $instructions = new LinkInstructionCollection();
-            if ($currentAsset->isUseDocumentInstruction()) {
-                $refAsset = $currentAsset->getUseInstructionAsset();
-                if ($refAsset !== $currentAsset) {
-                    $instructions->mergeWith($getLinkInstructions($refAsset));
-                }
-            }
             foreach ($currentAsset->getAssetChildren() as $asset) {
                 if ($asset->isUseDocumentInstruction()) {
-                    $instructions->mergeWith($getLinkInstructions($asset));
+                    $url = $asset->lookupExecutable($args)->createUrl();
+                    $instructions->mergeWith($getLinkInstructions(Module::resolveToAsset($url)));
                 }
                 if ($asset->isLinkStylesheetInstruction()) {
-                    $instructions->stylesheetAssets[] = $asset->getLinkInstructionAsset();
+                    $instructions->stylesheetUrls[] = $asset->lookupExecutable($args)->createUrl();
                 }
                 if ($asset->isLinkScriptInstruction()) {
-                    $instructions->scriptAssets[] = $asset->getLinkInstructionAsset();
+                    $instructions->scriptUrls[] = $asset->lookupExecutable($args)->createUrl();
                 }
             }
             return $instructions;

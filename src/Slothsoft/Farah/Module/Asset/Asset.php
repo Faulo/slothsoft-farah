@@ -9,12 +9,13 @@ use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
+use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
+use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableContainer;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use SplFileInfo;
-use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 
 class Asset implements AssetInterface
 {
@@ -75,6 +76,7 @@ class Asset implements AssetInterface
         $this->strategies = $strategies;
         $this->executables = new ExecutableContainer();
         $this->assetChildren = null;
+        //echo $this.PHP_EOL;
     }
 
     public function __toString(): string
@@ -94,12 +96,13 @@ class Asset implements AssetInterface
             foreach ($this->strategies->pathResolver->loadChildren($this) as $childPath) {
                 $childAsset = $this->traverseTo($childPath);
                 if ($childAsset->isImportSelfInstruction()) {
-                    $importedAsset = $childAsset->getImportInstructionAsset();
+                    $referencedAsset = Module::resolveToAsset($childAsset->getReferencedUrl());
                     yield $importedAsset;
                     $this->assetChildren[] = $importedAsset;
                 }
                 if ($childAsset->isImportChildrenInstruction()) {
-                    foreach ($childAsset->getImportInstructionAsset()->getAssetChildren() as $importedAsset) {
+                    $referencedAsset = Module::resolveToAsset($childAsset->getReferencedUrl());
+                    foreach ($referencedAsset->getAssetChildren() as $importedAsset) {
                         yield $importedAsset;
                         $this->assetChildren[] = $importedAsset;
                     }
@@ -157,6 +160,9 @@ class Asset implements AssetInterface
             $args = $args->withArguments($this->getManifestArguments());
         }
         $args = $this->applyParameterFilter($args);
+        if ($url = $this->getReferencedUrl()) {
+            return Module::resolveToExecutable($url->withQueryArguments($args));
+        }
         if (! $this->executables->has($args)) {
             $this->executables->put($args, $this->createExecutable($args));
         }
@@ -256,24 +262,15 @@ class Asset implements AssetInterface
         return $this->strategies->instruction->isParameterSupplier($this);
     }
 
-    public function getImportInstructionAsset(): AssetInterface
-    {
-        return $this->strategies->instruction->getImportAsset($this);
-    }
-
-    public function getUseInstructionAsset(): AssetInterface
-    {
-        return $this->strategies->instruction->getUseAsset($this);
-    }
-
-    public function getLinkInstructionAsset(): AssetInterface
-    {
-        return $this->strategies->instruction->getLinkAsset($this);
-    }
-
     public function normalizeManifestElement(LeanElement $child): void
     {
         $this->ownerManifest->normalizeManifestElement($this->manifestElement, $child);
+    }
+    
+    private function getReferencedUrl(): ?FarahUrl
+    {
+        $ref = $this->manifestElement->getAttribute('ref', '');
+        return $ref === '' ? null : FarahUrl::createFromReference($ref, $this->createUrl());
     }
 }
 

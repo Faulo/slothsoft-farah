@@ -11,24 +11,24 @@ class LinkInstructionCollection
      *
      * @var Set
      */
-    public $stylesheetAssets;
+    public $stylesheetUrls;
 
     /**
      *
      * @var Set
      */
-    public $scriptAssets;
+    public $scriptUrls;
 
     public function __construct()
     {
-        $this->stylesheetAssets = new Set();
-        $this->scriptAssets = new Set();
+        $this->stylesheetUrls = new Set();
+        $this->scriptUrls = new Set();
     }
 
     public function mergeWith(LinkInstructionCollection $other): void
     {
-        $this->stylesheetAssets = $this->stylesheetAssets->union($other->stylesheetAssets);
-        $this->scriptAssets = $this->scriptAssets->union($other->scriptAssets);
+        $this->stylesheetUrls = $this->stylesheetUrls->union($other->stylesheetUrls);
+        $this->scriptUrls = $this->scriptUrls->union($other->scriptUrls);
     }
 }
 

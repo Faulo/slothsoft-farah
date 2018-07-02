@@ -46,20 +46,5 @@ class FromManifestInstruction implements InstructionStrategyInterface
     {
         return false;
     }
-
-    public function getImportAsset(AssetInterface $context): AssetInterface
-    {
-        return $context;
-    }
-
-    public function getUseAsset(AssetInterface $context): AssetInterface
-    {
-        return $context;
-    }
-
-    public function getLinkAsset(AssetInterface $context): AssetInterface
-    {
-        return $context;
-    }
 }
 

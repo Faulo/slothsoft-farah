@@ -196,12 +196,12 @@ class FarahUrl implements UriInterface, Hashable
         if ($password !== null) {
             throw new MalformedUrlException($password);
         }
-        return $this->withAssetAuthority(FarahUrlAuthority::createFromVendorAndModule($user, $this->getHost()));
+        return $this->withAssetAuthority(FarahUrlAuthority::createFromVendorAndModule((string) $user, $this->getHost()));
     }
 
     public function withHost($host): FarahUrl
     {
-        return $this->withAssetAuthority(FarahUrlAuthority::createFromVendorAndModule($this->getUserInfo(), $host));
+        return $this->withAssetAuthority(FarahUrlAuthority::createFromVendorAndModule($this->getUserInfo(), (string) $host));
     }
 
     public function withPort($port): FarahUrl
@@ -211,17 +211,17 @@ class FarahUrl implements UriInterface, Hashable
 
     public function withPath($path): FarahUrl
     {
-        return $this->withAssetPath(FarahUrlPath::createFromString($path));
+        return $this->withAssetPath(FarahUrlPath::createFromString((string) $path));
     }
 
     public function withQuery($query): FarahUrl
     {
-        return $this->withQueryArguments(FarahUrlArguments::createFromQuery($path));
+        return $this->withQueryArguments(FarahUrlArguments::createFromQuery((string) $path));
     }
 
     public function withFragment($fragment): FarahUrl
     {
-        throw new MalformedUrlException($fragment);
+        return $this->withStreamIdentifier(FarahUrlStreamIdentifier::createFromString((string) $fragment));
     }
 
     // UriInterface::get* functions:

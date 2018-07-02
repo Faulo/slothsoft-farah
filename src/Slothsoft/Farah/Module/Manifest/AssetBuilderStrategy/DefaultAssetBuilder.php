@@ -8,9 +8,8 @@ use Slothsoft\Farah\Module\Asset\AssetStrategies;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromFilesystemExecutableBuilder;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromManifestExecutableBuilder;
-use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\LinkInstructionExecutableBuilder;
+use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromReferenceExecutableBuilder;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\NullExecutableBuilder;
-use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\UseInstructionExecutableBuilder;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\FromManifestInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\ImportChildrenInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\InstructionStrategyInterface;
@@ -87,37 +86,36 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface
             case Manifest::TAG_IMPORT:
                 $executableBuilder = NullExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
+                $parameterFilter = DenyAllParameterFilter::class;
                 $instruction = ImportChildrenInstruction::class;
                 break;
             case Manifest::TAG_USE_DOCUMENT:
-                $executableBuilder = UseInstructionExecutableBuilder::class;
-                // $pathResolver = NullPathResolver::class;
+                $executableBuilder = FromReferenceExecutableBuilder::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = UseDocumentInstruction::class;
                 break;
             case Manifest::TAG_USE_MANIFEST:
-                $executableBuilder = UseInstructionExecutableBuilder::class;
-                // $pathResolver = NullPathResolver::class;
+                $executableBuilder = FromReferenceExecutableBuilder::class;
+                $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = UseManifestInstruction::class;
                 break;
             case Manifest::TAG_USE_TEMPLATE:
-                $executableBuilder = UseInstructionExecutableBuilder::class;
-                // $pathResolver = NullPathResolver::class;
+                $executableBuilder = FromReferenceExecutableBuilder::class;
+                $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = UseTemplateInstruction::class;
                 break;
             case Manifest::TAG_LINK_STYLESHEET:
-                $executableBuilder = LinkInstructionExecutableBuilder::class;
-                // $pathResolver = NullPathResolver::class;
+                $executableBuilder = FromReferenceExecutableBuilder::class;
+                $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = LinkStylesheetInstruction::class;
                 break;
             case Manifest::TAG_LINK_SCRIPT:
-                $executableBuilder = LinkInstructionExecutableBuilder::class;
-                // $pathResolver = NullPathResolver::class;
+                $executableBuilder = FromReferenceExecutableBuilder::class;
+                $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = LinkScriptInstruction::class;
                 break;
             case Manifest::TAG_RESOURCE:
                 $executableBuilder = FromFilesystemExecutableBuilder::class;
-                // $pathResolver = NullPathResolver::class;
                 $parameterFilter = DenyAllParameterFilter::class;
                 break;
             case Manifest::TAG_RESOURCE_DIRECTORY:

@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\LinkDecorator;
 
-use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use DOMDocument;
 
 /**
@@ -12,35 +12,44 @@ use DOMDocument;
  */
 class FarahDecorator implements LinkDecoratorInterface
 {
-
     private $namespace;
-
-    public function __construct(string $namespace)
+    
+    private $targetDocument;
+    
+    private $rootNode;
+    
+    public function setNamespace(string $namespace)
     {
         $this->namespace = $namespace;
     }
-
-    public function decorateDocument(DOMDocument $document, array $stylesheetAssetList, array $scriptAssetList)
+    
+    public function setTarget(DOMDocument $document)
     {
-        $rootNode = $document->documentElement;
-        foreach ($stylesheetAssetList as $assetId => $asset) {
-            $rootNode->appendChild($asset->toElement($document));
-        }
-        foreach ($scriptAssetList as $assetId => $asset) {
-            $rootNode->appendChild($asset->toElement($document));
+        $this->targetDocument = $document;
+        
+        $this->rootNode = $document->documentElement;
+    }
+    
+    public function linkStylesheets(FarahUrl ...$stylesheets)
+    {
+        foreach ($stylesheets as $url) {
+            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            
+            $node = $this->targetDocument->createElementNS($this->namespace, 'link-stylesheet');
+            $node->setAttribute('href', $href);
+            $this->rootNode->appendChild($node);
         }
     }
-
-    public function linkScripts(AssetInterface ...$scripts)
-    {}
-
-    public function setTarget(DOMDocument $document)
-    {}
-
-    public function setNamespace(string $ns)
-    {}
-
-    public function linkStylesheets(AssetInterface ...$stylesheets)
-    {}
+    
+    public function linkScripts(FarahUrl ...$scripts)
+    {
+        foreach ($scripts as $url) {
+            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            
+            $node = $this->targetDocument->createElementNS($this->namespace, 'link-script');
+            $node->setAttribute('href', $href);
+            $this->rootNode->appendChild($node);
+        }
+    }
 }
 
