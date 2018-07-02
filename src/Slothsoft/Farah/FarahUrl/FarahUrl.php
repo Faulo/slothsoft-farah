@@ -216,7 +216,7 @@ class FarahUrl implements UriInterface, Hashable
 
     public function withQuery($query): FarahUrl
     {
-        return $this->withQueryArguments(FarahUrlArguments::createFromQuery((string) $path));
+        return $this->withQueryArguments(FarahUrlArguments::createFromQuery((string) $query));
     }
 
     public function withFragment($fragment): FarahUrl
