@@ -29,7 +29,7 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
 
     public function buildStreamMimeType(ResultInterface $context): string
     {
-        return MimeTypeDictionary::guessMime($this->getFile()->getExtension());
+        return MimeTypeDictionary::guessMime(pathinfo($this->buildStreamFileName($context), PATHINFO_EXTENSION));
     }
 
     public function buildStreamCharset(ResultInterface $context): string
@@ -39,7 +39,7 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
 
     public function buildStreamFileName(ResultInterface $context): string
     {
-        return $this->getFile()->getFilename();
+        return $this->writer->toFileName();
     }
 
     public function buildStreamFileStatistics(ResultInterface $context): array

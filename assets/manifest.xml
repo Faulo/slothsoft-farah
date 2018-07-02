@@ -14,4 +14,5 @@
 	</directory>
 	<custom-asset name="sites" executable-builder="Slothsoft\Farah\Internal\SitesBuilder" />
 	<custom-asset name="request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder" />
+	<custom-asset name="phpinfo" executable-builder="Slothsoft\Farah\Internal\PhpinfoBuilder" />
 </assets>
