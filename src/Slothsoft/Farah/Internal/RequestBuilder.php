@@ -2,7 +2,8 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Internal;
 
-use Slothsoft\Core\IO\AdapterDelegates\DOMWriterFromElementDelegate;
+use Slothsoft\Core\Configuration\ConfigurationRequiredException;
+use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromElementDelegate;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
@@ -23,13 +24,17 @@ class RequestBuilder implements ExecutableBuilderStrategyInterface
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
     {
         $closure = function (DOMDocument $targetDoc): DOMElement {
-            $request = Kernel::getCurrentRequest();
+            try {
+                $request = Kernel::getCurrentRequest();
+            } catch(ConfigurationRequiredException $e) {
+                $request = null;
+            }
             $node = $targetDoc->createElement('request');
             $node->setAttribute('lang', 'en-us'); // @TODO
             return $node;
         };
         $writer = new DOMWriterFromElementDelegate($closure);
-        $resultBuilder = new DOMWriterResultBuilder($writer);
+        $resultBuilder = new DOMWriterResultBuilder($writer, 'request.xml');
         return new ExecutableStrategies($resultBuilder);
     }
 }

@@ -348,13 +348,13 @@ class Dictionary
             $language = $this->currentLang;
         }
         
-        $ref = "$namespace/dictionary/$language"; // TODO: make this less presuming
+        $ref = "$namespace/dictionary/$language#xml"; // TODO: make this less presuming
         
         $url = FarahUrl::createFromReference($ref, $this->currentModule);
         $key = (string) $url;
         
         if (! isset($this->langPaths[$key])) {
-            $doc = Module::resolveToDocument($url);
+            $doc = Module::resolveToDOMWriter($url)->toDocument();
             $this->langPaths[$key] = DOMHelper::loadXPath($doc, DOMHelper::XPATH_SLOTHSOFT | DOMHelper::XPATH_HTML);
         }
         return $this->langPaths[$key];

@@ -2,7 +2,11 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Result;
 
-use Psr\Http\Message\StreamInterface;
+use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\FileWriterInterface;
+use Slothsoft\Core\IO\Writable\StreamWriterInterface;
+use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 /**
@@ -20,13 +24,12 @@ interface ResultInterface
      */
     public function createUrl(): FarahUrl;
 
-    /**
-     * Create a stream of this result.
-     *
-     * @return StreamInterface
-     */
-    public function lookupStream(): StreamInterface;
-
+    public function lookupStringWriter(): StringWriterInterface;
+    public function lookupStreamWriter(): StreamWriterInterface;
+    public function lookupFileWriter(): FileWriterInterface;
+    public function lookupDOMWriter(): DOMWriterInterface;
+    public function lookupChunkWriter(): ChunkWriterInterface;
+    
     /**
      * Determine all available statistics of this result, as a call to stat() would.
      *

@@ -8,7 +8,6 @@ use DOMElement;
 
 class DecoratedDOMWriter implements DOMWriterInterface
 {
-
     private $source;
 
     /**

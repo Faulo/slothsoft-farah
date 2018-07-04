@@ -2,7 +2,11 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
-use Psr\Http\Message\StreamInterface;
+use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\FileWriterInterface;
+use Slothsoft\Core\IO\Writable\StreamWriterInterface;
+use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
 /**
@@ -12,13 +16,35 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
  */
 interface StreamBuilderStrategyInterface
 {
+    public function buildStringWriter(ResultInterface $context): StringWriterInterface;
 
     /**
-     * Create a stream of this result.
+     * Create a stream writer for this result.
      *
-     * @return StreamInterface
+     * @return StreamWriterInterface
      */
-    public function buildStream(ResultInterface $context): StreamInterface;
+    public function buildStreamWriter(ResultInterface $context): StreamWriterInterface;
+    
+    /**
+     * Create a file writer for this result.
+     *
+     * @return FileWriterInterface
+     */
+    public function buildFileWriter(ResultInterface $context): FileWriterInterface;
+    
+    /**
+     * Create a chunk writer for this result.
+     *
+     * @return ChunkWriterInterface
+     */
+    public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface;
+    
+    /**
+     * Create a DOM writer for this result.
+     *
+     * @return DOMWriterInterface
+     */
+    public function buildDOMWriter(ResultInterface $context): DOMWriterInterface;
 
     /**
      * Determine all available stats of this resource, as a call to stat() would.

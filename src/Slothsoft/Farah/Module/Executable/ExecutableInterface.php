@@ -6,7 +6,6 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Result\ResultInterface;
-use Slothsoft\Farah\Module\Result\ResultInterfacePlusXml;
 
 interface ExecutableInterface
 {
@@ -31,6 +30,6 @@ interface ExecutableInterface
 
     public function lookupDefaultResult(): ResultInterface;
 
-    public function lookupXmlResult(): ResultInterfacePlusXml;
+    public function lookupXmlResult(): ResultInterface;
 }
 

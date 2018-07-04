@@ -2,7 +2,16 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Result;
 
-use Psr\Http\Message\StreamInterface;
+use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\FileWriterInterface;
+use Slothsoft\Core\IO\Writable\StreamWriterInterface;
+use Slothsoft\Core\IO\Writable\StringWriterInterface;
+use Slothsoft\Core\IO\Writable\Decorators\ChunkWriterMemoryCache;
+use Slothsoft\Core\IO\Writable\Decorators\DOMWriterMemoryCache;
+use Slothsoft\Core\IO\Writable\Decorators\FileWriterMemoryCache;
+use Slothsoft\Core\IO\Writable\Decorators\StreamWriterMemoryCache;
+use Slothsoft\Core\IO\Writable\Decorators\StringWriterMemoryCache;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
@@ -27,6 +36,12 @@ class Result implements ResultInterface
     private $fileStat;
 
     private $isBufferable;
+    
+    private $stringWriter;
+    private $fileWriter;
+    private $streamWriter;
+    private $chunkWriter;
+    private $domWriter;
 
     public function __construct(ExecutableInterface $ownerExecutable, FarahUrlStreamIdentifier $type, ResultStrategies $strategies)
     {
@@ -39,10 +54,45 @@ class Result implements ResultInterface
     {
         return $this->ownerExecutable->createUrl($this->type);
     }
-
-    public function lookupStream(): StreamInterface
+    
+    public function lookupStringWriter(): StringWriterInterface
     {
-        return $this->strategies->streamBuilder->buildStream($this);
+        if ($this->stringWriter === null) {
+            $this->stringWriter = new StringWriterMemoryCache($this->strategies->streamBuilder->buildStringWriter($this));
+        }
+        return $this->stringWriter;
+    }
+    
+    public function lookupStreamWriter(): StreamWriterInterface
+    {
+        if ($this->streamWriter === null) {
+            $this->streamWriter = new StreamWriterMemoryCache($this->strategies->streamBuilder->buildStreamWriter($this));
+        }
+        return $this->streamWriter;
+    }
+    
+    public function lookupFileWriter(): FileWriterInterface
+    {
+        if ($this->fileWriter === null) {
+            $this->fileWriter = new FileWriterMemoryCache($this->strategies->streamBuilder->buildFileWriter($this));
+        }
+        return $this->fileWriter;
+    }
+    
+    public function lookupDOMWriter(): DOMWriterInterface
+    {
+        if ($this->domWriter === null) {
+            $this->domWriter = new DOMWriterMemoryCache($this->strategies->streamBuilder->buildDOMWriter($this));
+        }
+        return $this->domWriter;
+    }
+    
+    public function lookupChunkWriter(): ChunkWriterInterface
+    {
+        if ($this->chunkWriter === null) {
+            $this->chunkWriter = new ChunkWriterMemoryCache($this->strategies->streamBuilder->buildChunkWriter($this));
+        }
+        return $this->chunkWriter;
     }
 
     public function lookupHash(): string
@@ -102,5 +152,7 @@ class Result implements ResultInterface
     {
         return $this->lookupFileStatistics()['size'] ?? 0;
     }
+
+    
 }
 

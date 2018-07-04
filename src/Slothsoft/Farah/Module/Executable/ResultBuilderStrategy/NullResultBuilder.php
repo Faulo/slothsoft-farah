@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy;
 
-use Slothsoft\Core\IO\AdapterDelegates\DOMWriterFromElementDelegate;
+use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromElementDelegate;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;

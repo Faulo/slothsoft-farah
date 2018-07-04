@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\LinkDecorator;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Exception\NamespaceNotSupportedException;
 use DOMDocument;
+use DOMElement;
 
 /**
  *
@@ -18,6 +19,13 @@ class DecoratorFactory
     {
         $decorator = self::createForNamespace((string) $targetDocument->documentElement->namespaceURI);
         $decorator->setTarget($targetDocument);
+        return $decorator;
+    }
+    
+    public static function createForElement(DOMElement $node): LinkDecoratorInterface
+    {
+        $decorator = self::createForNamespace((string) $node->namespaceURI);
+        $decorator->setTarget($node->ownerDocument);
         return $decorator;
     }
 

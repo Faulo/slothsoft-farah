@@ -3,8 +3,8 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\DOMWriter;
 
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\Core\IO\Writable\DOMWriterDocumentFromElementTrait;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use DOMDocument;
 use DOMElement;

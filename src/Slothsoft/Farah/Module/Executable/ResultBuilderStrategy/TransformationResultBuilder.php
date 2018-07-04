@@ -49,7 +49,7 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface
         $instructions = ($this->getUseInstructions)();
         
         if ($instructions->templateUrl and $type === static::resultIsXslTemplate()) {
-            $writer = Module::resolveToDOMWriter($instructions->templateUrl);
+            $writer = Module::resolveToDOMWriter($instructions->templateUrl->withFragment('xml'));
         } else {
             $writer = new AssetFragmentDOMWriter($instructions->rootUrl);
             
@@ -62,7 +62,7 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface
             }
             
             if ($instructions->templateUrl and $type !== static::resultIsXslSource()) {
-                $template = Module::resolveToDOMWriter($instructions->templateUrl);
+                $template = Module::resolveToDOMWriter($instructions->templateUrl->withFragment('xml'));
                 $writer = new TransformationDOMWriter($writer, $template);
                 $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $instructions->rootUrl);
             }
@@ -76,7 +76,7 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface
             }
         }
         
-        $streamBuilder = new DOMWriterStreamBuilder($writer);
+        $streamBuilder = new DOMWriterStreamBuilder($writer, 'transformation.xml');
         return new ResultStrategies($streamBuilder);
     }
 }

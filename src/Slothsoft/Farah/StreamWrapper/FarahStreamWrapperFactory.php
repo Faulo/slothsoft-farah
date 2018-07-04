@@ -19,7 +19,7 @@ class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface
     {
         $url = FarahUrl::createFromReference($url);
         
-        $stream = Module::resolveToStream($url);
+        $stream = Module::resolveToStreamWriter($url)->toStream();
         
         return new Psr7StreamWrapper($stream);
     }

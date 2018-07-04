@@ -2,19 +2,19 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy;
 
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
-use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
+use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\ChunkWriterStreamBuilder;
 
-class DOMWriterResultBuilder implements ResultBuilderStrategyInterface
+class ChunkWriterResultBuilder implements ResultBuilderStrategyInterface
 {
 
     private $writer;
     private $fileName;
-    
-    public function __construct(DOMWriterInterface $writer, string $fileName)
+
+    public function __construct(ChunkWriterInterface $writer, string $fileName)
     {
         $this->writer = $writer;
         $this->fileName = $fileName;
@@ -22,7 +22,7 @@ class DOMWriterResultBuilder implements ResultBuilderStrategyInterface
 
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
     {
-        $streamBuilder = new DOMWriterStreamBuilder($this->writer, $this->fileName);
+        $streamBuilder = new ChunkWriterStreamBuilder($this->writer, $this->fileName);
         return new ResultStrategies($streamBuilder);
     }
 }

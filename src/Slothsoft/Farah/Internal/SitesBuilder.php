@@ -4,7 +4,7 @@ namespace Slothsoft\Farah\Internal;
 
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
-use Slothsoft\Core\IO\AdapterDelegates\DOMWriterFromDocumentDelegate;
+use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
@@ -27,6 +27,7 @@ class SitesBuilder implements ExecutableBuilderStrategyInterface
             try {
                 return Kernel::getCurrentSitemap()->lookupExecutable()
                     ->lookupXmlResult()
+                    ->lookupDOMWriter()
                     ->toDocument();
             } catch (ConfigurationRequiredException $e) {
                 $doc = new DOMDocument();
@@ -36,7 +37,7 @@ class SitesBuilder implements ExecutableBuilderStrategyInterface
                 return $doc;
             }
         });
-        $resultBuilder = new DOMWriterResultBuilder($writer);
+        $resultBuilder = new DOMWriterResultBuilder($writer, 'sites.xml');
         return new ExecutableStrategies($resultBuilder);
     }
 }

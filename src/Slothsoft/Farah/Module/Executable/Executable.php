@@ -11,8 +11,6 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Result\Result;
 use Slothsoft\Farah\Module\Result\ResultContainer;
 use Slothsoft\Farah\Module\Result\ResultInterface;
-use Slothsoft\Farah\Module\Result\ResultInterfacePlusXml;
-use Slothsoft\Farah\Module\Result\XmlResult;
 
 class Executable implements ExecutableInterface
 {
@@ -83,11 +81,7 @@ class Executable implements ExecutableInterface
     {
         try {
             $strategies = $this->strategies->resultBuilder->buildResultStrategies($this, $type);
-            if ($type === static::resultIsXml()) {
-                $result = new XmlResult($this, $type, $strategies);
-            } else {
-                $result = new Result($this, $type, $strategies);
-            }
+            $result = new Result($this, $type, $strategies);
             return $result;
         } catch (HttpDownloadExecutableException $e) {
             $strategies = $e->getStrategies();
@@ -101,7 +95,7 @@ class Executable implements ExecutableInterface
         return $this->lookupResult(static::resultIsDefault());
     }
 
-    public function lookupXmlResult(): ResultInterfacePlusXml
+    public function lookupXmlResult(): ResultInterface
     {
         return $this->lookupResult(static::resultIsXml());
     }

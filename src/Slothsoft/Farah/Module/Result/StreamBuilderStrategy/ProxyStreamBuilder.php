@@ -2,7 +2,11 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
-use Psr\Http\Message\StreamInterface;
+use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\FileWriterInterface;
+use Slothsoft\Core\IO\Writable\StreamWriterInterface;
+use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
 class ProxyStreamBuilder implements StreamBuilderStrategyInterface
@@ -13,11 +17,6 @@ class ProxyStreamBuilder implements StreamBuilderStrategyInterface
     public function __construct(ResultInterface $proxy)
     {
         $this->proxy = $proxy;
-    }
-
-    public function buildStream(ResultInterface $context): StreamInterface
-    {
-        return $this->proxy->lookupStream();
     }
 
     public function buildStreamMimeType(ResultInterface $context): string
@@ -49,5 +48,31 @@ class ProxyStreamBuilder implements StreamBuilderStrategyInterface
     {
         return $this->proxy->lookupIsBufferable();
     }
+    
+    public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface
+    {
+        return $this->proxy->lookupChunkWriter();
+    }
+
+    public function buildFileWriter(ResultInterface $context): FileWriterInterface
+    {
+        return $this->proxy->lookupFileWriter();
+    }
+
+    public function buildStreamWriter(ResultInterface $context): StreamWriterInterface
+    {
+        return $this->proxy->lookupStreamWriter();
+    }
+
+    public function buildDOMWriter(ResultInterface $context): DOMWriterInterface
+    {
+        return $this->proxy->lookupDOMWriter();
+    }
+    public function buildStringWriter(ResultInterface $context): StringWriterInterface
+    {
+        return $this->proxy->lookupStringWriter();
+    }
+
+
 }
 

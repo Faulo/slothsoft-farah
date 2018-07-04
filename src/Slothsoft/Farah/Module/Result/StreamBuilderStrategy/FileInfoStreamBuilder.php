@@ -2,26 +2,29 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
-use GuzzleHttp\Psr7\LazyOpenStream;
-use Psr\Http\Message\StreamInterface;
 use Slothsoft\Core\MimeTypeDictionary;
-use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
+use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\FileWriterInterface;
+use Slothsoft\Core\IO\Writable\StreamWriterInterface;
+use Slothsoft\Core\IO\Writable\StringWriterInterface;
+use Slothsoft\Core\IO\Writable\Adapter\ChunkWriterFromFileWriter;
+use Slothsoft\Core\IO\Writable\Adapter\DOMWriterFromFileWriter;
+use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromFileWriter;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use SplFileInfo;
+use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromFileWriter;
 
-class FileInfoStreamBuilder implements StreamBuilderStrategyInterface
+class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWriterInterface
 {
 
     private $file;
+    private $fileName;
 
-    public function __construct(SplFileInfo $file)
+    public function __construct(SplFileInfo $file, ?string $fileName = null)
     {
         $this->file = $file;
-    }
-
-    public function buildStream(ResultInterface $context): StreamInterface
-    {
-        return new LazyOpenStream((string) $this->file, StreamWrapperInterface::MODE_OPEN_READONLY);
+        $this->fileName = $fileName;
     }
 
     public function buildStreamMimeType(ResultInterface $context): string
@@ -36,7 +39,7 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface
 
     public function buildStreamFileName(ResultInterface $context): string
     {
-        return $this->file->getFilename();
+        return $this->fileName ?? $this->file->getFilename();
     }
 
     public function buildStreamFileStatistics(ResultInterface $context): array
@@ -53,5 +56,34 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface
     {
         return true;
     }
+    
+    
+    public function buildStreamWriter(ResultInterface $context): StreamWriterInterface
+    {
+        return new StreamWriterFromFileWriter($context->lookupFileWriter());
+    }
+    public function buildFileWriter(ResultInterface $context): FileWriterInterface
+    {
+        return $this;
+    }
+    public function buildDOMWriter(ResultInterface $context): DOMWriterInterface
+    {
+        return new DOMWriterFromFileWriter($context->lookupFileWriter());
+    }
+    public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface
+    {
+        return new ChunkWriterFromFileWriter($context->lookupFileWriter());
+    }
+    public function buildStringWriter(ResultInterface $context): StringWriterInterface
+    {
+        return new StringWriterFromFileWriter($context->lookupFileWriter());
+    }
+    
+    public function toFile(): SplFileInfo
+    {
+        return $this->file;
+    }
+
+
 }
 

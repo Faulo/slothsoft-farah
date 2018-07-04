@@ -2,8 +2,11 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
-use Psr\Http\Message\StreamInterface;
 use Slothsoft\Core\ServerEnvironment;
+use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\FileWriterInterface;
+use Slothsoft\Core\IO\Writable\StreamWriterInterface;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
@@ -16,10 +19,8 @@ use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
 use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\DefaultAssetBuilder;
 use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\XmlTreeLoader;
 use Slothsoft\Farah\Module\Result\ResultInterface;
-use DOMDocument;
 use OutOfBoundsException;
 use SplFileInfo;
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 
 class Module
 {
@@ -59,6 +60,8 @@ class Module
         static::register($authority, $assetDirectory, new ManifestStrategies(new XmlTreeLoader(), new DefaultAssetBuilder()));
     }
 
+    
+    
     public static function resolveToManifest(FarahUrl $url): ManifestInterface
     {
         return static::getInstance()->getManifest($url->getAssetAuthority());
@@ -79,21 +82,27 @@ class Module
         return static::resolveToExecutable($url)->lookupResult($url->getStreamIdentifier());
     }
 
+    
+    
     public static function resolveToDOMWriter(FarahUrl $url): DOMWriterInterface
     {
-        return static::resolveToExecutable($url)->lookupXmlResult();
+        return static::resolveToResult($url)->lookupDOMWriter();
     }
-
-    public static function resolveToDocument(FarahUrl $url): DOMDocument
+    public static function resolveToFileWriter(FarahUrl $url): FileWriterInterface
     {
-        return static::resolveToDOMWriter($url)->toDocument();
+        return static::resolveToResult($url)->lookupFileWriter();
     }
-
-    public static function resolveToStream(FarahUrl $url): StreamInterface
+    public static function resolveToStreamWriter(FarahUrl $url): StreamWriterInterface
     {
-        return static::resolveToResult($url)->lookupStream();
+        return static::resolveToResult($url)->lookupStreamWriter();
     }
-
+    public static function resolveToChunkWriter(FarahUrl $url): ChunkWriterInterface
+    {
+        return static::resolveToResult($url)->lookupChunkWriter();
+    }
+    
+    
+    
     public function createCachedFile(string $fileName, FarahUrl $context): SplFileInfo
     {
         $path = $this->buildPath(ServerEnvironment::getCacheDirectory(), $context);
@@ -112,6 +121,9 @@ class Module
         return new \SplFileInfo($path . DIRECTORY_SEPARATOR . $fileName);
     }
 
+    
+    
+    
     private function buildPath(string $rootDirectory, FarahUrl $context): string
     {
         $rootDirectory .= DIRECTORY_SEPARATOR . $context->getAssetAuthority()->getVendor();

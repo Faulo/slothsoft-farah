@@ -8,25 +8,19 @@ use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\Core\IO\Writable\StreamWriterInterface;
 use Slothsoft\Core\IO\Writable\StringWriterInterface;
-use Slothsoft\Core\IO\Writable\Adapter\ChunkWriterFromStringWriter;
+use Slothsoft\Core\IO\Writable\Adapter\DOMWriterFromStringWriter;
 use Slothsoft\Core\IO\Writable\Adapter\FileWriterFromStringWriter;
-use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromStringWriter;
-use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromDOMWriter;
+use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromChunkWriter;
+use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromChunkWriter;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
-/**
- *
- * @author Daniel Schulz
- *        
- */
-class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface
+class ChunkWriterStreamBuilder implements StreamBuilderStrategyInterface
 {
 
     private $writer;
     private $fileName;
-    private $resourceUrl;
 
-    public function __construct(DOMWriterInterface $writer, string $fileName)
+    public function __construct(ChunkWriterInterface $writer, string $fileName)
     {
         $this->writer = $writer;
         $this->fileName = $fileName;
@@ -61,9 +55,11 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface
     
     
     
+    
+    
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface
     {
-        return new StreamWriterFromStringWriter($context->lookupStringWriter());
+        return new StreamWriterFromChunkWriter($context->lookupChunkWriter());
     }
     public function buildFileWriter(ResultInterface $context): FileWriterInterface
     {
@@ -71,26 +67,15 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface
     }
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface
     {
-        return $this->writer;
+        return new DOMWriterFromStringWriter($context->lookupStringWriter());
     }
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface
     {
-        return new ChunkWriterFromStringWriter($context->lookupStringWriter());
+        return $this->writer;
     }
     public function buildStringWriter(ResultInterface $context): StringWriterInterface
     {
-        return new StringWriterFromDOMWriter($context->lookupDOMWriter());
+        return new StringWriterFromChunkWriter($context->lookupChunkWriter());
     }
 
-    
-    
-//     private function toResourceUrl()
-//     {
-//         if ($this->resourceUrl === null) {
-//             $this->resourceUrl = BlobUrl::createTemporaryURL();
-//             $this->writer->toDocument()->save($this->resourceUrl, LIBXML_NSCLEAN);
-//         }
-//         return $this->resourceUrl;
-//     }
 }
-

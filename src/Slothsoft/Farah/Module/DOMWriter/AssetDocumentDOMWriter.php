@@ -3,8 +3,8 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\DOMWriter;
 
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\Core\IO\Writable\DOMWriterDocumentFromElementTrait;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 use DOMDocument;
@@ -27,7 +27,7 @@ class AssetDocumentDOMWriter implements DOMWriterInterface
 
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
-        $childNode = Module::resolveToDOMWriter($this->url)->toElement($targetDoc);
+        $childNode = Module::resolveToDOMWriter($this->url->withFragment('xml'))->toElement($targetDoc);
     
         $ns = $childNode->namespaceURI;
         $name = basename((string) $this->url->getAssetPath());

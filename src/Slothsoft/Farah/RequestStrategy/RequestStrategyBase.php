@@ -43,7 +43,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                     $fileHash = $result->lookupHash();
                     $isBufferable = $result->lookupIsBufferable();
                     $isCompressable = $isBufferable; // $result->lookupIsCompressable();
-                    $body = $result->lookupStream();
+                    $body = $result->lookupStreamWriter()->toStream();
                 } catch (HttpDownloadException $e) {
                     $result = $e->getResult();
                     $fileDisposition = 'download';
@@ -54,7 +54,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                     $fileHash = $result->lookupHash();
                     $isBufferable = $result->lookupIsBufferable();
                     $isCompressable = $isBufferable; // $result->lookupIsCompressable();
-                    $body = $result->lookupStream();
+                    $body = $result->lookupStreamWriter()->toStream();
                 }
                 $statusCode = StatusCode::STATUS_OK;
                 

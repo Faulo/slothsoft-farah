@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\DOMWriter;
 
-use Slothsoft\Core\IO\Writable\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use DOMDocument;
