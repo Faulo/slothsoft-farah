@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>slothsoft-farah</name>
-	<comment/>
-	<projects><project>/slothsoft-blob</project><project>/slothsoft-core</project></projects>
+	<comment></comment>
+	<projects>
+		<project>slothsoft-blob</project>
+		<project>slothsoft-core</project>
+	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.php.composer.core.builder.buildPathManagementBuilder</name>
