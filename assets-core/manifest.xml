@@ -12,6 +12,10 @@
 			<import ref="/api/XPath" />
 			<import ref="/api/XSLT" />
 		</fragment>
+		<fragment name="DOMHelper">
+			<link-script ref="/js/DOMHelper" />
+			<link-script ref="/js/NS" />
+		</fragment>
 		<fragment name="HTML5">
 			<link-script ref="/js/HTML5" />
 			<link-stylesheet ref="/css/HTML5" />
@@ -23,6 +27,7 @@
 		<fragment name="XSLT">
 			<link-script ref="/js/NS" />
 			<link-script ref="/js/XSLT" />
+			<import ref="/api/XPath" />
 		</fragment>
 	</fragment>
 

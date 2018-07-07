@@ -14,10 +14,11 @@ class AllowAllParameterFilter implements ParameterFilterStrategyInterface
     {
         return true;
     }
-
-    public function getDefaultMap(): array
+    
+    public function getValueSanitizers(): iterable
     {
         return [];
     }
+
 }
 

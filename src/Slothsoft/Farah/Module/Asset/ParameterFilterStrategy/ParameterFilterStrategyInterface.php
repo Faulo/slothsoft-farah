@@ -7,6 +7,6 @@ interface ParameterFilterStrategyInterface
 
     public function isAllowedName(string $name): bool;
 
-    public function getDefaultMap(): array;
+    public function getValueSanitizers(): iterable;
 }
 

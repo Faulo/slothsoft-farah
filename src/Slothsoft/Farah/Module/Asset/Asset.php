@@ -201,9 +201,15 @@ class Asset implements AssetInterface
                 $hasChanged = true;
             }
         }
-        foreach ($filter->getDefaultMap() as $name => $value) {
-            if (! isset($valueList[$name])) {
-                $valueList[$name] = $value;
+        foreach ($filter->getValueSanitizers() as $name => $sanitizer) {
+            if (isset($valueList[$name])) {
+                $value = $sanitizer->apply($valueList[$name]);
+                if ($valueList[$name] !== $value) {
+                    $valueList[$name] = $value;
+                    $hasChanged = true;
+                }
+            } else {
+                $valueList[$name] = $sanitizer->getDefault();
                 $hasChanged = true;
             }
         }

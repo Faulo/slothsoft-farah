@@ -14,6 +14,9 @@
 
 class DOMHelper {
 	static loadDocument(uri) {
+		if (uri.startsWith("farah://")) {
+			uri = "/getAsset.php/" + uri.substring("farah://".length);
+		}
 		return fetch(uri)
 			.then((response) => response.text())
 			.then(DOMHelper.parse)
@@ -50,5 +53,32 @@ class DOMHelper {
 	static stringify(document) {
 		return Promise.resolve()
 			.then(() => new XMLSerializer().serializeToString(document));
+	}
+	static transformToFragment(dataNode, templateDocument, ownerDocument) {
+		let promise;
+		let importNode = templateDocument.getElementsByTagNameNS(NS.XSL, "import")[0];
+		if (importNode) {
+			promise = DOMHelper.loadDocument(importNode.getAttribute("href"))
+				.then((importDocument) => {
+					[...importDocument.documentElement.children].forEach(
+						(childNode) => {
+							importNode.parentNode.appendChild(templateDocument.adoptNode(childNode));
+						}
+					);
+					importNode.parentNode.removeChild(importNode);
+					return DOMHelper.transformToFragment(dataNode, templateDocument, ownerDocument);
+				});
+		} else {
+			promise = Promise.resolve()
+				.then(() => {
+					let xslt = new XSLTProcessor();
+					xslt.importStylesheet(templateDocument);
+					return xslt.transformToFragment(dataNode, ownerDocument);
+				});
+		}
+		return promise.catch((e) => {
+			console.log(`Could not transform XML ressource "${dataNode}".`);
+			console.log(e);
+		});
 	}
 }

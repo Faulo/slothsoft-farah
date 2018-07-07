@@ -14,10 +14,11 @@ class DenyAllParameterFilter implements ParameterFilterStrategyInterface
     {
         return false;
     }
-
-    public function getDefaultMap(): array
+    
+    public function getValueSanitizers(): iterable
     {
         return [];
     }
+
 }
 
