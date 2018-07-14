@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\ResponseStrategy;
 
 use Psr\Http\Message\ResponseInterface;
+use Slothsoft\Core\IO\Memory;
 use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 
 class SendBodyStrategy extends ResponseStrategyBase
@@ -12,10 +13,10 @@ class SendBodyStrategy extends ResponseStrategyBase
 
     private $chunkSize;
 
-    public function __construct(string $destination, int $chunkSize)
+    public function __construct(?string $destination = null, ?int $chunkSize = null)
     {
-        $this->destination = $destination;
-        $this->chunkSize = $chunkSize;
+        $this->destination = $destination ?? 'php://output';
+        $this->chunkSize = $chunkSize ?? Memory::ONE_KILOBYTE;
     }
 
     public function process(ResponseInterface $response)

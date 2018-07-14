@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\ResponseStrategy;
 
 use Psr\Http\Message\ResponseInterface;
-use Slothsoft\Core\IO\Memory;
 
 class SendHeaderAndBodyStrategy extends ResponseStrategyBase
 {
@@ -16,7 +15,7 @@ class SendHeaderAndBodyStrategy extends ResponseStrategyBase
             flush();
             
             if ($response->getBody()) {
-                $body = new SendBodyStrategy('php://output', Memory::ONE_KILOBYTE);
+                $body = new SendBodyStrategy();
                 $body->process($response);
                 flush();
             }
