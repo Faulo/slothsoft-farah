@@ -4,7 +4,7 @@ namespace Slothsoft\Farah\ResponseStrategy;
 
 use Psr\Http\Message\ResponseInterface;
 
-class SendHeaderAndBodyStrategy extends ResponseStrategyBase
+class SendHeaderAndBodyStrategy implements ResponseStrategyInterface
 {
 
     public function process(ResponseInterface $response)

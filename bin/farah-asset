@@ -18,6 +18,11 @@ HELP;
     return 1;
 }
 
+//$url = Slothsoft\Farah\FarahUrl\FarahUrl::createFromReference($_SERVER['argv'][1]);
+//$result = Slothsoft\Farah\Module\Module::resolveToResult($url);
+//header('content-type:' . $result->lookupMimeType());
+//fwrite(STDERR, $result->lookupFileName());
+
 copy($_SERVER['argv'][1], 'php://output');
 
 exit(0);

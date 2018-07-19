@@ -1,14 +1,14 @@
 <?php
 namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy;
 
+use Psr\Http\Message\StreamInterface;
 use Slothsoft\Core\ServerEnvironment;
-use Slothsoft\Core\IO\Memory;
-use Slothsoft\Core\IO\Writable\Delegates\ChunkWriterFromChunksDelegate;
+use Slothsoft\Core\IO\Psr7\ProcessStream;
+use Slothsoft\Core\IO\Writable\Delegates\StreamWriterFromStreamDelegate;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
-use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\ChunkWriterStreamBuilder;
-use Generator;
+use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamWriterStreamBuilder;
 
 class SwitchToCliResultBuilder implements ResultBuilderStrategyInterface
 {
@@ -31,15 +31,11 @@ class SwitchToCliResultBuilder implements ResultBuilderStrategyInterface
                 ServerEnvironment::getRootDirectory(),
                 escapeshellarg((string) $context->createUrl($type))
             );
-            $delegate = function() use($command) : Generator {
-                $stream = popen($command, 'rb');
-                while (!feof($stream)) {
-                    yield fread($stream, Memory::ONE_KILOBYTE);
-                }
-                pclose($stream);
+            $delegate = function() use($command) : StreamInterface {
+                return new ProcessStream($command);
             };
-            $writer = new ChunkWriterFromChunksDelegate($delegate);
-            $streamBuilder = new ChunkWriterStreamBuilder($writer, $this->fileName);
+            $writer = new StreamWriterFromStreamDelegate($delegate);
+            $streamBuilder = new StreamWriterStreamBuilder($writer, $this->fileName);
             return new ResultStrategies($streamBuilder);
         }
     }

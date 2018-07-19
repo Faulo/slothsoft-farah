@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\Calendar\Seconds;
+use Slothsoft\Core\IO\Psr7\StreamHelper;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\Exception\HttpStatusException;
@@ -17,7 +18,6 @@ use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Http\TransferCoding;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Security\BannedManager;
-use Slothsoft\Farah\Streams\StreamHelper;
 
 abstract class RequestStrategyBase implements RequestStrategyInterface
 {
