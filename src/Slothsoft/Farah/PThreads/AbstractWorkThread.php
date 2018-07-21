@@ -18,7 +18,7 @@ abstract class AbstractWorkThread extends Threaded
         try {
             $this->work();
         } catch(Throwable $e) {
-            $this->log(get_class($e) . ': ' . $e->getMessage(), true);
+            $this->log(get_class($e) . ': ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString(), true);
         }
     }
     
