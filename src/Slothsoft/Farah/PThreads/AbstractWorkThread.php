@@ -22,6 +22,9 @@ abstract class AbstractWorkThread extends Threaded
         }
     }
     
+    protected function getOptions() : array {
+        return (array) $this->options;
+    }
     protected function getOption(string $key) {
         return $this->options[$key] ?? null;
     }

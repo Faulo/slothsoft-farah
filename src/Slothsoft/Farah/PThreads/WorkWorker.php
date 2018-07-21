@@ -2,6 +2,7 @@
 namespace Slothsoft\Farah\PThreads;
 
 use Worker;
+use Slothsoft\Core\ServerEnvironment;
 
 class WorkWorker extends Worker {
     public $logger;
@@ -13,11 +14,15 @@ class WorkWorker extends Worker {
     }
     
     public function run()   {
-        require_once('vendor/autoload.php');
+        if (class_exists(ServerEnvironment::class)) {
+            require_once ServerEnvironment::getRootDirectory() . '/vendor/autoload.php';
+        } else {
+            require_once 'vendor/autoload.php';
+        }
     }
     
-    public function start(?int $options = PTHREADS_INHERIT_ALL) {
-        return parent::start(PTHREADS_INHERIT_NONE);
+    public function start(?int $options = 1118481) { //PTHREADS_INHERIT_ALL
+        return parent::start(0); //PTHREADS_INHERIT_NONE
     }
 }
 
