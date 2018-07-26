@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
+use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
@@ -23,26 +24,26 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface
 {
 
     private $writer;
-    private $fileName;
-    private $resourceUrl;
+    private $documentName;
 
-    public function __construct(DOMWriterInterface $writer, string $fileName)
+    public function __construct(DOMWriterInterface $writer, string $documentName = 'document')
     {
         $this->writer = $writer;
-        $this->fileName = $fileName;
+        $this->documentName = $documentName;
     }
 
     public function buildStreamMimeType(ResultInterface $context): string
     {
-        return MimeTypeDictionary::guessMime(pathinfo($this->fileName, PATHINFO_EXTENSION));
+        return MimeTypeDictionary::guessMime(pathinfo($context->lookupFileName(), PATHINFO_EXTENSION));
     }
     public function buildStreamCharset(ResultInterface $context): string
     {
-        return 'UTF-8';
+        return $context->lookupDOMWriter()->toDocument()->encoding ?? 'UTF-8';
     }
     public function buildStreamFileName(ResultInterface $context): string
     {
-        return $this->fileName;
+        $extension = DOMHelper::guessExtension($context->lookupDOMWriter()->toDocument()->documentElement->namespaceURI);
+        return "$this->documentName.$extension";
     }
     public function buildStreamFileStatistics(ResultInterface $context): array
     {
@@ -50,7 +51,7 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface
     }
     public function buildStreamHash(ResultInterface $context): string
     {
-        return '';
+        return md5($context->lookupStringWriter()->toString());
     }
     public function buildStreamIsBufferable(ResultInterface $context): bool
     {
@@ -81,16 +82,5 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface
     {
         return new StringWriterFromDOMWriter($context->lookupDOMWriter());
     }
-
-    
-    
-//     private function toResourceUrl()
-//     {
-//         if ($this->resourceUrl === null) {
-//             $this->resourceUrl = BlobUrl::createTemporaryURL();
-//             $this->writer->toDocument()->save($this->resourceUrl, LIBXML_NSCLEAN);
-//         }
-//         return $this->resourceUrl;
-//     }
 }
 

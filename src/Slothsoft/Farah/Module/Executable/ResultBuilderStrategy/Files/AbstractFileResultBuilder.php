@@ -4,6 +4,7 @@ namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files;
 
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
+use Slothsoft\Core\IO\Writable\Decorators\DOMWriterMemoryCache;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
@@ -25,7 +26,7 @@ abstract class AbstractFileResultBuilder implements ResultBuilderStrategyInterfa
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
     {
         if ($type === Executable::resultIsXml()) {
-            $streamBuilder = new DOMWriterStreamBuilder($this, $this->file->getFilename() . '.xml');
+            $streamBuilder = new DOMWriterStreamBuilder(new DOMWriterMemoryCache($this), $this->file->getFilename());
         } else {
             $streamBuilder = new FileInfoStreamBuilder($this->file, $this->file->getFilename());
         }
