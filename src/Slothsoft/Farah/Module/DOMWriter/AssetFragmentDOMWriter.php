@@ -44,6 +44,7 @@ use DOMWriterElementFromDocumentTrait;
         $node = $targetDoc->documentElement;
         
         $id = (string) $this->url;
+        $targetDoc->documentURI = $id;
         $name = basename((string) $this->url->getAssetPath());
         $href = str_replace('farah://', '/getAsset.php/', $id);
         

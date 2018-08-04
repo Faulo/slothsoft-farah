@@ -35,7 +35,7 @@ class AssetDocumentDOMWriter implements DOMWriterInterface
         $href = str_replace('farah://', '/getAsset.php/', $id);
         
         $xml = sprintf(
-            '<sfm:asset-document xmlns:sfm="%s" xmlns="%s" name="%s" url="%s" href="%s"/>',
+            '<sfm:asset-document xmlns:sfm="%s" xmlns="%s" name="%s" url="%s" href="%s" />',
             DOMHelper::NS_FARAH_MODULE, $ns, $name, $id, $href
         );
         

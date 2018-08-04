@@ -68,7 +68,7 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWrite
     }
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface
     {
-        return new DOMWriterFromFileWriter($context->lookupFileWriter());
+        return new DOMWriterFromFileWriter($context->lookupFileWriter(), (string) $context->createUrl());
     }
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface
     {

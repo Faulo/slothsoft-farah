@@ -27,7 +27,7 @@ class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterf
 
     private function createResultBuilderForType(SplFileInfo $file, string $type): ResultBuilderStrategyInterface
     {
-        if ($type === 'application/xml' or strpos($type, '+xml') !== false) {
+        if ($type === 'application/xml' or substr($type, -4) === '+xml') {
             return new XmlFileResultBuilder($file);
         }
         if ($type === 'text/html') {
