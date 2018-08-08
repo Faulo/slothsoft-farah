@@ -71,6 +71,7 @@ This namespace defines elements to identify assets in a Farah module.
 			<xsd:element ref="use-template" />
 			<xsd:element ref="link-stylesheet" />
 			<xsd:element ref="link-script" />
+			<xsd:element ref="link-module" />
 			<xsd:element ref="param-filter" />
 			<xsd:element ref="param" />
 		</xsd:choice>
@@ -236,6 +237,14 @@ This namespace defines elements to identify assets in a Farah module.
 	</xsd:element>
 
 	<xsd:element name="link-script">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset-reference" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="link-module">
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="asset-reference" />

@@ -15,18 +15,25 @@ class DecoratedDOMWriter implements DOMWriterInterface
      * @var iterable
      */
     private $stylesheets;
-
+    
     /**
      *
      * @var iterable
      */
     private $scripts;
+    
+    /**
+     *
+     * @var iterable
+     */
+    private $modules;
 
-    public function __construct(DOMWriterInterface $source, iterable $stylesheets, iterable $scripts)
+    public function __construct(DOMWriterInterface $source, iterable $stylesheets, iterable $scripts, iterable $modules)
     {
         $this->source = $source;
         $this->stylesheets = $stylesheets;
         $this->scripts = $scripts;
+        $this->modules = $modules;
     }
 
     public function toElement(DOMDocument $targetDoc): DOMElement
@@ -35,6 +42,7 @@ class DecoratedDOMWriter implements DOMWriterInterface
         $decorator = DecoratorFactory::createForElement($element);
         $decorator->linkStylesheets(...$this->stylesheets);
         $decorator->linkScripts(...$this->scripts);
+        $decorator->linkModules(...$this->scripts);
         return $element;
     }
 

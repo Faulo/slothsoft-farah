@@ -18,7 +18,9 @@ interface LinkDecoratorInterface
     public function setTarget(DOMDocument $document);
 
     public function linkStylesheets(FarahUrl ...$stylesheets);
-
+    
     public function linkScripts(FarahUrl ...$scripts);
+    
+    public function linkModules(FarahUrl ...$scripts);
 }
 

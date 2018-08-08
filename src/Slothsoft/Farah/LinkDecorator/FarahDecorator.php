@@ -51,5 +51,16 @@ class FarahDecorator implements LinkDecoratorInterface
             $this->rootNode->appendChild($node);
         }
     }
+    
+    public function linkModules(FarahUrl ...$scripts)
+    {
+        foreach ($scripts as $url) {
+            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            
+            $node = $this->targetDocument->createElementNS($this->namespace, 'link-module');
+            $node->setAttribute('href', $href);
+            $this->rootNode->appendChild($node);
+        }
+    }
 }
 

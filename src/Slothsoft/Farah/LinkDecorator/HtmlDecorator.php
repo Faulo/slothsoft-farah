@@ -43,7 +43,7 @@ class HtmlDecorator implements LinkDecoratorInterface
             $this->rootNode->appendChild($node);
         }
     }
-
+    
     public function linkScripts(FarahUrl ...$scripts)
     {
         foreach ($scripts as $url) {
@@ -52,8 +52,20 @@ class HtmlDecorator implements LinkDecoratorInterface
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
             $node->setAttribute('src', $href);
             $node->setAttribute('defer', 'defer');
-            // "The type attribute is unnecessary for JavaScript resources."
-            // $node->setAttribute('type', 'application/javascript');
+            $this->rootNode->appendChild($node);
+        }
+    }
+    
+    public function linkModules(FarahUrl ...$scripts)
+    {
+        foreach ($scripts as $url) {
+            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            
+            $node = $this->targetDocument->createElementNS($this->namespace, 'script');
+            $node->setAttribute('src', $href);
+            $node->setAttribute('type', 'module');
+            $node->setAttribute('defer', 'defer');
+            $node->setAttribute('async', 'async');
             $this->rootNode->appendChild($node);
         }
     }

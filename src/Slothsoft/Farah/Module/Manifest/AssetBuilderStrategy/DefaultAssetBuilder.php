@@ -13,6 +13,7 @@ use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\NullExecutableBuilder
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\FromManifestInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\ImportChildrenInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\InstructionStrategyInterface;
+use Slothsoft\Farah\Module\Asset\InstructionStrategy\LinkModuleInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\LinkScriptInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\LinkStylesheetInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\NullInstruction;
@@ -113,6 +114,11 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = LinkScriptInstruction::class;
+                break;
+            case Manifest::TAG_LINK_MODULE:
+                $executableBuilder = FromReferenceExecutableBuilder::class;
+                $parameterSupplier = FromReferenceParameterSupplier::class;
+                $instruction = LinkModuleInstruction::class;
                 break;
             case Manifest::TAG_RESOURCE:
                 $executableBuilder = FromFilesystemExecutableBuilder::class;

@@ -252,10 +252,15 @@ class Asset implements AssetInterface
     {
         return $this->strategies->instruction->isUseTemplate($this);
     }
-
+    
     public function isLinkScriptInstruction(): bool
     {
         return $this->strategies->instruction->isLinkScript($this);
+    }
+    
+    public function isLinkModuleInstruction(): bool
+    {
+        return $this->strategies->instruction->isLinkModule($this);
     }
 
     public function isLinkStylesheetInstruction(): bool

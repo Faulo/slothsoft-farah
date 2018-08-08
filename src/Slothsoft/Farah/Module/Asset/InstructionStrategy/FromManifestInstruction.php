@@ -36,10 +36,15 @@ class FromManifestInstruction implements InstructionStrategyInterface
     {
         return $context->getManifestElement()->getAttribute('link', '') === 'stylesheet';
     }
-
+    
     public function isLinkScript(AssetInterface $context): bool
     {
         return $context->getManifestElement()->getAttribute('link', '') === 'script';
+    }
+    
+    public function isLinkModule(AssetInterface $context): bool
+    {
+        return $context->getManifestElement()->getAttribute('link', '') === 'module';
     }
 
     public function isParameterSupplier(AssetInterface $context): bool

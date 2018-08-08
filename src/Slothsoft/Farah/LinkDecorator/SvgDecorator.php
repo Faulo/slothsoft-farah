@@ -41,7 +41,7 @@ class SvgDecorator implements LinkDecoratorInterface
             $this->targetDocument->insertBefore($node, $this->targetDocument->firstChild);
         }
     }
-
+    
     public function linkScripts(FarahUrl ...$scripts)
     {
         foreach ($scripts as $url) {
@@ -50,6 +50,18 @@ class SvgDecorator implements LinkDecoratorInterface
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
             $node->setAttributeNS(DOMHelper::NS_XLINK, 'xlink:href', $href);
             $node->setAttribute('defer', 'defer');
+            $this->rootNode->appendChild($node);
+        }
+    }
+    
+    public function linkModules(FarahUrl ...$scripts)
+    {
+        foreach ($scripts as $url) {
+            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            
+            $node = $this->targetDocument->createElementNS($this->namespace, 'script');
+            $node->setAttributeNS(DOMHelper::NS_XLINK, 'xlink:href', $href);
+            $node->setAttribute('type', 'module');
             $this->rootNode->appendChild($node);
         }
     }
