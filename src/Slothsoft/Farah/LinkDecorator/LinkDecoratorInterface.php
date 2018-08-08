@@ -21,6 +21,6 @@ interface LinkDecoratorInterface
     
     public function linkScripts(FarahUrl ...$scripts);
     
-    public function linkModules(FarahUrl ...$scripts);
+    public function linkModules(FarahUrl ...$modules);
 }
 

@@ -41,7 +41,7 @@ class FarahDecorator implements LinkDecoratorInterface
         }
     }
     
-    public function linkScripts(FarahUrl ...$scripts)
+    public function linkScripts(FarahUrl ...$modules)
     {
         foreach ($scripts as $url) {
             $href = str_replace('farah://', '/getAsset.php/', (string) $url);

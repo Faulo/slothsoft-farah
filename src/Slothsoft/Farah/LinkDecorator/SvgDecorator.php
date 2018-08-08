@@ -54,7 +54,7 @@ class SvgDecorator implements LinkDecoratorInterface
         }
     }
     
-    public function linkModules(FarahUrl ...$scripts)
+    public function linkModules(FarahUrl ...$modules)
     {
         foreach ($scripts as $url) {
             $href = str_replace('farah://', '/getAsset.php/', (string) $url);
