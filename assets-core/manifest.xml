@@ -17,7 +17,6 @@
 			<link-script ref="/js/NS" />
 		</fragment>
 		<fragment name="HTML5">
-			<link-script ref="/js/HTML5" />
 			<link-stylesheet ref="/css/HTML5" />
 		</fragment>
 		<fragment name="XPath">
