@@ -19,7 +19,7 @@ class FarahUrlArguments implements IteratorAggregate, Hashable
         return self::create('', []);
     }
 
-    public static function createFromMany(FarahUrlArguments... $argsList): FarahUrlArguments
+    public static function createFromMany(FarahUrlArguments ...$argsList): FarahUrlArguments
     {
         $data = [];
         foreach ($argsList as $args) {

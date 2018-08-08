@@ -84,9 +84,9 @@ interface AssetInterface
     public function isUseDocumentInstruction(): bool;
 
     public function isLinkStylesheetInstruction(): bool;
-    
+
     public function isLinkScriptInstruction(): bool;
-    
+
     public function isLinkModuleInstruction(): bool;
 
     public function isParameterSupplierInstruction(): bool;

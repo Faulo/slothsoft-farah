@@ -48,7 +48,7 @@ class ProxyStreamBuilder implements StreamBuilderStrategyInterface
     {
         return $this->proxy->lookupIsBufferable();
     }
-    
+
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface
     {
         return $this->proxy->lookupChunkWriter();
@@ -68,11 +68,10 @@ class ProxyStreamBuilder implements StreamBuilderStrategyInterface
     {
         return $this->proxy->lookupDOMWriter();
     }
+
     public function buildStringWriter(ResultInterface $context): StringWriterInterface
     {
         return $this->proxy->lookupStringWriter();
     }
-
-
 }
 

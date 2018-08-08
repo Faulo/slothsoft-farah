@@ -6,6 +6,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 class LinkScriptInstruction extends NullInstruction
 {
+
     public function isLinkScript(AssetInterface $context): bool
     {
         return true;

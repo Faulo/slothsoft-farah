@@ -18,6 +18,7 @@ class StreamWriterStreamBuilder implements StreamBuilderStrategyInterface
 {
 
     private $writer;
+
     private $fileName;
 
     public function __construct(StreamWriterInterface $writer, string $fileName)
@@ -30,52 +31,54 @@ class StreamWriterStreamBuilder implements StreamBuilderStrategyInterface
     {
         return MimeTypeDictionary::guessMime(pathinfo($this->fileName, PATHINFO_EXTENSION));
     }
+
     public function buildStreamCharset(ResultInterface $context): string
     {
         return 'UTF-8';
     }
+
     public function buildStreamFileName(ResultInterface $context): string
     {
         return $this->fileName;
     }
+
     public function buildStreamFileStatistics(ResultInterface $context): array
     {
         return [];
     }
+
     public function buildStreamHash(ResultInterface $context): string
     {
         return '';
     }
+
     public function buildStreamIsBufferable(ResultInterface $context): bool
     {
         return true;
     }
-    
-    
-    
-    
-    
-    
-    
+
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface
     {
         return $this->writer;
     }
+
     public function buildFileWriter(ResultInterface $context): FileWriterInterface
     {
         return new FileWriterFromStringWriter($context->lookupStringWriter());
     }
+
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface
     {
         return new DOMWriterFromStringWriter($context->lookupStringWriter());
     }
+
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface
     {
         return new ChunkWriterFromStreamWriter($context->lookupStreamWriter());
     }
+
     public function buildStringWriter(ResultInterface $context): StringWriterInterface
     {
         return new StringWriterFromStreamWriter($context->lookupStreamWriter());
     }
-
 }

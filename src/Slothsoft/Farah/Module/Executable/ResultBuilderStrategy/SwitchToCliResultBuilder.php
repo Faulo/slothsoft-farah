@@ -12,26 +12,24 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamWriterStreamBuilde
 
 class SwitchToCliResultBuilder implements ResultBuilderStrategyInterface
 {
+
     private $resultBuilder;
+
     private $fileName;
-    
+
     public function __construct(ResultBuilderStrategyInterface $resultBuilder, string $fileName)
     {
         $this->resultBuilder = $resultBuilder;
         $this->fileName = $fileName;
     }
-    
+
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
     {
         if (PHP_SAPI === 'cli') {
             return $this->resultBuilder->buildResultStrategies($context, $type);
         } else {
-            $command = sprintf(
-                '%s\\vendor\\bin\\farah-asset %s',
-                ServerEnvironment::getRootDirectory(),
-                escapeshellarg((string) $context->createUrl($type))
-            );
-            $delegate = function() use($command) : StreamInterface {
+            $command = sprintf('%s\\vendor\\bin\\farah-asset %s', ServerEnvironment::getRootDirectory(), escapeshellarg((string) $context->createUrl($type)));
+            $delegate = function () use ($command): StreamInterface {
                 return new ProcessStream($command);
             };
             $writer = new StreamWriterFromStreamDelegate($delegate);

@@ -40,7 +40,9 @@ abstract class AbstractSitemapTest extends AbstractTestCase
 
     protected function getSitesDocument(): DOMDocument
     {
-        return $this->getSitesResult()->lookupDOMWriter()->toDocument();
+        return $this->getSitesResult()
+            ->lookupDOMWriter()
+            ->toDocument();
     }
 
     protected function getSitesRoot(): DOMElement

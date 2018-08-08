@@ -19,6 +19,7 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWrite
 {
 
     private $file;
+
     private $fileName;
 
     public function __construct(SplFileInfo $file, ?string $fileName = null)
@@ -56,34 +57,35 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWrite
     {
         return true;
     }
-    
-    
+
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface
     {
         return new StreamWriterFromFileWriter($context->lookupFileWriter());
     }
+
     public function buildFileWriter(ResultInterface $context): FileWriterInterface
     {
         return $this;
     }
+
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface
     {
         return new DOMWriterFromFileWriter($context->lookupFileWriter(), (string) $context->createUrl());
     }
+
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface
     {
         return new ChunkWriterFromFileWriter($context->lookupFileWriter());
     }
+
     public function buildStringWriter(ResultInterface $context): StringWriterInterface
     {
         return new StringWriterFromFileWriter($context->lookupFileWriter());
     }
-    
+
     public function toFile(): SplFileInfo
     {
         return $this->file;
     }
-
-
 }
 

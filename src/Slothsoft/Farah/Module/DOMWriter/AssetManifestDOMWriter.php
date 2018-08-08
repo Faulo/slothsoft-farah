@@ -12,18 +12,18 @@ use DOMElement;
 class AssetManifestDOMWriter implements DOMWriterInterface
 {
     use DOMWriterDocumentFromElementTrait;
-    
+
     /**
      *
      * @var FarahUrl
      */
     private $url;
-    
+
     public function __construct(FarahUrl $url)
     {
         $this->url = $url;
     }
-    
+
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
         $id = (string) $this->url;

@@ -8,6 +8,7 @@ use DOMElement;
 
 class DecoratedDOMWriter implements DOMWriterInterface
 {
+
     private $source;
 
     /**
@@ -15,13 +16,13 @@ class DecoratedDOMWriter implements DOMWriterInterface
      * @var iterable
      */
     private $stylesheets;
-    
+
     /**
      *
      * @var iterable
      */
     private $scripts;
-    
+
     /**
      *
      * @var iterable

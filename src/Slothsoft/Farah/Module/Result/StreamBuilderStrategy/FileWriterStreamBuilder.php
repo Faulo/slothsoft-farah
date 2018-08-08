@@ -18,6 +18,7 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
 {
 
     private $writer;
+
     private $fileName;
 
     public function __construct(FileWriterInterface $writer, string $fileName)
@@ -51,12 +52,6 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
         return '';
     }
 
-    
-    
-    
-    
-    
-    
     public function buildStreamIsBufferable(ResultInterface $context): bool
     {
         return true;
@@ -66,23 +61,24 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
     {
         return new StreamWriterFromFileWriter($context->lookupFileWriter());
     }
+
     public function buildFileWriter(ResultInterface $context): FileWriterInterface
     {
         return $this->writer;
     }
+
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface
     {
         return new DOMWriterFromFileWriter($context->lookupFileWriter(), (string) $context->createUrl());
     }
+
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface
     {
         return new ChunkWriterFromFileWriter($context->lookupFileWriter());
     }
+
     public function buildStringWriter(ResultInterface $context): StringWriterInterface
     {
         return new StringWriterFromFileWriter($context->lookupFileWriter());
     }
-    
-    
-
 }

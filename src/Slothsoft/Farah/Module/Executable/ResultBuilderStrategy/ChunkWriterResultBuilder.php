@@ -12,6 +12,7 @@ class ChunkWriterResultBuilder implements ResultBuilderStrategyInterface
 {
 
     private $writer;
+
     private $fileName;
 
     public function __construct(ChunkWriterInterface $writer, string $fileName)

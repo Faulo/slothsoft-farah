@@ -6,6 +6,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 class UseDocumentInstruction extends NullInstruction
 {
+
     public function isUseDocument(AssetInterface $context): bool
     {
         return true;

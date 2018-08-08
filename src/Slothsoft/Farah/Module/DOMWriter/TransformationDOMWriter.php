@@ -42,6 +42,5 @@ class TransformationDOMWriter implements DOMWriterInterface
         
         return $resultDoc;
     }
-
 }
 

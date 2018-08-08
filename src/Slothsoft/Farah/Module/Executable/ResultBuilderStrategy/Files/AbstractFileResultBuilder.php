@@ -16,6 +16,7 @@ use SplFileInfo;
 
 abstract class AbstractFileResultBuilder implements ResultBuilderStrategyInterface, FileWriterInterface, DOMWriterInterface
 {
+
     protected $file;
 
     public function __construct(SplFileInfo $file)
@@ -32,8 +33,9 @@ abstract class AbstractFileResultBuilder implements ResultBuilderStrategyInterfa
         }
         return new ResultStrategies($streamBuilder);
     }
-    
-    public function toFile() : SplFileInfo {
+
+    public function toFile(): SplFileInfo
+    {
         return $this->file;
     }
 }

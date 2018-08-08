@@ -11,6 +11,7 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ProxyResultBuilder;
 
 class FromReferenceExecutableBuilder implements ExecutableBuilderStrategyInterface
 {
+
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
     {
         $ref = $context->getManifestElement()->getAttribute('ref');

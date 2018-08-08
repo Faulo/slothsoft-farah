@@ -12,24 +12,25 @@ use DOMDocument;
  */
 class FarahDecorator implements LinkDecoratorInterface
 {
+
     private $namespace;
-    
+
     private $targetDocument;
-    
+
     private $rootNode;
-    
+
     public function setNamespace(string $namespace)
     {
         $this->namespace = $namespace;
     }
-    
+
     public function setTarget(DOMDocument $document)
     {
         $this->targetDocument = $document;
         
         $this->rootNode = $document->documentElement;
     }
-    
+
     public function linkStylesheets(FarahUrl ...$stylesheets)
     {
         foreach ($stylesheets as $url) {
@@ -40,7 +41,7 @@ class FarahDecorator implements LinkDecoratorInterface
             $this->rootNode->appendChild($node);
         }
     }
-    
+
     public function linkScripts(FarahUrl ...$modules)
     {
         foreach ($scripts as $url) {
@@ -51,7 +52,7 @@ class FarahDecorator implements LinkDecoratorInterface
             $this->rootNode->appendChild($node);
         }
     }
-    
+
     public function linkModules(FarahUrl ...$scripts)
     {
         foreach ($scripts as $url) {

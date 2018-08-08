@@ -41,7 +41,7 @@ class SvgDecorator implements LinkDecoratorInterface
             $this->targetDocument->insertBefore($node, $this->targetDocument->firstChild);
         }
     }
-    
+
     public function linkScripts(FarahUrl ...$scripts)
     {
         foreach ($scripts as $url) {
@@ -53,7 +53,7 @@ class SvgDecorator implements LinkDecoratorInterface
             $this->rootNode->appendChild($node);
         }
     }
-    
+
     public function linkModules(FarahUrl ...$modules)
     {
         foreach ($scripts as $url) {

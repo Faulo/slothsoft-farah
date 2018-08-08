@@ -60,8 +60,6 @@ class Module
         static::register($authority, $assetDirectory, new ManifestStrategies(new XmlTreeLoader(), new DefaultAssetBuilder()));
     }
 
-    
-    
     public static function resolveToManifest(FarahUrl $url): ManifestInterface
     {
         return static::getInstance()->getManifest($url->getAssetAuthority());
@@ -82,27 +80,26 @@ class Module
         return static::resolveToExecutable($url)->lookupResult($url->getStreamIdentifier());
     }
 
-    
-    
     public static function resolveToDOMWriter(FarahUrl $url): DOMWriterInterface
     {
         return static::resolveToResult($url)->lookupDOMWriter();
     }
+
     public static function resolveToFileWriter(FarahUrl $url): FileWriterInterface
     {
         return static::resolveToResult($url)->lookupFileWriter();
     }
+
     public static function resolveToStreamWriter(FarahUrl $url): StreamWriterInterface
     {
         return static::resolveToResult($url)->lookupStreamWriter();
     }
+
     public static function resolveToChunkWriter(FarahUrl $url): ChunkWriterInterface
     {
         return static::resolveToResult($url)->lookupChunkWriter();
     }
-    
-    
-    
+
     public function createCachedFile(string $fileName, FarahUrl $context): SplFileInfo
     {
         $path = $this->buildPath(ServerEnvironment::getCacheDirectory(), $context);
@@ -121,9 +118,6 @@ class Module
         return new \SplFileInfo($path . DIRECTORY_SEPARATOR . $fileName);
     }
 
-    
-    
-    
     private function buildPath(string $rootDirectory, FarahUrl $context): string
     {
         $rootDirectory .= DIRECTORY_SEPARATOR . $context->getAssetAuthority()->getVendor();

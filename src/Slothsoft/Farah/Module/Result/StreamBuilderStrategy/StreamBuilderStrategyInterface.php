@@ -16,6 +16,7 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
  */
 interface StreamBuilderStrategyInterface
 {
+
     public function buildStringWriter(ResultInterface $context): StringWriterInterface;
 
     /**
@@ -24,21 +25,21 @@ interface StreamBuilderStrategyInterface
      * @return StreamWriterInterface
      */
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface;
-    
+
     /**
      * Create a file writer for this result.
      *
      * @return FileWriterInterface
      */
     public function buildFileWriter(ResultInterface $context): FileWriterInterface;
-    
+
     /**
      * Create a chunk writer for this result.
      *
      * @return ChunkWriterInterface
      */
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface;
-    
+
     /**
      * Create a DOM writer for this result.
      *

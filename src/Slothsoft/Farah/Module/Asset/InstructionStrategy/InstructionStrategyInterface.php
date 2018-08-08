@@ -20,7 +20,7 @@ interface InstructionStrategyInterface
     public function isLinkStylesheet(AssetInterface $context): bool;
 
     public function isLinkScript(AssetInterface $context): bool;
-    
+
     public function isLinkModule(AssetInterface $context): bool;
 
     public function isParameterSupplier(AssetInterface $context): bool;

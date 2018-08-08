@@ -6,6 +6,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 class LinkStylesheetInstruction extends NullInstruction
 {
+
     public function isLinkStylesheet(AssetInterface $context): bool
     {
         return true;

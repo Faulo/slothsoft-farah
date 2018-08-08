@@ -25,11 +25,15 @@ interface ResultInterface
     public function createUrl(): FarahUrl;
 
     public function lookupStringWriter(): StringWriterInterface;
+
     public function lookupStreamWriter(): StreamWriterInterface;
+
     public function lookupFileWriter(): FileWriterInterface;
+
     public function lookupDOMWriter(): DOMWriterInterface;
+
     public function lookupChunkWriter(): ChunkWriterInterface;
-    
+
     /**
      * Determine all available statistics of this result, as a call to stat() would.
      *

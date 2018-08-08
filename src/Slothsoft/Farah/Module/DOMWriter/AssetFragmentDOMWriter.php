@@ -11,7 +11,7 @@ use DOMImplementation;
 
 class AssetFragmentDOMWriter implements DOMWriterInterface
 {
-use DOMWriterElementFromDocumentTrait;
+    use DOMWriterElementFromDocumentTrait;
 
     /**
      *
@@ -35,7 +35,7 @@ use DOMWriterElementFromDocumentTrait;
     {
         $this->children[] = $child;
     }
-    
+
     public function toDocument(): DOMDocument
     {
         $implementation = new DOMImplementation();

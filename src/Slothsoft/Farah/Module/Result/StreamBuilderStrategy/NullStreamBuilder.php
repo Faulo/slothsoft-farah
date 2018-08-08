@@ -13,6 +13,7 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
 
 class NullStreamBuilder implements StreamBuilderStrategyInterface
 {
+
     public function buildStreamMimeType(ResultInterface $context): string
     {
         return 'text/plain';
@@ -42,6 +43,7 @@ class NullStreamBuilder implements StreamBuilderStrategyInterface
     {
         return true;
     }
+
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface
     {
         throw new HttpStatusException('', StatusCode::STATUS_NO_CONTENT);
@@ -61,11 +63,10 @@ class NullStreamBuilder implements StreamBuilderStrategyInterface
     {
         throw new HttpStatusException('', StatusCode::STATUS_NO_CONTENT);
     }
+
     public function buildStringWriter(ResultInterface $context): StringWriterInterface
     {
         throw new HttpStatusException('', StatusCode::STATUS_NO_CONTENT);
     }
-
-
 }
 

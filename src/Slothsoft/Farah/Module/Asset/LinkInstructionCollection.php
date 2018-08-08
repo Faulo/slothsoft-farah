@@ -12,13 +12,13 @@ class LinkInstructionCollection
      * @var Set
      */
     public $stylesheetUrls;
-    
+
     /**
      *
      * @var Set
      */
     public $scriptUrls;
-    
+
     /**
      *
      * @var Set
@@ -38,8 +38,9 @@ class LinkInstructionCollection
         $this->scriptUrls = $this->scriptUrls->union($other->scriptUrls);
         $this->moduleUrls = $this->moduleUrls->union($other->moduleUrls);
     }
-    
-    public function isEmpty() : bool {
+
+    public function isEmpty(): bool
+    {
         return $this->stylesheetUrls->isEmpty() and $this->scriptUrls->isEmpty() and $this->moduleUrls->isEmpty();
     }
 }

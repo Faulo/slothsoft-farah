@@ -36,11 +36,15 @@ class Result implements ResultInterface
     private $fileStat;
 
     private $isBufferable;
-    
+
     private $stringWriter;
+
     private $fileWriter;
+
     private $streamWriter;
+
     private $chunkWriter;
+
     private $domWriter;
 
     public function __construct(ExecutableInterface $ownerExecutable, FarahUrlStreamIdentifier $type, ResultStrategies $strategies)
@@ -54,7 +58,7 @@ class Result implements ResultInterface
     {
         return $this->ownerExecutable->createUrl($this->type);
     }
-    
+
     public function lookupStringWriter(): StringWriterInterface
     {
         if ($this->stringWriter === null) {
@@ -62,7 +66,7 @@ class Result implements ResultInterface
         }
         return $this->stringWriter;
     }
-    
+
     public function lookupStreamWriter(): StreamWriterInterface
     {
         if ($this->streamWriter === null) {
@@ -70,7 +74,7 @@ class Result implements ResultInterface
         }
         return $this->streamWriter;
     }
-    
+
     public function lookupFileWriter(): FileWriterInterface
     {
         if ($this->fileWriter === null) {
@@ -78,7 +82,7 @@ class Result implements ResultInterface
         }
         return $this->fileWriter;
     }
-    
+
     public function lookupDOMWriter(): DOMWriterInterface
     {
         if ($this->domWriter === null) {
@@ -86,7 +90,7 @@ class Result implements ResultInterface
         }
         return $this->domWriter;
     }
-    
+
     public function lookupChunkWriter(): ChunkWriterInterface
     {
         if ($this->chunkWriter === null) {
@@ -152,7 +156,5 @@ class Result implements ResultInterface
     {
         return $this->lookupFileStatistics()['size'] ?? 0;
     }
-
-    
 }
 

@@ -36,12 +36,12 @@ class NullInstruction implements InstructionStrategyInterface
     {
         return false;
     }
-    
+
     public function isLinkScript(AssetInterface $context): bool
     {
         return false;
     }
-    
+
     public function isLinkModule(AssetInterface $context): bool
     {
         return false;

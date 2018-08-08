@@ -21,7 +21,7 @@ class DecoratorFactory
         $decorator->setTarget($targetDocument);
         return $decorator;
     }
-    
+
     public static function createForElement(DOMElement $node): LinkDecoratorInterface
     {
         $decorator = self::createForNamespace((string) $node->namespaceURI);

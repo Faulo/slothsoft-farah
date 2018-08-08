@@ -35,5 +35,4 @@ class FileInfoDOMWriter implements DOMWriterInterface
         
         return $node;
     }
-
 }

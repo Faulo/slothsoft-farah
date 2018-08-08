@@ -19,7 +19,7 @@ abstract class AbstractMapParameterFilter implements ParameterFilterStrategyInte
         return isset($this->map[$name]);
     }
 
-    public function getValueSanitizers() : iterable
+    public function getValueSanitizers(): iterable
     {
         return $this->map;
     }

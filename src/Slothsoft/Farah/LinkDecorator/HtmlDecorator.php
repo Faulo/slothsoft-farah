@@ -43,7 +43,7 @@ class HtmlDecorator implements LinkDecoratorInterface
             $this->rootNode->appendChild($node);
         }
     }
-    
+
     public function linkScripts(FarahUrl ...$scripts)
     {
         foreach ($scripts as $url) {
@@ -55,7 +55,7 @@ class HtmlDecorator implements LinkDecoratorInterface
             $this->rootNode->appendChild($node);
         }
     }
-    
+
     public function linkModules(FarahUrl ...$modules)
     {
         foreach ($modules as $url) {

@@ -59,12 +59,12 @@ class Manifest implements ManifestInterface
     const TAG_USE_MANIFEST = 'use-manifest';
 
     const TAG_LINK_STYLESHEET = 'link-stylesheet';
-    
+
     const TAG_LINK_SCRIPT = 'link-script';
-    
+
     const TAG_LINK_MODULE = 'link-module';
-    
-    //attributes
+
+    // attributes
     const ATTR_NAME = 'name';
 
     const ATTR_ID = 'url';

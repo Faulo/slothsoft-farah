@@ -12,6 +12,7 @@ class FileWriterResultBuilder implements ResultBuilderStrategyInterface
 {
 
     private $writer;
+
     private $fileName;
 
     public function __construct(FileWriterInterface $writer, string $fileName)

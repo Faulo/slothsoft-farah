@@ -12,8 +12,9 @@ class DOMWriterResultBuilder implements ResultBuilderStrategyInterface
 {
 
     private $writer;
+
     private $fileName;
-    
+
     public function __construct(DOMWriterInterface $writer, string $fileName)
     {
         $this->writer = $writer;

@@ -76,7 +76,7 @@ class Asset implements AssetInterface
         $this->strategies = $strategies;
         $this->executables = new ExecutableContainer();
         $this->assetChildren = null;
-        //echo $this.PHP_EOL;
+        // echo $this.PHP_EOL;
     }
 
     public function __toString(): string
@@ -252,12 +252,12 @@ class Asset implements AssetInterface
     {
         return $this->strategies->instruction->isUseTemplate($this);
     }
-    
+
     public function isLinkScriptInstruction(): bool
     {
         return $this->strategies->instruction->isLinkScript($this);
     }
-    
+
     public function isLinkModuleInstruction(): bool
     {
         return $this->strategies->instruction->isLinkModule($this);
@@ -277,7 +277,7 @@ class Asset implements AssetInterface
     {
         $this->ownerManifest->normalizeManifestElement($this->manifestElement, $child);
     }
-    
+
     private function getReferencedUrl(): ?FarahUrl
     {
         $ref = $this->manifestElement->getAttribute('ref', '');

@@ -26,7 +26,7 @@ class RequestBuilder implements ExecutableBuilderStrategyInterface
         $closure = function (DOMDocument $targetDoc): DOMElement {
             try {
                 $request = Kernel::getCurrentRequest();
-            } catch(ConfigurationRequiredException $e) {
+            } catch (ConfigurationRequiredException $e) {
                 $request = null;
             }
             $node = $targetDoc->createElement('request');

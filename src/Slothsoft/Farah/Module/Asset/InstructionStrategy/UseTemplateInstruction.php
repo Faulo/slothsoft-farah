@@ -6,6 +6,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 class UseTemplateInstruction extends NullInstruction
 {
+
     public function isUseTemplate(AssetInterface $context): bool
     {
         return true;
