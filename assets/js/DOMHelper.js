@@ -1,6 +1,9 @@
 
 import * as Namespace from "./Namespace";
 
+const parser = new DOMParser();
+const serializer = new XMLSerializer();
+
 export async function loadDocument(uri) {
 	try {
 		if (uri.startsWith("farah://")) {
@@ -16,6 +19,7 @@ export async function loadDocument(uri) {
 		console.log(e);
 	}
 }
+
 export async function parse(xml) {
 	const document = await parser.parseFromString(xml, "application/xml");
 	if (document.documentElement.namespaceURI === Namespace.byName("MOZILLA_ERROR").uri) {
@@ -23,13 +27,37 @@ export async function parse(xml) {
 	}
 	return document;
 }
+
 export async function stringify(document) {
 	return await serializer.serializeToString(document);
 }
-export async function transformToFragment() {
-	return "transformation";
+
+export async function transform(dataNode, templateDocument, targetDocument) {
+	let imports;
+	do {
+		imports = evaluate("/xsl:stylesheet/xsl:import", templateDocument)
+			.map((importNode) => {
+				return loadDocument(importNode.getAttribute("href"))
+					.then((tempDocument) => {
+						evaluate("/xsl:stylesheet/*", tempDocument)
+							.map(insertNode => templateDocument.importNode(insertNode, true))
+							.map(insertNode => importNode.insertAdjacentElement("beforebegin", insertNode));
+						importNode.remove();
+					});
+			});
+		await Promise.all(imports);
+	} while (imports.length);
+	
+	const xslt = new XSLTProcessor();
+	xslt.importStylesheet(templateDocument);
+	if (targetDocument) {
+		return xslt.transformToFragment(dataNode, targetDocument);
+	} else {
+		return xslt.transformToDocument(dataNode);
+	}
 }
-export async function evaluate(query, contextNode = document) {
+
+export function evaluate(query, contextNode = document) {
 	try {
 		const ownerDocument = contextNode.nodeType === Node.DOCUMENT_NODE
 			? contextNode
@@ -44,7 +72,7 @@ export async function evaluate(query, contextNode = document) {
 			case XPathResult.BOOLEAN_TYPE:
 				return result.booleanValue;
 			default:
-				let ret = [];
+				const ret = [];
 				let tmp;
 				while (tmp = result.iterateNext()) {
 					ret.push(tmp);
@@ -59,5 +87,3 @@ export async function evaluate(query, contextNode = document) {
 		throw e;
 	}
 }
-export const parser = new DOMParser();
-export const serializer = new XMLSerializer();
