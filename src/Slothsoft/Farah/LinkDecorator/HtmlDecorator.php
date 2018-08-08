@@ -64,7 +64,6 @@ class HtmlDecorator implements LinkDecoratorInterface
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
             $node->setAttribute('src', $href);
             $node->setAttribute('type', 'module');
-            $node->setAttribute('defer', 'defer');
             $node->setAttribute('async', 'async');
             $this->rootNode->appendChild($node);
         }
