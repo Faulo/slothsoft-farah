@@ -279,7 +279,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
         $executable = $asset->lookupExecutable();
         $result = $executable->lookupXmlResult();
         
-        $document = $result->toDocument();
+        $document = $result->lookupDOMWriter()->toDocument();
         $node = $document->documentElement;
         
         $this->assertInstanceOf(DOMElement::class, $node);

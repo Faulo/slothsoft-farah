@@ -9,21 +9,20 @@ use Throwable;
 
 abstract class AbstractXmlManifestTest extends AbstractManifestTest
 {
-    abstract protected static function getManifestDirectory() : string;
-    
+
+    abstract protected static function getManifestDirectory(): string;
+
     protected static function getManifestFile(): string
     {
         return static::getManifestDirectory() . DIRECTORY_SEPARATOR . 'manifest.xml';
     }
-    
+
     protected static function loadTree(): LeanElement
     {
         return LeanElement::createTreeFromDOMDocument(DOMHelper::loadDocument(static::getManifestFile()));
     }
 
     const SCHEMA_URL = 'farah://slothsoft@farah/schema/module/1.0';
-
-    
 
     public function testSchemaExists(): string
     {

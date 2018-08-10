@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files;
 
-use Slothsoft\Core\IO\Writable\DOMWriterElementFromDocumentTrait;
+use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use DOMDocument;
 
 class HtmlFileResultBuilder extends AbstractFileResultBuilder
@@ -12,7 +12,7 @@ class HtmlFileResultBuilder extends AbstractFileResultBuilder
     public function toDocument(): DOMDocument
     {
         $doc = new DOMDocument();
-        $doc->loadHTMLFile($this->file->getPath());
+        $doc->loadHTMLFile((string) $this->file);
         return $doc;
     }
 }
