@@ -8,6 +8,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
+use SplFileInfo;
 
 /**
  *
@@ -50,11 +51,19 @@ interface AssetInterface
     public function createUrl($args = null, $fragment = null): FarahUrl;
 
     /**
-     * Get the FarahUrlPath for this asset, if applicable
+     * Get the FarahUrlPath for this asset.
      *
      * @return FarahUrlPath|NULL
      */
     public function getUrlPath(): FarahUrlPath;
+
+    /**
+     * Get the filesystem entry for this asset.
+     * This might be a file, a directory, or it might not physically exist.
+     *
+     * @return FarahUrlPath|NULL
+     */
+    public function getFileInfo(): SplFileInfo;
 
     /**
      * Create the executable for this asset, with the arguments supplied.
@@ -78,9 +87,9 @@ interface AssetInterface
 
     public function isLinkScriptInstruction(): bool;
 
-    public function getImportInstructionAsset(): AssetInterface;
-    public function getUseInstructionAsset(): AssetInterface;
-    public function getLinkInstructionAsset(): AssetInterface;
+    public function isLinkModuleInstruction(): bool;
+
+    public function isParameterSupplierInstruction(): bool;
 
     /**
      * Set any missing attributes according to the manifest's AssetBuilderStrategy.
@@ -88,13 +97,13 @@ interface AssetInterface
      * @param LeanElement $child
      */
     public function normalizeManifestElement(LeanElement $child): void;
-    
+
     /**
      * Get the parameters supplied by this assets's ParameterSupplierStrategy.
-     * 
+     *
      * @return iterable
      */
-    public function getSuppliedParameters() : iterable;
+    public function getSuppliedParameters(): iterable;
 }
 
 

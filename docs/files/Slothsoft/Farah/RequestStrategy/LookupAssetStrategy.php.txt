@@ -53,9 +53,7 @@ class LookupAssetStrategy extends RequestStrategyBase
             $urlPath = null;
             $urlArgs = FarahUrlArguments::createFromValueList($args);
             
-            $url = FarahUrl::createFromReference(
-                $this->extractFarahUrl($uri->getPath()),
-                FarahUrl::createFromComponents($urlAuthority, $urlPath, $urlArgs));
+            $url = FarahUrl::createFromReference($this->extractFarahUrl($uri->getPath()), FarahUrl::createFromComponents($urlAuthority, $urlPath, $urlArgs));
         }
         
         return $url;

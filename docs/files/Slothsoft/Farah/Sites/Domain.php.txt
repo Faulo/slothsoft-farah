@@ -51,6 +51,7 @@ class Domain
             
             $this->document = $this->asset->lookupExecutable()
                 ->lookupXmlResult()
+                ->lookupDOMWriter()
                 ->toDocument();
             $this->xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT | DOMHelper::XPATH_PHP);
             $this->domainNode = $this->document->documentElement;

@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files;
 
-use Slothsoft\Core\IO\Writable\DOMWriterDocumentFromElementTrait;
+use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 use DOMDocument;
 use DOMElement;
 
@@ -13,7 +13,7 @@ class Base64FileResultBuilder extends AbstractFileResultBuilder
     public function toElement(DOMDocument $targetDoc): DOMElement
     {
         $element = $targetDoc->createElement('base64');
-        $element->textContent = base64_encode($this->file->getContents());
+        $element->textContent = base64_encode(file_get_contents((string) $this->file));
         return $element;
     }
 }
