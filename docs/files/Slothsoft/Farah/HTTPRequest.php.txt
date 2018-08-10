@@ -276,4 +276,10 @@ class HTTPRequest implements DOMWriterInterface
         $doc->appendChild($this->toElement($doc));
         return $doc;
     }
+
+    public function toFileName(): string
+    {}
+
+    public function toString(): string
+    {}
 }

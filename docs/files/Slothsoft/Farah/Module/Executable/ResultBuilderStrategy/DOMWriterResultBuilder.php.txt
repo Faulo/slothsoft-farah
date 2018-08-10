@@ -13,14 +13,17 @@ class DOMWriterResultBuilder implements ResultBuilderStrategyInterface
 
     private $writer;
 
-    public function __construct(DOMWriterInterface $writer)
+    private $fileName;
+
+    public function __construct(DOMWriterInterface $writer, string $fileName)
     {
         $this->writer = $writer;
+        $this->fileName = $fileName;
     }
 
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
     {
-        $streamBuilder = new DOMWriterStreamBuilder($this->writer);
+        $streamBuilder = new DOMWriterStreamBuilder($this->writer, $this->fileName);
         return new ResultStrategies($streamBuilder);
     }
 }

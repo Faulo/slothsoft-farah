@@ -4,13 +4,14 @@ namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
 
 abstract class AbstractMapParameterFilter implements ParameterFilterStrategyInterface
 {
-    abstract protected function loadMap() : array;
+
+    abstract protected function createValueSanitizers(): array;
 
     private $map;
 
     public function __construct()
     {
-        $this->map = $this->loadMap();
+        $this->map = $this->createValueSanitizers();
     }
 
     public function isAllowedName(string $name): bool
@@ -18,7 +19,7 @@ abstract class AbstractMapParameterFilter implements ParameterFilterStrategyInte
         return isset($this->map[$name]);
     }
 
-    public function getDefaultMap(): array
+    public function getValueSanitizers(): iterable
     {
         return $this->map;
     }

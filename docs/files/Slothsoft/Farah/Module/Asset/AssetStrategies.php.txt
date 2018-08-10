@@ -14,9 +14,9 @@ class AssetStrategies
     public $executableBuilder;
 
     public $pathResolver;
-    
+
     public $parameterFilter;
-    
+
     public $parameterSupplier;
 
     public $instruction;

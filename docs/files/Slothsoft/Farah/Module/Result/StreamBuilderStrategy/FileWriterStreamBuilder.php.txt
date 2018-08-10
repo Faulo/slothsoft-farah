@@ -2,11 +2,16 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
-use GuzzleHttp\Psr7\LazyOpenStream;
-use Psr\Http\Message\StreamInterface;
 use Slothsoft\Core\MimeTypeDictionary;
+use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
-use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
+use Slothsoft\Core\IO\Writable\StreamWriterInterface;
+use Slothsoft\Core\IO\Writable\StringWriterInterface;
+use Slothsoft\Core\IO\Writable\Adapter\ChunkWriterFromFileWriter;
+use Slothsoft\Core\IO\Writable\Adapter\DOMWriterFromFileWriter;
+use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromFileWriter;
+use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromFileWriter;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
 class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
@@ -14,21 +19,17 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
 
     private $writer;
 
-    private $resourceUrl;
+    private $fileName;
 
-    public function __construct(FileWriterInterface $writer)
+    public function __construct(FileWriterInterface $writer, string $fileName)
     {
         $this->writer = $writer;
-    }
-
-    public function buildStream(ResultInterface $context): StreamInterface
-    {
-        return new LazyOpenStream($this->toResourceUrl(), StreamWrapperInterface::MODE_OPEN_READONLY);
+        $this->fileName = $fileName;
     }
 
     public function buildStreamMimeType(ResultInterface $context): string
     {
-        return MimeTypeDictionary::guessMime(pathinfo($this->buildStreamFileName($context), PATHINFO_EXTENSION));
+        return MimeTypeDictionary::guessMime(pathinfo($this->fileName, PATHINFO_EXTENSION));
     }
 
     public function buildStreamCharset(ResultInterface $context): string
@@ -38,17 +39,17 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
 
     public function buildStreamFileName(ResultInterface $context): string
     {
-        return $this->writer->toFile()->getName();
+        return $this->fileName;
     }
 
     public function buildStreamFileStatistics(ResultInterface $context): array
     {
-        return stat($this->toResourceUrl());
+        return [];
     }
 
     public function buildStreamHash(ResultInterface $context): string
     {
-        return md5_file($this->toResourceUrl());
+        return '';
     }
 
     public function buildStreamIsBufferable(ResultInterface $context): bool
@@ -56,11 +57,28 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface
         return true;
     }
 
-    private function toResourceUrl()
+    public function buildStreamWriter(ResultInterface $context): StreamWriterInterface
     {
-        if ($this->resourceUrl === null) {
-            $this->resourceUrl = $this->writer->toFile()->getPath();
-        }
-        return $this->resourceUrl;
+        return new StreamWriterFromFileWriter($context->lookupFileWriter());
+    }
+
+    public function buildFileWriter(ResultInterface $context): FileWriterInterface
+    {
+        return $this->writer;
+    }
+
+    public function buildDOMWriter(ResultInterface $context): DOMWriterInterface
+    {
+        return new DOMWriterFromFileWriter($context->lookupFileWriter(), (string) $context->createUrl());
+    }
+
+    public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface
+    {
+        return new ChunkWriterFromFileWriter($context->lookupFileWriter());
+    }
+
+    public function buildStringWriter(ResultInterface $context): StringWriterInterface
+    {
+        return new StringWriterFromFileWriter($context->lookupFileWriter());
     }
 }

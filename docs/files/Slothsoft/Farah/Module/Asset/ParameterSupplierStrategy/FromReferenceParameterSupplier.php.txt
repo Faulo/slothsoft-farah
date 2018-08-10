@@ -7,6 +7,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 class FromReferenceParameterSupplier implements ParameterSupplierStrategyInterface
 {
+
     public function supplyParameters(AssetInterface $context): iterable
     {
         $element = $context->getManifestElement();
