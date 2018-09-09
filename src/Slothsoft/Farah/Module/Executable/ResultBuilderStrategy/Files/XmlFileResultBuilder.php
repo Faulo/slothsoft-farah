@@ -12,6 +12,8 @@ class XmlFileResultBuilder extends AbstractFileResultBuilder
 
     public function toDocument(): DOMDocument
     {
-        return DOMHelper::loadDocument((string) $this->file);
+        $document = DOMHelper::loadDocument((string) $this->file);
+        $document->documentURI = (string) $this->url;
+        return $document;
     }
 }
