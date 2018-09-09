@@ -42,7 +42,7 @@ class FarahDecorator implements LinkDecoratorInterface
         }
     }
 
-    public function linkScripts(FarahUrl ...$modules)
+    public function linkScripts(FarahUrl ...$scripts)
     {
         foreach ($scripts as $url) {
             $href = str_replace('farah://', '/getAsset.php/', (string) $url);
@@ -53,9 +53,9 @@ class FarahDecorator implements LinkDecoratorInterface
         }
     }
 
-    public function linkModules(FarahUrl ...$scripts)
+    public function linkModules(FarahUrl ...$modules)
     {
-        foreach ($scripts as $url) {
+        foreach ($modules as $url) {
             $href = str_replace('farah://', '/getAsset.php/', (string) $url);
             
             $node = $this->targetDocument->createElementNS($this->namespace, 'link-module');
