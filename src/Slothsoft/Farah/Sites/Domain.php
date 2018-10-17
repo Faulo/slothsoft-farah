@@ -11,6 +11,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Zend\Router\Http\RouteMatch;
 use DOMDocument;
 use DOMElement;
 
@@ -244,6 +245,61 @@ class Domain
             $ret[$paramNode->getAttribute('name')] = $paramNode->getAttribute('value');
         }
         return $ret;
+    }
+    
+    public function toRoutes() : array {
+        $this->loadDocument();
+        return [$this->domainName => $this->toRoute($this->domainNode, FarahUrl::createFromReference('farah://slothsoft@farah/'))];
+    }
+    private function toRoute(DOMElement $pageNode, FarahUrl $contextUrl) : array {
+        if ($pageNode->hasAttribute('module')) {
+            $module = $pageNode->getAttribute('module');
+            if ($pageNode->hasAttribute('vendor')) {
+                $vendor = $pageNode->getAttribute('vendor');
+            } else {
+                $vendor = $contextUrl->getUserInfo();
+            }
+            $contextUrl = $contextUrl->withAssetAuthority(FarahUrlAuthority::createFromVendorAndModule($vendor, $module));
+        }
+        switch ($pageNode->localName) {
+            case 'domain':
+                $pageName = '/';
+                break;
+            case 'page':
+                $pageName = $pageNode->getAttribute('name') . '/';
+                break;
+        }
+        
+        $children = [];
+        $params = [];
+        foreach ($pageNode->childNodes as $node) {
+            if ($node->nodeType === XML_ELEMENT_NODE) {
+                switch ($node->localName) {
+                    case 'param':
+                        $params[$node->getAttribute('name')] = $node->getAttribute('value');
+                        break;
+                    case 'page':
+                        $children[] = $this->toRoute($node, $contextUrl);
+                        break;
+                }
+            }
+        }
+        $route = [
+            'type' => 'literal',
+            'options' => [
+                'route' => $pageName,
+                'defaults' => $params,
+            ],
+            'child_routes' => $children,
+        ];
+        
+        if ($pageNode->hasAttribute('ref')) {
+            $route['may_terminate'] = true;
+            $ref = $pageNode->getAttribute('ref');
+            $route['options']['defaults']['asset'] = (string) FarahUrl::createFromReference($ref, $contextUrl);
+        }
+        RouteMatch::class;
+        return $route;
     }
 }
 

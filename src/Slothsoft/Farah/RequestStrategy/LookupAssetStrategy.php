@@ -65,6 +65,10 @@ class LookupAssetStrategy extends RequestStrategyBase
             $path = substr($path, strlen(self::getHrefBase()));
         }
         
+        if ($path[0] === '/') {
+            $path = "farah:/$path";
+        }
+        
         if (strpos($path, 'farah://') !== 0) {
             $path = "farah://$path";
         }
