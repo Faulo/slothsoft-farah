@@ -35,7 +35,7 @@ class SvgDecorator implements LinkDecoratorInterface
     public function linkStylesheets(FarahUrl ...$stylesheets)
     {
         foreach ($stylesheets as $url) {
-            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            $href = str_replace('farah://', '/', (string) $url);
             
             $node = $this->targetDocument->createProcessingInstruction('xml-stylesheet', sprintf('type="text/css" href="%s"', $href));
             $this->targetDocument->insertBefore($node, $this->targetDocument->firstChild);
@@ -45,7 +45,7 @@ class SvgDecorator implements LinkDecoratorInterface
     public function linkScripts(FarahUrl ...$scripts)
     {
         foreach ($scripts as $url) {
-            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            $href = str_replace('farah://', '/', (string) $url);
             
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
             $node->setAttributeNS(DOMHelper::NS_XLINK, 'xlink:href', $href);
@@ -57,7 +57,7 @@ class SvgDecorator implements LinkDecoratorInterface
     public function linkModules(FarahUrl ...$modules)
     {
         foreach ($scripts as $url) {
-            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            $href = str_replace('farah://', '/', (string) $url);
             
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
             $node->setAttributeNS(DOMHelper::NS_XLINK, 'xlink:href', $href);

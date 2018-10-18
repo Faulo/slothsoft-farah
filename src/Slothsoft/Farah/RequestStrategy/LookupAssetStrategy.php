@@ -19,7 +19,7 @@ class LookupAssetStrategy extends RequestStrategyBase
     {
         static $field;
         if ($field === null) {
-            $field = new ConfigurationField('/getAsset.php/');
+            $field = new ConfigurationField('/');
         }
         return $field;
     }

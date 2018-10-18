@@ -34,7 +34,7 @@ class HtmlDecorator implements LinkDecoratorInterface
     public function linkStylesheets(FarahUrl ...$stylesheets)
     {
         foreach ($stylesheets as $url) {
-            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            $href = str_replace('farah://', '/', (string) $url);
             
             $node = $this->targetDocument->createElementNS($this->namespace, 'link');
             $node->setAttribute('href', $href);
@@ -47,7 +47,7 @@ class HtmlDecorator implements LinkDecoratorInterface
     public function linkScripts(FarahUrl ...$scripts)
     {
         foreach ($scripts as $url) {
-            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            $href = str_replace('farah://', '/', (string) $url);
             
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
             $node->setAttribute('src', $href);
@@ -59,7 +59,7 @@ class HtmlDecorator implements LinkDecoratorInterface
     public function linkModules(FarahUrl ...$modules)
     {
         foreach ($modules as $url) {
-            $href = str_replace('farah://', '/getAsset.php/', (string) $url);
+            $href = str_replace('farah://', '/', (string) $url);
             
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
             $node->setAttribute('src', $href);

@@ -46,7 +46,7 @@ class AssetFragmentDOMWriter implements DOMWriterInterface
         $id = (string) $this->url;
         $targetDoc->documentURI = $id;
         $name = basename((string) $this->url->getAssetPath());
-        $href = str_replace('farah://', '/getAsset.php/', $id);
+        $href = str_replace('farah://', '/', $id);
         
         $node->setAttribute('name', $name);
         $node->setAttribute('url', $id);
