@@ -5,7 +5,7 @@
 
 	<xsl:template match="/*">
 		<xsl:processing-instruction name="xml-stylesheet">
-			href="/getAsset.php/farah/sitemap-generator/prettify" type="application/xslt+xml"
+			href="/farah/sitemap-generator/prettify" type="application/xslt+xml"
 		</xsl:processing-instruction>
 
 		<urlset>

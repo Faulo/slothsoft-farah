@@ -7,7 +7,7 @@ const serializer = new XMLSerializer();
 export async function loadDocument(uri) {
 	try {
 		if (uri.startsWith("farah://")) {
-			uri = "/getAsset.php/" + uri.substring("farah://".length);
+			uri = "/" + uri.substring("farah://".length);
 		}
 		const response = await fetch(uri);
 		const text = await response.text();
