@@ -55,7 +55,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         $ret = [];
         $result = $this->getSitesResult();
         $url = $result->createUrl();
-        $document = $result->toDocument();
+        $document = $result->lookupDOMWriter()->toDocument();
         $ret[(string) $url] = $url;
         $this->getSitesIncludesCrawl($ret, $url, $document);
         return $ret;
@@ -69,7 +69,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
             $ret[(string) $url] = $url;
             trigger_error("<include-pages> is deprecated (referencing $url)", E_USER_DEPRECATED);
             try {
-                $document = Module::resolveToDocument($url);
+                $document = Module::resolveToDOMWriter($url)->toDocument();
                 $this->getSitesIncludesCrawl($ret, $url, $document);
             } catch (Throwable $e) {}
         }
@@ -147,7 +147,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
     public function testIncludeExists($url)
     {
         try {
-            $document = Module::resolveToDocument($url);
+            $document = Module::resolveToDOMWriter($url)->toDocument();
             $this->assertInstanceOf(DOMElement::class, $document->documentElement);
         } catch (Throwable $e) {
             $this->failException($e);
@@ -161,7 +161,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
      */
     public function testIncludeIsValidAccordingToSchema($url)
     {
-        $document = Module::resolveToDocument($url);
+        $document = Module::resolveToDOMWriter($url)->toDocument();
         try {
             $validateResult = $document->schemaValidate(self::SCHEMA_URL);
         } catch (Throwable $e) {

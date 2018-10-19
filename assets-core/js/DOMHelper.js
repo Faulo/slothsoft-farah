@@ -15,7 +15,7 @@
 class DOMHelper {
 	static loadDocument(uri) {
 		if (uri.startsWith("farah://")) {
-			uri = "/getAsset.php/" + uri.substring("farah://".length);
+			uri = "/" + uri.substring("farah://".length);
 		}
 		return fetch(uri)
 			.then((response) => response.text())

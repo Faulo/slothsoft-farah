@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\Core\IO\Writable\Decorators\DOMWriterMemoryCache;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
@@ -16,11 +17,12 @@ use SplFileInfo;
 
 abstract class AbstractFileResultBuilder implements ResultBuilderStrategyInterface, FileWriterInterface, DOMWriterInterface
 {
-
+    protected $url;
     protected $file;
 
-    public function __construct(SplFileInfo $file)
+    public function __construct(FarahUrl $url, SplFileInfo $file)
     {
+        $this->url = $url;
         $this->file = $file;
     }
 

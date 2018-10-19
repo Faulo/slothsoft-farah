@@ -29,10 +29,10 @@ class AssetDocumentDOMWriter implements DOMWriterInterface
     {
         $childNode = Module::resolveToDOMWriter($this->url->withFragment('xml'))->toElement($targetDoc);
         
-        $ns = $childNode->namespaceURI;
+        $ns = (string) $childNode->namespaceURI;
         $name = basename((string) $this->url->getAssetPath());
         $id = htmlentities((string) $this->url, ENT_XML1);
-        $href = str_replace('farah://', '/getAsset.php/', $id);
+        $href = str_replace('farah://', '/', $id);
         
         $xml = sprintf('<sfm:asset-document xmlns:sfm="%s" xmlns="%s" name="%s" url="%s" href="%s" />', DOMHelper::NS_FARAH_MODULE, $ns, $name, $id, $href);
         

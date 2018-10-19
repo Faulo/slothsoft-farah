@@ -45,7 +45,7 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface
 
     public function buildStreamFileName(ResultInterface $context): string
     {
-        $extension = DOMHelper::guessExtension($context->lookupDOMWriter()->toDocument()->documentElement->namespaceURI);
+        $extension = DOMHelper::guessExtension((string) $context->lookupDOMWriter()->toDocument()->documentElement->namespaceURI);
         return "$this->documentName.$extension";
     }
 

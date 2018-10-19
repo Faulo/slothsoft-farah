@@ -19,7 +19,7 @@ var XSLT = {
 				while (node = XPath.evaluate("//xsl:import", templateDoc)[0]) {
 					uri = node.getAttribute("href");
 					if (uri.startsWith("farah://")) {
-						uri = "/getAsset.php/" + uri.substring("farah://".length);
+						uri = "/" + uri.substring("farah://".length);
 					}
 					if (tmpDoc = DOM.loadDocument(uri)) {
 						nodeList = XPath.evaluate("/xsl:stylesheet/*", tmpDoc);

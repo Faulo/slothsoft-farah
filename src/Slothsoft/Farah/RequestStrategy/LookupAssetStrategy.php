@@ -19,7 +19,7 @@ class LookupAssetStrategy extends RequestStrategyBase
     {
         static $field;
         if ($field === null) {
-            $field = new ConfigurationField('/getAsset.php/');
+            $field = new ConfigurationField('/');
         }
         return $field;
     }
@@ -63,6 +63,10 @@ class LookupAssetStrategy extends RequestStrategyBase
     {
         if (strpos($path, self::getHrefBase()) === 0) {
             $path = substr($path, strlen(self::getHrefBase()));
+        }
+        
+        if ($path[0] === '/') {
+            $path = "farah:/$path";
         }
         
         if (strpos($path, 'farah://') !== 0) {
