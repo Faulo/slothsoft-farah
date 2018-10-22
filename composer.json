@@ -1,7 +1,7 @@
 {
     "name": "slothsoft/farah",
     "description": "Files and Resources and Hypertext: A content management system.",
-    "license": "GPL",
+    "license": "WTFPL",
     "authors": [
         {
             "name": "Daniel Schulz",
