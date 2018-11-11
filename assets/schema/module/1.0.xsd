@@ -314,9 +314,16 @@ This namespace defines elements to identify assets in a Farah module.
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
+	<xsd:complexType name="named-asset" abstract="true">
+		<xsd:complexContent>
+			<xsd:restriction base="virtual-asset">
+				<xsd:attribute name="name" type="farahUrlPathSegment" use="required" />
+			</xsd:restriction>
+		</xsd:complexContent>
+	</xsd:complexType>
 	<xsd:complexType name="physical-asset" abstract="true">
 		<xsd:complexContent>
-			<xsd:extension base="virtual-asset">
+			<xsd:extension base="named-asset">
 				<xsd:attribute name="path" type="relativeFilesystemPath" use="optional" />
 				<xsd:attribute name="realpath" type="absoluteFilesystemPath" use="optional" />
 			</xsd:extension>
