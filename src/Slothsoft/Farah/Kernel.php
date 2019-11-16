@@ -8,6 +8,7 @@ use Slothsoft\Farah\Configuration\AssetConfigurationField;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\RequestStrategy\RequestStrategyInterface;
 use Slothsoft\Farah\ResponseStrategy\ResponseStrategyInterface;
+use Slothsoft\Farah\Tracking\Manager;
 
 class Kernel
 {
@@ -102,6 +103,9 @@ class Kernel
         self::setCurrentRequest($request);
         
         $response = $requestStrategy->process($request);
+        if (self::getTrackingEnabled()) {
+            Manager::track($_SERVER);
+        }
         $responseStrategy->process($response);
     }
 }
