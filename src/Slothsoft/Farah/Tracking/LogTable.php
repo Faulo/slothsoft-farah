@@ -58,7 +58,9 @@ class LogTable
                 $index = [];
                 $index['name'] = $key;
                 $index['columns'] = [];
-                $index['columns'][] = isset($column['size']) ? sprintf('%s(%s)', $key, $column['size']) : $key;
+                $index['columns'][] = isset($column['size'])
+					? sprintf('`%s`(%s)', $key, $column['size'])
+					: sprintf('`%s`', $key);
                 $sqlKeys[] = $index;
             }
             $this->dbmsTable->createTable($sqlCols, $sqlKeys);
