@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Farah\Configuration\AssetConfigurationField;
@@ -104,9 +105,33 @@ class Kernel
         
         $response = $requestStrategy->process($request);
         if (self::getTrackingEnabled()) {
-            Manager::track($_SERVER);
+            $this->track((new \ReflectionClass($requestStrategy))->getShortName(), $request, $response);
         }
         $responseStrategy->process($response);
+    }
+    
+    private function track(string $strategy, ServerRequestInterface $request, ResponseInterface $response) {
+        $env = $request->getServerParams();
+        
+        //request parameters
+        $env['RESPONSE_STRATEGY'] = $strategy;
+        $input = $request->getBody();
+        if ($input->getSize() and $input->getSize() < 1024*1014) {
+            $env['RESPONSE_INPUT'] = $input->getContents();
+        }
+        
+        //response parameters
+        $env['RESPONSE_STATUS'] = $response->getStatusCode();
+        $env['RESPONSE_LENGTH'] = $response->getBody()->getSize();
+        $env['RESPONSE_TYPE'] = $response->getHeaderLine('content-type');
+        $env['RESPONSE_ENCODING'] = $response->getHeaderLine('content-encoding');
+        $env['RESPONSE_LANGUAGE'] = $response->getHeaderLine('content-language');
+        
+        //environment parameters
+        $env['RESPONSE_TIME'] = get_execution_time();
+        $env['RESPONSE_MEMORY'] = sprintf('%.2f', memory_get_peak_usage() / 1048576);
+        
+        Manager::track($env);
     }
 }
 
