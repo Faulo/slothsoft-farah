@@ -28,7 +28,10 @@ class Archive
         '/getPage.php' => 'log_page',
         '/getResource.php' => 'log_resource',
         '/getScript.php' => 'log_script',
-        '/getTemplate.php' => 'log_template'
+        '/getTemplate.php' => 'log_template',
+        'LookupAssetStrategy' => 'lookup_asset',
+        'LookupPageStrategy' => 'lookup_page',
+        'LookupRouteStrategy' => 'lookup_route',
     ];
 
     protected $config = [
@@ -270,6 +273,10 @@ class Archive
         }
         return $ret;
     }
+    public function getLogTableByStrategy($strategy)
+    {
+        return $this->logTableList[$strategy];
+    }
 
     protected function fixTemp()
     {
@@ -342,7 +349,9 @@ class Archive
                 $data = json_decode($row['data'], true);
                 if (is_array($data)) {
                     $status = $this->prepareData($data);
-                    $table = $this->getLogTableByURI($data['REQUEST_URI']);
+                    $table = isset($data['RESPONSE_STRATEGY'])
+                        ? $this->getLogTableByStrategy($data['RESPONSE_STRATEGY'])
+                        : $this->getLogTableByURI($data['REQUEST_URI']);
                     
                     switch ($status) {
                         // just insert into log
