@@ -18,6 +18,7 @@ class Archive
     protected $db;
 
     protected $tempTable = 'temp';
+    protected $backupTable = 'backup';
 
     protected $logTableDefault = '/getPage.php';
 
@@ -188,6 +189,7 @@ class Archive
         unset($column);
         
         $this->tempTable = $this->db->getTable($this->tempTable);
+		$this->backupTable = $this->db->getTable($this->backupTable);
         foreach ($this->logTableList as &$table) {
             $table = new LogTable($this, $this->db->getTable($table));
         }
@@ -255,6 +257,11 @@ class Archive
     public function getOutdated()
     {
         return $this->tempTable->select('id', sprintf('version < %d LIMIT %d', $this->config['version'], $this->config['parseLimit']));
+    }
+	
+    public function getCurrent()
+    {
+        return $this->tempTable->select('id', sprintf('version = %d LIMIT %d', $this->config['version'], $this->config['parseLimit']));
     }
 
     public function getLogTableList()
@@ -329,6 +336,21 @@ class Archive
         }
         return false;
     }
+	
+    public function backup() {
+		$ret = 0;
+        while ($idList = $this->getCurrent()) {
+			foreach ($this->tempTable->select(true, ['id' => $idList]) as $row) {
+				$this->backupTable->insert($row, $row);
+				echo $row['id'] . PHP_EOL;
+				$ret++;
+			}
+			$this->tempTable->delete($idList);
+		}
+		if ($ret > 0) {
+			die("...done! $ret entries backupped.");
+		}
+	}
 
     public function parse()
     {
@@ -372,28 +394,16 @@ class Archive
                             $table->delete($id);
                             break;
                     }
+					//echo $row['id'] . PHP_EOL;
                 }
             }
             $ret += count($idList);
             $this->updateOutdated($idList);
         }
-        return $ret;
-        
-        /*
-         * $dbmsTable = self::getTableTemp();
-         * $rowList = $dbmsTable->select(sprintf('version < %d', $this->config['version']));
-         * $idList = [];
-         * foreach ($rowList as $row) {
-         * if ($data = json_decode($row['data'], true)) {
-         * $table = self::getTableByURI($data['REQUEST_URI']);
-         * if ($table->insert($row['time'], $data)) {
-         * $idList[] = $row['id'];
-         * }
-         * }
-         * }
-         * $dbmsTable->update(['version' => $this->config['version']], $idList);
-         * //
-         */
+		if ($ret > 0) {
+			//die("...done! $ret entries parsed.");
+		}
+		return $ret;
     }
 
     protected function prepareData(array &$data)
