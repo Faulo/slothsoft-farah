@@ -24,20 +24,6 @@ class HTTPRequest implements DOMWriterInterface
         return defined('SERVER_NAME') ? constant('SERVER_NAME') : 'localhost';
     }
 
-    protected static $allowedHostList = [
-        'slothsoft.net',
-        'backend.slothsoft.net',
-        'daniel-schulz.slothsoft.net',
-        'mtg.slothsoft.net',
-        'twitter.slothsoft.net',
-        'dev.slothsoft.net',
-        'twitter.slothsoft.net',
-        'proxy.slothsoft.net',
-        'test.slothsoft.net',
-        'dende',
-        'localhost'
-    ];
-
     public static function prepareEnvironment(array &$env)
     {
         $lang = null;
@@ -60,13 +46,7 @@ class HTTPRequest implements DOMWriterInterface
         $env['REQUEST_LANGUAGE'] = $lang;
         $env['REQUEST_TIME_DATE'] = date(DateTimeFormatter::FORMAT_DATETIME, $env['REQUEST_TIME']);
         
-        $key = isset($env['HTTP_HOST']) ? array_search(strtolower($env['HTTP_HOST']), self::$allowedHostList) : false;
-        if ($key === false) {
-            $key = array_search(strtolower($env['SERVER_NAME']), self::$allowedHostList);
-        }
-        $env['SERVER_NAME'] = $key === false ? self::$allowedHostList[0] : self::$allowedHostList[$key];
-        
-        if ($env['SERVER_NAME'] === 'localhost') {
+        if (!isset($env['SERVER_NAME']) or $env['SERVER_NAME'] === 'localhost') {
             $env['SERVER_NAME'] = self::getServerName();
         }
         
