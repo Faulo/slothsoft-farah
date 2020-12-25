@@ -5,7 +5,7 @@
 
 	<xsl:template match="/*">
 		<xsl:processing-instruction name="xml-stylesheet">
-			href="/farah/sitemap-generator/prettify" type="application/xslt+xml"
+			href="/slothsoft@farah/sitemap-generator/prettify" type="application/xslt+xml"
 		</xsl:processing-instruction>
 
 		<urlset>
