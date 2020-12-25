@@ -1,57 +1,54 @@
 {
-    "name": "slothsoft/farah",
-    "description": "Files and Resources and Hypertext: A content management system.",
-    "license": "WTFPL",
-    "authors": [
-        {
-            "name": "Daniel Schulz",
-            "email": "info.slothsoft@gmail.com"
-        }
-    ],
-    "bin": [
-        "bin/farah-asset"
-    ],
-    "type": "library",
-    "require": {
-        "guzzlehttp/psr7": "^1.4",
-        "krakjoe/pthreads-polyfill": "^1.1",
-        "matthiasmullie/minify": "^1.3",
-        "php": "^7.2",
-        "php-ds/php-ds": "^1.2",
-        "psr/cache": "^1.0",
-        "psr/container": "^1.0",
-        "psr/http-message": "^1.0",
-        "psr/log": "^1.0",
-        "slothsoft/blob": "^1.0",
-        "slothsoft/core": "^1.0",
-        "zendframework/zend-router": "^3.2"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^6.5"
-    },
-    "suggest": {
-        "ext-ds": "*",
-        "ext-pthreads": "*"
-    },
-    "autoload": {
-        "psr-0": {
-            "Slothsoft\\Farah\\": "src/"
-        },
-        "files": [
-            "src/autoload.php",
-            "src/registerModule.php"
-        ]
-    },
-    "keywords": [
-        "slothsoft",
-        "farah-module",
-        "docs"
-    ],
-    "classmap-authoritative": false,
-    "autoload-dev": {
-        "classmap": [
-            "tests/"
-        ]
-    },
-    "homepage": "http://farah.slothsoft.net/modules/farah"
+	"name" : "slothsoft/farah",
+	"description" : "Files and Resources and Hypertext: A content management system.",
+	"license" : "WTFPL",
+	"authors" : [{
+			"name" : "Daniel Schulz",
+			"email" : "info.slothsoft@gmail.com"
+		}
+	],
+	"bin" : [
+		"bin/farah-asset"
+	],
+	"type" : "library",
+	"require" : {
+		"php" : "^7.2",
+		"php-ds/php-ds" : "^1.2",
+		"guzzlehttp/psr7" : "~1.4",
+		"krakjoe/pthreads-polyfill" : "~1.1",
+		"matthiasmullie/minify" : "~1.3",
+		"psr/cache" : "~1.0",
+		"psr/container" : "~1.0",
+		"psr/http-message" : "~1.0",
+		"psr/log" : "~1.0",
+		"slothsoft/blob" : "~1.0",
+		"slothsoft/core" : "~1.0",
+		"zendframework/zend-router" : "~3.2"
+	},
+	"require-dev" : {
+		"phpunit/phpunit" : "~8.0.0"
+	},
+	"suggest" : {
+		"ext-ds" : "*",
+		"ext-pthreads" : "*"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Slothsoft\\Farah\\" : "src"
+		},
+		"files" : [
+			"scripts/bootstrap.php"
+		]
+	},
+	"keywords" : [
+		"slothsoft",
+		"farah-module",
+		"docs"
+	],
+	"autoload-dev" : {
+		"psr-4" : {
+			"Slothsoft\\Farah\\" : "tests"
+		}
+	},
+	"homepage" : "http://farah.slothsoft.net/modules/farah"
 }
