@@ -9,45 +9,26 @@
 	notice: Google Sitmaps Stylesheets (GSStylesheets) Project Home: http://sourceforge.net/projects/gstoolbox Copyright (c) 
 	2005 Baccou Bonneville SARL (http://www.baccoubonneville.com) License http://www.gnu.org/copyleft/lesser.html GNU/LGPL -->
 
-<xsl:stylesheet version="2.0" xmlns:html="http://www.w3.org/TR/REC-html40"
+<xsl:stylesheet version="1.0" xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" />
+	<xsl:output method="html" version="5.0" encoding="utf-8" indent="yes" />
+
 	<!-- Root template -->
 	<xsl:template match="/">
 		<html>
 			<head>
 				<title>Sitemap file</title>
 			</head>
-
-			<!-- Store in $fileType if we are in a sitemap or in a siteindex -->
-			<xsl:variable name="fileType">
-				<xsl:choose>
-					<xsl:when test="//sitemap:url">
-						sitemap
-					</xsl:when>
-					<xsl:otherwise>
-						siteindex
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-
 			<body>
 				<h1>Sitemap file</h1>
 				<xsl:choose>
-					<xsl:when test="$fileType='sitemap'">
+					<xsl:when test="//sitemap:url">
 						<xsl:call-template name="sitemapTable" />
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="siteindexTable" />
 					</xsl:otherwise>
 				</xsl:choose>
-				<!-- <textarea cols="120" rows="{count(//sitemap:url) + 1}"> -->
-				<!-- <xsl:for-each select="//sitemap:url"> -->
-				<!-- <xsl:value-of select="concat('start /b /wait curl &quot;', sitemap:loc, '?dnt&quot; -o curl.sitemap.xhtml')"/> -->
-				<!-- <xsl:text> -->
-				<!-- </xsl:text> -->
-				<!-- </xsl:for-each> -->
-				<!-- </textarea> -->
 			</body>
 		</html>
 	</xsl:template>
@@ -83,7 +64,7 @@
 				<xsl:value-of select="count(sitemap:urlset/sitemap:url)"></xsl:value-of>
 			</p>
 		</div>
-		<table class="tablesorter sitemap">
+		<table class="tablesorter sitemap" border="1">
 			<thead>
 				<tr>
 					<th>URL location</th>
@@ -93,9 +74,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<xsl:apply-templates select="sitemap:urlset/sitemap:url">
-					<!--<xsl:sort select="sitemap:priority" order="descending"/> -->
-				</xsl:apply-templates>
+				<xsl:apply-templates select="sitemap:urlset/sitemap:url" />
 			</tbody>
 		</table>
 	</xsl:template>
@@ -118,15 +97,7 @@
 				<xsl:value-of select="sitemap:changefreq" />
 			</td>
 			<td>
-				<xsl:choose>
-					<!-- If priority is not defined, show the default value of 0.5 -->
-					<xsl:when test="sitemap:priority">
-						<xsl:value-of select="sitemap:priority" />
-					</xsl:when>
-					<xsl:otherwise>
-						0.5
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:value-of select="sitemap:priority" />
 			</td>
 		</tr>
 	</xsl:template>
