@@ -115,6 +115,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                 } else {
                     $headers['accept-ranges'] = 'bytes';
                     if ($request->hasHeader('range')) {
+                        $match = [];
                         if (preg_match('/^bytes=(\d*)-(\d*)(.*)$/', $request->getHeaderLine('range'), $match)) {
                             if (strlen($match[3])) {
                                 throw new HttpStatusException('', StatusCode::STATUS_REQUESTED_RANGE_NOT_SATISFIABLE, null, $headers);

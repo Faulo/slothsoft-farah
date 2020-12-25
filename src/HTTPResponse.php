@@ -372,6 +372,7 @@ class HTTPResponse
 
     public function setRange(string $range)
     {
+        $match = [];
         if (preg_match('/^bytes=(\d*)-(\d*)(.*)$/', $range, $match)) {
             if ($match[3]) {
                 $this->setStatus(self::STATUS_REQUESTED_RANGE_NOT_SATISFIABLE);
@@ -711,7 +712,6 @@ class HTTPResponse
                     }
                     break;
                 case self::BODY_FILE:
-                    $size = $this->bodyLength;
                     $start = $this->rangeStart;
                     $end = $this->rangeEnd;
                     $length = $end - $start;

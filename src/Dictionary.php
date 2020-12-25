@@ -38,7 +38,8 @@ class Dictionary
 
     public static function parseAcceptLanguageHeader(string $language): array
     {
-        return preg_match_all(self::BCP47_PREGMATCH, strtolower($language), $ret, PREG_SET_ORDER) ? $ret : [];
+        $match = [];
+        return preg_match_all(self::BCP47_PREGMATCH, strtolower($language), $match, PREG_SET_ORDER) ? $match : [];
     }
 
     const NS_HTML = 'http://www.w3.org/1999/xhtml';
@@ -168,7 +169,6 @@ class Dictionary
         }
         foreach ($langReqs as $req) {
             if (isset($req[self::KEY_REQUEST_LANG]) and $this->acceptLanguage($req[self::KEY_REQUEST_LANG])) {
-                $found = true;
                 break;
             }
         }
@@ -212,7 +212,7 @@ class Dictionary
             $ret += $this->translateNode($xpath, $node, $attr, $namespace, $language);
         }
         if ($lang = $this->getLang()) {
-            $doc->documentElement->setAttribute('xml:lang', $this->getLang());
+            $doc->documentElement->setAttribute('xml:lang', $lang);
         }
         return $ret ? $ret + $this->translateDoc($doc, $context) : 0;
     }

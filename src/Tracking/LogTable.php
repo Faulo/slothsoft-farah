@@ -77,7 +77,7 @@ class LogTable
         $sql = [];
         $sql['id'] = $id;
         $sql['data'] = $json;
-        foreach ($this->columnConfig as $key => $column) {
+        foreach (array_keys($this->columnConfig) as $key) {
             $sql[$key] = (isset($data[$key]) and strlen($data[$key])) ? $data[$key] : null;
         }
         return $this->dbmsTable->insert($sql, $sql);
@@ -115,7 +115,7 @@ class LogTable
                 $index['name'] = $key;
                 $index['columns'] = [];
                 $index['columns'][] = isset($column['size']) ? sprintf('%s(%s)', $key, $column['size']) : $key;
-                $res = $this->dbmsTable->addIndex($index);
+                $this->dbmsTable->addIndex($index);
             }
         }
     }

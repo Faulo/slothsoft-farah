@@ -56,7 +56,7 @@ class SvgDecorator implements LinkDecoratorInterface
 
     public function linkModules(FarahUrl ...$modules)
     {
-        foreach ($scripts as $url) {
+        foreach ($modules as $url) {
             $href = str_replace('farah://', '/', (string) $url);
             
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');

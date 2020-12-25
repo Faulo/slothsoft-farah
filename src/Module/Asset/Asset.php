@@ -97,8 +97,8 @@ class Asset implements AssetInterface
                 $childAsset = $this->traverseTo($childPath);
                 if ($childAsset->isImportSelfInstruction()) {
                     $referencedAsset = Module::resolveToAsset($childAsset->getReferencedUrl());
-                    yield $importedAsset;
-                    $this->assetChildren[] = $importedAsset;
+                    yield $referencedAsset;
+                    $this->assetChildren[] = $referencedAsset;
                 }
                 if ($childAsset->isImportChildrenInstruction()) {
                     $referencedAsset = Module::resolveToAsset($childAsset->getReferencedUrl());

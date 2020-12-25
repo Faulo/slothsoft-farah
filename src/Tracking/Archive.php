@@ -411,7 +411,7 @@ class Archive
         $ret = self::PREPARE_OK;
         
         // preset null
-        foreach ($this->config['logColumns'] as $key => $column) {
+        foreach (array_keys($this->config['logColumns']) as $key) {
             if (! isset($data[$key])) {
                 $data[$key] = null;
             }

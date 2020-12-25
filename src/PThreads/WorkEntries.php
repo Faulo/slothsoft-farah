@@ -35,7 +35,7 @@ class WorkEntries extends Threaded
 
     public function hasEntries(): bool
     {
-        $ret;
+        $ret = false;
         $this->entries->synchronized(function () use (&$ret) {
             $ret = (bool) $this->entries->count();
         });

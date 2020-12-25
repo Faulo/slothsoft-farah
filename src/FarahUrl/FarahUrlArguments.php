@@ -34,6 +34,7 @@ class FarahUrlArguments implements IteratorAggregate, Hashable
         if ($query === '') {
             return self::createEmpty();
         }
+        $valueList = [];
         parse_str($query, $valueList);
         return self::create($query, $valueList);
     }

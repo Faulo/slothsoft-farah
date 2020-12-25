@@ -25,9 +25,8 @@ class RequestBuilder implements ExecutableBuilderStrategyInterface
     {
         $closure = function (DOMDocument $targetDoc): DOMElement {
             try {
-                $request = Kernel::getCurrentRequest();
+                Kernel::getCurrentRequest();
             } catch (ConfigurationRequiredException $e) {
-                $request = null;
             }
             $node = $targetDoc->createElement('request');
             $node->setAttribute('lang', 'en-us'); // @TODO

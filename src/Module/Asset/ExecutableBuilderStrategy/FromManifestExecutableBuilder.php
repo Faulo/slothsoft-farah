@@ -32,6 +32,7 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
             }
             return $instructions;
         };
+        $getLinkInstructions = null;
         $getLinkInstructions = function (?AssetInterface $currentAsset = null) use ($rootAsset, $args, &$getLinkInstructions): LinkInstructionCollection {
             if ($currentAsset === null) {
                 $currentAsset = $rootAsset;

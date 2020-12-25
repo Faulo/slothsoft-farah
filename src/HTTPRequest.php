@@ -135,6 +135,7 @@ class HTTPRequest implements DOMWriterInterface
         $this->schema = strtolower($this->schema);
         $protocol = isset($env['SERVER_PROTOCOL']) ? $env['SERVER_PROTOCOL'] : 'HTTP/1.1';
         $protocol = trim($protocol);
+        $match = [];
         $this->protocolRecognised = preg_match('/^(\w+)\/(\d+)\.(\d+)$/', $protocol, $match);
         if ($this->protocolRecognised) {
             $this->protocolName = $match[1];

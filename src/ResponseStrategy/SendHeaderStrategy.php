@@ -11,7 +11,7 @@ class SendHeaderStrategy implements ResponseStrategyInterface
     {
         $httpHeader = sprintf('%s/%d.%d %d %s', 'HTTP', 1, 1, $response->getStatusCode(), $response->getReasonPhrase());
         header($httpHeader, true, $response->getStatusCode());
-        foreach ($response->getHeaders() as $name => $values) {
+        foreach (array_keys($response->getHeaders()) as $name) {
             header("$name: {$response->getHeaderLine($name)}");
         }
     }
