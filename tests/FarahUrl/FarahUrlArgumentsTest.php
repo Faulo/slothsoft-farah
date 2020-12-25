@@ -4,11 +4,9 @@ namespace Slothsoft\Farah\FarahUrl;
 
 use PHPUnit\Framework\TestCase;
 
-class FarahUrlArgumentsTest extends TestCase
-{
+class FarahUrlArgumentsTest extends TestCase {
 
-    public function testCreateFromValueList()
-    {
+    public function testCreateFromValueList() {
         $data = [
             'hello' => 'world'
         ];
@@ -21,14 +19,12 @@ class FarahUrlArgumentsTest extends TestCase
      *
      * @dataProvider argumentsProvider
      */
-    public function testCreateFromQuery(FarahUrlArguments $expected, string $query)
-    {
+    public function testCreateFromQuery(FarahUrlArguments $expected, string $query) {
         $calculated = FarahUrlArguments::createFromQuery($query);
         $this->assertEquals($expected, $calculated);
     }
 
-    public function argumentsProvider()
-    {
+    public function argumentsProvider() {
         $argsList = [];
         $argsList[] = [
             'a' => 'b'
@@ -42,7 +38,7 @@ class FarahUrlArgumentsTest extends TestCase
                 ]
             ]
         ];
-        
+
         $ret = [];
         foreach ($argsList as $args) {
             $query = http_build_query($args);
@@ -54,8 +50,7 @@ class FarahUrlArgumentsTest extends TestCase
         return $ret;
     }
 
-    public function testCreateFromMany()
-    {
+    public function testCreateFromMany() {
         $data1 = [
             'a' => 'b'
         ];
@@ -65,11 +60,11 @@ class FarahUrlArgumentsTest extends TestCase
         $data3 = [
             'c' => 'e'
         ];
-        
+
         $args1 = FarahUrlArguments::createFromValueList($data1);
         $args2 = FarahUrlArguments::createFromValueList($data2);
         $args3 = FarahUrlArguments::createFromValueList($data3);
-        
+
         $expected = FarahUrlArguments::createFromValueList($data1 + $data2 + $data3);
         $calculated = FarahUrlArguments::createFromMany($args1, $args2, $args3);
         $this->assertEquals($expected, $calculated);

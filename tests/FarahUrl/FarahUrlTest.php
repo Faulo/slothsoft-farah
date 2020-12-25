@@ -7,26 +7,23 @@ use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
 
-class FarahUrlTest extends TestCase
-{
+class FarahUrlTest extends TestCase {
 
     /**
      *
      * @dataProvider malformedUrlProvider
      */
-    public function testMalformedUrlParsing(string $ref)
-    {
+    public function testMalformedUrlParsing(string $ref) {
         $this->expectException(MalformedUrlException::class);
         FarahUrl::createFromReference($ref);
     }
 
-    public function malformedUrlProvider()
-    {
+    public function malformedUrlProvider() {
         $urls = [];
         $urls[] = 'farah:///slothsoft@farah';
         $urls[] = 'farah://slothsoft@farah:port';
         $urls[] = 'farah://slothsoft@';
-        
+
         $ret = [];
         foreach ($urls as $ref) {
             $ret[$ref] = [
@@ -40,19 +37,17 @@ class FarahUrlTest extends TestCase
      *
      * @dataProvider incompleteUrlProvider
      */
-    public function testIncompleteUrlParsing(string $ref)
-    {
+    public function testIncompleteUrlParsing(string $ref) {
         $this->expectException(IncompleteUrlException::class);
         FarahUrl::createFromReference($ref);
     }
 
-    public function incompleteUrlProvider()
-    {
+    public function incompleteUrlProvider() {
         $urls = [];
         $urls[] = '//slothsoft@farah';
         $urls[] = 'farah://slothsoft';
         $urls[] = 'farah://@farah';
-        
+
         $ret = [];
         foreach ($urls as $ref) {
             $ret[$ref] = [
@@ -66,18 +61,16 @@ class FarahUrlTest extends TestCase
      *
      * @dataProvider notFarahUrlProvider
      */
-    public function testNotFarahUrlParsing(string $ref)
-    {
+    public function testNotFarahUrlParsing(string $ref) {
         $this->expectException(ProtocolNotSupportedException::class);
         FarahUrl::createFromReference($ref);
     }
 
-    public function notFarahUrlProvider()
-    {
+    public function notFarahUrlProvider() {
         $urls = [];
         $urls[] = 'http://slothsoft@farah';
         $urls[] = 'file://slothsoft@farah';
-        
+
         $ret = [];
         foreach ($urls as $ref) {
             $ret[$ref] = [
@@ -91,14 +84,12 @@ class FarahUrlTest extends TestCase
      *
      * @dataProvider absoluteUrlProvider
      */
-    public function testAbsoluteUrlParsing(string $expected, string $ref)
-    {
+    public function testAbsoluteUrlParsing(string $expected, string $ref) {
         $url = FarahUrl::createFromReference($ref);
         $this->assertEquals($expected, (string) $url);
     }
 
-    public function absoluteUrlProvider()
-    {
+    public function absoluteUrlProvider() {
         $urls = [];
         $urls['farah://slothsoft@farah'] = 'farah://slothsoft@farah/';
         $urls['farah://slothsoft@farah/'] = 'farah://slothsoft@farah/';
@@ -106,11 +97,11 @@ class FarahUrlTest extends TestCase
         $urls['farah://slothsoft@farah/./'] = 'farah://slothsoft@farah/';
         $urls['farah://slothsoft@farah/./#'] = 'farah://slothsoft@farah/';
         $urls['farah://slothsoft@farah/./#xml'] = 'farah://slothsoft@farah/#xml';
-        
+
         $urls['farah://slothsoft@farah/asset'] = 'farah://slothsoft@farah/asset';
         $urls['farah://slothsoft@farah/asset/'] = 'farah://slothsoft@farah/asset';
         $urls['farah://slothsoft@farah/asset/tmp/..'] = 'farah://slothsoft@farah/asset';
-        
+
         $ret = [];
         foreach ($urls as $ref => $expected) {
             $ret[$ref] = [
@@ -125,8 +116,7 @@ class FarahUrlTest extends TestCase
      *
      * @dataProvider relativeUrlProvider
      */
-    public function testRelativeUrlParsing(string $expected, string $ref)
-    {
+    public function testRelativeUrlParsing(string $expected, string $ref) {
         $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'farah');
         $path = FarahUrlPath::createFromString('/testing');
         $url = FarahUrl::createFromComponents($authority, $path);
@@ -134,34 +124,33 @@ class FarahUrlTest extends TestCase
         $this->assertEquals($expected, (string) $url);
     }
 
-    public function relativeUrlProvider()
-    {
+    public function relativeUrlProvider() {
         $urls = [];
         $urls['farah://slothsoft@farah/assets'] = 'farah://slothsoft@farah/assets';
         $urls['//slothsoft@farah/assets'] = 'farah://slothsoft@farah/assets';
         $urls['//farah/assets'] = 'farah://slothsoft@farah/assets';
         $urls['/assets'] = 'farah://slothsoft@farah/assets';
-        
+
         $urls['farah://slothsoft@farah'] = 'farah://slothsoft@farah/';
         $urls['//slothsoft@farah'] = 'farah://slothsoft@farah/';
         $urls['//farah'] = 'farah://slothsoft@farah/';
         $urls['//farah#'] = 'farah://slothsoft@farah/';
         $urls['//farah#xml'] = 'farah://slothsoft@farah/#xml';
-        
+
         $urls['/'] = 'farah://slothsoft@farah/';
         $urls['..'] = 'farah://slothsoft@farah/';
         $urls['./..'] = 'farah://slothsoft@farah/';
-        
+
         $urls[''] = 'farah://slothsoft@farah/testing';
         $urls['.'] = 'farah://slothsoft@farah/testing';
         $urls['./'] = 'farah://slothsoft@farah/testing';
         $urls['./.'] = 'farah://slothsoft@farah/testing';
-        
+
         $urls['assets'] = 'farah://slothsoft@farah/testing/assets';
         $urls['./../testing/assets'] = 'farah://slothsoft@farah/testing/assets';
         $urls['/testing/assets'] = 'farah://slothsoft@farah/testing/assets';
         $urls['./assets/tmp/..'] = 'farah://slothsoft@farah/testing/assets';
-        
+
         $ret = [];
         foreach ($urls as $ref => $expected) {
             $ret["'$ref'"] = [
@@ -174,11 +163,10 @@ class FarahUrlTest extends TestCase
 
     /**
      */
-    public function testFileModifiedTime()
-    {
+    public function testFileModifiedTime() {
         $assetsPath = realpath('assets/xsl/module.xsl');
         $assetsUrl = 'farah://slothsoft@farah/xsl/module';
-        
+
         $expected = filemtime($assetsPath);
         $actual = filemtime($assetsUrl);
         $this->assertEquals($expected, $actual);
