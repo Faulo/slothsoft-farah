@@ -15,8 +15,7 @@ use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Core\DBMS\Manager;
 use Exception;
 
-class Session
-{
+class Session {
 
     const GLOBAL_SESSION = null;
 
@@ -34,13 +33,11 @@ class Session
 
     protected $initialized;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->initialized = false;
     }
 
-    protected function install()
-    {
+    protected function install() {
         $sqlCols = [
             'id' => 'int NOT NULL AUTO_INCREMENT',
             'session' => 'CHAR(40) CHARACTER SET ascii COLLATE ascii_bin NULL',
@@ -71,8 +68,7 @@ class Session
         $this->dbmsTable->createTable($sqlCols, $sqlKeys, $options);
     }
 
-    protected function init()
-    {
+    protected function init() {
         if (! $this->initialized) {
             $this->initialized = true;
             try {
@@ -87,8 +83,7 @@ class Session
         }
     }
 
-    protected function initKey($key = null)
-    {
+    protected function initKey($key = null) {
         if ($key === null) {
             $key = $this->generateKey();
         }
@@ -97,47 +92,40 @@ class Session
         $this->setCookie($this->cookieName, $this->key);
     }
 
-    public function getGlobalValue($key, $val = null)
-    {
+    public function getGlobalValue($key, $val = null) {
         $this->init();
         return $this->loadData(self::GLOBAL_SESSION, $key, $val);
     }
 
-    public function setGlobalValue($key, $val = null)
-    {
+    public function setGlobalValue($key, $val = null) {
         $this->init();
         $this->saveData(self::GLOBAL_SESSION, $key, $val);
     }
 
-    public function getDataValue($key, $val = null)
-    {
+    public function getDataValue($key, $val = null) {
         $this->init();
         $this->data[$key] = $this->loadData($this->key, $key, $val);
         return $this->data[$key];
     }
 
-    public function setDataValue($key, $val = null)
-    {
+    public function setDataValue($key, $val = null) {
         $this->init();
         $this->data[$key] = $val;
         $this->saveData($this->key, $key, $val);
     }
 
-    public function setCookie($key, $val = null)
-    {
+    public function setCookie($key, $val = null) {
         if (! headers_sent()) {
             setcookie($key, $val, time() + Seconds::MONTH, '/');
         }
         $_COOKIE[$key] = $val;
     }
 
-    public function getCookie($key, $val = null)
-    {
+    public function getCookie($key, $val = null) {
         return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $val;
     }
 
-    protected function loadData($session, $key, $val)
-    {
+    protected function loadData($session, $key, $val) {
         $arr = [];
         $arr['session'] = $session;
         $arr['name'] = $this->hash($key);
@@ -145,12 +133,11 @@ class Session
         return $res ? $this->decodeData(current($res), true) : $val;
     }
 
-    protected function saveData($session, $key, $val)
-    {
+    protected function saveData($session, $key, $val) {
         $arr = [];
         $arr['session'] = $session;
         $arr['name'] = $this->hash($key);
-        
+
         if ($this->dbmsTable) {
             if ($idList = $this->dbmsTable->select('id', $arr)) {
                 try {
@@ -167,8 +154,7 @@ class Session
         }
     }
 
-    protected function generateKey()
-    {
+    protected function generateKey() {
         if (isset($_SERVER, $_SERVER['REQUEST_TIME_FLOAT'], $_SERVER['REMOTE_ADDR'])) {
             $ret = sha1($_SERVER['REQUEST_TIME_FLOAT'] . '-' . $_SERVER['REMOTE_ADDR']);
         } else {
@@ -179,21 +165,18 @@ class Session
 
     protected static $hashList = [];
 
-    protected function hash($name)
-    {
+    protected function hash($name) {
         if (! isset(self::$hashList[$name])) {
             self::$hashList[$name] = sha1($name);
         }
         return self::$hashList[$name];
     }
 
-    protected function encodeData($data)
-    {
+    protected function encodeData($data) {
         return json_encode($data);
     }
 
-    protected function decodeData($data)
-    {
+    protected function decodeData($data) {
         return json_decode($data, true);
     }
 }

@@ -4,11 +4,9 @@ namespace Slothsoft\Farah\Module\Asset\InstructionStrategy;
 
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 
-class ImportChildrenInstruction extends NullInstruction
-{
+class ImportChildrenInstruction extends NullInstruction {
 
-    public function isImportChildren(AssetInterface $context): bool
-    {
+    public function isImportChildren(AssetInterface $context): bool {
         return true;
     }
 }

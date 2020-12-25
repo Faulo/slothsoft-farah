@@ -2,8 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Http;
 
-abstract class StatusCode
-{
+abstract class StatusCode {
 
     const STATUS_OK = 200;
 
@@ -65,13 +64,11 @@ abstract class StatusCode
         self::STATUS_HTTP_VERSION_NOT_SUPPORTED => 'HTTP Version Not Supported'
     ];
 
-    public static function getReasonPhrase(int $statusCode): string
-    {
+    public static function getReasonPhrase(int $statusCode): string {
         return self::REASON_PHRASES[$statusCode] ?? '';
     }
 
-    public static function getMessage(int $statusCode, string $message = ''): string
-    {
+    public static function getMessage(int $statusCode, string $message = ''): string {
         $ret = '';
         $ret .= $statusCode;
         if (isset(self::REASON_PHRASES[$statusCode])) {

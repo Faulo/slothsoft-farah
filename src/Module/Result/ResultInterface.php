@@ -14,8 +14,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
  * @author Daniel Schulz
  *        
  */
-interface ResultInterface
-{
+interface ResultInterface {
 
     /**
      * Create a FarahUrl for this result

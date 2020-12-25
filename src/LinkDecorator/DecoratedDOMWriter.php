@@ -6,8 +6,7 @@ use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use DOMDocument;
 use DOMElement;
 
-class DecoratedDOMWriter implements DOMWriterInterface
-{
+class DecoratedDOMWriter implements DOMWriterInterface {
 
     private $source;
 
@@ -29,16 +28,14 @@ class DecoratedDOMWriter implements DOMWriterInterface
      */
     private $modules;
 
-    public function __construct(DOMWriterInterface $source, iterable $stylesheets, iterable $scripts, iterable $modules)
-    {
+    public function __construct(DOMWriterInterface $source, iterable $stylesheets, iterable $scripts, iterable $modules) {
         $this->source = $source;
         $this->stylesheets = $stylesheets;
         $this->scripts = $scripts;
         $this->modules = $modules;
     }
 
-    public function toElement(DOMDocument $targetDoc): DOMElement
-    {
+    public function toElement(DOMDocument $targetDoc): DOMElement {
         $element = $this->source->toElement($targetDoc);
         $decorator = DecoratorFactory::createForElement($element);
         $decorator->linkStylesheets(...$this->stylesheets);
@@ -47,8 +44,7 @@ class DecoratedDOMWriter implements DOMWriterInterface
         return $element;
     }
 
-    public function toDocument(): DOMDocument
-    {
+    public function toDocument(): DOMDocument {
         $document = $this->source->toDocument();
         $decorator = DecoratorFactory::createForDocument($document);
         $decorator->linkStylesheets(...$this->stylesheets);

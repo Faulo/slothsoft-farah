@@ -19,19 +19,17 @@ use Slothsoft\Farah\Http\TransferCoding;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Security\BannedManager;
 
-abstract class RequestStrategyBase implements RequestStrategyInterface
-{
+abstract class RequestStrategyBase implements RequestStrategyInterface {
 
     private $request;
 
-    public function process(ServerRequestInterface $request): ResponseInterface
-    {
+    public function process(ServerRequestInterface $request): ResponseInterface {
         try {
             $this->request = $request;
-            
+
             $this->validateRequest();
             $url = $this->createUrl($request);
-            
+
             try {
                 try {
                     $result = Module::resolveToResult($url);
@@ -57,28 +55,28 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                     $body = $result->lookupStreamWriter()->toStream();
                 }
                 $statusCode = StatusCode::STATUS_OK;
-                
+
                 $headers = [];
-                
+
                 if ($fileName === '') {
                     $fileName = uniqid();
                 }
-                
+
                 $headers['content-disposition'] = sprintf('%s; filename="%s"; filename*=UTF-8\'\'%s', $fileDisposition, preg_replace('/[^[:print:]]/', '', $fileName), rawurlencode($fileName));
-                
+
                 if ($fileMime === '') {
                     $fileMime = 'application/octet-stream';
                 }
-                
+
                 $headers['content-type'] = $fileCharset === '' ? $fileMime : "$fileMime; charset=$fileCharset";
-                
+
                 $cacheDuration = $this->inventCacheDuration($fileMime);
                 $headers['cache-control'] = "must-revalidate, max-age=$cacheDuration";
-                
+
                 if ($fileTime > 0) {
                     $headers['last-modified'] = gmdate('D, d M Y H:i:s \\G\\M\\T', $fileTime);
                 }
-                
+
                 if ($isCompressable) {
                     $preferredCompressions = $this->inventPreferredCompressions($fileMime);
                     if (strlen($preferredCompressions)) {
@@ -93,18 +91,18 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                         }
                     }
                 }
-                
+
                 if ($fileHash !== '') {
                     $headers['etag'] = "\"$fileHash\"";
                 }
-                
+
                 $bodyLength = $body->getSize();
-                
+
                 if ($bodyLength === null and $isBufferable) {
                     $body = StreamHelper::cacheStream($body);
                     $bodyLength = $body->getSize();
                 }
-                
+
                 if ($bodyLength === null) {
                     // we don't know the length of the response, so we better figure out a safe transfer coding
                     $transferCoding = $this->negotiateTransferCoding('chunked');
@@ -122,18 +120,18 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                             }
                             $rangeStart = strlen($match[1]) ? (int) $match[1] : 0;
                             $rangeEnd = strlen($match[2]) ? (int) $match[2] + 1 : $bodyLength;
-                            
+
                             $statusCode = StatusCode::STATUS_PARTIAL_CONTENT;
                             $headers['content-range'] = sprintf('bytes %1$d-%2$d/%3$d', $rangeStart, $rangeEnd - 1, $bodyLength);
-                            
+
                             $bodyLength = $rangeEnd - $rangeStart;
-                            
+
                             $body = StreamHelper::sliceStream($body, $rangeStart, $bodyLength);
                         }
                     }
                     $headers['content-length'] = $bodyLength;
                 }
-                
+
                 if (isset($headers['last-modified']) and $request->hasHeader('if-modified-since')) {
                     $serverTime = (int) strtotime($headers['last-modified']);
                     $clientTime = (int) strtotime($request->getHeaderLine('if-modified-since'));
@@ -141,7 +139,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
                         throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, $headers);
                     }
                 }
-                
+
                 if (isset($headers['etag']) and $request->hasHeader('if-none-match')) {
                     $serverTag = $headers['etag'];
                     $clientTag = $request->getHeaderLine('if-none-match');
@@ -159,29 +157,28 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
             $headers = $e->getAdditionalHeaders();
             $body = MessageFactory::createStreamFromContents(StatusCode::getMessage($statusCode, $e->getMessage()));
         }
-        
+
         if (! $this->shouldIncludeBody($this->request->getMethod(), $statusCode)) {
             $body = null;
         }
-        
+
         return MessageFactory::createServerResponse($statusCode, $headers, $body);
     }
 
-    private function validateRequest()
-    {
+    private function validateRequest() {
         $clientIp = $this->request->getServerParams()['REMOTE_ADDR'] ?? '';
         if (strlen($clientIp) and BannedManager::getInstance()->isBanned($clientIp)) {
             // BANHAMMER
             throw new HttpStatusException('You have been found wanting.', StatusCode::STATUS_PRECONDITION_FAILED);
         }
-        
+
         if (! in_array($this->request->getUri()->getScheme(), [
             'http',
             'farah'
         ])) {
             throw new HttpStatusException("Scheme '{$this->request->getUri()->getScheme()}' is not supported by this implementation.", StatusCode::STATUS_NOT_IMPLEMENTED);
         }
-        
+
         if (! in_array($this->request->getMethod(), [
             'HEAD',
             'GET',
@@ -193,8 +190,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
 
     abstract protected function createUrl(ServerRequestInterface $request): FarahUrl;
 
-    private function negotiateContentCoding(string $preferred): ContentCoding
-    {
+    private function negotiateContentCoding(string $preferred): ContentCoding {
         $accept = $this->request->getHeaderLine('accept-encoding');
         foreach (ContentCoding::getEncodings() as $coding) {
             $name = (string) $coding;
@@ -205,8 +201,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         return ContentCoding::identity();
     }
 
-    private function negotiateTransferCoding(string $preferred): TransferCoding
-    {
+    private function negotiateTransferCoding(string $preferred): TransferCoding {
         $accept = $this->request->getHeaderLine('te');
         if (version_compare($this->request->getProtocolVersion(), '1.1', '>=')) {
             $accept .= ', chunked'; // HTTP 1.1 must accept chunked encoding
@@ -220,13 +215,12 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         return TransferCoding::identity();
     }
 
-    private function shouldIncludeBody(string $method, int $statusCode): bool
-    {
+    private function shouldIncludeBody(string $method, int $statusCode): bool {
         switch ($method) {
             case 'HEAD':
                 return false;
         }
-        
+
         switch ($statusCode) {
             case StatusCode::STATUS_NO_CONTENT:
             case StatusCode::STATUS_MULTIPLE_CHOICES:
@@ -237,12 +231,11 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
             case StatusCode::STATUS_PERMANENT_REDIRECT:
                 return false;
         }
-        
+
         return true;
     }
 
-    private function inventCacheDuration(string $mimeType): int
-    {
+    private function inventCacheDuration(string $mimeType): int {
         if (strpos($mimeType, 'image/') === 0) {
             return Seconds::MONTH;
         }
@@ -258,8 +251,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface
         return 30;
     }
 
-    private function inventPreferredCompressions(string $mimeType): string
-    {
+    private function inventPreferredCompressions(string $mimeType): string {
         return MimeTypeDictionary::guessCompressions($mimeType);
     }
 }

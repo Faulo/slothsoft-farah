@@ -8,8 +8,7 @@ use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use DOMDocument;
 
-class TranslationDOMWriter implements DOMWriterInterface
-{
+class TranslationDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
 
     /**
@@ -30,18 +29,16 @@ class TranslationDOMWriter implements DOMWriterInterface
      */
     private $context;
 
-    public function __construct(DOMWriterInterface $source, Dictionary $dict, FarahUrl $context)
-    {
+    public function __construct(DOMWriterInterface $source, Dictionary $dict, FarahUrl $context) {
         $this->source = $source;
         $this->dict = $dict;
         $this->context = $context;
     }
 
-    public function toDocument(): DOMDocument
-    {
+    public function toDocument(): DOMDocument {
         $document = $this->source->toDocument();
         $this->dict->translateDoc($document, $this->context);
-        
+
         return $document;
     }
 }

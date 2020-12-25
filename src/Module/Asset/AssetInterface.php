@@ -15,8 +15,7 @@ use SplFileInfo;
  * @author Daniel Schulz
  *        
  */
-interface AssetInterface
-{
+interface AssetInterface {
 
     public function __toString(): string;
 

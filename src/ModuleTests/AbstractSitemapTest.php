@@ -14,15 +14,13 @@ use DOMDocument;
 use DOMElement;
 use Throwable;
 
-abstract class AbstractSitemapTest extends AbstractTestCase
-{
+abstract class AbstractSitemapTest extends AbstractTestCase {
 
     const SCHEMA_URL = 'farah://slothsoft@farah/schema/sitemap/1.0';
 
     abstract protected static function loadSitesAsset(): AssetInterface;
 
-    protected function getSitesAsset(): AssetInterface
-    {
+    protected function getSitesAsset(): AssetInterface {
         static $asset;
         if ($asset === null) {
             $asset = static::loadSitesAsset();
@@ -31,27 +29,23 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         return $asset;
     }
 
-    protected function getSitesResult(): ResultInterface
-    {
+    protected function getSitesResult(): ResultInterface {
         return $this->getSitesAsset()
             ->lookupExecutable()
             ->lookupXmlResult();
     }
 
-    protected function getSitesDocument(): DOMDocument
-    {
+    protected function getSitesDocument(): DOMDocument {
         return $this->getSitesResult()
             ->lookupDOMWriter()
             ->toDocument();
     }
 
-    protected function getSitesRoot(): DOMElement
-    {
+    protected function getSitesRoot(): DOMElement {
         return $this->getSitesDocument()->documentElement;
     }
 
-    protected function getSitesIncludes(): array
-    {
+    protected function getSitesIncludes(): array {
         $ret = [];
         $result = $this->getSitesResult();
         $url = $result->createUrl();
@@ -61,8 +55,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         return $ret;
     }
 
-    protected function getSitesIncludesCrawl(array &$ret, FarahUrl $parentUrl, DOMDocument $document)
-    {
+    protected function getSitesIncludesCrawl(array &$ret, FarahUrl $parentUrl, DOMDocument $document) {
         $nodeList = $document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_INCLUDE_PAGES);
         foreach ($nodeList as $node) {
             $url = FarahUrl::createFromReference($node->getAttribute('ref'), $parentUrl);
@@ -75,8 +68,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         }
     }
 
-    protected function getDomain(): Domain
-    {
+    protected function getDomain(): Domain {
         static $domain;
         if ($domain === null) {
             $domain = new Domain($this->getSitesAsset());
@@ -84,13 +76,11 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         return $domain;
     }
 
-    protected function getDomainDocument(): DOMDocument
-    {
+    protected function getDomainDocument(): DOMDocument {
         return $this->getDomain()->getDocument();
     }
 
-    public function testHasRootElement()
-    {
+    public function testHasRootElement() {
         $this->assertInstanceOf(DOMElement::class, $this->getSitesDocument()->documentElement);
     }
 
@@ -98,14 +88,12 @@ abstract class AbstractSitemapTest extends AbstractTestCase
      *
      * @depends testHasRootElement
      */
-    public function testRootElementIsDomain()
-    {
+    public function testRootElementIsDomain() {
         $this->assertEquals($this->getSitesRoot()->namespaceURI, DOMHelper::NS_FARAH_SITES);
         $this->assertEquals($this->getSitesRoot()->localName, Domain::TAG_DOMAIN);
     }
 
-    public function testSchemaExists()
-    {
+    public function testSchemaExists() {
         $path = self::SCHEMA_URL;
         $this->assertFileExists($path, 'Schema file not found!');
         return $path;
@@ -115,8 +103,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
      *
      * @depends testSchemaExists
      */
-    public function testSchemaIsValidXml(string $path)
-    {
+    public function testSchemaIsValidXml(string $path) {
         $dom = new DOMHelper();
         $document = $dom->load($path);
         $this->assertInstanceOf(DOMDocument::class, $document);
@@ -127,8 +114,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
      *
      * @depends testSchemaIsValidXml
      */
-    public function testSitesIsValidAccordingToSchema($schemaDocument)
-    {
+    public function testSitesIsValidAccordingToSchema($schemaDocument) {
         $sitesDocument = $this->getSitesDocument();
         try {
             $validateResult = $sitesDocument->schemaValidate($schemaDocument->documentURI);
@@ -144,8 +130,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
      *
      * @dataProvider includeProvider
      */
-    public function testIncludeExists($url)
-    {
+    public function testIncludeExists($url) {
         try {
             $document = Module::resolveToDOMWriter($url)->toDocument();
             $this->assertInstanceOf(DOMElement::class, $document->documentElement);
@@ -159,8 +144,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
      * @depends testIncludeExists
      * @dataProvider includeProvider
      */
-    public function testIncludeIsValidAccordingToSchema($url)
-    {
+    public function testIncludeIsValidAccordingToSchema($url) {
         $document = Module::resolveToDOMWriter($url)->toDocument();
         try {
             $validateResult = $document->schemaValidate(self::SCHEMA_URL);
@@ -171,8 +155,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         $this->assertTrue($validateResult, '<include-pages> document is invalid!');
     }
 
-    public function includeProvider()
-    {
+    public function includeProvider() {
         $ret = [];
         foreach ($this->getSitesIncludes() as $key => $url) {
             $ret[$key] = [
@@ -187,8 +170,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
      * @depends      testIncludeExists
      * @dataProvider pageNodeProvider
      */
-    public function testPageMustHaveEitherRefOrRedirect($node)
-    {
+    public function testPageMustHaveEitherRefOrRedirect($node) {
         $this->assertNotEquals($node->hasAttribute('ref'), $node->hasAttribute('redirect'), '<page> must have either ref or redirect attribute.');
     }
 
@@ -197,8 +179,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
      * @depends      testPageMustHaveEitherRefOrRedirect
      * @dataProvider pageNodeProvider
      */
-    public function testPageResultExists($node)
-    {
+    public function testPageResultExists($node) {
         $path = $node->getAttribute('uri');
         if ($node->hasAttribute('ref')) {
             $this->assertEquals($node, $this->getDomain()
@@ -211,8 +192,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase
         }
     }
 
-    public function pageNodeProvider()
-    {
+    public function pageNodeProvider() {
         $ret = [];
         foreach ($this->getDomainDocument()->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, 'page') as $node) {
             $key = sprintf('%3d: %s', count($ret), $node->getAttribute('uri'));

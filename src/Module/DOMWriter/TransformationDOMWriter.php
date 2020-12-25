@@ -8,8 +8,7 @@ use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use DOMDocument;
 
-class TransformationDOMWriter implements DOMWriterInterface
-{
+class TransformationDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
 
     /**
@@ -24,22 +23,20 @@ class TransformationDOMWriter implements DOMWriterInterface
      */
     private $template;
 
-    public function __construct(DOMWriterInterface $source, DOMWriterInterface $template)
-    {
+    public function __construct(DOMWriterInterface $source, DOMWriterInterface $template) {
         $this->source = $source;
         $this->template = $template;
     }
 
-    public function toDocument(): DOMDocument
-    {
+    public function toDocument(): DOMDocument {
         $dom = new DOMHelper();
-        
+
         $resultDoc = $dom->transformToDocument($this->source, $this->template);
-        
+
         if (! $resultDoc->documentElement) {
             throw new EmptyTransformationException($this->source->toDocument()->documentElement->getAttribute('url'));
         }
-        
+
         return $resultDoc;
     }
 }

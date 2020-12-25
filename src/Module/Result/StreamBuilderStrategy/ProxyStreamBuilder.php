@@ -9,68 +9,55 @@ use Slothsoft\Core\IO\Writable\StreamWriterInterface;
 use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
-class ProxyStreamBuilder implements StreamBuilderStrategyInterface
-{
+class ProxyStreamBuilder implements StreamBuilderStrategyInterface {
 
     private $proxy;
 
-    public function __construct(ResultInterface $proxy)
-    {
+    public function __construct(ResultInterface $proxy) {
         $this->proxy = $proxy;
     }
 
-    public function buildStreamMimeType(ResultInterface $context): string
-    {
+    public function buildStreamMimeType(ResultInterface $context): string {
         return $this->proxy->lookupMimeType();
     }
 
-    public function buildStreamCharset(ResultInterface $context): string
-    {
+    public function buildStreamCharset(ResultInterface $context): string {
         return $this->proxy->lookupCharset();
     }
 
-    public function buildStreamFileName(ResultInterface $context): string
-    {
+    public function buildStreamFileName(ResultInterface $context): string {
         return $this->proxy->lookupFileName();
     }
 
-    public function buildStreamFileStatistics(ResultInterface $context): array
-    {
+    public function buildStreamFileStatistics(ResultInterface $context): array {
         return $this->proxy->lookupFileStatistics();
     }
 
-    public function buildStreamHash(ResultInterface $context): string
-    {
+    public function buildStreamHash(ResultInterface $context): string {
         return $this->proxy->lookupHash();
     }
 
-    public function buildStreamIsBufferable(ResultInterface $context): bool
-    {
+    public function buildStreamIsBufferable(ResultInterface $context): bool {
         return $this->proxy->lookupIsBufferable();
     }
 
-    public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface
-    {
+    public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface {
         return $this->proxy->lookupChunkWriter();
     }
 
-    public function buildFileWriter(ResultInterface $context): FileWriterInterface
-    {
+    public function buildFileWriter(ResultInterface $context): FileWriterInterface {
         return $this->proxy->lookupFileWriter();
     }
 
-    public function buildStreamWriter(ResultInterface $context): StreamWriterInterface
-    {
+    public function buildStreamWriter(ResultInterface $context): StreamWriterInterface {
         return $this->proxy->lookupStreamWriter();
     }
 
-    public function buildDOMWriter(ResultInterface $context): DOMWriterInterface
-    {
+    public function buildDOMWriter(ResultInterface $context): DOMWriterInterface {
         return $this->proxy->lookupDOMWriter();
     }
 
-    public function buildStringWriter(ResultInterface $context): StringWriterInterface
-    {
+    public function buildStringWriter(ResultInterface $context): StringWriterInterface {
         return $this->proxy->lookupStringWriter();
     }
 }

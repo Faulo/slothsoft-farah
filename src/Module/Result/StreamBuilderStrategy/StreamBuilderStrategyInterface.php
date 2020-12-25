@@ -14,8 +14,7 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
  * @author Daniel Schulz
  *        
  */
-interface StreamBuilderStrategyInterface
-{
+interface StreamBuilderStrategyInterface {
 
     public function buildStringWriter(ResultInterface $context): StringWriterInterface;
 

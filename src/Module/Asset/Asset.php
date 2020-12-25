@@ -17,8 +17,7 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use SplFileInfo;
 
-class Asset implements AssetInterface
-{
+class Asset implements AssetInterface {
 
     /**
      *
@@ -68,8 +67,7 @@ class Asset implements AssetInterface
      */
     private $linkInstructions;
 
-    public function __construct(ManifestInterface $ownerManifest, LeanElement $manifestElement, FarahUrlPath $urlPath, AssetStrategies $strategies)
-    {
+    public function __construct(ManifestInterface $ownerManifest, LeanElement $manifestElement, FarahUrlPath $urlPath, AssetStrategies $strategies) {
         $this->ownerManifest = $ownerManifest;
         $this->manifestElement = $manifestElement;
         $this->urlPath = $urlPath;
@@ -79,18 +77,15 @@ class Asset implements AssetInterface
         // echo $this.PHP_EOL;
     }
 
-    public function __toString(): string
-    {
+    public function __toString(): string {
         return (string) $this->createUrl();
     }
 
-    public function getManifestElement(): LeanElement
-    {
+    public function getManifestElement(): LeanElement {
         return $this->manifestElement;
     }
 
-    public function getAssetChildren(): iterable
-    {
+    public function getAssetChildren(): iterable {
         if ($this->assetChildren === null) {
             $this->assetChildren = new Vector();
             foreach ($this->strategies->pathResolver->loadChildren($this) as $childPath) {
@@ -117,18 +112,17 @@ class Asset implements AssetInterface
         }
     }
 
-    public function traverseTo(string $path): AssetInterface
-    {
+    public function traverseTo(string $path): AssetInterface {
         $path = preg_replace('~^/+~', '', $path);
-        
+
         if ($path === '') {
             return $this;
         }
-        
+
         list ($name, $descendantPath) = explode('/', "$path/", 2);
         $element = $this->strategies->pathResolver->resolvePath($this, $name);
         $asset = $this->ownerManifest->createAsset($element);
-        
+
         if ($descendantPath === '') {
             return $asset;
         } else {
@@ -136,23 +130,19 @@ class Asset implements AssetInterface
         }
     }
 
-    public function createUrl($args = null, $fragment = null): FarahUrl
-    {
+    public function createUrl($args = null, $fragment = null): FarahUrl {
         return $this->ownerManifest->createUrl($this->getUrlPath(), $args, $fragment);
     }
 
-    public function getUrlPath(): FarahUrlPath
-    {
+    public function getUrlPath(): FarahUrlPath {
         return $this->urlPath;
     }
 
-    public function getFileInfo(): SplFileInfo
-    {
+    public function getFileInfo(): SplFileInfo {
         return new SplFileInfo($this->manifestElement->getAttribute('realpath'));
     }
 
-    public function lookupExecutable(FarahUrlArguments $args = null): ExecutableInterface
-    {
+    public function lookupExecutable(FarahUrlArguments $args = null): ExecutableInterface {
         if ($args === null) {
             $args = $this->getManifestArguments();
         } else {
@@ -169,8 +159,7 @@ class Asset implements AssetInterface
         return $this->executables->get($args);
     }
 
-    private function getManifestArguments(): FarahUrlArguments
-    {
+    private function getManifestArguments(): FarahUrlArguments {
         $data = [];
         foreach ($this->getSuppliedParameters() as $key => $val) {
             $data[$key] = $val;
@@ -185,13 +174,11 @@ class Asset implements AssetInterface
         return FarahUrlArguments::createFromValueList($data);
     }
 
-    public function getSuppliedParameters(): iterable
-    {
+    public function getSuppliedParameters(): iterable {
         return $this->strategies->parameterSupplier->supplyParameters($this);
     }
 
-    private function applyParameterFilter(FarahUrlArguments $args): FarahUrlArguments
-    {
+    private function applyParameterFilter(FarahUrlArguments $args): FarahUrlArguments {
         $valueList = $args->getValueList();
         $hasChanged = false;
         $filter = $this->strategies->parameterFilter;
@@ -216,8 +203,7 @@ class Asset implements AssetInterface
         return $hasChanged ? FarahUrlArguments::createFromValueList($valueList) : $args;
     }
 
-    private function createExecutable(FarahUrlArguments $args)
-    {
+    private function createExecutable(FarahUrlArguments $args) {
         try {
             $strategies = $this->strategies->executableBuilder->buildExecutableStrategies($this, $args);
             return new Executable($this, $args, $strategies);
@@ -228,58 +214,47 @@ class Asset implements AssetInterface
         }
     }
 
-    public function isImportSelfInstruction(): bool
-    {
+    public function isImportSelfInstruction(): bool {
         return $this->strategies->instruction->isImportSelf($this);
     }
 
-    public function isImportChildrenInstruction(): bool
-    {
+    public function isImportChildrenInstruction(): bool {
         return $this->strategies->instruction->isImportChildren($this);
     }
 
-    public function isUseManifestInstruction(): bool
-    {
+    public function isUseManifestInstruction(): bool {
         return $this->strategies->instruction->isUseManifest($this);
     }
 
-    public function isUseDocumentInstruction(): bool
-    {
+    public function isUseDocumentInstruction(): bool {
         return $this->strategies->instruction->isUseDocument($this);
     }
 
-    public function isUseTemplateInstruction(): bool
-    {
+    public function isUseTemplateInstruction(): bool {
         return $this->strategies->instruction->isUseTemplate($this);
     }
 
-    public function isLinkScriptInstruction(): bool
-    {
+    public function isLinkScriptInstruction(): bool {
         return $this->strategies->instruction->isLinkScript($this);
     }
 
-    public function isLinkModuleInstruction(): bool
-    {
+    public function isLinkModuleInstruction(): bool {
         return $this->strategies->instruction->isLinkModule($this);
     }
 
-    public function isLinkStylesheetInstruction(): bool
-    {
+    public function isLinkStylesheetInstruction(): bool {
         return $this->strategies->instruction->isLinkStylesheet($this);
     }
 
-    public function isParameterSupplierInstruction(): bool
-    {
+    public function isParameterSupplierInstruction(): bool {
         return $this->strategies->instruction->isParameterSupplier($this);
     }
 
-    public function normalizeManifestElement(LeanElement $child): void
-    {
+    public function normalizeManifestElement(LeanElement $child): void {
         $this->ownerManifest->normalizeManifestElement($this->manifestElement, $child);
     }
 
-    private function getReferencedUrl(): ?FarahUrl
-    {
+    private function getReferencedUrl(): ?FarahUrl {
         $ref = $this->manifestElement->getAttribute('ref', '');
         return $ref === '' ? null : FarahUrl::createFromReference($ref, $this->createUrl());
     }

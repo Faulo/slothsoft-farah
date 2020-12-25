@@ -14,20 +14,17 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\TextFileResult
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\XmlFileResultBuilder;
 use SplFileInfo;
 
-class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterface
-{
+class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterface {
 
-    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
-    {
+    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $path = $context->getManifestElement()->getAttribute('realpath');
         $type = $context->getManifestElement()->getAttribute('type', '*/*');
-        
+
         $resultBuilder = $this->createResultBuilderForType($context->createUrl($args), FileInfoFactory::createFromPath($path), $type);
         return new ExecutableStrategies($resultBuilder);
     }
 
-    private function createResultBuilderForType(FarahUrl $url, SplFileInfo $file, string $type): ResultBuilderStrategyInterface
-    {
+    private function createResultBuilderForType(FarahUrl $url, SplFileInfo $file, string $type): ResultBuilderStrategyInterface {
         if ($type === 'application/xml' or substr($type, - 4) === '+xml') {
             return new XmlFileResultBuilder($url, $file);
         }

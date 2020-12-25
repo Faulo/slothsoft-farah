@@ -5,8 +5,7 @@ namespace Slothsoft\Farah\Module\Asset\PathResolverStrategy;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 
-interface PathResolverStrategyInterface
-{
+interface PathResolverStrategyInterface {
 
     /**
      *

@@ -5,8 +5,7 @@ namespace Slothsoft\Farah\RequestStrategy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-interface RequestStrategyInterface
-{
+interface RequestStrategyInterface {
 
     public function process(ServerRequestInterface $request): ResponseInterface;
 }

@@ -18,16 +18,13 @@ use DOMElement;
  * @author Daniel Schulz
  *        
  */
-class RequestBuilder implements ExecutableBuilderStrategyInterface
-{
+class RequestBuilder implements ExecutableBuilderStrategyInterface {
 
-    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
-    {
+    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $closure = function (DOMDocument $targetDoc): DOMElement {
             try {
                 Kernel::getCurrentRequest();
-            } catch (ConfigurationRequiredException $e) {
-            }
+            } catch (ConfigurationRequiredException $e) {}
             $node = $targetDoc->createElement('request');
             $node->setAttribute('lang', 'en-us'); // @TODO
             return $node;

@@ -12,20 +12,17 @@ use Slothsoft\Farah\Module\Result\Result;
 use Slothsoft\Farah\Module\Result\ResultContainer;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
-class Executable implements ExecutableInterface
-{
+class Executable implements ExecutableInterface {
 
     const RESULT_IS_DEFAULT = '';
 
-    public static function resultIsDefault(): FarahUrlStreamIdentifier
-    {
+    public static function resultIsDefault(): FarahUrlStreamIdentifier {
         return FarahUrlStreamIdentifier::createFromString(self::RESULT_IS_DEFAULT);
     }
 
     const RESULT_IS_XML = 'xml';
 
-    public static function resultIsXml(): FarahUrlStreamIdentifier
-    {
+    public static function resultIsXml(): FarahUrlStreamIdentifier {
         return FarahUrlStreamIdentifier::createFromString(self::RESULT_IS_XML);
     }
 
@@ -53,21 +50,18 @@ class Executable implements ExecutableInterface
      */
     private $results;
 
-    public function __construct(AssetInterface $ownerAsset, FarahUrlArguments $args, ExecutableStrategies $strategies)
-    {
+    public function __construct(AssetInterface $ownerAsset, FarahUrlArguments $args, ExecutableStrategies $strategies) {
         $this->ownerAsset = $ownerAsset;
         $this->args = $args;
         $this->strategies = $strategies;
         $this->results = new ResultContainer();
     }
 
-    public function getUrlArguments(): FarahUrlArguments
-    {
+    public function getUrlArguments(): FarahUrlArguments {
         return $this->args;
     }
 
-    public function lookupResult($type): ResultInterface
-    {
+    public function lookupResult($type): ResultInterface {
         if (is_string($type)) {
             $type = FarahUrlStreamIdentifier::createFromString($type);
         }
@@ -77,8 +71,7 @@ class Executable implements ExecutableInterface
         return $this->results->get($type);
     }
 
-    private function createResult(FarahUrlStreamIdentifier $type): ResultInterface
-    {
+    private function createResult(FarahUrlStreamIdentifier $type): ResultInterface {
         try {
             $strategies = $this->strategies->resultBuilder->buildResultStrategies($this, $type);
             $result = new Result($this, $type, $strategies);
@@ -90,18 +83,15 @@ class Executable implements ExecutableInterface
         }
     }
 
-    public function lookupDefaultResult(): ResultInterface
-    {
+    public function lookupDefaultResult(): ResultInterface {
         return $this->lookupResult(static::resultIsDefault());
     }
 
-    public function lookupXmlResult(): ResultInterface
-    {
+    public function lookupXmlResult(): ResultInterface {
         return $this->lookupResult(static::resultIsXml());
     }
 
-    public function createUrl($fragment = null): FarahUrl
-    {
+    public function createUrl($fragment = null): FarahUrl {
         return $this->ownerAsset->createUrl($this->args, $fragment);
     }
 }

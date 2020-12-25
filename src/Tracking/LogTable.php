@@ -4,8 +4,7 @@ namespace Slothsoft\Farah\Tracking;
 
 use Slothsoft\Core\DBMS\Table;
 
-class LogTable
-{
+class LogTable {
 
     /*
      * protected $colList = [
@@ -36,18 +35,16 @@ class LogTable
 
     protected $columnConfig;
 
-    public function __construct(Archive $archive, Table $dbmsTable)
-    {
+    public function __construct(Archive $archive, Table $dbmsTable) {
         $this->ownerArchive = $archive;
         $this->dbmsTable = $dbmsTable;
         $config = $this->ownerArchive->getConfig();
         $this->columnConfig = $config['logColumns'];
     }
 
-    public function install()
-    {
+    public function install() {
         if (! $this->dbmsTable->tableExists()) {
-            
+
             $sqlCols = [];
             $sqlCols['id'] = 'int NOT NULL AUTO_INCREMENT';
             $sqlCols['data'] = 'longtext NOT NULL';
@@ -58,22 +55,18 @@ class LogTable
                 $index = [];
                 $index['name'] = $key;
                 $index['columns'] = [];
-                $index['columns'][] = isset($column['size'])
-					? sprintf('`%s`(%s)', $key, $column['size'])
-					: sprintf('`%s`', $key);
+                $index['columns'][] = isset($column['size']) ? sprintf('`%s`(%s)', $key, $column['size']) : sprintf('`%s`', $key);
                 $sqlKeys[] = $index;
             }
             $this->dbmsTable->createTable($sqlCols, $sqlKeys);
         }
     }
 
-    public function getName()
-    {
+    public function getName() {
         return $this->dbmsTable->getName();
     }
 
-    public function insert($id, $json, array $data)
-    {
+    public function insert($id, $json, array $data) {
         $sql = [];
         $sql['id'] = $id;
         $sql['data'] = $json;
@@ -83,32 +76,27 @@ class LogTable
         return $this->dbmsTable->insert($sql, $sql);
     }
 
-    public function delete($id)
-    {
+    public function delete($id) {
         return $this->dbmsTable->delete($id);
     }
 
-    public function selectGroup($column, array $filter, $sql)
-    {
+    public function selectGroup($column, array $filter, $sql) {
         if (isset($filter[$column])) {
             unset($filter[$column]);
         }
         return $this->dbmsTable->select(sprintf('DISTINCT %s', $column), $filter, sprintf('%s ORDER BY %s', $sql, $column));
     }
 
-    public function selectCount(array $filter, $sql)
-    {
+    public function selectCount(array $filter, $sql) {
         $res = $this->dbmsTable->select('COUNT(*)', $filter, $sql);
         return reset($res);
     }
 
-    public function select(array $filter, $sql, $page, $limit)
-    {
+    public function select(array $filter, $sql, $page, $limit) {
         return $this->dbmsTable->select(array_keys($this->columnConfig), $filter, sprintf('%s ORDER BY id DESC LIMIT %d, %d', $sql, $page * $limit, $limit));
     }
 
-    public function fixIndex()
-    {
+    public function fixIndex() {
         foreach ($this->columnConfig as $key => $column) {
             if ($column['searchable'] or $column['groupable']) {
                 $index = [];
@@ -120,8 +108,7 @@ class LogTable
         }
     }
 
-    public function fixRollback(Table $tempTable)
-    {
+    public function fixRollback(Table $tempTable) {
         $ret = 0;
         $rowList = $this->dbmsTable->select();
         foreach ($rowList as $row) {

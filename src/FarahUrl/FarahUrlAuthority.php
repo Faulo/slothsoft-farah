@@ -10,11 +10,9 @@ use Slothsoft\Farah\Exception\IncompleteUrlException;
  * @author Daniel Schulz
  *        
  */
-class FarahUrlAuthority implements Hashable
-{
+class FarahUrlAuthority implements Hashable {
 
-    public static function createFromVendorAndModule(string $vendor, string $module): FarahUrlAuthority
-    {
+    public static function createFromVendorAndModule(string $vendor, string $module): FarahUrlAuthority {
         $id = "farah://$vendor@$module";
         if ($vendor === '' or $module === '') {
             throw new IncompleteUrlException($id, 'vendor or module');
@@ -22,14 +20,12 @@ class FarahUrlAuthority implements Hashable
         return self::create($id, $vendor, $module);
     }
 
-    public static function createFromHttpAuthority(string $authority): FarahUrlAuthority
-    {
+    public static function createFromHttpAuthority(string $authority): FarahUrlAuthority {
         list ($vendor, $module) = explode('@', $authority);
         return self::createFromVendorAndModule($vendor, $module);
     }
 
-    private static function create(string $id, string $vendor, string $module): FarahUrlAuthority
-    {
+    private static function create(string $id, string $vendor, string $module): FarahUrlAuthority {
         static $cache = [];
         if (! isset($cache[$id])) {
             $cache[$id] = new FarahUrlAuthority($id, $vendor, $module);
@@ -43,40 +39,33 @@ class FarahUrlAuthority implements Hashable
 
     private $module;
 
-    private function __construct(string $id, string $vendor, string $module)
-    {
+    private function __construct(string $id, string $vendor, string $module) {
         $this->id = $id;
         $this->vendor = $vendor;
         $this->module = $module;
     }
 
-    public function __toString(): string
-    {
+    public function __toString(): string {
         return $this->id;
     }
 
-    public function getProtocol(): string
-    {
+    public function getProtocol(): string {
         return 'farah';
     }
 
-    public function getVendor(): string
-    {
+    public function getVendor(): string {
         return $this->vendor;
     }
 
-    public function getModule(): string
-    {
+    public function getModule(): string {
         return $this->module;
     }
 
-    public function equals($obj): bool
-    {
+    public function equals($obj): bool {
         return ($obj instanceof self and ((string) $this === (string) $obj));
     }
 
-    public function hash()
-    {
+    public function hash() {
         return (string) $this;
     }
 }

@@ -5,39 +5,32 @@ namespace Slothsoft\Farah;
 use Closure;
 use Slothsoft\Core\InterExec;
 
-class HTTPCommand
-{
+class HTTPCommand {
 
     protected $exec;
 
-    public function __construct($command)
-    {
+    public function __construct($command) {
         $this->exec = new InterExec($command);
     }
 
-    public function getMime()
-    {
+    public function getMime() {
         return null;
     }
 
-    public function getEncoding()
-    {
+    public function getEncoding() {
         return null;
     }
 
-    public function getHeaderList()
-    {
+    public function getHeaderList() {
         return [];
     }
 
-    public function run()
-    {
+    public function run() {
         $this->exec->run();
     }
 
     // EventTarget
-    public function addEventListener($type, Closure $listener, $capture = false)
-    {
+    public function addEventListener($type, Closure $listener, $capture = false) {
         $this->exec->on($type, function (InterExec $exec, $data) use ($type, $listener) {
             $eve = new HTTPEvent($type);
             $eve->target = $this;
@@ -46,13 +39,11 @@ class HTTPCommand
         });
     }
 
-    public function removeEventListener($type, $listener, $capture = false)
-    {
+    public function removeEventListener($type, $listener, $capture = false) {
         // not implemented
     }
 
-    public function dispatchEvent($event)
-    {
+    public function dispatchEvent($event) {
         // not implemented
     }
 }

@@ -7,16 +7,13 @@ namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
  * @author Daniel Schulz
  *        
  */
-class DenyAllParameterFilter implements ParameterFilterStrategyInterface
-{
+class DenyAllParameterFilter implements ParameterFilterStrategyInterface {
 
-    public function isAllowedName(string $name): bool
-    {
+    public function isAllowedName(string $name): bool {
         return false;
     }
 
-    public function getValueSanitizers(): iterable
-    {
+    public function getValueSanitizers(): iterable {
         return [];
     }
 }

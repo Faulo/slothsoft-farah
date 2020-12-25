@@ -35,11 +35,9 @@ use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterf
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 
-class DefaultAssetBuilder implements AssetBuilderStrategyInterface
-{
+class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
 
-    public function normalizeElement(LeanElement $element, ?Leanelement $parent = null): void
-    {
+    public function normalizeElement(LeanElement $element, ?Leanelement $parent = null): void {
         $tag = $element->getTag();
         if (! $element->hasAttribute('name')) {
             $element->setAttribute('name', uniqid('asset-'));
@@ -62,13 +60,13 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface
                 $element->setAttribute('realpath', $parent->getAttribute('realpath') . DIRECTORY_SEPARATOR . $element->getAttribute('path'));
             }
         }
-        
+
         $executableBuilder = FromManifestExecutableBuilder::class;
         $pathResolver = FromManifestPathResolver::class;
         $parameterFilter = AllowAllParameterFilter::class;
         $parameterSupplier = NullParameterSupplier::class;
         $instruction = FromManifestInstruction::class;
-        
+
         switch ($tag) {
             case Manifest::TAG_PARAM:
                 $executableBuilder = NullExecutableBuilder::class;
@@ -129,31 +127,31 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface
                 $parameterFilter = DenyAllParameterFilter::class;
                 break;
         }
-        
+
         if (! $element->hasAttribute('use')) {
             $element->setAttribute('use', 'manifest');
         }
-        
+
         if (! $element->hasAttribute('executable-builder')) {
             $element->setAttribute('executable-builder', $executableBuilder);
         }
-        
+
         if (! $element->hasAttribute('path-resolver')) {
             $element->setAttribute('path-resolver', $pathResolver);
         }
-        
+
         if (! $element->hasAttribute('parameter-filter')) {
             $element->setAttribute('parameter-filter', $parameterFilter);
         }
-        
+
         if (! $element->hasAttribute('parameter-supplier')) {
             $element->setAttribute('parameter-supplier', $parameterSupplier);
         }
-        
+
         if (! $element->hasAttribute('instruction')) {
             $element->setAttribute('instruction', $instruction);
         }
-        
+
         foreach ($element->getChildren() as $child) {
             $this->normalizeElement($child, $element);
         }
@@ -161,45 +159,39 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface
 
     private static $services = [];
 
-    public function buildAssetStrategies(ManifestInterface $ownerManifest, LeanElement $element): AssetStrategies
-    {
+    public function buildAssetStrategies(ManifestInterface $ownerManifest, LeanElement $element): AssetStrategies {
         return new AssetStrategies($this->newExecutableBuilder($element->getAttribute('executable-builder')), $this->newPathResolver($element->getAttribute('path-resolver')), $this->newParameterFilter($element->getAttribute('parameter-filter')), $this->newParameterSupplier($element->getAttribute('parameter-supplier')), $this->newInstruction($element->getAttribute('instruction')));
     }
 
-    private function newExecutableBuilder(string $className): ExecutableBuilderStrategyInterface
-    {
+    private function newExecutableBuilder(string $className): ExecutableBuilderStrategyInterface {
         if (! isset(static::$services[$className])) {
             static::$services[$className] = new $className();
         }
         return static::$services[$className];
     }
 
-    private function newPathResolver(string $className): PathResolverStrategyInterface
-    {
+    private function newPathResolver(string $className): PathResolverStrategyInterface {
         if (! isset(static::$services[$className])) {
             static::$services[$className] = new $className();
         }
         return static::$services[$className];
     }
 
-    private function newParameterFilter(string $className): ParameterFilterStrategyInterface
-    {
+    private function newParameterFilter(string $className): ParameterFilterStrategyInterface {
         if (! isset(static::$services[$className])) {
             static::$services[$className] = new $className();
         }
         return static::$services[$className];
     }
 
-    private function newParameterSupplier(string $className): ParameterSupplierStrategyInterface
-    {
+    private function newParameterSupplier(string $className): ParameterSupplierStrategyInterface {
         if (! isset(static::$services[$className])) {
             static::$services[$className] = new $className();
         }
         return static::$services[$className];
     }
 
-    private function newInstruction(string $className): InstructionStrategyInterface
-    {
+    private function newInstruction(string $className): InstructionStrategyInterface {
         if (! isset(static::$services[$className])) {
             static::$services[$className] = new $className();
         }

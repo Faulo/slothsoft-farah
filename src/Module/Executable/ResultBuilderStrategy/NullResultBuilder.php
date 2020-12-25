@@ -12,11 +12,9 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\NullStreamBuilder;
 use DOMDocument;
 use DOMElement;
 
-class NullResultBuilder implements ResultBuilderStrategyInterface
-{
+class NullResultBuilder implements ResultBuilderStrategyInterface {
 
-    public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies
-    {
+    public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         if ($type === Executable::resultIsXml()) {
             $writer = new DOMWriterFromElementDelegate(function (DOMDocument $targetDoc): DOMElement {
                 return $targetDoc->createElement('null');

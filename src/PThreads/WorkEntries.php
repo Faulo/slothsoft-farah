@@ -5,25 +5,21 @@ namespace Slothsoft\Farah\PThreads;
 use Threaded;
 use Volatile;
 
-class WorkEntries extends Threaded
-{
+class WorkEntries extends Threaded {
 
     private $entries;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->entries = new Volatile();
     }
 
-    public function append($entry): void
-    {
+    public function append($entry): void {
         $this->entries->synchronized(function ($entry) {
             $this->entries[] = $entry;
         }, $entry);
     }
 
-    public function fetch(): iterable
-    {
+    public function fetch(): iterable {
         $ret = [];
         $this->entries->synchronized(function () use (&$ret) {
             while ($this->entries->count()) {
@@ -33,8 +29,7 @@ class WorkEntries extends Threaded
         yield from $ret;
     }
 
-    public function hasEntries(): bool
-    {
+    public function hasEntries(): bool {
         $ret = false;
         $this->entries->synchronized(function () use (&$ret) {
             $ret = (bool) $this->entries->count();

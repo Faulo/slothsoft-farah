@@ -8,8 +8,7 @@ use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\ParameterFilterStrategy
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\ParameterSupplierStrategyInterface;
 
-class AssetStrategies
-{
+class AssetStrategies {
 
     public $executableBuilder;
 
@@ -21,8 +20,7 @@ class AssetStrategies
 
     public $instruction;
 
-    public function __construct(ExecutableBuilderStrategyInterface $executableBuilder, PathResolverStrategyInterface $pathResolver, ParameterFilterStrategyInterface $parameterFilter, ParameterSupplierStrategyInterface $parameterSupplier, InstructionStrategyInterface $instruction)
-    {
+    public function __construct(ExecutableBuilderStrategyInterface $executableBuilder, PathResolverStrategyInterface $pathResolver, ParameterFilterStrategyInterface $parameterFilter, ParameterSupplierStrategyInterface $parameterSupplier, InstructionStrategyInterface $instruction) {
         $this->executableBuilder = $executableBuilder;
         $this->pathResolver = $pathResolver;
         $this->parameterFilter = $parameterFilter;

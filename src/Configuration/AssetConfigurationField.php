@@ -8,17 +8,14 @@ use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use InvalidArgumentException;
 
-class AssetConfigurationField extends ConfigurationField
-{
+class AssetConfigurationField extends ConfigurationField {
 
-    public function getValue()
-    {
+    public function getValue() {
         $value = parent::getValue();
         return $value instanceof AssetInterface ? $value : $this->loadValue($value);
     }
 
-    private function loadValue($newValue): AssetInterface
-    {
+    private function loadValue($newValue): AssetInterface {
         if (is_string($newValue)) {
             $newValue = FarahUrl::createFromReference($newValue);
         }

@@ -7,11 +7,9 @@ use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Core\Configuration\FileConfigurationField;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
 
-class BannedManager
-{
+class BannedManager {
 
-    public static function getInstance(): self
-    {
+    public static function getInstance(): self {
         static $instance;
         if ($instance === null) {
             $instance = new self();
@@ -19,8 +17,7 @@ class BannedManager
         return $instance;
     }
 
-    private static function ipFile(): ConfigurationField
-    {
+    private static function ipFile(): ConfigurationField {
         static $field;
         if ($field === null) {
             try {
@@ -33,36 +30,30 @@ class BannedManager
         return $field;
     }
 
-    public static function setIpFile(string $path)
-    {
+    public static function setIpFile(string $path) {
         self::ipFile()->setValue($path);
     }
 
-    public static function getIpFile(): string
-    {
+    public static function getIpFile(): string {
         return self::ipFile()->getValue();
     }
 
-    public function isBanworthy(string $message): bool
-    {
+    public function isBanworthy(string $message): bool {
         // TODO: proper hate speech check
         return (preg_match('/nigg[ae]/u', $message) or preg_match('/fags/u', $message) or preg_match('/卐/u', $message));
     }
 
-    public function isBanned(string $ip): bool
-    {
+    public function isBanned(string $ip): bool {
         return in_array($ip, $this->getBannedList(), true);
     }
 
-    public function addBanned(string $ip)
-    {
+    public function addBanned(string $ip) {
         $this->setBannedList(array_merge($this->getBannedList(), [
             $ip
         ]));
     }
 
-    public function removeBanned(string $ip)
-    {
+    public function removeBanned(string $ip) {
         $this->setBannedList(array_diff($this->getBannedList(), [
             $ip
         ]));
@@ -70,8 +61,7 @@ class BannedManager
 
     private $bannedList;
 
-    private function getBannedList(): array
-    {
+    private function getBannedList(): array {
         if ($this->bannedList === null) {
             $logFile = self::getIpFile();
             $this->bannedList = file_exists($logFile) ? file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : [];
@@ -79,8 +69,7 @@ class BannedManager
         return $this->bannedList;
     }
 
-    private function setBannedList(array $list)
-    {
+    private function setBannedList(array $list) {
         $this->bannedList = $list;
         $logFile = self::getIpFile();
         file_put_contents($logFile, implode(PHP_EOL, $this->bannedList));

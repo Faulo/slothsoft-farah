@@ -5,8 +5,7 @@ namespace Slothsoft\Farah\Http;
 use Psr\Http\Message\StreamInterface;
 use Slothsoft\Core\IO\Writable\FilteredStreamWriterInterface;
 
-interface CodingInterface
-{
+interface CodingInterface {
 
     public function __toString(): string;
 

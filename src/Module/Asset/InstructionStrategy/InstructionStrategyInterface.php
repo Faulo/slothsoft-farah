@@ -4,8 +4,7 @@ namespace Slothsoft\Farah\Module\Asset\InstructionStrategy;
 
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 
-interface InstructionStrategyInterface
-{
+interface InstructionStrategyInterface {
 
     public function isImportSelf(AssetInterface $context): bool;
 

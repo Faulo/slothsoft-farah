@@ -13,8 +13,7 @@ namespace Slothsoft\Farah;
 
 use Closure;
 
-class HTTPClosure
-{
+class HTTPClosure {
 
     protected $options = [
         'isThreaded' => false,
@@ -23,24 +22,20 @@ class HTTPClosure
 
     protected $task;
 
-    public function __construct(array $options, Closure $task)
-    {
+    public function __construct(array $options, Closure $task) {
         $this->options = $options + $this->options;
         $this->task = $task;
     }
 
-    public function run(...$args)
-    {
+    public function run(...$args) {
         return ($this->task)(...$args);
     }
 
-    public function isThreaded()
-    {
+    public function isThreaded() {
         return (bool) $this->options['isThreaded'];
     }
 
-    public function isCachable()
-    {
+    public function isCachable() {
         return (bool) $this->options['isCachable'];
     }
 }

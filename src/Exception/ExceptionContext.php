@@ -15,11 +15,9 @@ use Throwable;
  * @author Daniel Schulz
  *        
  */
-class ExceptionContext implements DOMWriterInterface
-{
+class ExceptionContext implements DOMWriterInterface {
 
-    public static function append(Throwable $exception, array $data = []): Throwable
-    {
+    public static function append(Throwable $exception, array $data = []): Throwable {
         if (isset($exception->exceptionContext)) {
             $exception->exceptionContext->addData($data);
         } else {
@@ -32,41 +30,34 @@ class ExceptionContext implements DOMWriterInterface
 
     private $data;
 
-    private function __construct(Throwable $ownerException, array $data)
-    {
+    private function __construct(Throwable $ownerException, array $data) {
         $this->ownerException = $ownerException;
         $this->data = $data;
     }
 
-    public function addData(array $data)
-    {
+    public function addData(array $data) {
         $this->data += $data;
     }
 
-    public function getModule()
-    {
+    public function getModule() {
         return $this->data['module'] ?? null;
     }
 
-    public function getAsset()
-    {
+    public function getAsset() {
         return $this->data['asset'] ?? null;
     }
 
-    public function getResult()
-    {
+    public function getResult() {
         return $this->data['result'] ?? null;
     }
 
-    public function getClass()
-    {
+    public function getClass() {
         return $this->data['class'] ?? null;
     }
 
-    public function toElement(DOMDocument $targetDoc): DOMElement
-    {
+    public function toElement(DOMDocument $targetDoc): DOMElement {
         $name = get_class($this->ownerException);
-        
+
         if ($this->ownerException instanceof ErrorException) {
             $code = $this->ownerException->getSeverity();
             $constList = array_flip(array_slice(get_defined_constants(true)['Core'], 0, 15, true));
@@ -74,7 +65,7 @@ class ExceptionContext implements DOMWriterInterface
                 $name .= "[$constList[$code]]";
             }
         }
-        
+
         $element = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, Module::TAG_ERROR);
         $element->setAttribute('name', $name);
         $element->setAttribute('code', (string) $this->ownerException->getCode());
@@ -82,7 +73,7 @@ class ExceptionContext implements DOMWriterInterface
         $element->setAttribute('line', (string) $this->ownerException->getLine());
         $element->setAttribute('message', $this->ownerException->getMessage());
         $element->setAttribute('trace', $this->ownerException->getTraceAsString());
-        
+
         if ($module = $this->getModule()) {
             $element->setAttribute('module', $module->getId());
         }
@@ -95,16 +86,15 @@ class ExceptionContext implements DOMWriterInterface
         if ($class = $this->getClass()) {
             $element->setAttribute('class', $class);
         }
-        
+
         if ($exception = $this->ownerException->getPrevious()) {
             $element->appendChild(self::append($exception)->exceptionContext->toElement($targetDoc));
         }
-        
+
         return $element;
     }
 
-    public function toDocument(): DOMDocument
-    {
+    public function toDocument(): DOMDocument {
         $targetDoc = new DOMDocument();
         try {
             // let's retrieve the error template to make sure it exists

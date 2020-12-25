@@ -5,16 +5,13 @@ namespace Slothsoft\Farah\ModuleTests;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
-class AbstractTestCase extends TestCase
-{
+class AbstractTestCase extends TestCase {
 
-    protected function failException(Throwable $e)
-    {
+    protected function failException(Throwable $e) {
         $this->fail(sprintf('%s: %s', basename(get_class($e)), $e->getMessage()));
     }
 
-    protected function getObjectProperty(object $target, string $name)
-    {
+    protected function getObjectProperty(object $target, string $name) {
         $getProperty = function (string $name) {
             return $this->$name;
         };
@@ -22,8 +19,7 @@ class AbstractTestCase extends TestCase
         return $getProperty($name);
     }
 
-    protected function getObjectMethod(object $target, string $name, ...$args)
-    {
+    protected function getObjectMethod(object $target, string $name, ...$args) {
         $getProperty = function (string $name, $args) {
             return $this->$name(...$args);
         };

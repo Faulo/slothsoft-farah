@@ -9,11 +9,9 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ProxyResultBuilder;
 
-class FromReferenceExecutableBuilder implements ExecutableBuilderStrategyInterface
-{
+class FromReferenceExecutableBuilder implements ExecutableBuilderStrategyInterface {
 
-    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
-    {
+    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $ref = $context->getManifestElement()->getAttribute('ref');
         $url = FarahUrl::createFromReference($ref, $context->createUrl());
         $resultBuilder = new ProxyResultBuilder(Module::resolveToExecutable($url));

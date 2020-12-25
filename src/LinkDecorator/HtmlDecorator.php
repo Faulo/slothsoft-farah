@@ -10,8 +10,7 @@ use DOMDocument;
  * @author Daniel Schulz
  *        
  */
-class HtmlDecorator implements LinkDecoratorInterface
-{
+class HtmlDecorator implements LinkDecoratorInterface {
 
     private $namespace;
 
@@ -19,23 +18,20 @@ class HtmlDecorator implements LinkDecoratorInterface
 
     private $rootNode;
 
-    public function setNamespace(string $namespace)
-    {
+    public function setNamespace(string $namespace) {
         $this->namespace = $namespace;
     }
 
-    public function setTarget(DOMDocument $document)
-    {
+    public function setTarget(DOMDocument $document) {
         $this->targetDocument = $document;
-        
+
         $this->rootNode = $document->getElementsByTagNameNS($this->namespace, 'head')->item(0) ?? $document->documentElement;
     }
 
-    public function linkStylesheets(FarahUrl ...$stylesheets)
-    {
+    public function linkStylesheets(FarahUrl ...$stylesheets) {
         foreach ($stylesheets as $url) {
             $href = str_replace('farah://', '/', (string) $url);
-            
+
             $node = $this->targetDocument->createElementNS($this->namespace, 'link');
             $node->setAttribute('href', $href);
             $node->setAttribute('rel', 'stylesheet');
@@ -44,11 +40,10 @@ class HtmlDecorator implements LinkDecoratorInterface
         }
     }
 
-    public function linkScripts(FarahUrl ...$scripts)
-    {
+    public function linkScripts(FarahUrl ...$scripts) {
         foreach ($scripts as $url) {
             $href = str_replace('farah://', '/', (string) $url);
-            
+
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
             $node->setAttribute('src', $href);
             $node->setAttribute('defer', 'defer');
@@ -56,11 +51,10 @@ class HtmlDecorator implements LinkDecoratorInterface
         }
     }
 
-    public function linkModules(FarahUrl ...$modules)
-    {
+    public function linkModules(FarahUrl ...$modules) {
         foreach ($modules as $url) {
             $href = str_replace('farah://', '/', (string) $url);
-            
+
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
             $node->setAttribute('src', $href);
             $node->setAttribute('type', 'module');

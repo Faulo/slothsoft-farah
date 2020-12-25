@@ -8,8 +8,7 @@ use DOMDocument;
 use DOMElement;
 use SplFileInfo;
 
-class FileInfoDOMWriter implements DOMWriterInterface
-{
+class FileInfoDOMWriter implements DOMWriterInterface {
     use DOMWriterDocumentFromElementTrait;
 
     /**
@@ -18,13 +17,11 @@ class FileInfoDOMWriter implements DOMWriterInterface
      */
     private $file;
 
-    public function __construct(SplFileInfo $file)
-    {
+    public function __construct(SplFileInfo $file) {
         $this->file = $file;
     }
 
-    public function toElement(DOMDocument $targetDoc): DOMElement
-    {
+    public function toElement(DOMDocument $targetDoc): DOMElement {
         $node = $targetDoc->createElement($this->file->getType());
         $node->setAttribute('name', $this->file->getFilename());
         if ($this->file->isFile()) {
@@ -32,7 +29,7 @@ class FileInfoDOMWriter implements DOMWriterInterface
             $node->setAttribute('modification-time', $this->file->getMTime());
             $node->setAttribute('modification-date', date(DATE_W3C, $this->file->getMTime()));
         }
-        
+
         return $node;
     }
 }

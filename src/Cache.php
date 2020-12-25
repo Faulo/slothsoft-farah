@@ -14,20 +14,17 @@ namespace Slothsoft\Farah;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\ServerEnvironment;
 
-class Cache
-{
+class Cache {
 
     protected $rootDir;
 
     protected $loadScript = '/getCache.php/';
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->rootDir = ServerEnvironment::getCacheDirectory();
     }
 
-    public function getPath($uri, $cacheDir = '')
-    {
+    public function getPath($uri, $cacheDir = '') {
         $path = $this->sanitizeName($uri);
         $ret = $this->rootDir . $cacheDir;
         if (! is_dir($ret)) {
@@ -36,8 +33,7 @@ class Cache
         return realpath($ret) . DIRECTORY_SEPARATOR . $path;
     }
 
-    public function getURI($uri, $cacheDir = '')
-    {
+    public function getURI($uri, $cacheDir = '') {
         $ret = $this->getPath($uri, $cacheDir);
         $ret = substr($ret, strlen($this->rootDir));
         $ret = str_replace('\\', '/', $ret);
@@ -45,8 +41,7 @@ class Cache
         return $ret;
     }
 
-    public function getFile($path)
-    {
+    public function getFile($path) {
         $ret = null;
         if (file_exists($this->rootDir . $path)) {
             $ret = $this->rootDir . $path;
@@ -54,17 +49,16 @@ class Cache
         return $ret;
     }
 
-    public function mergeFiles(array $fileList, $targetDir = '', $zipFunction = null)
-    {
+    public function mergeFiles(array $fileList, $targetDir = '', $zipFunction = null) {
         if (! count($fileList)) {
             return;
         }
-        
+
         $timeList = [];
         foreach ($fileList as $file) {
             $timeList[$file] = FileSystem::changetime($file);
         }
-        
+
         $ext = explode('.', current($fileList));
         $ext = end($ext);
         $cacheName = sprintf('%s.%s.%s', $this->createName($fileList), max($timeList), $ext);
@@ -95,13 +89,11 @@ class Cache
         return $cacheURI;
     }
 
-    protected function createName(array $names)
-    {
+    protected function createName(array $names) {
         return md5(implode(PHP_EOL, $names));
     }
 
-    protected function sanitizeName($path)
-    {
+    protected function sanitizeName($path) {
         return trim(str_replace([
             '/',
             '\\',

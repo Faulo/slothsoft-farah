@@ -13,16 +13,14 @@ use Slothsoft\Farah\Module\Asset\ManifestElementBuilder;
  * @author Daniel Schulz
  *        
  */
-class FromFilesystemPathResolver implements PathResolverStrategyInterface
-{
+class FromFilesystemPathResolver implements PathResolverStrategyInterface {
 
-    public function loadChildren(AssetInterface $context): iterable
-    {
+    public function loadChildren(AssetInterface $context): iterable {
         $element = $context->getManifestElement();
         $desiredMime = $element->getAttribute('type', '*/*');
         $desiredExtension = MimeTypeDictionary::guessExtension($desiredMime);
         $path = $element->getAttribute('realpath');
-        
+
         $filePathList = FileSystem::scanDir($path, FileSystem::SCANDIR_EXCLUDE_DIRS);
         foreach ($filePathList as $filePath) {
             $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
@@ -38,15 +36,14 @@ class FromFilesystemPathResolver implements PathResolverStrategyInterface
         }
     }
 
-    public function resolvePath(AssetInterface $context, string $name): LeanElement
-    {
+    public function resolvePath(AssetInterface $context, string $name): LeanElement {
         $element = $context->getManifestElement();
         $type = $element->getAttribute('type', '*/*');
         $extension = MimeTypeDictionary::guessExtension($type);
         $directory = $element->getAttribute('realpath');
-        
+
         $path = $name;
-        
+
         if (is_dir($directory . DIRECTORY_SEPARATOR . $path)) {
             $child = ManifestElementBuilder::createResourceDirectory($name, $path, $type);
         } else {
@@ -55,9 +52,9 @@ class FromFilesystemPathResolver implements PathResolverStrategyInterface
             }
             $child = ManifestElementBuilder::createResource($name, $path, $type);
         }
-        
+
         $context->normalizeManifestElement($child);
-        
+
         return $child;
     }
 }

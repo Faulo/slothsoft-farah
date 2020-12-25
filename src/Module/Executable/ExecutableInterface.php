@@ -7,8 +7,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
-interface ExecutableInterface
-{
+interface ExecutableInterface {
 
     public function getUrlArguments(): FarahUrlArguments;
 

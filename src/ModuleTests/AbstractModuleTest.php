@@ -16,13 +16,11 @@ use DOMElement;
 use Throwable;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 
-abstract class AbstractModuleTest extends AbstractTestCase
-{
+abstract class AbstractModuleTest extends AbstractTestCase {
 
     abstract protected static function getManifestAuthority(): FarahUrlAuthority;
 
-    protected function getManifest(): ManifestInterface
-    {
+    protected function getManifest(): ManifestInterface {
         static $manifest;
         if ($manifest === null) {
             $manifest = Module::resolveToManifest($this->getManifestUrl());
@@ -30,28 +28,23 @@ abstract class AbstractModuleTest extends AbstractTestCase
         return $manifest;
     }
 
-    protected function getManifestUrl(): FarahUrl
-    {
+    protected function getManifestUrl(): FarahUrl {
         return FarahUrl::createFromComponents(static::getManifestAuthority());
     }
 
-    protected function getManifestAsset(): AssetInterface
-    {
+    protected function getManifestAsset(): AssetInterface {
         return $this->getManifest()->lookupAsset('/');
     }
 
-    protected function getManifestDocument(): DOMDocument
-    {
+    protected function getManifestDocument(): DOMDocument {
         return $this->getManifestMethod('getRootElement')->toDocument();
     }
 
-    protected function getManifestProperty(string $name)
-    {
+    protected function getManifestProperty(string $name) {
         return $this->getObjectProperty($this->getManifest(), $name);
     }
 
-    protected function getManifestMethod(string $name)
-    {
+    protected function getManifestMethod(string $name) {
         return $this->getObjectMethod($this->getManifest(), $name);
     }
 
@@ -59,8 +52,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
      *
      * @dataProvider assetReferenceProvider
      */
-    public function testAssetReferenceIsValid(string $ref, FarahUrl $context): void
-    {
+    public function testAssetReferenceIsValid(string $ref, FarahUrl $context): void {
         try {
             FarahUrl::createFromReference($ref, $context);
             $this->assertTrue(true);
@@ -71,8 +63,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
         }
     }
 
-    public function assetReferenceProvider(): iterable
-    {
+    public function assetReferenceProvider(): iterable {
         foreach ($this->getReferencedAssetReferences() as $context => $path) {
             yield (string) $path => [
                 $path,
@@ -81,8 +72,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
         }
     }
 
-    public function assetReferenceUrlProvider(): iterable
-    {
+    public function assetReferenceUrlProvider(): iterable {
         foreach ($this->getReferencedAssetReferences() as $context => $ref) {
             try {
                 $url = FarahUrl::createFromReference($ref, $context);
@@ -93,8 +83,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
         }
     }
 
-    private function getReferencedAssetReferences(): iterable
-    {
+    private function getReferencedAssetReferences(): iterable {
         $manifestDocument = $this->getManifestDocument();
         $nodeList = $manifestDocument->getElementsByTagName('*');
         foreach ($nodeList as $node) {
@@ -104,8 +93,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
         }
     }
 
-    private function getContextUrlForManifestNode(DOMElement $node): FarahUrl
-    {
+    private function getContextUrlForManifestNode(DOMElement $node): FarahUrl {
         $path = [];
         while ($node->parentNode instanceof DOMElement) {
             if ($node->hasAttribute('name')) {
@@ -125,8 +113,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
      *
      * @dataProvider assetReferenceUrlProvider
      */
-    public function testReferencedModuleExists(FarahUrl $url): void
-    {
+    public function testReferencedModuleExists(FarahUrl $url): void {
         try {
             Module::resolveToManifest($url);
             $this->assertTrue(true);
@@ -139,8 +126,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
      *
      * @dataProvider assetReferenceUrlProvider
      */
-    public function testReferencedAssetExists(FarahUrl $url): void
-    {
+    public function testReferencedAssetExists(FarahUrl $url): void {
         try {
             Module::resolveToAsset($url);
             $this->assertTrue(true);
@@ -155,8 +141,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
      *
      * @dataProvider assetReferenceUrlProvider
      */
-    public function testReferencedExecutableExists(FarahUrl $url): void
-    {
+    public function testReferencedExecutableExists(FarahUrl $url): void {
         try {
             Module::resolveToExecutable($url);
             $this->assertTrue(true);
@@ -173,8 +158,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
      *
      * @dataProvider assetReferenceUrlProvider
      */
-    public function testReferencedResultExists(FarahUrl $url): void
-    {
+    public function testReferencedResultExists(FarahUrl $url): void {
         try {
             Module::resolveToResult($url);
             $this->assertTrue(true);
@@ -187,8 +171,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
         }
     }
 
-    public function assetLocalUrlProvider(): iterable
-    {
+    public function assetLocalUrlProvider(): iterable {
         foreach ($this->getLocalAssetPaths() as $path) {
             try {
                 $url = $this->getManifest()->createUrl($path);
@@ -199,13 +182,11 @@ abstract class AbstractModuleTest extends AbstractTestCase
         }
     }
 
-    private function getLocalAssetPaths(): iterable
-    {
+    private function getLocalAssetPaths(): iterable {
         return $this->buildPathIndex($this->getManifestAsset());
     }
 
-    private function buildPathIndex(AssetInterface $asset): iterable
-    {
+    private function buildPathIndex(AssetInterface $asset): iterable {
         yield $asset->getUrlPath();
         foreach ($asset->getAssetChildren() as $childAsset) {
             if ($childAsset->createUrl()->getAssetAuthority() === static::getManifestAuthority()) {
@@ -220,8 +201,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
      *
      * @dataProvider assetLocalUrlProvider
      */
-    public function testLocalAssetExists(FarahUrl $url): void
-    {
+    public function testLocalAssetExists(FarahUrl $url): void {
         try {
             Module::resolveToAsset($url);
             $this->assertTrue(true);
@@ -236,8 +216,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
      *
      * @dataProvider assetLocalUrlProvider
      */
-    public function testLocalExecutableExists(FarahUrl $url): void
-    {
+    public function testLocalExecutableExists(FarahUrl $url): void {
         try {
             Module::resolveToExecutable($url);
             $this->assertTrue(true);
@@ -254,8 +233,7 @@ abstract class AbstractModuleTest extends AbstractTestCase
      *
      * @dataProvider assetLocalUrlProvider
      */
-    public function testLocalResultExists(FarahUrl $url): void
-    {
+    public function testLocalResultExists(FarahUrl $url): void {
         try {
             Module::resolveToResult($url);
             $this->assertTrue(true);
@@ -273,15 +251,14 @@ abstract class AbstractModuleTest extends AbstractTestCase
      * @depends      testLocalResultExists
      * @dataProvider assetLocalUrlProvider
      */
-    public function testLocalResultIsValidAccordingToSchema(FarahUrl $url): void
-    {
+    public function testLocalResultIsValidAccordingToSchema(FarahUrl $url): void {
         $asset = Module::resolveToAsset($url);
         $executable = $asset->lookupExecutable();
         $result = $executable->lookupXmlResult();
-        
+
         $document = $result->lookupDOMWriter()->toDocument();
         $node = $document->documentElement;
-        
+
         $this->assertInstanceOf(DOMElement::class, $node);
         $ns = $node->namespaceURI;
         $version = $node->getAttribute('version');
@@ -289,9 +266,9 @@ abstract class AbstractModuleTest extends AbstractTestCase
             if (strpos($ns, 'http://schema.slothsoft.net/') === 0) {
                 $schema = explode('/', substr($ns, strlen('http://schema.slothsoft.net/')));
                 $this->assertEquals(2, count($schema), "Invalid slothsoft schema: $ns");
-                
+
                 $url = "farah://slothsoft@$schema[0]/schema/$schema[1]/$version";
-                
+
                 try {
                     $validateResult = $document->schemaValidate($url);
                 } catch (Throwable $e) {

@@ -10,18 +10,15 @@ use Slothsoft\Farah\Exception\MalformedUrlException;
  * @author Daniel Schulz
  *        
  */
-class FarahUrlPath implements Hashable
-{
+class FarahUrlPath implements Hashable {
 
     const SEPARATOR = '/';
 
-    public static function createEmpty(): self
-    {
+    public static function createEmpty(): self {
         return self::create('');
     }
 
-    public static function createFromString(string $path, FarahUrlPath $base = null): self
-    {
+    public static function createFromString(string $path, FarahUrlPath $base = null): self {
         if ($base and substr($path, 0, 1) !== self::SEPARATOR) {
             return self::create(self::normalize($base . self::SEPARATOR . $path));
         } else {
@@ -29,8 +26,7 @@ class FarahUrlPath implements Hashable
         }
     }
 
-    private static function create(string $id): self
-    {
+    private static function create(string $id): self {
         static $cache = [];
         if (! isset($cache[$id])) {
             $cache[$id] = new self($id);
@@ -38,8 +34,7 @@ class FarahUrlPath implements Hashable
         return $cache[$id];
     }
 
-    private static function normalize(string $path): string
-    {
+    private static function normalize(string $path): string {
         $segments = [];
         if ($path !== '') {
             foreach (explode(self::SEPARATOR, str_replace('\\', self::SEPARATOR, $path)) as $val) {
@@ -65,23 +60,19 @@ class FarahUrlPath implements Hashable
 
     private $id;
 
-    private function __construct(string $id)
-    {
+    private function __construct(string $id) {
         $this->id = $id;
     }
 
-    public function __toString(): string
-    {
+    public function __toString(): string {
         return $this->id;
     }
 
-    public function equals($obj): bool
-    {
+    public function equals($obj): bool {
         return ($obj instanceof self and ((string) $this === (string) $obj));
     }
 
-    public function hash()
-    {
+    public function hash() {
         return (string) $this;
     }
 }

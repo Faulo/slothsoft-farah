@@ -4,13 +4,11 @@ namespace Slothsoft\Farah\PThreads;
 
 use Pool;
 
-class WorkPool extends Pool
-{
+class WorkPool extends Pool {
 
     private $workCount = 0;
 
-    public function submitWork(WorkInstruction $instruction)
-    {
+    public function submitWork(WorkInstruction $instruction) {
         $class = $instruction->className;
         $options = $instruction->options;
         $work = new $class($options);
@@ -18,8 +16,7 @@ class WorkPool extends Pool
         $this->workCount ++;
     }
 
-    public function hasWork(): bool
-    {
+    public function hasWork(): bool {
         $this->collect(function (AbstractWorkThread $work) {
             if ($work->isGarbage()) {
                 $this->workCount --;

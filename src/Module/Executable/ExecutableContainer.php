@@ -10,28 +10,23 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
  * @author Daniel Schulz
  *        
  */
-class ExecutableContainer
-{
+class ExecutableContainer {
 
     private $map;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->map = new Map();
     }
 
-    public function put(FarahUrlArguments $id, ExecutableInterface $item)
-    {
+    public function put(FarahUrlArguments $id, ExecutableInterface $item) {
         $this->map->put($id, $item);
     }
 
-    public function get(FarahUrlArguments $id): ExecutableInterface
-    {
+    public function get(FarahUrlArguments $id): ExecutableInterface {
         return $this->map->get($id);
     }
 
-    public function has(FarahUrlArguments $id): bool
-    {
+    public function has(FarahUrlArguments $id): bool {
         return $this->map->hasKey($id);
     }
 }

@@ -4,13 +4,11 @@ namespace Slothsoft\Farah\Tracking;
 
 use Slothsoft\Core\ServerEnvironment;
 
-class Tick
-{
+class Tick {
 
     protected static $logTick;
 
-    public static function log()
-    {
+    public static function log() {
         if (! self::$logTick) {
             self::$logTick = new Tick();
         }
@@ -31,31 +29,27 @@ class Tick
 
     protected $lastTime;
 
-    protected function __construct()
-    {
+    protected function __construct() {
         $this->create();
     }
 
-    public function __destruct()
-    {
+    public function __destruct() {
         $this->save();
     }
 
-    protected function create()
-    {
+    protected function create() {
         $this->lastTime = get_execution_time();
-        
+
         $this->functionList = [];
         $this->functionFile = ServerEnvironment::getLogDirectory() . 'tracking.tick.function.log';
         file_put_contents($this->functionFile, '');
-        
+
         $this->timelineList = [];
         $this->timelineFile = ServerEnvironment::getLogDirectory() . 'tracking.tick.timeline.log';
         file_put_contents($this->timelineFile, '');
     }
 
-    protected function save()
-    {
+    protected function save() {
         $arr = $this->functionList;
         arsort($arr);
         foreach ($arr as $key => &$val) {
@@ -66,8 +60,7 @@ class Tick
         file_put_contents($this->timelineFile, implode(PHP_EOL, $this->timelineList));
     }
 
-    protected function append()
-    {
+    protected function append() {
         $mode = true;
         if ($mode) {
             $time = get_execution_time();
@@ -80,7 +73,7 @@ class Tick
             $backtraceList = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             array_shift($backtraceList);
             array_shift($backtraceList);
-            
+
             $funcList = [];
             foreach ($backtraceList as $backtrace) {
                 $func = isset($backtrace['class'], $backtrace['type']) ? $backtrace['class'] . $backtrace['type'] . $backtrace['function'] : $backtrace['function'];

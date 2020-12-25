@@ -10,11 +10,9 @@ use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\TransformationResultBuilder;
 
-class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterface
-{
+class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterface {
 
-    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
-    {
+    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $rootAsset = $context;
         $getUseInstructions = function () use ($rootAsset, $args): UseInstructionCollection {
             $instructions = new UseInstructionCollection();

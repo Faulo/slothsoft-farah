@@ -5,20 +5,17 @@ namespace Slothsoft\Farah\PThreads;
 use Threaded;
 use Throwable;
 
-abstract class AbstractWorkThread extends Threaded
-{
+abstract class AbstractWorkThread extends Threaded {
 
     abstract protected function work(): void;
 
     private $options;
 
-    public function __construct(array $options)
-    {
+    public function __construct(array $options) {
         $this->options = $options;
     }
 
-    public function run(): void
-    {
+    public function run(): void {
         try {
             $this->work();
         } catch (Throwable $e) {
@@ -26,18 +23,15 @@ abstract class AbstractWorkThread extends Threaded
         }
     }
 
-    protected function getOptions(): array
-    {
+    protected function getOptions(): array {
         return (array) $this->options;
     }
 
-    protected function getOption(string $key)
-    {
+    protected function getOption(string $key) {
         return $this->options[$key] ?? null;
     }
 
-    protected function log($message, bool $isImportant = false): void
-    {
+    protected function log($message, bool $isImportant = false): void {
         if (! is_string($message)) {
             $message = print_r($message, true);
         }
@@ -46,8 +40,7 @@ abstract class AbstractWorkThread extends Threaded
         $this->worker->logger->append($message);
     }
 
-    protected function thenDo(string $className, array $options = []): void
-    {
+    protected function thenDo(string $className, array $options = []): void {
         $this->worker->instructions->append(new WorkInstruction($className, $options));
     }
 }

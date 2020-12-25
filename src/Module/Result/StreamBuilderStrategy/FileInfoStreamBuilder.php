@@ -15,76 +15,62 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
 use SplFileInfo;
 use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromFileWriter;
 
-class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWriterInterface
-{
+class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWriterInterface {
 
     private $file;
 
     private $fileName;
 
-    public function __construct(SplFileInfo $file, ?string $fileName = null)
-    {
+    public function __construct(SplFileInfo $file, ?string $fileName = null) {
         $this->file = $file;
         $this->fileName = $fileName;
     }
 
-    public function buildStreamMimeType(ResultInterface $context): string
-    {
+    public function buildStreamMimeType(ResultInterface $context): string {
         return MimeTypeDictionary::guessMime($this->file->getExtension());
     }
 
-    public function buildStreamCharset(ResultInterface $context): string
-    {
+    public function buildStreamCharset(ResultInterface $context): string {
         return 'UTF-8';
     }
 
-    public function buildStreamFileName(ResultInterface $context): string
-    {
+    public function buildStreamFileName(ResultInterface $context): string {
         return $this->fileName ?? $this->file->getFilename();
     }
 
-    public function buildStreamFileStatistics(ResultInterface $context): array
-    {
+    public function buildStreamFileStatistics(ResultInterface $context): array {
         return stat((string) $this->file);
     }
 
-    public function buildStreamHash(ResultInterface $context): string
-    {
+    public function buildStreamHash(ResultInterface $context): string {
         return md5_file((string) $this->file);
     }
 
-    public function buildStreamIsBufferable(ResultInterface $context): bool
-    {
+    public function buildStreamIsBufferable(ResultInterface $context): bool {
         return true;
     }
 
-    public function buildStreamWriter(ResultInterface $context): StreamWriterInterface
-    {
+    public function buildStreamWriter(ResultInterface $context): StreamWriterInterface {
         return new StreamWriterFromFileWriter($context->lookupFileWriter());
     }
 
-    public function buildFileWriter(ResultInterface $context): FileWriterInterface
-    {
+    public function buildFileWriter(ResultInterface $context): FileWriterInterface {
         return $this;
     }
 
-    public function buildDOMWriter(ResultInterface $context): DOMWriterInterface
-    {
+    public function buildDOMWriter(ResultInterface $context): DOMWriterInterface {
         return new DOMWriterFromFileWriter($context->lookupFileWriter(), (string) $context->createUrl());
     }
 
-    public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface
-    {
+    public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface {
         return new ChunkWriterFromFileWriter($context->lookupFileWriter());
     }
 
-    public function buildStringWriter(ResultInterface $context): StringWriterInterface
-    {
+    public function buildStringWriter(ResultInterface $context): StringWriterInterface {
         return new StringWriterFromFileWriter($context->lookupFileWriter());
     }
 
-    public function toFile(): SplFileInfo
-    {
+    public function toFile(): SplFileInfo {
         return $this->file;
     }
 }

@@ -7,15 +7,13 @@ use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Throwable;
 
-class XmlTreeLoader implements TreeLoaderStrategyInterface
-{
+class XmlTreeLoader implements TreeLoaderStrategyInterface {
 
-    public function loadTree(ManifestInterface $context): LeanElement
-    {
+    public function loadTree(ManifestInterface $context): LeanElement {
         $xmlFile = $context->createManifestFile('manifest.xml');
-        
+
         $tmpFile = $context->createCacheFile('manifest.tmp');
-        
+
         if ($tmpFile->isFile()) {
             if ($tmpFile->getMTime() > $xmlFile->getMTime()) {
                 try {
@@ -30,7 +28,7 @@ class XmlTreeLoader implements TreeLoaderStrategyInterface
                 } catch (Throwable $e) {}
             }
         }
-        
+
         $dom = new DOMHelper();
         $element = LeanElement::createTreeFromDOMDocument($dom->loadDocument($xmlFile->getRealPath()));
         if ($context) {

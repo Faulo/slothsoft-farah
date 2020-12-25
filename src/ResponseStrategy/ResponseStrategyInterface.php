@@ -4,8 +4,7 @@ namespace Slothsoft\Farah\ResponseStrategy;
 
 use Psr\Http\Message\ResponseInterface;
 
-interface ResponseStrategyInterface
-{
+interface ResponseStrategyInterface {
 
     public function process(ResponseInterface $response);
 }

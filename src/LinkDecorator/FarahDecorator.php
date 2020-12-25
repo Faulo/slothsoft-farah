@@ -10,8 +10,7 @@ use DOMDocument;
  * @author Daniel Schulz
  *        
  */
-class FarahDecorator implements LinkDecoratorInterface
-{
+class FarahDecorator implements LinkDecoratorInterface {
 
     private $namespace;
 
@@ -19,45 +18,40 @@ class FarahDecorator implements LinkDecoratorInterface
 
     private $rootNode;
 
-    public function setNamespace(string $namespace)
-    {
+    public function setNamespace(string $namespace) {
         $this->namespace = $namespace;
     }
 
-    public function setTarget(DOMDocument $document)
-    {
+    public function setTarget(DOMDocument $document) {
         $this->targetDocument = $document;
-        
+
         $this->rootNode = $document->documentElement;
     }
 
-    public function linkStylesheets(FarahUrl ...$stylesheets)
-    {
+    public function linkStylesheets(FarahUrl ...$stylesheets) {
         foreach ($stylesheets as $url) {
             $href = str_replace('farah://', '/', (string) $url);
-            
+
             $node = $this->targetDocument->createElementNS($this->namespace, 'link-stylesheet');
             $node->setAttribute('href', $href);
             $this->rootNode->appendChild($node);
         }
     }
 
-    public function linkScripts(FarahUrl ...$scripts)
-    {
+    public function linkScripts(FarahUrl ...$scripts) {
         foreach ($scripts as $url) {
             $href = str_replace('farah://', '/', (string) $url);
-            
+
             $node = $this->targetDocument->createElementNS($this->namespace, 'link-script');
             $node->setAttribute('href', $href);
             $this->rootNode->appendChild($node);
         }
     }
 
-    public function linkModules(FarahUrl ...$modules)
-    {
+    public function linkModules(FarahUrl ...$modules) {
         foreach ($modules as $url) {
             $href = str_replace('farah://', '/', (string) $url);
-            
+
             $node = $this->targetDocument->createElementNS($this->namespace, 'link-module');
             $node->setAttribute('href', $href);
             $this->rootNode->appendChild($node);

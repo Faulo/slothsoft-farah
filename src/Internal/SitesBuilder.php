@@ -18,11 +18,9 @@ use DOMDocument;
  * @author Daniel Schulz
  *        
  */
-class SitesBuilder implements ExecutableBuilderStrategyInterface
-{
+class SitesBuilder implements ExecutableBuilderStrategyInterface {
 
-    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
-    {
+    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $writer = new DOMWriterFromDocumentDelegate(function (): DOMDocument {
             try {
                 return Kernel::getCurrentSitemap()->lookupExecutable()

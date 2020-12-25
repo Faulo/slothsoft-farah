@@ -12,8 +12,7 @@ use Slothsoft\Farah\Module\Asset\AssetContainer;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use SplFileInfo;
 
-class Manifest implements ManifestInterface
-{
+class Manifest implements ManifestInterface {
 
     // asset tags
     const TAG_FRAGMENT = 'fragment';
@@ -129,28 +128,24 @@ class Manifest implements ManifestInterface
 
     private $rootAsset;
 
-    public function __construct(Module $ownerKernel, FarahUrlAuthority $authority, string $manifestDirectory, ManifestStrategies $strategies)
-    {
+    public function __construct(Module $ownerKernel, FarahUrlAuthority $authority, string $manifestDirectory, ManifestStrategies $strategies) {
         $this->ownerKernel = $ownerKernel;
         $this->authority = $authority;
         $this->manifestDirectory = $manifestDirectory;
         $this->strategies = $strategies;
-        
+
         $this->assets = new AssetContainer();
     }
 
-    public function getId(): string
-    {
+    public function getId(): string {
         return (string) $this->authority;
     }
 
-    public function createUrl($path = null, $args = null, $fragment = null): FarahUrl
-    {
+    public function createUrl($path = null, $args = null, $fragment = null): FarahUrl {
         return FarahUrl::createFromComponents($this->authority, $path, $args, $fragment);
     }
 
-    public function lookupAsset($path): AssetInterface
-    {
+    public function lookupAsset($path): AssetInterface {
         if (is_string($path)) {
             $path = FarahUrlPath::createFromString($path);
         }
@@ -161,63 +156,53 @@ class Manifest implements ManifestInterface
         return $this->assets->get($path);
     }
 
-    public function normalizeElement(LeanElement $parent, LeanElement $element): void
-    {
+    public function normalizeElement(LeanElement $parent, LeanElement $element): void {
         $this->strategies->assetBuilder->normalizeTree($parent, $element);
     }
 
-    public function createAsset(LeanElement $element): AssetInterface
-    {
+    public function createAsset(LeanElement $element): AssetInterface {
         $strategies = $this->strategies->assetBuilder->buildAssetStrategies($this, $element);
         return new Asset($this, $element, FarahUrlPath::createFromString($element->getAttribute('assetpath')), $strategies);
     }
 
-    public function createManifestFile(string $fileName): SplFileInfo
-    {
+    public function createManifestFile(string $fileName): SplFileInfo {
         return new SplFileInfo($this->manifestDirectory . DIRECTORY_SEPARATOR . $fileName);
     }
 
-    public function createCacheFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo
-    {
+    public function createCacheFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo {
         return $this->ownerKernel->createCachedFile($fileName, $this->createUrl($path, $args, $fragment));
     }
 
-    public function createDataFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo
-    {
+    public function createDataFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo {
         return $this->ownerKernel->createCachedFile($fileName, $this->createUrl($path, $args, $fragment));
     }
 
-    private function getRootAsset(): AssetInterface
-    {
+    private function getRootAsset(): AssetInterface {
         if ($this->rootAsset === null) {
             $this->rootAsset = $this->createAsset($this->getRootElement(), FarahUrlPath::createEmpty());
         }
         return $this->rootAsset;
     }
 
-    private function getRootElement(): LeanElement
-    {
+    private function getRootElement(): LeanElement {
         if ($this->rootElement === null) {
             $this->rootElement = $this->strategies->treeLoader->loadTree($this);
         }
         return $this->rootElement;
     }
 
-    public function normalizeManifestElement(LeanElement $parent, LeanElement $child): void
-    {
+    public function normalizeManifestElement(LeanElement $parent, LeanElement $child): void {
         $this->strategies->assetBuilder->normalizeElement($child, $parent);
     }
 
-    public function normalizeManifestTree(LeanElement $root): void
-    {
+    public function normalizeManifestTree(LeanElement $root): void {
         foreach ($this->getManifestAttributes() as $key => $val) {
             $root->setAttribute($key, $val);
         }
         $this->strategies->assetBuilder->normalizeElement($root);
     }
 
-    private function getManifestAttributes(): array
-    {
+    private function getManifestAttributes(): array {
         return [
             static::ATTR_ID => $this->getId(),
             static::ATTR_NAME => $this->authority->getModule(),

@@ -10,8 +10,7 @@ use DOMDocument;
  * @author Daniel Schulz
  *        
  */
-interface LinkDecoratorInterface
-{
+interface LinkDecoratorInterface {
 
     public function setNamespace(string $ns);
 

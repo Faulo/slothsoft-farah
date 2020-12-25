@@ -4,8 +4,7 @@ namespace Slothsoft\Farah\Module\Asset;
 
 use Ds\Set;
 
-class UseInstructionCollection
-{
+class UseInstructionCollection {
 
     /**
      *
@@ -31,8 +30,7 @@ class UseInstructionCollection
      */
     public $templateUrl;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->rootUrl = null;
         $this->documentUrls = new Set();
         $this->manifestUrls = new Set();

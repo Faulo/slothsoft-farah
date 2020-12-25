@@ -15,11 +15,9 @@ use Slothsoft\Core\IO\Writable\Adapter\FileWriterFromStringWriter;
  * @author Daniel Schulz
  *        
  */
-class PhpinfoBuilder implements ExecutableBuilderStrategyInterface
-{
+class PhpinfoBuilder implements ExecutableBuilderStrategyInterface {
 
-    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies
-    {
+    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $delegate = function (): string {
             ob_start();
             phpinfo();

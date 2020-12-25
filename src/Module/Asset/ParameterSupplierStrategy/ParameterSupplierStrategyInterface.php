@@ -4,8 +4,7 @@ namespace Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy;
 
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 
-interface ParameterSupplierStrategyInterface
-{
+interface ParameterSupplierStrategyInterface {
 
     public function supplyParameters(AssetInterface $context): iterable;
 }

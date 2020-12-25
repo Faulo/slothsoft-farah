@@ -5,8 +5,7 @@ namespace Slothsoft\Farah\Tracking;
 use Slothsoft\Farah\HTTPRequest;
 use DOMDocument;
 
-class View
-{
+class View {
 
     protected $archive = null;
 
@@ -20,10 +19,9 @@ class View
 
     protected $pageLimit = 500;
 
-    public function __construct(Archive $archive)
-    {
+    public function __construct(Archive $archive) {
         $this->archive = $archive;
-        
+
         $config = $this->archive->getConfig();
         foreach ($config['logColumns'] as $key => $column) {
             if ($column['groupable']) {
@@ -35,8 +33,7 @@ class View
         }
     }
 
-    public function parseRequest(HTTPRequest $request)
-    {
+    public function parseRequest(HTTPRequest $request) {
         $this->pageNo = (int) $request->getInputValue('page', 0);
         $this->logURI = (string) $request->getInputValue('log');
         /*
@@ -50,7 +47,7 @@ class View
          * }
          * //
          */
-        
+
         $group = (array) $request->getInputValue('group', []);
         foreach ($this->groupList as $key => &$val) {
             if (isset($group[$key])) {
@@ -67,13 +64,12 @@ class View
         unset($val);
     }
 
-    public function asNode(DOMDocument $dataDoc)
-    {
+    public function asNode(DOMDocument $dataDoc) {
         $retFragment = $dataDoc->createDocumentFragment();
-        
+
         $config = $this->archive->getConfig();
         $table = $this->archive->getLogTableByURI($this->logURI);
-        
+
         $groupFilter = [];
         $searchFilter = [];
         $params = [];
@@ -94,13 +90,13 @@ class View
             }
         }
         $searchFilter = implode(' ', $searchFilter);
-        
+
         $parentNode = $dataDoc->createElement('groupList');
         $tableList = $this->archive->getLogTableList();
         foreach ($tableList as $key => $tmp) {
             $query = $params;
             $query['log'] = $key;
-            
+
             $node = $dataDoc->createElement('group');
             $node->appendChild($dataDoc->createTextNode($key));
             $node->setAttribute('uri', './?' . http_build_query($query));
@@ -110,11 +106,11 @@ class View
             $parentNode->appendChild($node);
         }
         $retFragment->appendChild($parentNode);
-        
+
         foreach ($this->groupList as $key => $val) {
             $query = $params;
             unset($query['group'][$key]);
-            
+
             $parentNode = $dataDoc->createElement('groupList');
             $node = $dataDoc->createElement('group');
             $node->appendChild($dataDoc->createTextNode('*'));
@@ -123,14 +119,14 @@ class View
                 $node->setAttribute('active', 'active');
             }
             $parentNode->appendChild($node);
-            
+
             $rowList = $table->selectGroup($key, $groupFilter, $searchFilter);
             foreach ($rowList as $row) {
                 if ($row === null) {
                     $row = 'NULL';
                 }
                 $query['group'][$key] = $row;
-                
+
                 $node = $dataDoc->createElement('group');
                 $node->appendChild($dataDoc->createTextNode(implode(' ', preg_split('/[\/\-]/', $row, 2))));
                 $node->setAttribute('uri', './?' . http_build_query($query));
@@ -141,7 +137,7 @@ class View
             }
             $retFragment->appendChild($parentNode);
         }
-        
+
         $parentNode = $dataDoc->createElement('groupList');
         $count = $table->selectCount($groupFilter, $searchFilter);
         $pageCount = (int) ceil($count / $this->pageLimit);
@@ -149,7 +145,7 @@ class View
         for ($i = 0; $i < $pageCount; $i ++) {
             if ($i < 50 or ($i + 1) === $pageCount) {
                 $query['page'] = $i;
-                
+
                 $node = $dataDoc->createElement('group');
                 $node->appendChild($dataDoc->createTextNode($i + 1));
                 $node->setAttribute('uri', './?' . http_build_query($query));
@@ -160,9 +156,9 @@ class View
             }
         }
         $retFragment->appendChild($parentNode);
-        
+
         $rowList = $table->select($groupFilter, $searchFilter, $this->pageNo, $this->pageLimit);
-        
+
         foreach ($config['logColumns'] as $key => $column) {
             if ($column['visible']) {
                 $node = $dataDoc->createElement('col');
@@ -179,7 +175,7 @@ class View
                 $retFragment->appendChild($node);
             }
         }
-        
+
         foreach ($rowList as $row) {
             $node = $dataDoc->createElement('log');
             foreach ($row as $key => $val) {
@@ -197,7 +193,7 @@ class View
             }
             $retFragment->appendChild($node);
         }
-        
+
         return $retFragment;
     }
 }

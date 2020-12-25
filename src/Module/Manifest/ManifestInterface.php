@@ -10,8 +10,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use SplFileInfo;
 
-interface ManifestInterface
-{
+interface ManifestInterface {
 
     /**
      * The Farah URL that represents this module.

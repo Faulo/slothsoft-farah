@@ -4,11 +4,9 @@ namespace Slothsoft\Farah\Module\Asset\InstructionStrategy;
 
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 
-class ParameterSupplierInstruction extends NullInstruction
-{
+class ParameterSupplierInstruction extends NullInstruction {
 
-    public function isParameterSupplier(AssetInterface $context): bool
-    {
+    public function isParameterSupplier(AssetInterface $context): bool {
         return true;
     }
 }

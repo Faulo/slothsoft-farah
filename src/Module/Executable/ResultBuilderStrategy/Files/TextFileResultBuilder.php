@@ -6,12 +6,10 @@ use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 use DOMDocument;
 use DOMElement;
 
-class TextFileResultBuilder extends AbstractFileResultBuilder
-{
+class TextFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterDocumentFromElementTrait;
 
-    public function toElement(DOMDocument $targetDoc): DOMElement
-    {
+    public function toElement(DOMDocument $targetDoc): DOMElement {
         $element = $targetDoc->createElement('text');
         $element->textContent = file_get_contents((string) $this->file);
         return $element;

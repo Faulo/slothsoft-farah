@@ -12,26 +12,23 @@ use Slothsoft\Farah\Module\Module;
  * @author Daniel Schulz
  *        
  */
-class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface
-{
+class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
 
-    public function createStreamWrapper(string $url, string $mode, int $options)
-    {
+    public function createStreamWrapper(string $url, string $mode, int $options) {
         my_dump($url);
         $url = FarahUrl::createFromReference($url);
-        
+
         $stream = Module::resolveToStreamWriter($url)->toStream();
-        
+
         return new Psr7StreamWrapper($stream);
     }
 
-    public function statUrl(string $url, int $flags)
-    {
+    public function statUrl(string $url, int $flags) {
         my_dump($url);
         $url = FarahUrl::createFromReference($url);
-        
+
         $result = Module::resolveToResult($url);
-        
+
         return $result->lookupFileStatistics();
     }
 }

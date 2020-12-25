@@ -16,16 +16,13 @@ use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use DOMDocument;
 use DOMElement;
 
-class HTTPRequest implements DOMWriterInterface
-{
+class HTTPRequest implements DOMWriterInterface {
 
-    private static function getServerName(): string
-    {
+    private static function getServerName(): string {
         return defined('SERVER_NAME') ? constant('SERVER_NAME') : 'localhost';
     }
 
-    public static function prepareEnvironment(array &$env)
-    {
+    public static function prepareEnvironment(array &$env) {
         $lang = null;
         if (isset($env['HTTP_ACCEPT_LANGUAGE'])) {
             if ($matchList = Dictionary::parseAcceptLanguageHeader($env['HTTP_ACCEPT_LANGUAGE'])) {
@@ -45,11 +42,11 @@ class HTTPRequest implements DOMWriterInterface
         }
         $env['REQUEST_LANGUAGE'] = $lang;
         $env['REQUEST_TIME_DATE'] = date(DateTimeFormatter::FORMAT_DATETIME, $env['REQUEST_TIME']);
-        
-        if (!isset($env['SERVER_NAME']) or $env['SERVER_NAME'] === 'localhost') {
+
+        if (! isset($env['SERVER_NAME']) or $env['SERVER_NAME'] === 'localhost') {
             $env['SERVER_NAME'] = self::getServerName();
         }
-        
+
         $turing = 'human';
         if (isset($env['HTTP_USER_AGENT'])) {
             $botList = [];
@@ -118,8 +115,7 @@ class HTTPRequest implements DOMWriterInterface
 
     protected $headerList;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->headerList = [];
         $this->input = [];
         $this->protocolRecognised = true;
@@ -128,8 +124,7 @@ class HTTPRequest implements DOMWriterInterface
         $this->protocolMinorVersion = 0;
     }
 
-    public function init(array $env)
-    {
+    public function init(array $env) {
         $this->method = isset($env['REQUEST_METHOD']) ? $env['REQUEST_METHOD'] : self::METHOD_GET;
         $this->schema = isset($env['REQUEST_SCHEME']) ? $env['REQUEST_SCHEME'] : self::PROTOCOL_HTTP;
         $this->schema = strtolower($this->schema);
@@ -152,82 +147,67 @@ class HTTPRequest implements DOMWriterInterface
         $this->dict = Dictionary::getInstance();
     }
 
-    public function hasInputValue($key)
-    {
+    public function hasInputValue($key) {
         return isset($this->input[$key]);
     }
 
-    public function getInputValue($key, $val = null)
-    {
+    public function getInputValue($key, $val = null) {
         return isset($this->input[$key]) ? $this->input[$key] : $val;
     }
 
-    public function setInputValue($key, $val = null)
-    {
+    public function setInputValue($key, $val = null) {
         $this->input[$key] = $val;
     }
 
-    public function setInput(array $input)
-    {
+    public function setInput(array $input) {
         $this->input = $input;
     }
 
     // deprecated, use getBody(), should return $this->input
-    public function getInput()
-    {
+    public function getInput() {
         return file_get_contents('php://input');
     }
 
     // deprecated, use getBodyJSON()
-    public function getInputJSON()
-    {
+    public function getInputJSON() {
         return json_decode($this->getInput(), true);
     }
 
-    public function getBody()
-    {
+    public function getBody() {
         return file_get_contents('php://input');
     }
 
-    public function getBodyJSON()
-    {
+    public function getBodyJSON() {
         return json_decode($this->getBody(), true);
     }
 
-    public function setAllHeaders(array $headerList)
-    {
+    public function setAllHeaders(array $headerList) {
         foreach ($headerList as $key => $val) {
             $this->headerList[strtolower($key)] = $val;
         }
     }
 
-    public function getHeader(string $key, string $default = null)
-    {
+    public function getHeader(string $key, string $default = null) {
         return $this->headerList[$key] ?? $default;
     }
 
-    public function setMode($mode)
-    {
+    public function setMode($mode) {
         $this->mode = $mode;
     }
 
-    public function setPath($path)
-    {
+    public function setPath($path) {
         $this->path = $path;
     }
 
-    public function getURL()
-    {
+    public function getURL() {
         return sprintf('%s://%s%s', $this->schema, $this->clientHost, $this->path);
     }
 
-    public function getQuery()
-    {
+    public function getQuery() {
         return http_build_query($this->input);
     }
 
-    public function asNode(DOMDocument $doc)
-    {
+    public function asNode(DOMDocument $doc) {
         $retNode = $doc->createElement('request');
         $retNode->setAttribute('url', $this->getURL());
         $retNode->setAttribute('query', $this->getQuery());
@@ -246,21 +226,17 @@ class HTTPRequest implements DOMWriterInterface
         return $retNode;
     }
 
-    public function toElement(DOMDocument $targetDoc): DOMElement
-    {
+    public function toElement(DOMDocument $targetDoc): DOMElement {
         return $this->asNode($targetDoc);
     }
 
-    public function toDocument(): DOMDocument
-    {
+    public function toDocument(): DOMDocument {
         $doc = new DOMDocument();
         $doc->appendChild($this->toElement($doc));
         return $doc;
     }
 
-    public function toFileName(): string
-    {}
+    public function toFileName(): string {}
 
-    public function toString(): string
-    {}
+    public function toString(): string {}
 }

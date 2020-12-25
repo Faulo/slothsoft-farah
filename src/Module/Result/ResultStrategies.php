@@ -4,8 +4,7 @@ namespace Slothsoft\Farah\Module\Result;
 
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamBuilderStrategyInterface;
 
-class ResultStrategies
-{
+class ResultStrategies {
 
     /**
      *
@@ -13,8 +12,7 @@ class ResultStrategies
      */
     public $streamBuilder;
 
-    public function __construct(StreamBuilderStrategyInterface $streamBuilder)
-    {
+    public function __construct(StreamBuilderStrategyInterface $streamBuilder) {
         $this->streamBuilder = $streamBuilder;
     }
 }

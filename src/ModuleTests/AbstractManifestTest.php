@@ -10,13 +10,11 @@ use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterf
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use DOMDocument;
 
-abstract class AbstractManifestTest extends AbstractTestCase
-{
+abstract class AbstractManifestTest extends AbstractTestCase {
 
     abstract protected static function loadTree(): LeanElement;
 
-    protected function getManifestRoot(): LeanElement
-    {
+    protected function getManifestRoot(): LeanElement {
         static $rootElement;
         if ($rootElement === null) {
             $rootElement = static::loadTree();
@@ -24,13 +22,11 @@ abstract class AbstractManifestTest extends AbstractTestCase
         return $rootElement;
     }
 
-    protected function getManifestDocument(): DOMDocument
-    {
+    protected function getManifestDocument(): DOMDocument {
         return $this->getManifestRoot()->toDocument();
     }
 
-    public function testHasRootElement(): void
-    {
+    public function testHasRootElement(): void {
         $this->assertInstanceOf(LeanElement::class, $this->getManifestRoot());
     }
 
@@ -38,8 +34,7 @@ abstract class AbstractManifestTest extends AbstractTestCase
      *
      * @depends testHasRootElement
      */
-    public function testRootElementIsAssets()
-    {
+    public function testRootElementIsAssets() {
         $this->assertEquals($this->getManifestRoot()
             ->getTag(), Manifest::TAG_ASSET_ROOT);
     }
@@ -48,15 +43,13 @@ abstract class AbstractManifestTest extends AbstractTestCase
      *
      * @dataProvider customPathResolverProvider
      */
-    public function testClassImplementsPathResolverStrategy(string $className): void
-    {
+    public function testClassImplementsPathResolverStrategy(string $className): void {
         $this->assertNotNull($className);
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(PathResolverStrategyInterface::class, new $className());
     }
 
-    public function customPathResolverProvider(): iterable
-    {
+    public function customPathResolverProvider(): iterable {
         foreach ($this->getAllAttributeValues('path-resolver') as $className) {
             yield $className => [
                 $className
@@ -68,15 +61,13 @@ abstract class AbstractManifestTest extends AbstractTestCase
      *
      * @dataProvider customExecutableBuilderProvider
      */
-    public function testClassImplementsExecutableBuilderStrategy(string $className): void
-    {
+    public function testClassImplementsExecutableBuilderStrategy(string $className): void {
         $this->assertNotNull($className);
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(ExecutableBuilderStrategyInterface::class, new $className());
     }
 
-    public function customExecutableBuilderProvider(): iterable
-    {
+    public function customExecutableBuilderProvider(): iterable {
         foreach ($this->getAllAttributeValues('executable-builder') as $className) {
             yield $className => [
                 $className
@@ -88,15 +79,13 @@ abstract class AbstractManifestTest extends AbstractTestCase
      *
      * @dataProvider customInstructionProvider
      */
-    public function testClassImplementsInstructionStrategy(string $className): void
-    {
+    public function testClassImplementsInstructionStrategy(string $className): void {
         $this->assertNotNull($className);
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(InstructionStrategyInterface::class, new $className());
     }
 
-    public function customInstructionProvider(): iterable
-    {
+    public function customInstructionProvider(): iterable {
         foreach ($this->getAllAttributeValues('instruction') as $className) {
             yield $className => [
                 $className
@@ -108,15 +97,13 @@ abstract class AbstractManifestTest extends AbstractTestCase
      *
      * @dataProvider customParameterFilterProvider
      */
-    public function testClassImplementsParameterFilterStrategy(string $className): void
-    {
+    public function testClassImplementsParameterFilterStrategy(string $className): void {
         $this->assertNotNull($className);
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(ParameterFilterStrategyInterface::class, new $className());
     }
 
-    public function customParameterFilterProvider(): iterable
-    {
+    public function customParameterFilterProvider(): iterable {
         foreach ($this->getAllAttributeValues('parameter-filter') as $className) {
             yield $className => [
                 $className
@@ -124,8 +111,7 @@ abstract class AbstractManifestTest extends AbstractTestCase
         }
     }
 
-    private function getAllAttributeValues(string $attributeName): iterable
-    {
+    private function getAllAttributeValues(string $attributeName): iterable {
         $attributes = [];
         $manifestDocument = $this->getManifestDocument();
         $nodeList = $manifestDocument->getElementsByTagName('*');

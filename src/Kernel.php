@@ -11,11 +11,9 @@ use Slothsoft\Farah\RequestStrategy\RequestStrategyInterface;
 use Slothsoft\Farah\ResponseStrategy\ResponseStrategyInterface;
 use Slothsoft\Farah\Tracking\Manager;
 
-class Kernel
-{
+class Kernel {
 
-    public static function getInstance(): self
-    {
+    public static function getInstance(): self {
         static $instance;
         if ($instance === null) {
             $instance = new self();
@@ -23,8 +21,7 @@ class Kernel
         return $instance;
     }
 
-    private static function currentSitemap(): ConfigurationField
-    {
+    private static function currentSitemap(): ConfigurationField {
         static $field;
         if ($field === null) {
             $field = new AssetConfigurationField();
@@ -32,18 +29,15 @@ class Kernel
         return $field;
     }
 
-    public static function setCurrentSitemap($asset)
-    {
+    public static function setCurrentSitemap($asset) {
         self::currentSitemap()->setValue($asset);
     }
 
-    public static function getCurrentSitemap(): AssetInterface
-    {
+    public static function getCurrentSitemap(): AssetInterface {
         return self::currentSitemap()->getValue();
     }
 
-    private static function currentRequest(): ConfigurationField
-    {
+    private static function currentRequest(): ConfigurationField {
         static $field;
         if ($field === null) {
             $field = new ConfigurationField();
@@ -51,18 +45,15 @@ class Kernel
         return $field;
     }
 
-    public static function setCurrentRequest(ServerRequestInterface $request)
-    {
+    public static function setCurrentRequest(ServerRequestInterface $request) {
         self::currentRequest()->setValue($request);
     }
 
-    public static function getCurrentRequest(): ServerRequestInterface
-    {
+    public static function getCurrentRequest(): ServerRequestInterface {
         return self::currentRequest()->getValue();
     }
 
-    private static function trackingEnabled(): ConfigurationField
-    {
+    private static function trackingEnabled(): ConfigurationField {
         static $field;
         if ($field === null) {
             $field = new ConfigurationField(false);
@@ -70,18 +61,15 @@ class Kernel
         return $field;
     }
 
-    public static function setTrackingEnabled(bool $value)
-    {
+    public static function setTrackingEnabled(bool $value) {
         self::trackingEnabled()->setValue($value);
     }
 
-    public static function getTrackingEnabled(): bool
-    {
+    public static function getTrackingEnabled(): bool {
         return self::trackingEnabled()->getValue();
     }
 
-    private static function trackingExceptionUris()
-    {
+    private static function trackingExceptionUris() {
         static $field;
         if ($field === null) {
             $field = new ConfigurationField([]);
@@ -89,48 +77,45 @@ class Kernel
         return $field;
     }
 
-    public static function setTrackingExceptionUris(string ...$uriList)
-    {
+    public static function setTrackingExceptionUris(string ...$uriList) {
         self::trackingExceptionUris()->setValue($uriList);
     }
 
-    public static function getTrackingExceptionUris(): array
-    {
+    public static function getTrackingExceptionUris(): array {
         return self::trackingExceptionUris()->getValue();
     }
 
-    public function handle(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy, ServerRequestInterface $request)
-    {
+    public function handle(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy, ServerRequestInterface $request) {
         self::setCurrentRequest($request);
-        
+
         $response = $requestStrategy->process($request);
         if (self::getTrackingEnabled()) {
             $this->track((new \ReflectionClass($requestStrategy))->getShortName(), $request, $response);
         }
         $responseStrategy->process($response);
     }
-    
+
     private function track(string $strategy, ServerRequestInterface $request, ResponseInterface $response) {
         $env = $request->getServerParams();
-        
-        //request parameters
+
+        // request parameters
         $env['RESPONSE_STRATEGY'] = $strategy;
         $input = $request->getBody();
-        if ($input->getSize() and $input->getSize() < 1024*1014) {
+        if ($input->getSize() and $input->getSize() < 1024 * 1014) {
             $env['RESPONSE_INPUT'] = $input->getContents();
         }
-        
-        //response parameters
+
+        // response parameters
         $env['RESPONSE_STATUS'] = $response->getStatusCode();
         $env['RESPONSE_LENGTH'] = $response->getBody()->getSize();
         $env['RESPONSE_TYPE'] = $response->getHeaderLine('content-type');
         $env['RESPONSE_ENCODING'] = $response->getHeaderLine('content-encoding');
         $env['RESPONSE_LANGUAGE'] = $response->getHeaderLine('content-language');
-        
-        //environment parameters
+
+        // environment parameters
         $env['RESPONSE_TIME'] = get_execution_time();
         $env['RESPONSE_MEMORY'] = sprintf('%.2f', memory_get_peak_usage() / 1048576);
-        
+
         Manager::track($env);
     }
 }
