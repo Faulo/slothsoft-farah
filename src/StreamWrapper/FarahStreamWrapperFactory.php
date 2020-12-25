@@ -15,7 +15,6 @@ use Slothsoft\Farah\Module\Module;
 class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
 
     public function createStreamWrapper(string $url, string $mode, int $options) {
-        my_dump($url);
         $url = FarahUrl::createFromReference($url);
 
         $stream = Module::resolveToStreamWriter($url)->toStream();
@@ -24,7 +23,6 @@ class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
     }
 
     public function statUrl(string $url, int $flags) {
-        my_dump($url);
         $url = FarahUrl::createFromReference($url);
 
         $result = Module::resolveToResult($url);

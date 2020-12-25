@@ -64,21 +64,31 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     }
 
     public function assetReferenceProvider(): iterable {
+        $set = [];
         foreach ($this->getReferencedAssetReferences() as $context => $path) {
-            yield (string) $path => [
-                $path,
-                $context
-            ];
+            $key = (string) $path;
+            if (! isset($set[$key])) {
+                $set[$key] = true;
+                yield $key => [
+                    $path,
+                    $context
+                ];
+            }
         }
     }
 
     public function assetReferenceUrlProvider(): iterable {
+        $set = [];
         foreach ($this->getReferencedAssetReferences() as $context => $ref) {
             try {
                 $url = FarahUrl::createFromReference($ref, $context);
-                yield (string) $url => [
-                    $url
-                ];
+                $key = (string) $url;
+                if (! isset($set[$key])) {
+                    $set[$key] = true;
+                    yield $key => [
+                        $url
+                    ];
+                }
             } catch (Throwable $e) {}
         }
     }
@@ -172,12 +182,17 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     }
 
     public function assetLocalUrlProvider(): iterable {
+        $set = [];
         foreach ($this->getLocalAssetPaths() as $path) {
             try {
                 $url = $this->getManifest()->createUrl($path);
-                yield (string) $url => [
-                    $url
-                ];
+                $key = (string) $url;
+                if (! isset($set[$key])) {
+                    $set[$key] = true;
+                    yield $key => [
+                        $url
+                    ];
+                }
             } catch (Throwable $e) {}
         }
     }
@@ -203,8 +218,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
      */
     public function testLocalAssetExists(FarahUrl $url): void {
         try {
-            Module::resolveToAsset($url);
-            $this->assertTrue(true);
+            $asset = Module::resolveToAsset($url);
+            $this->assertNotNull($asset);
         } catch (ModuleNotFoundException $e) {
             $this->assertTrue(true);
         } catch (AssetPathNotFoundException $e) {

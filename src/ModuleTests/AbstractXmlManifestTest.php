@@ -22,7 +22,6 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
     const SCHEMA_URL = 'farah://slothsoft@farah/schema/module/1.0';
 
     public function testSchemaExists(): string {
-        echo file_get_contents(static::SCHEMA_URL);
         $path = static::SCHEMA_URL;
         $this->assertFileExists($path, 'Schema file not found!');
         return $path;
