@@ -8,8 +8,8 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Sites\Domain;
-use Zend\Http\Request;
-use Zend\Router\Http\TreeRouteStack;
+use Laminas\Http\Request;
+use Laminas\Router\Http\TreeRouteStack;
 
 class LookupRouteStrategy extends RequestStrategyBase {
 

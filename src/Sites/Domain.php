@@ -11,7 +11,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
-use Zend\Router\Http\RouteMatch;
+use Laminas\Router\Http\RouteMatch;
 use DOMDocument;
 use DOMElement;
 
