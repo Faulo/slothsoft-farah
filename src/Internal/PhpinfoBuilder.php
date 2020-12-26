@@ -24,7 +24,7 @@ class PhpinfoBuilder implements ExecutableBuilderStrategyInterface {
             $data = ob_get_contents();
             ob_clean();
             if (PHP_SAPI === 'cli') {
-                $data = '<pre>' . htmlentities($data, ENT_XML1, 'UTF-8') . '</pre>';
+                $data = '<pre>' . htmlentities($data, ENT_XML1 | ENT_DISALLOWED, 'UTF-8') . '</pre>';
             }
             return $data;
         };
