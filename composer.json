@@ -12,7 +12,7 @@
 	],
 	"type" : "library",
 	"require" : {
-		"php" : "7.2 - 8.0",
+		"php" : "7.2 - 7.4",
 		"php-ds/php-ds" : "^1.2",
 		"guzzlehttp/psr7" : "^1.4",
 		"krakjoe/pthreads-polyfill" : "^1.1",
