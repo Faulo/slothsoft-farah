@@ -155,7 +155,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
         } catch (HttpStatusException $e) {
             $statusCode = $e->getCode();
             $headers = $e->getAdditionalHeaders();
-            $body = MessageFactory::createStreamFromContents(StatusCode::getMessage($statusCode, $e->getMessage()));
+            $body = MessageFactory::createStreamFromContents(StatusCode::getMessage($statusCode, $e->getMessage()) . PHP_EOL);
         }
 
         if (! $this->shouldIncludeBody($this->request->getMethod(), $statusCode)) {
