@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class ScriptsTest extends TestCase {
 
-    public function someFarahUrls(): array {
+    public function someFarahAssets(): array {
         return [
             [
                 'farah://slothsoft@farah/',
@@ -17,7 +17,7 @@ class ScriptsTest extends TestCase {
 
     /**
      *
-     * @dataProvider someFarahUrls
+     * @dataProvider someFarahAssets
      */
     public function testFarahAsset(string $url): void {
         $result = [];

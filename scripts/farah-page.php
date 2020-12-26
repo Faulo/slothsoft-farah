@@ -1,10 +1,10 @@
 <?php
-use Slothsoft\Farah\HTTPResponse;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Http\MessageFactory;
 use Slothsoft\Farah\Http\StatusCode;
-use Slothsoft\Farah\RequestStrategy\LookupAssetStrategy;
+use Slothsoft\Farah\RequestStrategy\LookupPageStrategy;
 use Slothsoft\Farah\ResponseStrategy\SendBodyStrategy;
+use Slothsoft\Farah\HTTPResponse;
 
 array_shift($_SERVER['argv']);
 
@@ -20,17 +20,17 @@ foreach ([
 
 if (count($_SERVER['argv']) !== 1) {
     echo <<<'EOT'
-Retrieve a farah asset via its URL.
-
+Retrieve a farah page via its URL.
+        
 Usage:
-composer farah-asset "farah://vendor@module/path/to/asset?arguments#stream-type"
+composer farah-page "/path/to/page?arguments#stream-type"
 
 EOT;
     return 1;
 }
 
 $request = MessageFactory::createServerRequest($_SERVER, $_REQUEST, $_FILES);
-$requestStrategy = new LookupAssetStrategy();
+$requestStrategy = new LookupPageStrategy();
 $responseStrategy = new SendBodyStrategy();
 
 $kernel = Kernel::getInstance();

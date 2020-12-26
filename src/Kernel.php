@@ -85,7 +85,7 @@ class Kernel {
         return self::trackingExceptionUris()->getValue();
     }
 
-    public function handle(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy, ServerRequestInterface $request) {
+    public function handle(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy, ServerRequestInterface $request): ResponseInterface {
         self::setCurrentRequest($request);
 
         $response = $requestStrategy->process($request);
@@ -93,6 +93,7 @@ class Kernel {
             $this->track((new \ReflectionClass($requestStrategy))->getShortName(), $request, $response);
         }
         $responseStrategy->process($response);
+        return $response;
     }
 
     private function track(string $strategy, ServerRequestInterface $request, ResponseInterface $response) {
