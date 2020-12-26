@@ -25,26 +25,4 @@ class ScriptsTest extends TestCase {
         $result = implode("\n", $result) . "\n";
         $this->assertEquals(file_get_contents($url), $result);
     }
-    
-    public function someFarahPages(): array {
-        return [
-            [
-                '/',
-                '/sitemap/'
-            ]
-        ];
-    }
-    
-    /**
-     *
-     * @dataProvider someFarahPages
-     */
-    public function testFarahPage(string $url): void {
-        Kernel::setCurrentSitemap('farah://slothsoft@farah/example-domain');
-        
-        $result = [];
-        exec(sprintf('composer farah-page %s', escapeshellarg($url)), $result);
-        $result = implode("\n", $result) . "\n";
-        $this->assertEquals(file_get_contents($url), $result);
-    }
 }

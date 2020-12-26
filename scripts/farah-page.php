@@ -23,7 +23,7 @@ if (count($_SERVER['argv']) !== 1) {
 Retrieve a farah page via its URL.
         
 Usage:
-composer farah-page "http://domain.net/path/to/page?arguments#stream-type"
+composer farah-page "/path/to/page?arguments#stream-type"
 
 EOT;
     return 1;

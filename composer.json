@@ -13,7 +13,7 @@
 	},
 	"scripts-descriptions" : {
 		"farah-asset" : "Retrieve a farah asset. Usage: composer farah-asset \"farah://vendor@module/path/to/asset?arguments#stream-type\"",
-		"farah-page" : "Retrieve a farah page. Usage: composer farah-page \"http://domain.net/path/to/page?arguments#stream-type\""
+		"farah-page" : "Retrieve a farah page. Usage: composer farah-page \"/path/to/page?arguments#stream-type\""
 	},
 	"type" : "library",
 	"require" : {
