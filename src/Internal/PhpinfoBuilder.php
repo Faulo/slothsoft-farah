@@ -24,13 +24,13 @@ class PhpinfoBuilder implements ExecutableBuilderStrategyInterface {
             $data = ob_get_contents();
             ob_clean();
             if (PHP_SAPI === 'cli') {
-                $data = '<pre>' . htmlentities($data, ENT_HTML5, 'UTF-8') . '</pre>';
+                $data = '<pre>' . htmlentities($data, ENT_XML1, 'UTF-8') . '</pre>';
             }
             return $data;
         };
         $writer = new StringWriterFromStringDelegate($delegate);
         $writer = new FileWriterFromStringWriter($writer);
-        $resultBuilder = new FileWriterResultBuilder($writer, 'phpinfo.html');
+        $resultBuilder = new FileWriterResultBuilder($writer, 'phpinfo.xhtml');
         return new ExecutableStrategies($resultBuilder);
     }
 }
