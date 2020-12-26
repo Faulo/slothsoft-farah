@@ -29,10 +29,6 @@ EOT;
     return 1;
 }
 
-if (!Kernel::getCurrentSitemap()) {
-    Kernel::setCurrentSitemap('farah://slothsoft@farah/example-domain');
-}
-
 $request = MessageFactory::createServerRequest($_SERVER, $_REQUEST, $_FILES);
 $requestStrategy = new LookupPageStrategy();
 $responseStrategy = new SendBodyStrategy();
