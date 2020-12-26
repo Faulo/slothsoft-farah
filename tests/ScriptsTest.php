@@ -10,7 +10,7 @@ class ScriptsTest extends TestCase {
         return [
             [
                 'farah://slothsoft@farah/',
-                'farah://slothsoft@core/',
+                'farah://slothsoft@core/'
             ]
         ];
     }
