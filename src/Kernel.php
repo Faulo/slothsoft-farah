@@ -85,7 +85,7 @@ class Kernel {
         return self::trackingExceptionUris()->getValue();
     }
 
-    public function handle(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy, ServerRequestInterface $request):ResponseInterface {
+    public function handle(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy, ServerRequestInterface $request): ResponseInterface {
         self::setCurrentRequest($request);
 
         $response = $requestStrategy->process($request);
