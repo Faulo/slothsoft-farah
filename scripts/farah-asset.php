@@ -10,8 +10,10 @@ foreach (['vendor/autoload.php', '../vendor/autoload.php'] as $file) {
 
 if (!isset($_SERVER['argv'][1])) {
 	echo <<<HELP
-Retrieve farah asset
-Usage: farah-asset "farah://vendor@package/asset/path?arguments#stream-type"
+Retrieve a farah asset.
+
+Usage:
+composer farah-asset \"farah://vendor@module/path/to/asset?arguments#stream-type\"
 
 HELP;
     return 1;
@@ -19,4 +21,4 @@ HELP;
 
 readfile($_SERVER['argv'][1]);
 
-exit(0);
+return 0;
