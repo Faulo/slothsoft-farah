@@ -10,13 +10,13 @@ foreach ([
 }
 
 if (! isset($_SERVER['argv'][1])) {
-    echo <<<HELP
-Retrieve a farah asset.
+    echo <<<'EOT'
+Retrieve a farah asset via its URL.
 
 Usage:
-composer farah-asset \"farah://vendor@module/path/to/asset?arguments#stream-type\"
+composer farah-asset "farah://vendor@module/path/to/asset?arguments#stream-type"
 
-HELP;
+EOT;
     return 1;
 }
 
