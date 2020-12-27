@@ -20,9 +20,12 @@ class ChunkWriterStreamBuilder implements StreamBuilderStrategyInterface {
 
     private $fileName;
 
-    public function __construct(ChunkWriterInterface $writer, string $fileName) {
+    private $isBufferable;
+
+    public function __construct(ChunkWriterInterface $writer, string $fileName, bool $isBufferable = true) {
         $this->writer = $writer;
         $this->fileName = $fileName;
+        $this->isBufferable = $isBufferable;
     }
 
     public function buildStreamMimeType(ResultInterface $context): string {
@@ -46,7 +49,7 @@ class ChunkWriterStreamBuilder implements StreamBuilderStrategyInterface {
     }
 
     public function buildStreamIsBufferable(ResultInterface $context): bool {
-        return true;
+        return $this->isBufferable;
     }
 
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface {
