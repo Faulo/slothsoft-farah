@@ -14,13 +14,16 @@ class ChunkWriterResultBuilder implements ResultBuilderStrategyInterface {
 
     private $fileName;
 
-    public function __construct(ChunkWriterInterface $writer, string $fileName) {
+    private $isBufferable;
+
+    public function __construct(ChunkWriterInterface $writer, string $fileName, bool $isBufferable = true) {
         $this->writer = $writer;
         $this->fileName = $fileName;
+        $this->isBufferable = $isBufferable;
     }
 
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
-        $streamBuilder = new ChunkWriterStreamBuilder($this->writer, $this->fileName);
+        $streamBuilder = new ChunkWriterStreamBuilder($this->writer, $this->fileName, $this->isBufferable);
         return new ResultStrategies($streamBuilder);
     }
 }
