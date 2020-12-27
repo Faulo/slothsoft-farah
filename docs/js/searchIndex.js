@@ -1111,6 +1111,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Slothsoft-Farah-Http-MessageFactory.html#method_createServerRequest"
         },                {
+            "fqsen": "\\Slothsoft\\Farah\\Http\\MessageFactory\u003A\u003AcreateCustomRequest\u0028\u0029",
+            "name": "createCustomRequest",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Http-MessageFactory.html#method_createCustomRequest"
+        },                {
             "fqsen": "\\Slothsoft\\Farah\\Http\\MessageFactory\u003A\u003AcreateServerResponse\u0028\u0029",
             "name": "createServerResponse",
             "summary": "",

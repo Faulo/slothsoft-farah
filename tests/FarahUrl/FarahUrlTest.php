@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
+use Slothsoft\Core\Calendar\DateTimeFormatter;
+use Slothsoft\Core\FileSystem;
 
 class FarahUrlTest extends TestCase {
 
@@ -167,9 +169,10 @@ class FarahUrlTest extends TestCase {
         $assetsPath = realpath('assets/xsl/module.xsl');
         $assetsUrl = 'farah://slothsoft@farah/xsl/module';
 
-        $expected = filemtime($assetsPath);
-        $actual = filemtime($assetsUrl);
-        $this->assertEquals($expected, $actual);
+        $expected = FileSystem::changetime($assetsPath);
+        $actual = FileSystem::changetime($assetsUrl);
+
+        $this->assertEquals(date(DateTimeFormatter::FORMAT_DATETIME, $expected), date(DateTimeFormatter::FORMAT_DATETIME, $actual));
     }
 }
 

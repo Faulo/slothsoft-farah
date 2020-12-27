@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 use Slothsoft\Core\IO\HTTPFile;
 use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
@@ -16,6 +17,13 @@ abstract class MessageFactory {
 
     public static function createServerRequest(): ServerRequestInterface {
         return ServerRequest::fromGlobals();
+    }
+
+    public static function createCustomRequest(string $method, UriInterface $uri, $body = null): ServerRequestInterface {
+        $serverRequest = new ServerRequest($method, $uri, [], $body, $_SERVER['SERVER_PROTOCOL'], $_SERVER);
+        $params = [];
+        parse_str($uri->getQuery(), $params);
+        return $serverRequest->withQueryParams($params);
     }
 
     public static function createServerResponse(int $statusCode, array $headers, StreamInterface $stream = null): ResponseInterface {
