@@ -101,14 +101,9 @@ class Kernel {
 
         // request parameters
         $env['RESPONSE_STRATEGY'] = $strategy;
-        $input = $request->getBody();
-        if ($input->getSize() and $input->getSize() < 1024 * 1014) {
-            $env['RESPONSE_INPUT'] = $input->getContents();
-        }
 
         // response parameters
         $env['RESPONSE_STATUS'] = $response->getStatusCode();
-        $env['RESPONSE_LENGTH'] = $response->getBody()->getSize();
         $env['RESPONSE_TYPE'] = $response->getHeaderLine('content-type');
         $env['RESPONSE_ENCODING'] = $response->getHeaderLine('content-encoding');
         $env['RESPONSE_LANGUAGE'] = $response->getHeaderLine('content-language');
