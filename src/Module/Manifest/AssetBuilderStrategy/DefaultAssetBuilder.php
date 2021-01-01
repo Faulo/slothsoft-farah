@@ -34,6 +34,7 @@ use Slothsoft\Farah\Module\Asset\PathResolverStrategy\NullPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\DaemonExecutableBuilder;
 
 class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
 
@@ -76,6 +77,13 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
                 $instruction = ParameterSupplierInstruction::class;
                 break;
             case Manifest::TAG_CUSTOM_ASSET:
+                $executableBuilder = DaemonExecutableBuilder::class;
+                $pathResolver = NullPathResolver::class;
+                $parameterFilter = DenyAllParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
+                $instruction = NullInstruction::class;
+                break;
+            case Manifest::TAG_DAEMON:
                 $executableBuilder = NullExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
                 $parameterFilter = DenyAllParameterFilter::class;
