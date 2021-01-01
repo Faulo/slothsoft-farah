@@ -9,11 +9,11 @@ use Slothsoft\Farah\HTTPResponse;
 array_shift($_SERVER['argv']);
 
 foreach ([
-    'vendor/autoload.php',
-    '../vendor/autoload.php'
+    __DIR__ . '/../../../autoload.php',
+    __DIR__ . '/../vendor/autoload.php'
 ] as $file) {
     if (file_exists($file)) {
-        require $file;
+        require_once $file;
         break;
     }
 }
