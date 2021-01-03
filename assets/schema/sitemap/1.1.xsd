@@ -52,6 +52,9 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 			<xsd:complexContent>
 				<xsd:restriction base="xsd:anyType">
 					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:element ref="page" />
+						<xsd:element ref="file" />
+						<xsd:element ref="include-pages" />
 						<xsd:element ref="sfm:param" />
 					</xsd:choice>
 					<xsd:attributeGroup ref="genericPage" />
@@ -66,6 +69,9 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 			<xsd:complexContent>
 				<xsd:restriction base="xsd:anyType">
 					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:element ref="page" />
+						<xsd:element ref="file" />
+						<xsd:element ref="include-pages" />
 						<xsd:element ref="sfm:param" />
 					</xsd:choice>
 					<xsd:attributeGroup ref="genericPage" />
@@ -79,9 +85,6 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 			<xsd:complexContent>
 				<xsd:restriction base="xsd:anyType">
 					<xsd:choice minOccurs="0" maxOccurs="unbounded">
-						<xsd:element ref="page" />
-						<xsd:element ref="file" />
-						<xsd:element ref="include-pages" />
 						<xsd:element ref="sfm:param" />
 					</xsd:choice>
 					<xsd:attributeGroup ref="genericPage" />
