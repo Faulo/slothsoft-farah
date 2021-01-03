@@ -19,7 +19,7 @@ This namespace defines elements to identify assets in a Farah module.
 				<ssv:changelog><![CDATA[
 *** Version 1.0 ***
 	R20200103
-		- added elements <asset-document>, <asset-manifest>, , <asset-fragment>
+		- added elements <document-info>, <fragment-info>, <manifest-info>
 	R20181111
 		- physical assets must have a "name" attribute
 	R20180402
@@ -299,10 +299,10 @@ This namespace defines elements to identify assets in a Farah module.
 	</xsd:element>
 
 	<!-- asset info elements -->
-	<xsd:element name="asset-document" type="asset-root" />
-	<xsd:element name="asset-manifest" type="asset-root" />
-	<xsd:element name="asset-fragment" type="asset-root" />
-	<xsd:complexType name="asset-root">
+	<xsd:element name="document-info" type="asset-info" />
+	<xsd:element name="fragment-info" type="asset-info" />
+	<xsd:element name="manifest-info" type="asset-info" />
+	<xsd:complexType name="asset-info">
 		<xsd:sequence>
 			<xsd:any processContents="skip" minOccurs="0" maxOccurs="unbounded" />
 		</xsd:sequence>

@@ -27,7 +27,7 @@ class AssetManifestDOMWriter implements DOMWriterInterface {
         $name = basename((string) $this->url->getAssetPath());
         $href = str_replace('farah://', '/', $id);
 
-        $node = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, 'sfm:asset-manifest');
+        $node = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, 'sfm:manifest-info');
         $node->setAttribute('name', $name);
         $node->setAttribute('url', $id);
         $node->setAttribute('href', $href);
