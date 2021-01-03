@@ -10,7 +10,7 @@
 			<ssv:info version="1.0">
 				<ssv:name>Farah Sitemap</ssv:name>
 				<ssv:version>1.0</ssv:version>
-				<ssv:revision>R20180405</ssv:revision>
+				<ssv:revision>R20200103</ssv:revision>
 				<ssv:prefix>sfs</ssv:prefix>
 				<ssv:namespace>http://schema.slothsoft.net/farah/sitemap</ssv:namespace>
 				<ssv:author email="daniel.lio.schulz@gmail.com">Daniel Schulz</ssv:author>
@@ -20,7 +20,7 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 				<ssv:changelog><![CDATA[
 *** Version 1.0 ***
 	R20200103
-		- updated referenecd schema locations
+		- updated referenced schema locations
 	R20180402
 		- initial release
 	R20180405
