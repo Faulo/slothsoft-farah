@@ -16,7 +16,7 @@ use Throwable;
 
 abstract class AbstractSitemapTest extends AbstractTestCase {
 
-    const SCHEMA_URL = 'farah://slothsoft@farah/schema/sitemap/1.0';
+    const SCHEMA_URL = 'farah://slothsoft@farah/schema/sitemap/';
 
     abstract protected static function loadSitesAsset(): AssetInterface;
 
@@ -80,21 +80,28 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         return $this->getDomain()->getDocument();
     }
 
-    public function testHasRootElement() {
-        $this->assertInstanceOf(DOMElement::class, $this->getSitesDocument()->documentElement);
+    public function testHasRootElement(): DOMElement {
+        $rootElement = $this->getSitesDocument()->documentElement;
+        $this->assertInstanceOf(DOMElement::class, $rootElement);
+        return $rootElement;
     }
 
     /**
      *
      * @depends testHasRootElement
      */
-    public function testRootElementIsDomain() {
-        $this->assertEquals($this->getSitesRoot()->namespaceURI, DOMHelper::NS_FARAH_SITES);
-        $this->assertEquals($this->getSitesRoot()->localName, Domain::TAG_DOMAIN);
+    public function testRootElementIsDomain($rootElement) {
+        $this->assertEquals($rootElement->namespaceURI, DOMHelper::NS_FARAH_SITES);
+        $this->assertEquals($rootElement->localName, Domain::TAG_DOMAIN);
     }
 
-    public function testSchemaExists() {
-        $path = self::SCHEMA_URL;
+    /**
+     *
+     * @depends testHasRootElement
+     */
+    public function testSchemaExists($rootElement): string {
+        $version = $rootElement->hasAttribute('version') ? $rootElement->getAttribute('version') : '1.0';
+        $path = self::SCHEMA_URL . $version;
         $this->assertFileExists($path, 'Schema file not found!');
         return $path;
     }
@@ -147,7 +154,8 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     public function testIncludeIsValidAccordingToSchema($url) {
         $document = Module::resolveToDOMWriter($url)->toDocument();
         try {
-            $validateResult = $document->schemaValidate(self::SCHEMA_URL);
+            $schema = $this->testSchemaExists($document->documentElement);
+            $validateResult = $document->schemaValidate($schema);
         } catch (Throwable $e) {
             $validateResult = false;
             $this->failException($e);
