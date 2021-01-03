@@ -22,14 +22,14 @@ class Manifest implements ManifestInterface {
     const TAG_EXTERNAL_RESOURCE = 'external-resource';
 
     const TAG_CUSTOM_ASSET = 'custom-asset';
-    
+
     const TAG_DAEMON = 'daemon';
 
     // runtime-only asset tags
     const TAG_DOCUMENT = 'document';
 
     const TAG_ERROR = 'error';
-    
+
     const TAG_CLOSURE = 'closure';
 
     // physical asset tags

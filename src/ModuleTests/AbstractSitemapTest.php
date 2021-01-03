@@ -194,7 +194,13 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
 
     public function pageNodeProvider() {
         $ret = [];
-        foreach ($this->getDomainDocument()->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, 'page') as $node) {
+        foreach ($this->getDomainDocument()->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_PAGE) as $node) {
+            $key = sprintf('%3d: %s', count($ret), $node->getAttribute('uri'));
+            $ret[$key] = [
+                $node
+            ];
+        }
+        foreach ($this->getDomainDocument()->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_FILE) as $node) {
             $key = sprintf('%3d: %s', count($ret), $node->getAttribute('uri'));
             $ret[$key] = [
                 $node

@@ -8,7 +8,10 @@ class CLIDaemonServerTest extends TestCase {
 
     public function testServer(): void {
         $server = new CLIDaemonServer(0);
-        foreach ($server->onMessage(['php', '--version']) as $type => $output) {
+        foreach ($server->onMessage([
+            'php',
+            '--version'
+        ]) as $type => $output) {
             switch ($type) {
                 case CLIDaemonServer::STDOUT:
                     $this->assertStringContainsString(PHP_VERSION, $output);
