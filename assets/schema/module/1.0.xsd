@@ -296,6 +296,43 @@ This namespace defines elements to identify assets in a Farah module.
 			</xsd:complexContent>
 		</xsd:complexType>
 	</xsd:element>
+	
+	<!-- temporary asset elements -->
+	<xsd:element name="asset-document">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:attributeGroup ref="assetAttributes"/>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="asset-manifest">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:attributeGroup ref="assetAttributes"/>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="asset-fragment">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:attributeGroup ref="assetAttributes"/>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:attributeGroup name="assetAttributes">
+		<xsd:attribute name="name" type="xsd:token" use="optional" />
+		<xsd:attribute name="url" type="farahUrl" use="optional" />
+		<xsd:attribute name="href" type="xsd:anyURI" use="optional" />
+	</xsd:attributeGroup>
 
 
 

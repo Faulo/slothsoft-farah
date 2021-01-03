@@ -36,7 +36,7 @@ class AssetFragmentDOMWriter implements DOMWriterInterface {
     public function toDocument(): DOMDocument {
         $implementation = new DOMImplementation();
 
-        $targetDoc = $implementation->createDocument(DOMHelper::NS_FARAH_MODULE, 'sfm:fragment');
+        $targetDoc = $implementation->createDocument(DOMHelper::NS_FARAH_MODULE, 'sfm:asset-fragment');
         $node = $targetDoc->documentElement;
 
         $id = (string) $this->url;
