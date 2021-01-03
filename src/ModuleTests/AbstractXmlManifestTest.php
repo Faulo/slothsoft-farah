@@ -19,10 +19,15 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
         return LeanElement::createTreeFromDOMDocument(DOMHelper::loadDocument(static::getManifestFile()));
     }
 
-    const SCHEMA_URL = 'farah://slothsoft@farah/schema/module/1.0';
+    const SCHEMA_URL = 'farah://slothsoft@farah/schema/module/';
 
-    public function testSchemaExists(): string {
-        $path = static::SCHEMA_URL;
+    /**
+     *
+     * @depends testManifestIsValidXml
+     */
+    public function testSchemaExists($manifestDocument): string {
+        $version = $manifestDocument->documentElement->hasAttribute('version') ? $manifestDocument->documentElement->getAttribute('version') : '1.0';
+        $path = static::SCHEMA_URL . $version;
         $this->assertFileExists($path, 'Schema file not found!');
         return $path;
     }
