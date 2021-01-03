@@ -17,7 +17,8 @@ class CLIDaemonServerTest extends TestCase {
                     $this->assertStringContainsString(PHP_VERSION, $output);
                     break;
                 case CLIDaemonServer::STDERR:
-                    $this->assertStringContainsString('php --version', $output);
+                    $this->assertStringContainsString('php', $output);
+                    $this->assertStringContainsString('--version', $output);
                     break;
             }
         }
