@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<assets xmlns="http://schema.slothsoft.net/farah/module">
+<assets xmlns="http://schema.slothsoft.net/farah/module" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schema.slothsoft.net/farah/module http://schema.slothsoft.net/farah/module/1.1.xsd">
 	<resource-directory name="js" type="application/javascript" />
 	<resource-directory name="xsl" type="application/xslt+xml" />
 
@@ -17,4 +18,5 @@
 	<custom-asset name="request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder" />
 	<custom-asset name="phpinfo" executable-builder="Slothsoft\Farah\Internal\PhpinfoBuilder" />
 	<resource name="example-domain" type="application/xml" />
+	<daemon name="cli-daemon" server="Slothsoft\Farah\Internal\CLIDaemon" port="5050" />
 </assets>
