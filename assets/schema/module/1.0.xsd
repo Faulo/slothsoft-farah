@@ -18,9 +18,10 @@ This namespace defines elements to identify assets in a Farah module.
 				]]></ssv:description>
 				<ssv:changelog><![CDATA[
 *** Version 1.0 ***
+	R20200103
+		- added elements <asset-document>, <asset-manifest>, , <asset-fragment>
 	R20181111
 		- physical assets must have a "name" attribute
-		
 	R20180402
 		- initial release
 				]]></ssv:changelog>
