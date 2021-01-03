@@ -55,7 +55,7 @@ class FarahUrlPath implements Hashable {
                 }
             }
         }
-        return count($segments) ? self::SEPARATOR . implode(self::SEPARATOR, $segments) : self::SEPARATOR;
+        return self::SEPARATOR . implode(self::SEPARATOR, $segments);
     }
 
     private $id;
