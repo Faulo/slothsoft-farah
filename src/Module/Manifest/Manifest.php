@@ -23,6 +23,8 @@ class Manifest implements ManifestInterface {
 
     const TAG_CUSTOM_ASSET = 'custom-asset';
 
+    const TAG_DAEMON = 'daemon';
+
     // runtime-only asset tags
     const TAG_DOCUMENT = 'document';
 

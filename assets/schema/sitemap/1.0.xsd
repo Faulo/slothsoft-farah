@@ -10,7 +10,7 @@
 			<ssv:info version="1.0">
 				<ssv:name>Farah Sitemap</ssv:name>
 				<ssv:version>1.0</ssv:version>
-				<ssv:revision>R20180405</ssv:revision>
+				<ssv:revision>R20200103</ssv:revision>
 				<ssv:prefix>sfs</ssv:prefix>
 				<ssv:namespace>http://schema.slothsoft.net/farah/sitemap</ssv:namespace>
 				<ssv:author email="daniel.lio.schulz@gmail.com">Daniel Schulz</ssv:author>
@@ -19,6 +19,8 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 				]]></ssv:description>
 				<ssv:changelog><![CDATA[
 *** Version 1.0 ***
+	R20200103
+		- updated referenced schema locations
 	R20180402
 		- initial release
 	R20180405
@@ -29,7 +31,7 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 	</xsd:annotation>
 
 	<xsd:import namespace="http://schema.slothsoft.net/farah/module"
-		schemaLocation="farah://slothsoft@farah/schema/module/1.0" />
+		schemaLocation="http://schema.slothsoft.net/farah/module/1.0.xsd" />
 
 	<xsd:attributeGroup name="schemaVersion">
 		<xsd:attribute name="version" type="xsd:token" use="required" fixed="1.0">

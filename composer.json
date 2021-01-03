@@ -7,6 +7,10 @@
 			"email" : "info.slothsoft@gmail.com"
 		}
 	],
+	"bin" : [
+		"bin/farah-asset",
+		"bin/farah-page"
+	],
 	"scripts" : {
 		"farah-asset" : "@php scripts/farah-asset.php",
 		"farah-page" : "@php scripts/farah-page.php"
@@ -57,7 +61,7 @@
 	},
 	"extra" : {
 		"branch-alias" : {
-			"dev-develop" : "1.3.x-dev"
+			"dev-develop" : "1.4.x-dev"
 		}
 	},
 	"homepage" : "http://farah.slothsoft.net/modules/farah"

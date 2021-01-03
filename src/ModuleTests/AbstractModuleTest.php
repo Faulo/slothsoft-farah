@@ -276,8 +276,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
 
         $this->assertInstanceOf(DOMElement::class, $node);
         $ns = $node->namespaceURI;
-        $version = $node->getAttribute('version');
-        if ($ns !== null and $version !== '') {
+        $version = $node->hasAttribute('version') ? $node->getAttribute('version') : '1.0';
+        if ($ns !== null) {
             if (strpos($ns, 'http://schema.slothsoft.net/') === 0) {
                 $schema = explode('/', substr($ns, strlen('http://schema.slothsoft.net/')));
                 $this->assertEquals(2, count($schema), "Invalid slothsoft schema: $ns");

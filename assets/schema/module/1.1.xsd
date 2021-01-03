@@ -1,0 +1,452 @@
+<?xml version="1.0"?>
+<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/module"
+	xmlns="http://schema.slothsoft.net/farah/module" xmlns:sfm="http://schema.slothsoft.net/farah/module"
+	xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:annotation>
+		<xsd:appinfo>
+			<ssv:info version="1.0">
+				<ssv:name>Farah Module Manifest</ssv:name>
+				<ssv:version>1.1</ssv:version>
+				<ssv:revision>R20200103</ssv:revision>
+				<ssv:prefix>sfm</ssv:prefix>
+				<ssv:namespace>http://schema.slothsoft.net/farah/module</ssv:namespace>
+				<ssv:author email="daniel.lio.schulz@gmail.com">Daniel Schulz</ssv:author>
+				<ssv:description><![CDATA[
+This namespace defines elements to identify assets in a Farah module.
+				]]></ssv:description>
+				<ssv:changelog><![CDATA[
+*** Version 1.1 ***
+	R20200103
+		- added element <daemon>
+		- added attribute <module version="">
+		- added elements <document-info>, <fragment-info>, <manifest-info>
+
+*** Version 1.0 ***
+	R20181111
+		- physical assets must have a "name" attribute
+		
+	R20180402
+		- initial release
+				]]></ssv:changelog>
+			</ssv:info>
+		</xsd:appinfo>
+	</xsd:annotation>
+
+	<xsd:attributeGroup name="schemaVersion">
+		<xsd:attribute name="version" type="xsd:token" use="required" fixed="1.1">
+			<xsd:annotation>
+				<xsd:documentation>The schema version used by the instance document.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:attributeGroup>
+
+	<!-- groups -->
+	<xsd:group name="assets">
+		<xsd:choice>
+			<xsd:group ref="virtual-assets" />
+			<xsd:group ref="physical-assets" />
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:group name="virtual-assets">
+		<xsd:choice>
+			<xsd:element ref="fragment" />
+			<xsd:element ref="custom-asset" />
+			<xsd:element ref="daemon" />
+			<xsd:element ref="external-resource" />
+			<xsd:group ref="runtime-assets" />
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:group name="physical-assets">
+		<xsd:choice>
+			<xsd:element ref="directory" />
+			<xsd:element ref="resource" />
+			<xsd:element ref="resource-directory" />
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:group name="runtime-assets">
+		<xsd:choice>
+			<xsd:element ref="closure" />
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:group name="asset-meta">
+		<xsd:choice>
+			<xsd:element ref="import" />
+			<xsd:element ref="use-document" />
+			<xsd:element ref="use-template" />
+			<xsd:element ref="link-stylesheet" />
+			<xsd:element ref="link-script" />
+			<xsd:element ref="link-module" />
+			<xsd:element ref="param-filter" />
+			<xsd:element ref="param" />
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:group name="reference-meta">
+		<xsd:choice>
+			<xsd:element ref="param" />
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:group name="resource-meta">
+		<xsd:choice>
+			<xsd:element ref="source" />
+			<xsd:element ref="options" />
+		</xsd:choice>
+	</xsd:group>
+
+
+
+	<!-- root element -->
+	<xsd:element name="assets">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="module-node">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:group ref="assets" />
+						<xsd:group ref="asset-meta" />
+					</xsd:choice>
+					<xsd:attributeGroup ref="schemaVersion" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- virtual assets -->
+	<xsd:element name="fragment">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="virtual-asset">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:group ref="virtual-assets" />
+						<xsd:group ref="asset-meta" />
+					</xsd:choice>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="custom-asset">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="virtual-asset">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:group ref="virtual-assets" />
+						<xsd:group ref="asset-meta" />
+					</xsd:choice>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="daemon">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="virtual-asset">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:group ref="asset-meta" />
+					</xsd:choice>
+					<xsd:attribute name="server" type="phpClass" use="required" />
+					<xsd:attribute name="port" type="xsd:unsignedShort" use="required" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="external-resource">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="virtual-asset">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:group ref="asset-meta" />
+						<xsd:group ref="resource-meta" />
+					</xsd:choice>
+					<xsd:attribute name="type" type="mimeType" use="required" />
+					<xsd:attribute name="src" type="wwwUrl" use="required" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="closure">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="virtual-asset" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+
+
+	<!-- physical assets -->
+	<xsd:element name="resource">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="physical-asset">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:group ref="asset-meta" />
+						<xsd:group ref="resource-meta" />
+					</xsd:choice>
+					<xsd:attribute name="type" type="mimeType" use="required" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="resource-directory">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="physical-asset">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:group ref="assets" />
+						<xsd:group ref="asset-meta" />
+						<xsd:group ref="resource-meta" />
+					</xsd:choice>
+					<xsd:attribute name="type" type="mimeType" use="required" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="directory">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="physical-asset">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:group ref="assets" />
+						<xsd:group ref="asset-meta" />
+					</xsd:choice>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+
+	<!-- meta nodes -->
+	<xsd:element name="import">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset-reference" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="use-document">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset-reference">
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="use-template">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset-reference" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="link-stylesheet">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset-reference" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="link-script">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset-reference" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="link-module">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset-reference" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="param">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="meta">
+					<xsd:attribute name="value" type="farahUrlArgumentValue" use="optional" />
+					<xsd:attribute name="scope" type="xsd:normalizedString" use="optional" />
+					<xsd:attribute name="type" type="xsd:normalizedString" use="optional" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="param-filter">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="meta">
+					<xsd:anyAttribute processContents="lax" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="options">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="meta">
+					<xsd:anyAttribute processContents="lax" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="source">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="meta">
+					<xsd:attribute name="href" type="wwwUrl" use="required" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- asset info elements -->
+	<xsd:element name="document-info" type="asset-info" />
+	<xsd:element name="fragment-info" type="asset-info" />
+	<xsd:element name="manifest-info" type="asset-info" />
+	<xsd:complexType name="asset-info">
+		<xsd:sequence>
+			<xsd:any processContents="skip" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:token" use="optional" />
+		<xsd:attribute name="url" type="farahUrl" use="optional" />
+		<xsd:attribute name="href" type="xsd:anyURI" use="optional" />
+		<xsd:attributeGroup ref="schemaVersion" />
+	</xsd:complexType>
+
+	<!-- element types -->
+	<xsd:complexType name="module-node" abstract="true">
+		<xsd:attribute name="name" type="farahUrlPathSegment" use="optional" />
+		<xsd:attribute name="executable-builder" type="phpClass" use="optional" />
+		<xsd:attribute name="path-resolver" type="phpClass" use="optional" />
+		<xsd:attribute name="parameter-filter" type="phpClass" use="optional" />
+		<xsd:attribute name="parameter-supplier" type="phpClass" use="optional" />
+		<xsd:attribute name="instruction" type="phpClass" use="optional" />
+	</xsd:complexType>
+	<xsd:complexType name="virtual-asset" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="module-node">
+				<xsd:attribute name="assetpath" type="farahUrlPath" use="optional" />
+				<xsd:attribute name="use" type="assetUses" use="optional" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="named-asset" abstract="true">
+		<xsd:complexContent>
+			<xsd:restriction base="virtual-asset">
+				<xsd:attribute name="name" type="farahUrlPathSegment" use="required" />
+			</xsd:restriction>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="physical-asset" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="named-asset">
+				<xsd:attribute name="path" type="relativeFilesystemPath" use="optional" />
+				<xsd:attribute name="realpath" type="absoluteFilesystemPath" use="optional" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="meta" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="module-node">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="asset-reference" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="meta">
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:group ref="reference-meta" />
+				</xsd:choice>
+				<xsd:attribute name="ref" type="farahUrl" use="required" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+
+
+	<!-- attribute types -->
+	<xsd:simpleType name="farahUrl">
+		<xsd:restriction base="xsd:anyURI">
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="farahUrlPath">
+		<xsd:restriction base="xsd:token">
+			<xsd:pattern value="[/\c+]+" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="farahUrlPathSegment">
+		<xsd:restriction base="xsd:token">
+			<xsd:pattern value="\c+" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="farahUrlArgumentName">
+		<xsd:restriction base="xsd:token">
+			<xsd:pattern value="\c+" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="farahUrlArgumentValue">
+		<xsd:restriction base="xsd:normalizedString" />
+	</xsd:simpleType>
+
+	<xsd:simpleType name="relativeFilesystemPath">
+		<xsd:restriction base="xsd:normalizedString">
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="absoluteFilesystemPath">
+		<xsd:restriction base="xsd:normalizedString">
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="phpClass">
+		<xsd:restriction base="xsd:normalizedString">
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="wwwUrl">
+		<xsd:restriction base="xsd:anyURI">
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="mimeType">
+		<xsd:restriction base="xsd:normalizedString">
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="assetUses">
+		<xsd:list itemType="assetUse" />
+	</xsd:simpleType>
+	<xsd:simpleType name="assetUse">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="document" />
+			<xsd:enumeration value="template" />
+			<xsd:enumeration value="manifest" />
+			<xsd:enumeration value="script" />
+			<xsd:enumeration value="stylesheet" />
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

@@ -30,6 +30,10 @@ class Domain {
 
     const TAG_PAGE = 'page';
 
+    const TAG_FILE = 'file';
+
+    const TAG_PARAM = 'param';
+
     private $file;
 
     private $document;
@@ -86,6 +90,10 @@ class Domain {
         foreach ($nodeList as $node) {
             $this->initPageElement($node);
         }
+        $nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, self::TAG_FILE);
+        foreach ($nodeList as $node) {
+            $this->initPageElement($node);
+        }
     }
 
     private function initDomainElement(DOMElement $node) {
@@ -102,7 +110,14 @@ class Domain {
             $uri = $node->getAttribute('ext');
         } else {
             $parentUri = $node->parentNode->getAttribute('uri');
-            $uri = $parentUri . $name . '/';
+            switch ($node->localName) {
+                case self::TAG_PAGE:
+                    $uri = $parentUri . $name . '/';
+                    break;
+                case self::TAG_FILE:
+                    $uri = $parentUri . $name;
+                    break;
+            }
         }
 
         if (! $node->hasAttribute('title')) {
@@ -125,7 +140,7 @@ class Domain {
         if ($contextNode === null or $path[0] === '/') {
             $contextNode = $this->domainNode;
         }
-        $query = $this->path2expr($path, 'sfs:' . self::TAG_PAGE);
+        $query = $this->path2expr($path, '[self::sfs:page | self::sfs:file]');
         $pageNode = $this->xpath->evaluate($query, $contextNode)->item(0);
 
         if (! $pageNode) {
@@ -159,13 +174,13 @@ class Domain {
         return FarahUrl::createFromReference($ref, FarahUrl::createFromComponents(FarahUrlAuthority::createFromVendorAndModule($vendorName, $moduleName), null, FarahUrlArguments::createFromValueList($args)));
     }
 
-    private function path2expr(string $path, string $elementName = '*'): string {
+    private function path2expr(string $path, string $filter = ''): string {
         $path = array_filter(explode('/', $path), 'strlen');
         $qry = [
             '.'
         ];
         foreach ($path as $folder) {
-            $qry[] = $elementName . '[php:functionString("strtolower", @name) = "' . strtolower($folder) . '" or ancestor-or-self::*/@name = "*"]';
+            $qry[] = '*[php:functionString("strtolower", @name) = "' . strtolower($folder) . '" or ancestor-or-self::*/@name = "*"]';
         }
         return implode('/', $qry);
     }
@@ -249,11 +264,13 @@ class Domain {
             $contextUrl = $contextUrl->withAssetAuthority(FarahUrlAuthority::createFromVendorAndModule($vendor, $module));
         }
         switch ($pageNode->localName) {
-            case 'domain':
+            case self::TAG_DOMAIN:
                 $pageName = '/';
                 break;
-            case 'page':
+            case self::TAG_PAGE:
                 $pageName = $pageNode->getAttribute('name') . '/';
+            case self::TAG_FILE:
+                $pageName = $pageNode->getAttribute('name');
                 break;
         }
 
@@ -262,10 +279,11 @@ class Domain {
         foreach ($pageNode->childNodes as $node) {
             if ($node->nodeType === XML_ELEMENT_NODE) {
                 switch ($node->localName) {
-                    case 'param':
+                    case self::TAG_PARAM:
                         $params[$node->getAttribute('name')] = $node->getAttribute('value');
                         break;
-                    case 'page':
+                    case self::TAG_PAGE:
+                    case self::TAG_FILE:
                         $children[] = $this->toRoute($node, $contextUrl);
                         break;
                 }

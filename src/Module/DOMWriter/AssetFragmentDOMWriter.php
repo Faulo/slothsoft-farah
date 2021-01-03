@@ -36,14 +36,15 @@ class AssetFragmentDOMWriter implements DOMWriterInterface {
     public function toDocument(): DOMDocument {
         $implementation = new DOMImplementation();
 
-        $targetDoc = $implementation->createDocument(DOMHelper::NS_FARAH_MODULE, 'sfm:fragment');
+        $targetDoc = $implementation->createDocument(DOMHelper::NS_FARAH_MODULE, 'sfm:fragment-info');
         $node = $targetDoc->documentElement;
 
         $id = (string) $this->url;
         $targetDoc->documentURI = $id;
         $name = basename((string) $this->url->getAssetPath());
         $href = str_replace('farah://', '/', $id);
-
+        
+        $node->setAttribute('version', '1.1');
         $node->setAttribute('name', $name);
         $node->setAttribute('url', $id);
         $node->setAttribute('href', $href);
