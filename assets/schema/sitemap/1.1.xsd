@@ -20,7 +20,9 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 				<ssv:changelog><![CDATA[
 *** Version 1.1 ***
 	R20200103
-		- added <file> element
+		- added element <file>
+		- removed element <sitemap>
+		- added attribute <domain version="">
 
 *** Version 1.0 ***
 	R20200103
@@ -38,27 +40,12 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 		schemaLocation="http://schema.slothsoft.net/farah/module/1.1.xsd" />
 
 	<xsd:attributeGroup name="schemaVersion">
-		<xsd:attribute name="version" type="xsd:token" use="required" fixed="1.0">
+		<xsd:attribute name="version" type="xsd:token" use="required" fixed="1.1">
 			<xsd:annotation>
 				<xsd:documentation>The schema version used by the instance document.</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
 	</xsd:attributeGroup>
-
-	<xsd:element name="sitemap">
-		<xsd:complexType>
-			<xsd:complexContent>
-				<xsd:restriction base="xsd:anyType">
-					<xsd:choice minOccurs="0" maxOccurs="unbounded">
-						<xsd:element ref="page" />
-						<xsd:element ref="include-pages" />
-						<xsd:element ref="sfm:param" />
-					</xsd:choice>
-					<xsd:attributeGroup ref="schemaVersion" />
-				</xsd:restriction>
-			</xsd:complexContent>
-		</xsd:complexType>
-	</xsd:element>
 
 	<xsd:element name="domain">
 		<xsd:complexType>
@@ -68,6 +55,7 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 						<xsd:element ref="sfm:param" />
 					</xsd:choice>
 					<xsd:attributeGroup ref="genericPage" />
+					<xsd:attributeGroup ref="schemaVersion" />
 				</xsd:restriction>
 			</xsd:complexContent>
 		</xsd:complexType>

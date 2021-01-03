@@ -19,7 +19,8 @@ This namespace defines elements to identify assets in a Farah module.
 				<ssv:changelog><![CDATA[
 *** Version 1.1 ***
 	R20200103
-		- added <daemon> asset
+		- added element <daemon>
+		- added attribute <module version="">
 
 *** Version 1.0 ***
 	R20181111
@@ -109,6 +110,7 @@ This namespace defines elements to identify assets in a Farah module.
 						<xsd:group ref="assets" />
 						<xsd:group ref="asset-meta" />
 					</xsd:choice>
+					<xsd:attributeGroup ref="schemaVersion" />
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>
