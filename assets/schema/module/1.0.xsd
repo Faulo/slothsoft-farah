@@ -298,11 +298,11 @@ This namespace defines elements to identify assets in a Farah module.
 		</xsd:complexType>
 	</xsd:element>
 
-	<!-- temporary asset elements -->
+	<!-- asset info elements -->
 	<xsd:element name="asset-document" type="asset-root" />
 	<xsd:element name="asset-manifest" type="asset-root" />
 	<xsd:element name="asset-fragment" type="asset-root" />
-	<xsd:complexType name="asset-root" abstract="true">
+	<xsd:complexType name="asset-root">
 		<xsd:sequence>
 			<xsd:any processContents="skip" minOccurs="0" maxOccurs="unbounded" />
 		</xsd:sequence>
