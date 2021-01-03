@@ -19,6 +19,8 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 				]]></ssv:description>
 				<ssv:changelog><![CDATA[
 *** Version 1.0 ***
+	R20200103
+		- updated referenecd schema locations
 	R20180402
 		- initial release
 	R20180405
@@ -29,7 +31,7 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 	</xsd:annotation>
 
 	<xsd:import namespace="http://schema.slothsoft.net/farah/module"
-		schemaLocation="farah://slothsoft@farah/schema/module/1.0" />
+		schemaLocation="http://schema.slothsoft.net/farah/module/1.0.xsd" />
 
 	<xsd:attributeGroup name="schemaVersion">
 		<xsd:attribute name="version" type="xsd:token" use="required" fixed="1.0">
