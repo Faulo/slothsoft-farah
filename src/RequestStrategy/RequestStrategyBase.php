@@ -18,6 +18,7 @@ use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Http\TransferCoding;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Security\BannedManager;
+use Slothsoft\Farah\HTTPRequest;
 
 abstract class RequestStrategyBase implements RequestStrategyInterface {
 
@@ -180,9 +181,10 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
         }
 
         if (! in_array($this->request->getMethod(), [
-            'HEAD',
-            'GET',
-            'POST'
+            HTTPRequest::METHOD_HEAD,
+            HTTPRequest::METHOD_GET,
+            HTTPRequest::METHOD_POST,
+            HTTPRequest::METHOD_OPTIONS
         ])) {
             throw new HttpStatusException("HTTP Method '{$this->request->getMethod()}' is not supported by this implementation.", StatusCode::STATUS_METHOD_NOT_ALLOWED);
         }
@@ -217,7 +219,8 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
 
     private function shouldIncludeBody(string $method, int $statusCode): bool {
         switch ($method) {
-            case 'HEAD':
+            case HTTPRequest::METHOD_HEAD:
+            case HTTPRequest::METHOD_OPTIONS:
                 return false;
         }
 

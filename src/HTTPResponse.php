@@ -266,6 +266,7 @@ class HTTPResponse {
             $this->sendHeaderList();
 
             switch ($this->method) {
+                case HTTPRequest::METHOD_OPTIONS:
                 case HTTPRequest::METHOD_HEAD:
                     break;
                 default:
