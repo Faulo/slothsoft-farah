@@ -21,7 +21,7 @@ class ScriptsTest extends TestCase {
      * @dataProvider someFarahAssets
      */
     public function testFarahAsset(string $url): void {
-        $process = Process::fromShellCommandline(sprintf('composer farah-asset %s', escapeshellarg($url)));
+        $process = Process::fromShellCommandline(sprintf('php bin/farah-asset %s', escapeshellarg($url)));
         $process->run();
         $result = $process->getOutput();
         $this->assertEquals(file_get_contents($url), $result);
