@@ -83,6 +83,8 @@ class HTTPRequest implements DOMWriterInterface {
 
     const METHOD_HEAD = 'HEAD';
 
+    const METHOD_OPTIONS = 'OPTIONS';
+
     const PROTOCOL_HTTP = 'HTTP';
 
     public $dict;

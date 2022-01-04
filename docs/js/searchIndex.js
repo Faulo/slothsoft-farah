@@ -3761,6 +3761,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Slothsoft-Farah-Module-Manifest-Manifest.html#constant_TAG_CUSTOM_ASSET"
         },                {
+            "fqsen": "\\Slothsoft\\Farah\\Module\\Manifest\\Manifest\u003A\u003ATAG_DAEMON",
+            "name": "TAG_DAEMON",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Module-Manifest-Manifest.html#constant_TAG_DAEMON"
+        },                {
             "fqsen": "\\Slothsoft\\Farah\\Module\\Manifest\\Manifest\u003A\u003ATAG_DOCUMENT",
             "name": "TAG_DOCUMENT",
             "summary": "",
@@ -5771,6 +5776,16 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Slothsoft-Farah-Sites-Domain.html#constant_TAG_PAGE"
         },                {
+            "fqsen": "\\Slothsoft\\Farah\\Sites\\Domain\u003A\u003ATAG_FILE",
+            "name": "TAG_FILE",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Sites-Domain.html#constant_TAG_FILE"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Sites\\Domain\u003A\u003ATAG_PARAM",
+            "name": "TAG_PARAM",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Sites-Domain.html#constant_TAG_PARAM"
+        },                {
             "fqsen": "\\Slothsoft\\Farah\\StreamWrapper\\DocumentStreamWrapper",
             "name": "DocumentStreamWrapper",
             "summary": "",
@@ -6166,6 +6181,126 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Slothsoft-Farah-Tracking-View.html#property_pageLimit"
         },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer",
+            "name": "AbstractDaemonServer",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#method___construct"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003Ainit\u0028\u0029",
+            "name": "init",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#method_init"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003AonInitialize\u0028\u0029",
+            "name": "onInitialize",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#method_onInitialize"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003AtoChunks\u0028\u0029",
+            "name": "toChunks",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#method_toChunks"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003AonMessage\u0028\u0029",
+            "name": "onMessage",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#method_onMessage"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003Astop\u0028\u0029",
+            "name": "stop",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#method_stop"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003Alog\u0028\u0029",
+            "name": "log",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#method_log"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003ArespondWith\u0028\u0029",
+            "name": "respondWith",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#method_respondWith"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003ADAEMON_DOMAIN",
+            "name": "DAEMON_DOMAIN",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#constant_DAEMON_DOMAIN"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003ADAEMON_TYPE",
+            "name": "DAEMON_TYPE",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#constant_DAEMON_TYPE"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003ADAEMON_PROTOCOL",
+            "name": "DAEMON_PROTOCOL",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#constant_DAEMON_PROTOCOL"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003ADAEMON_ADDRESS",
+            "name": "DAEMON_ADDRESS",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#constant_DAEMON_ADDRESS"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003ASTDOUT",
+            "name": "STDOUT",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#constant_STDOUT"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\AbstractDaemonServer\u003A\u003ASTDERR",
+            "name": "STDERR",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-AbstractDaemonServer.html#constant_STDERR"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\DaemonClient",
+            "name": "DaemonClient",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-DaemonClient.html"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\DaemonClient\u003A\u003AfromUrl\u0028\u0029",
+            "name": "fromUrl",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-DaemonClient.html#method_fromUrl"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\DaemonClient\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-DaemonClient.html#method___construct"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon\\DaemonClient\u003A\u003Acall\u0028\u0029",
+            "name": "call",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Daemon-DaemonClient.html#method_call"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Internal\\CLIDaemonServer",
+            "name": "CLIDaemonServer",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Internal-CLIDaemonServer.html"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Internal\\CLIDaemonServer\u003A\u003AonInitialize\u0028\u0029",
+            "name": "onInitialize",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Internal-CLIDaemonServer.html#method_onInitialize"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Internal\\CLIDaemonServer\u003A\u003AonMessage\u0028\u0029",
+            "name": "onMessage",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Internal-CLIDaemonServer.html#method_onMessage"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Module\\Asset\\ExecutableBuilderStrategy\\DaemonExecutableBuilder",
+            "name": "DaemonExecutableBuilder",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Module-Asset-ExecutableBuilderStrategy-DaemonExecutableBuilder.html"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Module\\Asset\\ExecutableBuilderStrategy\\DaemonExecutableBuilder\u003A\u003AbuildExecutableStrategies\u0028\u0029",
+            "name": "buildExecutableStrategies",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-Module-Asset-ExecutableBuilderStrategy-DaemonExecutableBuilder.html#method_buildExecutableStrategies"
+        },                {
             "fqsen": "\\",
             "name": "\\",
             "summary": "",
@@ -6190,6 +6325,11 @@ Search.appendIndex(
             "name": "Container",
             "summary": "",
             "url": "namespaces/slothsoft-farah-container.html"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\Daemon",
+            "name": "Daemon",
+            "summary": "",
+            "url": "namespaces/slothsoft-farah-daemon.html"
         },                {
             "fqsen": "\\Slothsoft\\Farah\\Exception",
             "name": "Exception",

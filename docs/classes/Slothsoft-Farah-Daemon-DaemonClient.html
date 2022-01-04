@@ -75,27 +75,22 @@
                     <ul class="phpdocumentor-breadcrumbs">
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/slothsoft.html">Slothsoft</a></li>
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/slothsoft-farah.html">Farah</a></li>
-            <li class="phpdocumentor-breadcrumb"><a href="namespaces/slothsoft-farah-module.html">Module</a></li>
-            <li class="phpdocumentor-breadcrumb"><a href="namespaces/slothsoft-farah-module-manifest.html">Manifest</a></li>
-            <li class="phpdocumentor-breadcrumb"><a href="namespaces/slothsoft-farah-module-manifest-assetbuilderstrategy.html">AssetBuilderStrategy</a></li>
+            <li class="phpdocumentor-breadcrumb"><a href="namespaces/slothsoft-farah-daemon.html">Daemon</a></li>
     </ul>
 
     <article class="phpdocumentor-element -class">
         <h2 class="phpdocumentor-content__title">
-    DefaultAssetBuilder
+    DaemonClient
 
     
     
-            <span class="phpdocumentor-element__implements">
-            implements
-                            <a href="classes/Slothsoft-Farah-Module-Manifest-AssetBuilderStrategy-AssetBuilderStrategyInterface.html"><abbr title="\Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\AssetBuilderStrategyInterface">AssetBuilderStrategyInterface</abbr></a>                    </span>
     
     </h2>
 
         <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="src/Module/Manifest/AssetBuilderStrategy/DefaultAssetBuilder.php"><a href="files/src-module-manifest-assetbuilderstrategy-defaultassetbuilder.html"><abbr title="src/Module/Manifest/AssetBuilderStrategy/DefaultAssetBuilder.php">DefaultAssetBuilder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Daemon/DaemonClient.php"><a href="files/src-daemon-daemonclient.html"><abbr title="src/Daemon/DaemonClient.php">DaemonClient.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">8</span>
 </aside>
 
         
@@ -105,17 +100,6 @@
 
 
 
-<h3 id="interfaces_class_traits">
-    Interfaces, Classes and Traits
-    <a href="#interfaces_class_traits" class="headerlink"><i class="fas fa-link"></i></a>
-</h3>
-
-<dl class="phpdocumentor-table-of-contents">
-            <dt class="phpdocumentor-table-of-contents__entry -interface"><a href="classes/Slothsoft-Farah-Module-Manifest-AssetBuilderStrategy-AssetBuilderStrategyInterface.html"><abbr title="\Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\AssetBuilderStrategyInterface">AssetBuilderStrategyInterface</abbr></a></dt>
-        <dd></dd>
-    
-    
-    </dl>
 
 
 <h3 id="toc">
@@ -125,16 +109,23 @@
 
 <dl class="phpdocumentor-table-of-contents">
                     <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Slothsoft-Farah-Module-Manifest-AssetBuilderStrategy-DefaultAssetBuilder.html#method_buildAssetStrategies">buildAssetStrategies()</a>
+    <a href="classes/Slothsoft-Farah-Daemon-DaemonClient.html#method___construct">__construct()</a>
     <span>
-                        &nbsp;: <a href="classes/Slothsoft-Farah-Module-Asset-AssetStrategies.html"><abbr title="\Slothsoft\Farah\Module\Asset\AssetStrategies">AssetStrategies</abbr></a>    </span>
+                        &nbsp;: mixed    </span>
 </dt>
 <dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Slothsoft-Farah-Module-Manifest-AssetBuilderStrategy-DefaultAssetBuilder.html#method_normalizeElement">normalizeElement()</a>
+    <a href="classes/Slothsoft-Farah-Daemon-DaemonClient.html#method_call">call()</a>
     <span>
-                        &nbsp;: void    </span>
+                        &nbsp;: iteratable&lt;string|int, mixed&gt;    </span>
+</dt>
+<dd></dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/Slothsoft-Farah-Daemon-DaemonClient.html#method_fromUrl">fromUrl()</a>
+    <span>
+                        &nbsp;: <a href="classes/Slothsoft-Farah-Daemon-DaemonClient.html"><abbr title="\Slothsoft\Farah\Daemon\DaemonClient">DaemonClient</abbr></a>    </span>
 </dt>
 <dd></dd>
 
@@ -149,7 +140,7 @@
             <section class="phpdocumentor-methods">
         <h3 class="phpdocumentor-elements__header" id="methods">
             Methods
-            <a href="classes/Slothsoft-Farah-Module-Manifest-AssetBuilderStrategy-DefaultAssetBuilder.html#methods" class="headerlink"><i class="fas fa-link"></i></a>
+            <a href="classes/Slothsoft-Farah-Daemon-DaemonClient.html#methods" class="headerlink"><i class="fas fa-link"></i></a>
         </h3>
                     <article
         class="phpdocumentor-element
@@ -157,34 +148,27 @@
             -public
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_buildAssetStrategies">
-        buildAssetStrategies()
-        <a href="classes/Slothsoft-Farah-Module-Manifest-AssetBuilderStrategy-DefaultAssetBuilder.html#method_buildAssetStrategies" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method___construct">
+        __construct()
+        <a href="classes/Slothsoft-Farah-Daemon-DaemonClient.html#method___construct" class="headerlink"><i class="fas fa-link"></i></a>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="src/Module/Manifest/AssetBuilderStrategy/DefaultAssetBuilder.php"><a href="files/src-module-manifest-assetbuilderstrategy-defaultassetbuilder.html"><abbr title="src/Module/Manifest/AssetBuilderStrategy/DefaultAssetBuilder.php">DefaultAssetBuilder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Daemon/DaemonClient.php"><a href="files/src-daemon-daemonclient.html"><abbr title="src/Daemon/DaemonClient.php">DaemonClient.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">170</span>
+    <span class="phpdocumentor-element-found-in__line">19</span>
 </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                <span class="phpdocumentor-signature__name">buildAssetStrategies</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Slothsoft-Farah-Module-Manifest-ManifestInterface.html"><abbr title="\Slothsoft\Farah\Module\Manifest\ManifestInterface">ManifestInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$ownerManifest</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Slothsoft\Core\XML\LeanElement">LeanElement</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$element</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Slothsoft-Farah-Module-Asset-AssetStrategies.html"><abbr title="\Slothsoft\Farah\Module\Asset\AssetStrategies">AssetStrategies</abbr></a></span></code>
+                <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$port</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$ownerManifest</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Slothsoft-Farah-Module-Manifest-ManifestInterface.html"><abbr title="\Slothsoft\Farah\Module\Manifest\ManifestInterface">ManifestInterface</abbr></a></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$element</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Slothsoft\Core\XML\LeanElement">LeanElement</abbr></span>
+                <span class="phpdocumentor-signature__argument__name">$port</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -194,7 +178,7 @@
     
 
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type"><a href="classes/Slothsoft-Farah-Module-Asset-AssetStrategies.html"><abbr title="\Slothsoft\Farah\Module\Asset\AssetStrategies">AssetStrategies</abbr></a></span>
+    <span class="phpdocumentor-signature__response_type">mixed</span>
             &mdash;
             <section class="phpdocumentor-description"></section>
 
@@ -206,35 +190,28 @@
             -public
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_normalizeElement">
-        normalizeElement()
-        <a href="classes/Slothsoft-Farah-Module-Manifest-AssetBuilderStrategy-DefaultAssetBuilder.html#method_normalizeElement" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_call">
+        call()
+        <a href="classes/Slothsoft-Farah-Daemon-DaemonClient.html#method_call" class="headerlink"><i class="fas fa-link"></i></a>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="src/Module/Manifest/AssetBuilderStrategy/DefaultAssetBuilder.php"><a href="files/src-module-manifest-assetbuilderstrategy-defaultassetbuilder.html"><abbr title="src/Module/Manifest/AssetBuilderStrategy/DefaultAssetBuilder.php">DefaultAssetBuilder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Daemon/DaemonClient.php"><a href="files/src-daemon-daemonclient.html"><abbr title="src/Daemon/DaemonClient.php">DaemonClient.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">23</span>
 </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                <span class="phpdocumentor-signature__name">normalizeElement</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Slothsoft\Core\XML\LeanElement">LeanElement</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$element</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Slothsoft\Core\XML\LeanElement">LeanElement</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$parent</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                <span class="phpdocumentor-signature__name">call</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">iteratable&lt;string|int, mixed&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$element</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Slothsoft\Core\XML\LeanElement">LeanElement</abbr></span>
+                <span class="phpdocumentor-signature__argument__name">$message</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
                             </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$parent</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Slothsoft\Core\XML\LeanElement">LeanElement</abbr>|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
@@ -243,7 +220,49 @@
     
 
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">void</span>
+    <span class="phpdocumentor-signature__response_type">iteratable&lt;string|int, mixed&gt;</span>
+            &mdash;
+            <section class="phpdocumentor-description"></section>
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_fromUrl">
+        fromUrl()
+        <a href="classes/Slothsoft-Farah-Daemon-DaemonClient.html#method_fromUrl" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Daemon/DaemonClient.php"><a href="files/src-daemon-daemonclient.html"><abbr title="src/Daemon/DaemonClient.php">DaemonClient.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">10</span>
+</aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__name">fromUrl</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Slothsoft-Farah-FarahUrl-FarahUrl.html"><abbr title="\Slothsoft\Farah\FarahUrl\FarahUrl">FarahUrl</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$url</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Slothsoft-Farah-Daemon-DaemonClient.html"><abbr title="\Slothsoft\Farah\Daemon\DaemonClient">DaemonClient</abbr></a></span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$url</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Slothsoft-Farah-FarahUrl-FarahUrl.html"><abbr title="\Slothsoft\Farah\FarahUrl\FarahUrl">FarahUrl</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type"><a href="classes/Slothsoft-Farah-Daemon-DaemonClient.html"><abbr title="\Slothsoft\Farah\Daemon\DaemonClient">DaemonClient</abbr></a></span>
             &mdash;
             <section class="phpdocumentor-description"></section>
 
@@ -265,7 +284,7 @@
 </section>
             </div>
         </div>
-        <a href="classes/Slothsoft-Farah-Module-Manifest-AssetBuilderStrategy-DefaultAssetBuilder.html#top" class="phpdocumentor-back-to-top"><i class="fas fa-chevron-circle-up"></i></a>
+        <a href="classes/Slothsoft-Farah-Daemon-DaemonClient.html#top" class="phpdocumentor-back-to-top"><i class="fas fa-chevron-circle-up"></i></a>
 
     </main>
 
