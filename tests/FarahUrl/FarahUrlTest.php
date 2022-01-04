@@ -3,11 +3,10 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\FarahUrl;
 
 use PHPUnit\Framework\TestCase;
+use Slothsoft\Core\FileSystem;
 use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
-use Slothsoft\Core\Calendar\DateTimeFormatter;
-use Slothsoft\Core\FileSystem;
 
 class FarahUrlTest extends TestCase {
 
@@ -168,11 +167,12 @@ class FarahUrlTest extends TestCase {
     public function testFileModifiedTime() {
         $assetsPath = realpath('assets/xsl/module.xsl');
         $assetsUrl = 'farah://slothsoft@farah/xsl/module';
-
+        $dateFormat = 'd.m.y H:i';
+        
         $expected = FileSystem::changetime($assetsPath);
         $actual = FileSystem::changetime($assetsUrl);
 
-        $this->assertEquals(date(DateTimeFormatter::FORMAT_DATETIME, $expected), date(DateTimeFormatter::FORMAT_DATETIME, $actual));
+        $this->assertEquals(date($dateFormat, $expected), date($dateFormat, $actual));
     }
 }
 
