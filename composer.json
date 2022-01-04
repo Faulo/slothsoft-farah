@@ -21,8 +21,8 @@
 	},
 	"type" : "library",
 	"require" : {
-		"php" : "7.2 - 8.1",
-        "ext-sockets" : "*",
+		"php" : "7.2 - 8.0",
+		"ext-sockets" : "*",
 		"php-ds/php-ds" : "^1.2",
 		"guzzlehttp/psr7" : "^1.4",
 		"krakjoe/pthreads-polyfill" : "^1.1",
