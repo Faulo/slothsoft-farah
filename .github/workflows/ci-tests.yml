@@ -24,14 +24,14 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: ${{ matrix.php }}
-          php_extensions: xsl
+          php_extensions: xsl sockets
           command: update
 
       - name: Run PHPUnit
         uses: php-actions/phpunit@v3
         with:
           php_version: ${{ matrix.php }}
-          php_extensions: xsl
+          php_extensions: xsl sockets
           version: 8
           bootstrap: vendor/autoload.php
           configuration: phpunit.xml
