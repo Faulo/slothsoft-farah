@@ -13,7 +13,7 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\FileWriterResultBuil
 /**
  *
  * @author Daniel Schulz
- *
+ *        
  */
 class PhpinfoBuilder implements ExecutableBuilderStrategyInterface {
 
