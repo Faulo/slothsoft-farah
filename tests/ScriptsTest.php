@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Process\Process;
 
 class ScriptsTest extends TestCase {
 
@@ -20,9 +21,9 @@ class ScriptsTest extends TestCase {
      * @dataProvider someFarahAssets
      */
     public function testFarahAsset(string $url): void {
-        $result = [];
-        exec(sprintf('composer farah-asset %s', escapeshellarg($url)), $result);
-        $result = implode("\n", $result) . "\n";
+        $process = Process::fromShellCommandline(sprintf('php bin/farah-asset %s', escapeshellarg($url)));
+        $process->run();
+        $result = $process->getOutput();
         $this->assertEquals(file_get_contents($url), $result);
     }
 }
