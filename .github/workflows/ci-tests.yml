@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ["7.2", "7.3", "7.4", "8.0"]
+        php: ["7.2", "7.3", "7.4", "8.0", "8.1"]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -18,20 +18,21 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/composer-cache
-          key: ${{ runner.os }}-${{ matrix.php }}-${{ hashFiles('**/composer.json') }}
+          key: ${{ runner.os }}-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
       
       - name: Install Composer
         uses: php-actions/composer@v6
         with:
           php_version: ${{ matrix.php }}
-          php_extensions: xsl sockets
+          php_extensions: xsl
           command: update
+          args: --prefer-lowest --prefer-stable
 
       - name: Run PHPUnit
         uses: php-actions/phpunit@v3
         with:
           php_version: ${{ matrix.php }}
-          php_extensions: xsl sockets
+          php_extensions: xsl
           version: 8
           bootstrap: vendor/autoload.php
           configuration: phpunit.xml
