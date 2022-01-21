@@ -30,7 +30,8 @@ class SitesBuilder implements ExecutableBuilderStrategyInterface {
             } catch (ConfigurationRequiredException $e) {
                 $doc = new DOMDocument();
                 $node = $doc->createElementNS(DOMHelper::NS_FARAH_SITES, 'domain');
-                $node->textContent = $e->getMessage();
+                $node->setAttribute('version', '1.1');
+                $node->setAttribute('title', $e->getMessage());
                 $doc->appendChild($node);
                 return $doc;
             }
