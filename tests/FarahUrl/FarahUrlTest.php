@@ -168,7 +168,7 @@ class FarahUrlTest extends TestCase {
         $assetsPath = realpath('assets/xsl/module.xsl');
         $assetsUrl = 'farah://slothsoft@farah/xsl/module';
         $dateFormat = 'd.m.y H:i';
-        
+
         $expected = FileSystem::changetime($assetsPath);
         $actual = FileSystem::changetime($assetsUrl);
 
