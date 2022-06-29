@@ -23,7 +23,7 @@
 	"require" : {
 		"php" : "7.4 - 8.0",
 		"php-ds/php-ds" : "^1.2",
-		"guzzlehttp/psr7" : "^1.8",
+		"guzzlehttp/psr7" : "^1.8.4",
 		"krakjoe/pthreads-polyfill" : "^1.1",
 		"matthiasmullie/minify" : "^1.3",
 		"psr/cache" : "^1.0",
