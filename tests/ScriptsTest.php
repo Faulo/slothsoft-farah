@@ -21,7 +21,11 @@ class ScriptsTest extends TestCase {
      * @dataProvider someFarahAssets
      */
     public function testFarahAsset(string $url): void {
-        $process = new Process([PHP_BINARY, 'bin/farah-asset', $url]);
+        $process = new Process([
+            PHP_BINARY,
+            'bin/farah-asset',
+            $url
+        ]);
         $process->run();
         $result = $process->getOutput();
         $this->assertEquals(file_get_contents($url), $result);
