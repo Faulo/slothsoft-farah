@@ -7,6 +7,7 @@ use Slothsoft\Farah\ResponseStrategy\SendBodyStrategy;
 use Slothsoft\Farah\HTTPResponse;
 
 array_shift($_SERVER['argv']);
+$_SERVER['argc'] --;
 
 foreach ([
     __DIR__ . '/../../../autoload.php',
@@ -20,12 +21,12 @@ foreach ([
 
 if (count($_SERVER['argv']) !== 1) {
     echo <<<'EOT'
-Retrieve a farah page via its URL.
-        
-Usage:
-composer farah-page "/path/to/page?arguments#stream-type"
-
-EOT;
+    Retrieve a farah page via its URL.
+            
+    Usage:
+    composer farah-page "/path/to/page?arguments#stream-type"
+    
+    EOT;
     return 1;
 }
 

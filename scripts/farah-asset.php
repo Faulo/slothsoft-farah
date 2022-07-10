@@ -8,6 +8,7 @@ use Slothsoft\Farah\RequestStrategy\LookupAssetStrategy;
 use Slothsoft\Farah\ResponseStrategy\SendBodyStrategy;
 
 array_shift($_SERVER['argv']);
+$_SERVER['argc'] --;
 
 foreach ([
     __DIR__ . '/../../../autoload.php',
@@ -21,12 +22,12 @@ foreach ([
 
 if (count($_SERVER['argv']) !== 1) {
     echo <<<'EOT'
-Retrieve a farah asset via its URL.
-        
-Usage:
-composer farah-asset "farah://vendor@module/path/to/asset?arguments#stream-type"
-
-EOT;
+    Retrieve a farah asset via its URL.
+            
+    Usage:
+    composer farah-asset "farah://vendor@module/path/to/asset?arguments#stream-type"
+    
+    EOT;
     return 1;
 }
 
