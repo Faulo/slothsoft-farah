@@ -21,7 +21,7 @@ TransferCoding::registerEncodingFilter('chunked', new ChunkedFilteredStreamFacto
 
 Module::registerWithXmlManifestAndDefaultAssets('slothsoft@farah', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets');
 
-HTTPResponse::cacheDurations()['image/'] = Seconds::MONTH;
-HTTPResponse::cacheDurations()['application/font'] = Seconds::YEAR;
-HTTPResponse::cacheDurations()['text/css'] = Seconds::WEEK;
-HTTPResponse::cacheDurations()['application/javascript'] = Seconds::WEEK;
+HTTPResponse::cacheDurations()['image'] = Seconds::MINUTE;
+HTTPResponse::cacheDurations()['application/font'] = Seconds::MINUTE;
+HTTPResponse::cacheDurations()['text/css'] = Seconds::MINUTE;
+HTTPResponse::cacheDurations()['application/javascript'] = Seconds::MINUTE;
