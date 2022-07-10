@@ -166,6 +166,8 @@ class FarahUrlTest extends TestCase {
      */
     public function testFileModifiedTime() {
         $assetsPath = realpath('assets/xsl/module.xsl');
+        $this->assertIsString($assetsPath);
+        
         $assetsUrl = 'farah://slothsoft@farah/xsl/module';
         $dateFormat = 'd.m.y H:i';
 
