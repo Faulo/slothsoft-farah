@@ -33,6 +33,10 @@ class HTTPResponse {
         return $field;
     }
 
+    public static function inventCacheDuration(string $mimeType): int {
+        return self::cacheDurations()[$mimeType] ?? self::$httpConfig['cache-duration'];
+    }
+
     const CHUNK_EOL = "\r\n";
 
     const STATUS_OK = 200;
@@ -642,7 +646,7 @@ class HTTPResponse {
         switch ($this->bodyType) {
             case self::BODY_STRING:
             case self::BODY_FILE:
-                $cacheDuration = self::cacheDurations()[$this->mime] ?? self::$httpConfig['cache-duration'];
+                $cacheDuration = self::inventCacheDuration($this->mime);
                 $this->addHeader('cache-control', 'must-revalidate, max-age=%d', [
                     $cacheDuration
                 ]);
