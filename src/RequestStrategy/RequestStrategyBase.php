@@ -5,8 +5,9 @@ namespace Slothsoft\Farah\RequestStrategy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slothsoft\Core\MimeTypeDictionary;
-use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Core\IO\Psr7\StreamHelper;
+use Slothsoft\Farah\HTTPRequest;
+use Slothsoft\Farah\HTTPResponse;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\Exception\HttpStatusException;
@@ -18,7 +19,6 @@ use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Http\TransferCoding;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Security\BannedManager;
-use Slothsoft\Farah\HTTPRequest;
 
 abstract class RequestStrategyBase implements RequestStrategyInterface {
 
@@ -71,7 +71,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
 
                 $headers['content-type'] = $fileCharset === '' ? $fileMime : "$fileMime; charset=$fileCharset";
 
-                $cacheDuration = $this->inventCacheDuration($fileMime);
+                $cacheDuration = HTTPResponse::inventCacheDuration($fileMime);
                 $headers['cache-control'] = "must-revalidate, max-age=$cacheDuration";
 
                 if ($fileTime > 0) {
@@ -236,22 +236,6 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
         }
 
         return true;
-    }
-
-    private function inventCacheDuration(string $mimeType): int {
-        if (strpos($mimeType, 'image/') === 0) {
-            return Seconds::MONTH;
-        }
-        if (strpos($mimeType, 'application/font') === 0) {
-            return Seconds::YEAR;
-        }
-        if (strpos($mimeType, 'application/javascript') === 0) {
-            return Seconds::WEEK;
-        }
-        if (strpos($mimeType, 'text/css') === 0) {
-            return Seconds::WEEK;
-        }
-        return 30;
     }
 
     private function inventPreferredCompressions(string $mimeType): string {
