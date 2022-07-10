@@ -1791,6 +1791,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Slothsoft-Farah-HTTPResponse.html#method_cacheDurations"
         },                {
+            "fqsen": "\\Slothsoft\\Farah\\HTTPResponse\u003A\u003AinventCacheDuration\u0028\u0029",
+            "name": "inventCacheDuration",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-HTTPResponse.html#method_inventCacheDuration"
+        },                {
             "fqsen": "\\Slothsoft\\Farah\\HTTPResponse\u003A\u003AsetHttpConfig\u0028\u0029",
             "name": "setHttpConfig",
             "summary": "",
