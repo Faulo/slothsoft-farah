@@ -9,7 +9,7 @@ class CLIDaemonServerTest extends TestCase {
     public function testServer(): void {
         $server = new CLIDaemonServer(0);
         foreach ($server->onMessage([
-            'php',
+            PHP_BINARY,
             '--version'
         ]) as $type => $output) {
             switch ($type) {

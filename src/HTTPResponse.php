@@ -11,6 +11,7 @@ declare(strict_types = 1);
  */
 namespace Slothsoft\Farah;
 
+use Slothsoft\Core\CascadingDictionary;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\MimeTypeDictionary;
@@ -23,6 +24,14 @@ use DOMDocument;
 use Exception;
 
 class HTTPResponse {
+
+    public static function cacheDurations(): CascadingDictionary {
+        static $field;
+        if ($field === null) {
+            $field = new CascadingDictionary();
+        }
+        return $field;
+    }
 
     const CHUNK_EOL = "\r\n";
 
@@ -633,19 +642,7 @@ class HTTPResponse {
         switch ($this->bodyType) {
             case self::BODY_STRING:
             case self::BODY_FILE:
-                $cacheDuration = self::$httpConfig['cache-duration'];
-                if (strpos($this->mime, 'image/') === 0) {
-                    $cacheDuration = Seconds::MONTH;
-                }
-                if (strpos($this->mime, 'application/font') === 0) {
-                    $cacheDuration = Seconds::YEAR;
-                }
-                if (strpos($this->mime, 'text/css') === 0) {
-                    $cacheDuration = Seconds::WEEK;
-                }
-                if (strpos($this->mime, 'application/javascript') === 0) {
-                    $cacheDuration = Seconds::WEEK;
-                }
+                $cacheDuration = self::cacheDurations()[$this->mime] ?? self::$httpConfig['cache-duration'];
                 $this->addHeader('cache-control', 'must-revalidate, max-age=%d', [
                     $cacheDuration
                 ]);

@@ -6,13 +6,16 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Throwable;
+use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 
 class XmlTreeLoader implements TreeLoaderStrategyInterface {
 
     public function loadTree(ManifestInterface $context): LeanElement {
         $xmlFile = $context->createManifestFile('manifest.xml');
 
-        $tmpFile = $context->createCacheFile('manifest.tmp');
+        $tmpFile = $context->createCacheFile('manifest.tmp', null, FarahUrlArguments::createFromValueList([
+            'cwd' => getcwd()
+        ]));
 
         if ($tmpFile->isFile()) {
             if ($tmpFile->getMTime() > $xmlFile->getMTime()) {

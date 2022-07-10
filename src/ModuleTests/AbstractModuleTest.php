@@ -272,15 +272,15 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         $executable = $asset->lookupExecutable();
         $result = $executable->lookupDefaultResult();
         $mimeType = $result->lookupMimeType();
-        
-        if (!MimeTypeDictionary::isXml($mimeType)) {
+
+        if (! MimeTypeDictionary::isXml($mimeType)) {
             $this->markTestSkipped("Won't attempt to validate non-XML resource '$mimeType'");
             return;
         }
-        
+
         $document = $result->lookupDOMWriter()->toDocument();
         $node = $document->documentElement;
-        
+
         $this->assertInstanceOf(DOMElement::class, $node);
         $ns = $node->namespaceURI;
         $version = $node->hasAttribute('version') ? $node->getAttribute('version') : '1.0';
@@ -288,9 +288,9 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             if (strpos($ns, 'http://schema.slothsoft.net/') === 0) {
                 $schema = explode('/', substr($ns, strlen('http://schema.slothsoft.net/')));
                 $this->assertEquals(2, count($schema), "Invalid slothsoft schema: $ns");
-                
+
                 $url = "farah://slothsoft@$schema[0]/schema/$schema[1]/$version";
-                
+
                 try {
                     $validateResult = $document->schemaValidate($url);
                 } catch (Throwable $e) {
