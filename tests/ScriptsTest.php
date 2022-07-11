@@ -25,12 +25,17 @@ class ScriptsTest extends TestCase {
     public function testFarahAsset(string $url): void {
         $process = new Process([
             'composer',
+            '-d',
+            dirname(__DIR__),
             'exec',
             'farah-asset',
             $url
         ]);
-        $process->run();
+
+        $code = $process->run();
+        $this->assertEquals(0, $code, 'Calling composer failed! Command:' . PHP_EOL . $process->getCommandLine());
+
         $result = $process->getOutput();
-        $this->assertEquals(file_get_contents($url), $result);
+        $this->assertEquals(file_get_contents($url), $result, 'Calling composer failed! Command:' . PHP_EOL . $process->getCommandLine());
     }
 }
