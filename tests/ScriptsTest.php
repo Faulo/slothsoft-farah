@@ -9,8 +9,10 @@ class ScriptsTest extends TestCase {
 
     public function someFarahAssets(): array {
         return [
-            [
-                'farah://slothsoft@farah/',
+            'farah://slothsoft@farah/' => [
+                'farah://slothsoft@farah/'
+            ],
+            'farah://slothsoft@core/' => [
                 'farah://slothsoft@core/'
             ]
         ];
