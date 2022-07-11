@@ -22,8 +22,9 @@ class ScriptsTest extends TestCase {
      */
     public function testFarahAsset(string $url): void {
         $process = new Process([
-            PHP_BINARY,
-            'bin/farah-asset',
+            'composer',
+            'exec',
+            'farah-asset',
             $url
         ]);
         $process->run();

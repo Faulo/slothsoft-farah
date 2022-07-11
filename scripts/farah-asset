@@ -10,22 +10,14 @@ use Slothsoft\Farah\ResponseStrategy\SendBodyStrategy;
 array_shift($_SERVER['argv']);
 $_SERVER['argc'] --;
 
-foreach ([
-    __DIR__ . '/../../../autoload.php',
-    __DIR__ . '/../vendor/autoload.php'
-] as $file) {
-    if (file_exists($file)) {
-        require_once $file;
-        break;
-    }
-}
+include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
 
 if (count($_SERVER['argv']) !== 1) {
     echo <<<'EOT'
     Retrieve a farah asset via its URL.
             
     Usage:
-    composer farah-asset "farah://vendor@module/path/to/asset?arguments#stream-type"
+    composer exec farah-asset "farah://vendor@module/path/to/asset?arguments#stream-type"
     
     EOT;
     return 1;

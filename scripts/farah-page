@@ -9,22 +9,14 @@ use Slothsoft\Farah\HTTPResponse;
 array_shift($_SERVER['argv']);
 $_SERVER['argc'] --;
 
-foreach ([
-    __DIR__ . '/../../../autoload.php',
-    __DIR__ . '/../vendor/autoload.php'
-] as $file) {
-    if (file_exists($file)) {
-        require_once $file;
-        break;
-    }
-}
+include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
 
 if (count($_SERVER['argv']) !== 1) {
     echo <<<'EOT'
     Retrieve a farah page via its URL.
             
     Usage:
-    composer farah-page "/path/to/page?arguments#stream-type"
+    composer exec farah-page "/path/to/page?arguments#stream-type"
     
     EOT;
     return 1;
