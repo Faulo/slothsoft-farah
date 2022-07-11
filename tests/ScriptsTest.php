@@ -25,7 +25,8 @@ class ScriptsTest extends TestCase {
     public function testFarahAsset(string $url): void {
         $composer = getenv('COMPOSER_BINARY');
         if (! $composer) {
-            $this->markTestSkipped('"COMPOSER_BINARY" is not available in environment, skipping test.');
+            $this->markTestIncomplete('"COMPOSER_BINARY" is not available in environment!');
+            return;
         }
 
         $process = new Process([
