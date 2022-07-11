@@ -23,6 +23,13 @@ class ScriptsTest extends TestCase {
      * @dataProvider someFarahAssets
      */
     public function testFarahAsset(string $url): void {
+        $output = [];
+        $code = 0;
+        exec('composer', $output, $code);
+        if ($code !== 0) {
+            $this->markTestSkipped('Composer is not available in PATH, skipping test.');
+        }
+        
         $process = new Process([
             'composer',
             '-d',
