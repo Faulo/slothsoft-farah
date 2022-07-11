@@ -33,9 +33,13 @@ class ScriptsTest extends TestCase {
         ]);
 
         $code = $process->run();
+        $result = $process->getOutput();
+        $errors = $process->getErrorOutput();
+        
+        $this->assertEquals('', $errors, 'Calling composer failed! Command:' . PHP_EOL . $process->getCommandLine());
+        
         $this->assertEquals(0, $code, 'Calling composer failed! Command:' . PHP_EOL . $process->getCommandLine());
 
-        $result = $process->getOutput();
         $this->assertEquals(file_get_contents($url), $result, 'Calling composer failed! Command:' . PHP_EOL . $process->getCommandLine());
     }
 }
