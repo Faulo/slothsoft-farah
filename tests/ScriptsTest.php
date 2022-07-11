@@ -23,18 +23,9 @@ class ScriptsTest extends TestCase {
      * @dataProvider someFarahAssets
      */
     public function testFarahAsset(string $url): void {
-        $composer = getenv('COMPOSER_BINARY');
-        if (! $composer) {
-            $this->markTestIncomplete('"COMPOSER_BINARY" is not available in environment!');
-            return;
-        }
-
         $process = new Process([
-            $composer,
-            '-d',
-            dirname(__DIR__),
-            'exec',
-            'farah-asset',
+            PHP_BINARY,
+            'scripts/farah-asset',
             $url
         ]);
 
