@@ -1,4 +1,0 @@
-#!/usr/bin/env php
-<?php
-
-return require __DIR__ . '/../scripts/farah-asset.php';

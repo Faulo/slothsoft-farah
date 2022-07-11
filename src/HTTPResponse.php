@@ -80,7 +80,7 @@ class HTTPResponse {
     protected static $httpConfig = [
         'date-format' => 'D, d M Y H:i:s \\G\\M\\T',
         'doc-timestamp' => false, // "rendering took X seconds and Y MB"
-        'cache-duration' => 30, // max-age, Sekunden
+        'cache-duration' => 0, // max-age, Sekunden
         'input-size' => 1 * Memory::ONE_MEGABYTE, // maximum $env['RESPONSE_INPUT'] size
         'download-size' => 10 * Memory::ONE_MEGABYTE, // if above, force download
         'file-size' => 16 * Memory::ONE_MEGABYTE, // maximum setFile-load

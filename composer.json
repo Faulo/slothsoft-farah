@@ -8,17 +8,9 @@
 		}
 	],
 	"bin" : [
-		"bin/farah-asset",
-		"bin/farah-page"
+		"scripts/farah-asset",
+		"scripts/farah-page"
 	],
-	"scripts" : {
-		"farah-asset" : "@php scripts/farah-asset.php",
-		"farah-page" : "@php scripts/farah-page.php"
-	},
-	"scripts-descriptions" : {
-		"farah-asset" : "Retrieve a farah asset. Usage: composer farah-asset \"farah://vendor@module/path/to/asset?arguments#stream-type\"",
-		"farah-page" : "Retrieve a farah page. Usage: composer farah-page \"/path/to/page?arguments#stream-type\""
-	},
 	"type" : "library",
 	"require" : {
 		"php" : "7.4 - 8.0",
@@ -62,7 +54,7 @@
 	},
 	"extra" : {
 		"branch-alias" : {
-			"dev-develop" : "1.7.x-dev"
+			"dev-develop" : "1.8.x-dev"
 		}
 	},
 	"homepage" : "http://farah.slothsoft.net/modules/farah"
