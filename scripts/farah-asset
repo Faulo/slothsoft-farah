@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 use Slothsoft\Farah\HTTPResponse;
 use Slothsoft\Farah\Kernel;
