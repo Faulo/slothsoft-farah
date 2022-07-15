@@ -14,7 +14,7 @@ class FarahUrlTest extends TestCase {
      *
      * @dataProvider malformedUrlProvider
      */
-    public function testMalformedUrlParsing(string $ref) {
+    public function testMalformedUrlParsing(string $ref): void {
         $this->expectException(MalformedUrlException::class);
         FarahUrl::createFromReference($ref);
     }
@@ -25,72 +25,66 @@ class FarahUrlTest extends TestCase {
         $urls[] = 'farah://slothsoft@farah:port';
         $urls[] = 'farah://slothsoft@';
 
-        $ret = [];
         foreach ($urls as $ref) {
-            $ret[$ref] = [
+            yield $ref => [
                 $ref
             ];
         }
-        return $ret;
     }
 
     /**
      *
      * @dataProvider incompleteUrlProvider
      */
-    public function testIncompleteUrlParsing(string $ref) {
+    public function testIncompleteUrlParsing(string $ref): void {
         $this->expectException(IncompleteUrlException::class);
         FarahUrl::createFromReference($ref);
     }
 
-    public function incompleteUrlProvider() {
+    public function incompleteUrlProvider(): iterable {
         $urls = [];
         $urls[] = '//slothsoft@farah';
         $urls[] = 'farah://slothsoft';
         $urls[] = 'farah://@farah';
 
-        $ret = [];
         foreach ($urls as $ref) {
-            $ret[$ref] = [
+            yield $ref => [
                 $ref
             ];
         }
-        return $ret;
     }
 
     /**
      *
      * @dataProvider notFarahUrlProvider
      */
-    public function testNotFarahUrlParsing(string $ref) {
+    public function testNotFarahUrlParsing(string $ref): void {
         $this->expectException(ProtocolNotSupportedException::class);
         FarahUrl::createFromReference($ref);
     }
 
-    public function notFarahUrlProvider() {
+    public function notFarahUrlProvider(): iterable {
         $urls = [];
         $urls[] = 'http://slothsoft@farah';
         $urls[] = 'file://slothsoft@farah';
 
-        $ret = [];
         foreach ($urls as $ref) {
-            $ret[$ref] = [
+            yield $ref => [
                 $ref
             ];
         }
-        return $ret;
     }
 
     /**
      *
      * @dataProvider absoluteUrlProvider
      */
-    public function testAbsoluteUrlParsing(string $expected, string $ref) {
+    public function testAbsoluteUrlParsing(string $expected, string $ref): void {
         $url = FarahUrl::createFromReference($ref);
         $this->assertEquals($expected, (string) $url);
     }
 
-    public function absoluteUrlProvider() {
+    public function absoluteUrlProvider(): iterable {
         $urls = [];
         $urls['farah://slothsoft@farah'] = 'farah://slothsoft@farah/';
         $urls['farah://slothsoft@farah/'] = 'farah://slothsoft@farah/';
@@ -103,21 +97,19 @@ class FarahUrlTest extends TestCase {
         $urls['farah://slothsoft@farah/asset/'] = 'farah://slothsoft@farah/asset';
         $urls['farah://slothsoft@farah/asset/tmp/..'] = 'farah://slothsoft@farah/asset';
 
-        $ret = [];
         foreach ($urls as $ref => $expected) {
-            $ret[$ref] = [
+            yield $ref => [
                 $expected,
                 $ref
             ];
         }
-        return $ret;
     }
 
     /**
      *
      * @dataProvider relativeUrlProvider
      */
-    public function testRelativeUrlParsing(string $expected, string $ref) {
+    public function testRelativeUrlParsing(string $expected, string $ref): void {
         $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'farah');
         $path = FarahUrlPath::createFromString('/testing');
         $url = FarahUrl::createFromComponents($authority, $path);
@@ -125,7 +117,7 @@ class FarahUrlTest extends TestCase {
         $this->assertEquals($expected, (string) $url);
     }
 
-    public function relativeUrlProvider() {
+    public function relativeUrlProvider(): iterable {
         $urls = [];
         $urls['farah://slothsoft@farah/assets'] = 'farah://slothsoft@farah/assets';
         $urls['//slothsoft@farah/assets'] = 'farah://slothsoft@farah/assets';
@@ -152,19 +144,17 @@ class FarahUrlTest extends TestCase {
         $urls['/testing/assets'] = 'farah://slothsoft@farah/testing/assets';
         $urls['./assets/tmp/..'] = 'farah://slothsoft@farah/testing/assets';
 
-        $ret = [];
         foreach ($urls as $ref => $expected) {
-            $ret["'$ref'"] = [
+            yield "'$ref'" => [
                 $expected,
                 $ref
             ];
         }
-        return $ret;
     }
 
     /**
      */
-    public function testFileModifiedTime() {
+    public function testFileModifiedTime(): void {
         $assetsPath = realpath('assets/xsl/module.xsl');
         $this->assertIsString($assetsPath);
 
@@ -175,6 +165,52 @@ class FarahUrlTest extends TestCase {
         $actual = FileSystem::changetime($assetsUrl);
 
         $this->assertEquals(date($dateFormat, $expected), date($dateFormat, $actual));
+    }
+
+    /**
+     *
+     * @dataProvider componentProvider
+     */
+    public function testCreateFromComponents($authority, $path, $args, $fragment): void {
+        $expectedUrl = FarahUrl::createFromReference('farah://slothsoft@farah/some/path?hello=world#xml');
+        $actualUrl = FarahUrl::createFromComponents($authority, $path, $args, $fragment);
+
+        $this->assertEquals($expectedUrl, $actualUrl);
+    }
+
+    public function componentProvider(): iterable {
+        yield 'all strings' => [
+            'slothsoft@farah',
+            'some/path',
+            'hello=world',
+            'xml'
+        ];
+        yield 'authority object' => [
+            FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'farah'),
+            'some/path',
+            'hello=world',
+            'xml'
+        ];
+        yield 'path object' => [
+            'slothsoft@farah',
+            FarahUrlPath::createFromString('some/path'),
+            'hello=world',
+            'xml'
+        ];
+        yield 'args object' => [
+            'slothsoft@farah',
+            'some/path',
+            FarahUrlArguments::createFromValueList([
+                'hello' => 'world'
+            ]),
+            'xml'
+        ];
+        yield 'fragment object' => [
+            'slothsoft@farah',
+            'some/path',
+            'hello=world',
+            FarahUrlStreamIdentifier::createFromString('xml')
+        ];
     }
 }
 
