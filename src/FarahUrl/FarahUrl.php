@@ -25,24 +25,32 @@ class FarahUrl implements UriInterface, Hashable {
      * @param FarahUrlStreamIdentifier|string $fragment
      * @return FarahUrl
      */
-    public static function createFromComponents(FarahUrlAuthority $authority, $path = null, $args = null, $fragment = null): FarahUrl {
+    public static function createFromComponents($authority, $path = null, $args = null, $fragment = null): FarahUrl {
+        if (is_string($authority)) {
+            $authority = FarahUrlAuthority::createFromHttpAuthority($authority);
+        }
+        assert($authority instanceof FarahUrlAuthority, 'Argument $authority must be of type FarahUrlAuthority!');
+
         if ($path === null) {
             $path = FarahUrlPath::createEmpty();
         } elseif (is_string($path)) {
             $path = FarahUrlPath::createFromString($path);
         }
+        assert($path instanceof FarahUrlPath, 'Argument $path must be of type FarahUrlPath!');
 
         if ($args === null) {
             $args = FarahUrlArguments::createEmpty();
         } elseif (is_string($args)) {
             $args = FarahUrlArguments::createFromQuery($args);
         }
+        assert($args instanceof FarahUrlArguments, 'Argument $args must be of type FarahUrlArguments!');
 
         if ($fragment === null) {
             $fragment = FarahUrlStreamIdentifier::createEmpty();
         } elseif (is_string($fragment)) {
             $fragment = FarahUrlStreamIdentifier::createFromString($fragment);
         }
+        assert($fragment instanceof FarahUrlStreamIdentifier, 'Argument $fragment must be of type FarahUrlStreamIdentifier!');
 
         $authorityId = (string) $authority;
         $pathId = (string) $path;
