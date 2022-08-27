@@ -14,7 +14,7 @@ use IteratorAggregate;
 class FarahUrlArguments implements IteratorAggregate, Hashable {
 
     public static function createEmpty(): FarahUrlArguments {
-        return self::create('', []);
+        return self::create('', '', []);
     }
 
     public static function createFromMany(FarahUrlArguments ...$argsList): FarahUrlArguments {
@@ -32,32 +32,42 @@ class FarahUrlArguments implements IteratorAggregate, Hashable {
         }
         $valueList = [];
         parse_str($query, $valueList);
-        return self::create($query, $valueList);
+        return self::create($query, $query, $valueList);
     }
 
     public static function createFromValueList(array $valueList): FarahUrlArguments {
-        return self::create(http_build_query($valueList), $valueList);
+        $query = http_build_query($valueList);
+        $id = $query;
+        foreach ($valueList as $key => $val) {
+            if (is_array($val) and empty($val)) {
+                $id .= sprintf('&%s[]', $key);
+            }
+        }
+        return self::create($id, $query, $valueList);
     }
 
-    private static function create(string $id, array $valueList): FarahUrlArguments {
+    private static function create(string $id, string $query, array $valueList): FarahUrlArguments {
         static $cache = [];
         if (! isset($cache[$id])) {
-            $cache[$id] = new FarahUrlArguments($id, $valueList);
+            $cache[$id] = new FarahUrlArguments($id, $query, $valueList);
         }
         return $cache[$id];
     }
 
-    private $id;
+    private string $id;
 
-    private $data;
+    private string $query;
 
-    private function __construct(string $id, array $data) {
+    private array $data;
+
+    private function __construct(string $id, string $query, array $data) {
         $this->id = $id;
+        $this->query = $query;
         $this->data = $data;
     }
 
     public function __toString(): string {
-        return $this->id;
+        return $this->query;
     }
 
     public function get(string $key, $default = null) {
@@ -113,11 +123,11 @@ class FarahUrlArguments implements IteratorAggregate, Hashable {
     }
 
     public function equals($obj): bool {
-        return ($obj instanceof self and ((string) $this === (string) $obj));
+        return ($obj instanceof self and ($this->id === $obj->id));
     }
 
     public function hash() {
-        return (string) $this;
+        return $this->id;
     }
 }
 
