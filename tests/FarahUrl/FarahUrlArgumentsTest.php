@@ -69,5 +69,22 @@ class FarahUrlArgumentsTest extends TestCase {
         $calculated = FarahUrlArguments::createFromMany($args1, $args2, $args3);
         $this->assertEquals($expected, $calculated);
     }
+
+    public function testEmptyArrays() {
+        $data1 = [
+            'a' => '1',
+            'b' => []
+        ];
+        $data2 = [
+            'a' => '1',
+            'c' => []
+        ];
+
+        $args1 = FarahUrlArguments::createFromValueList($data1);
+        $args2 = FarahUrlArguments::createFromValueList($data2);
+
+        $this->assertEquals((string) $args1, (string) $args2);
+        $this->assertNotEquals($args1, $args2);
+    }
 }
 
