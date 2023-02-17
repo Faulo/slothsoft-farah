@@ -179,7 +179,17 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      * @dataProvider pageNodeProvider
      */
     public function testPageMustHaveEitherRefOrRedirect($node) {
-        $this->assertNotEquals($node->hasAttribute('ref'), $node->hasAttribute('redirect'), '<page> must have either ref or redirect attribute.');
+        if ($node->hasAttribute('ref')) {
+            $this->assertFalse($node->hasAttribute('redirect'), '<page> must not have both ref and redirect attributes.');
+            $this->assertNotEmpty($node->getAttribute('ref'), '<page> ref must not be empty.');
+            return;
+        }
+        if ($node->hasAttribute('redirect')) {
+            $this->assertFalse($node->hasAttribute('ref'), '<page> must not have both ref and redirect attributes.');
+            $this->assertNotEmpty($node->getAttribute('redirect'), '<page> redirect must not be empty.');
+            return;
+        }
+        $this->fail('<page> must have either ref or redirect attribute.');
     }
 
     /**
