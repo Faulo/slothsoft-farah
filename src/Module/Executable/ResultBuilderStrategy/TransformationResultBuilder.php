@@ -35,9 +35,12 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
 
     private $getLinkInstructions;
 
-    public function __construct(callable $getUseInstructions, callable $getLinkInstructions) {
+    private $translateResult;
+
+    public function __construct(callable $getUseInstructions, callable $getLinkInstructions, bool $translateResult = true) {
         $this->getUseInstructions = $getUseInstructions;
         $this->getLinkInstructions = $getLinkInstructions;
+        $this->translateResult = $translateResult;
     }
 
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
@@ -59,7 +62,9 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
             if ($instructions->templateUrl and $type !== static::resultIsXslSource()) {
                 $template = Module::resolveToDOMWriter($instructions->templateUrl->withFragment('xml'));
                 $writer = new TransformationDOMWriter($writer, $template);
-                $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $instructions->rootUrl);
+                if ($this->translateResult) {
+                    $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $instructions->rootUrl);
+                }
             }
 
             if ($type === static::resultIsDefault()) {
