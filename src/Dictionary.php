@@ -163,8 +163,15 @@ class Dictionary {
         }
     }
 
+    private $isSettingUp = false;
+
     /* public functions */
     public function translateDoc(DOMDocument $doc, FarahUrl $context) {
+        if ($this->isSettingUp) {
+            return 0;
+        }
+        $this->isSettingUp = true;
+
         $this->currentModule = FarahUrl::createFromComponents($context->getAssetAuthority());
 
         $ret = 0;
@@ -202,6 +209,9 @@ class Dictionary {
         if ($lang = $this->getLang()) {
             $doc->documentElement->setAttribute('xml:lang', $lang);
         }
+
+        $this->isSettingUp = false;
+
         return $ret ? $ret + $this->translateDoc($doc, $context) : 0;
     }
 
