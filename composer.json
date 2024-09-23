@@ -54,8 +54,9 @@
 	},
 	"extra" : {
 		"branch-alias" : {
-			"dev-develop" : "1.11.x-dev"
+			"dev-main" : "1.11.x-dev"
 		}
 	},
-	"homepage" : "http://farah.slothsoft.net/modules/farah"
+	"homepage" : "http://farah.slothsoft.net/modules/farah",
+	"classmap-authoritative" : false
 }
