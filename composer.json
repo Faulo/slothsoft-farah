@@ -57,6 +57,5 @@
 			"dev-main" : "1.11.x-dev"
 		}
 	},
-	"homepage" : "http://farah.slothsoft.net/modules/farah",
-	"classmap-authoritative" : false
+	"homepage" : "http://farah.slothsoft.net/modules/farah"
 }
