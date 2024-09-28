@@ -40,7 +40,7 @@ jobs:
           
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: results-${{ matrix.php }}
           path: phpunit.results.xml
@@ -53,7 +53,7 @@ jobs:
 
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
 
