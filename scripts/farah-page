@@ -10,7 +10,9 @@ use Slothsoft\Farah\HTTPResponse;
 array_shift($_SERVER['argv']);
 $_SERVER['argc'] --;
 
-include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
+$_composer_autoload_path ??= __DIR__ . '/../vendor/autoload.php';
+
+include $_composer_autoload_path;
 
 if (count($_SERVER['argv']) !== 1) {
     echo <<<'EOT'

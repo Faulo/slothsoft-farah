@@ -1,15 +1,15 @@
 <?php
 declare(strict_types = 1);
+namespace Slothsoft\Farah;
+
 use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Core\IO\Psr7\ChunkedFilteredStreamFactory;
 use Slothsoft\Core\IO\Psr7\ZlibFilteredStreamFactory;
 use Slothsoft\Core\StreamWrapper\StreamWrapperRegistrar;
-use Slothsoft\Farah\HTTPResponse;
 use Slothsoft\Farah\Http\ContentCoding;
 use Slothsoft\Farah\Http\TransferCoding;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\StreamWrapper\FarahStreamWrapperFactory;
-
 StreamWrapperRegistrar::registerStreamWrapper('farah', new FarahStreamWrapperFactory());
 
 Module::registerWithXmlManifestAndDefaultAssets('slothsoft@core', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets-core');
