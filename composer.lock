@@ -1262,16 +1262,16 @@
         },
         {
             "name": "slothsoft/w3c",
-            "version": "1.2.3",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Faulo/slothsoft-w3c.git",
-                "reference": "fa3b681214549f96d45c56eabd7460d30e9da752"
+                "reference": "d976610f8bcd306948c624404ec2eaaa21b9e7c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Faulo/slothsoft-w3c/zipball/fa3b681214549f96d45c56eabd7460d30e9da752",
-                "reference": "fa3b681214549f96d45c56eabd7460d30e9da752",
+                "url": "https://api.github.com/repos/Faulo/slothsoft-w3c/zipball/d976610f8bcd306948c624404ec2eaaa21b9e7c4",
+                "reference": "d976610f8bcd306948c624404ec2eaaa21b9e7c4",
                 "shasum": ""
             },
             "require": {
@@ -1309,9 +1309,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Faulo/slothsoft-w3c/issues",
-                "source": "https://github.com/Faulo/slothsoft-w3c/tree/1.2.3"
+                "source": "https://github.com/Faulo/slothsoft-w3c/tree/1.2.4"
             },
-            "time": "2024-09-23T11:09:19+00:00"
+            "time": "2024-09-28T22:40:36+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
