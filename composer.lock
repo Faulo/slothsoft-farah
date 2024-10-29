@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18623f5c41b665ffc30b001dc57fde5d",
+    "content-hash": "243cb0ed11bbd7a35d2e2d58be72eff4",
     "packages": [
         {
             "name": "guzzlehttp/psr7",
@@ -1143,16 +1143,16 @@
         },
         {
             "name": "slothsoft/core",
-            "version": "1.11.12",
+            "version": "1.11.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Faulo/slothsoft-core.git",
-                "reference": "433ea76d2ab8edd5b6d365705dcf385251485972"
+                "reference": "30aece95f0ffdffb0f6b63ed6236645076f740f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Faulo/slothsoft-core/zipball/433ea76d2ab8edd5b6d365705dcf385251485972",
-                "reference": "433ea76d2ab8edd5b6d365705dcf385251485972",
+                "url": "https://api.github.com/repos/Faulo/slothsoft-core/zipball/30aece95f0ffdffb0f6b63ed6236645076f740f5",
+                "reference": "30aece95f0ffdffb0f6b63ed6236645076f740f5",
                 "shasum": ""
             },
             "require": {
@@ -1162,7 +1162,7 @@
                 "php-ds/php-ds": "^1.2",
                 "psr/http-message": "^1.0",
                 "slothsoft/w3c": "^1.1",
-                "symfony/process": "^5.0"
+                "symfony/process": "^5.4.45"
             },
             "require-dev": {
                 "phpunit/phpunit": "8.5.*"
@@ -1206,9 +1206,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Faulo/slothsoft-core/issues",
-                "source": "https://github.com/Faulo/slothsoft-core/tree/1.11.12"
+                "source": "https://github.com/Faulo/slothsoft-core/tree/1.11.13"
             },
-            "time": "2024-10-29T18:23:19+00:00"
+            "time": "2024-10-29T18:56:49+00:00"
         },
         {
             "name": "slothsoft/w3c",
