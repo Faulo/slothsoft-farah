@@ -16,7 +16,6 @@
 		"php" : ">=7.4",
 		"php-ds/php-ds" : "^1.2",
 		"guzzlehttp/psr7" : "^1.8.4",
-		"krakjoe/pthreads-polyfill" : "^1.1",
 		"matthiasmullie/minify" : "^1.3",
 		"psr/cache" : "^1.0",
 		"psr/container" : "^1.0",
@@ -32,7 +31,8 @@
 	"suggest" : {
 		"ext-sockets" : "*",
 		"ext-ds" : "*",
-		"ext-pthreads" : "*"
+		"ext-pthreads" : "*",
+		"krakjoe/pthreads-polyfill" : "^1.1"
 	},
 	"autoload" : {
 		"psr-4" : {
