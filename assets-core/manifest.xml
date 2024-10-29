@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
-<assets xmlns="http://schema.slothsoft.net/farah/module" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://schema.slothsoft.net/farah/module http://schema.slothsoft.net/farah/module/1.1.xsd"
-	version="1.1">
+<assets xmlns="http://schema.slothsoft.net/farah/module" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
 	<resource-directory name="css" type="text/css" />
 	<resource-directory name="js" type="application/javascript" />
 	<resource-directory name="xsl" type="application/xslt+xml" />
@@ -32,14 +30,10 @@
 		</fragment>
 	</fragment>
 
-	<!-- <directory name="static"> <resource name="language-registry" path="language-subtag-registry.xml" type="application/xml"> 
-		<source href="http://www.langtag.net/registries/language-subtag-registry.xml"/> </resource> <resource name="iso-639" path="iso-639.xml" 
-		type="application/xml"> <source href="http://www.loc.gov/standards/iso639-2/php/code_list.php"/> </resource> <resource name="unicode" 
-		path="ucd.all.flat.csv" type="text/csv"> <source href="http://unicode.org/Public/UNIDATA/UnicodeData.txt"/> <options del=";" 
-		sep="" key-col="0" val-col="1" output="assoc"/> </resource> <resource name="unicode-all" path="ucd.all.flat.xml" type="application/xml"> 
-		<source href="http://www.unicode.org/Public/UCD/latest/ucdxml/ucd.all.flat.zip"/> </resource> </directory> <fragment name="ipLog"> 
-		<use-template ref="xsl/_ipLog"/> <use-document ref="data/ipLog"/> </fragment> <fragment name="botLog"> <use-template ref="xsl/_ipLog"/> 
-		<param name="bots" value="1"/> <use-document ref="data/ipLog"/> </fragment> <fragment name="userLog"> <use-template ref="xsl/_ipLog"/> 
-		<use-document ref="data/ipLog"/> </fragment> <fragment name="language-backend"> <use-template ref="xsl/_language-backend"/> 
-		<use-document ref="data/language-backend"/> </fragment> -->
+	<!-- <directory name="static"> <resource name="language-registry" path="language-subtag-registry.xml" type="application/xml"> <source href="http://www.langtag.net/registries/language-subtag-registry.xml"/> 
+		</resource> <resource name="iso-639" path="iso-639.xml" type="application/xml"> <source href="http://www.loc.gov/standards/iso639-2/php/code_list.php"/> </resource> <resource name="unicode" path="ucd.all.flat.csv" 
+		type="text/csv"> <source href="http://unicode.org/Public/UNIDATA/UnicodeData.txt"/> <options del=";" sep="" key-col="0" val-col="1" output="assoc"/> </resource> <resource name="unicode-all" path="ucd.all.flat.xml" 
+		type="application/xml"> <source href="http://www.unicode.org/Public/UCD/latest/ucdxml/ucd.all.flat.zip"/> </resource> </directory> <fragment name="ipLog"> <use-template ref="xsl/_ipLog"/> <use-document 
+		ref="data/ipLog"/> </fragment> <fragment name="botLog"> <use-template ref="xsl/_ipLog"/> <param name="bots" value="1"/> <use-document ref="data/ipLog"/> </fragment> <fragment name="userLog"> <use-template 
+		ref="xsl/_ipLog"/> <use-document ref="data/ipLog"/> </fragment> <fragment name="language-backend"> <use-template ref="xsl/_language-backend"/> <use-document ref="data/language-backend"/> </fragment> -->
 </assets>
