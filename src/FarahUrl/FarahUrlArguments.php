@@ -5,11 +5,12 @@ namespace Slothsoft\Farah\FarahUrl;
 use Ds\Hashable;
 use ArrayIterator;
 use IteratorAggregate;
+use Traversable;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class FarahUrlArguments implements IteratorAggregate, Hashable {
 
@@ -94,7 +95,7 @@ class FarahUrlArguments implements IteratorAggregate, Hashable {
         return array_keys($this->data);
     }
 
-    public function getIterator(): iterable {
+    public function getIterator(): Traversable {
         return new ArrayIterator($this->data);
     }
 
