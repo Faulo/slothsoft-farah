@@ -16,13 +16,13 @@ class UseInstructionCollection {
      *
      * @var AssetInterface[]
      */
-    public $documentUrl;
+    public $documentUrls;
 
     /**
      *
      * @var AssetInterface[]
      */
-    public $manifestUrl;
+    public $manifestUrls;
 
     /**
      *
