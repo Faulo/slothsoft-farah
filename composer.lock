@@ -1143,16 +1143,16 @@
         },
         {
             "name": "slothsoft/core",
-            "version": "1.11.10",
+            "version": "1.11.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Faulo/slothsoft-core.git",
-                "reference": "a03ab4a87bb15eee1983d43258fb96ee3ad626a6"
+                "reference": "8d2ed65297400acbc84c798cac9dc6f4f3c73932"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Faulo/slothsoft-core/zipball/a03ab4a87bb15eee1983d43258fb96ee3ad626a6",
-                "reference": "a03ab4a87bb15eee1983d43258fb96ee3ad626a6",
+                "url": "https://api.github.com/repos/Faulo/slothsoft-core/zipball/8d2ed65297400acbc84c798cac9dc6f4f3c73932",
+                "reference": "8d2ed65297400acbc84c798cac9dc6f4f3c73932",
                 "shasum": ""
             },
             "require": {
@@ -1206,9 +1206,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Faulo/slothsoft-core/issues",
-                "source": "https://github.com/Faulo/slothsoft-core/tree/1.11.10"
+                "source": "https://github.com/Faulo/slothsoft-core/tree/1.11.11"
             },
-            "time": "2024-10-29T17:35:12+00:00"
+            "time": "2024-10-29T18:07:57+00:00"
         },
         {
             "name": "slothsoft/w3c",
