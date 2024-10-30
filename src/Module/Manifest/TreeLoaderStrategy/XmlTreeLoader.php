@@ -25,7 +25,7 @@ class XmlTreeLoader implements TreeLoaderStrategyInterface {
                             LeanElement::class
                         ]
                     ]);
-                    if ($element) {
+                    if ($element and $element->getTag()) {
                         return $element;
                     }
                 } catch (Throwable $e) {}
