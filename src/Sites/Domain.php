@@ -18,7 +18,7 @@ use DOMElement;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class Domain {
 
@@ -33,6 +33,8 @@ class Domain {
     const TAG_FILE = 'file';
 
     const TAG_PARAM = 'param';
+
+    private AssetInterface $asset;
 
     private $file;
 
