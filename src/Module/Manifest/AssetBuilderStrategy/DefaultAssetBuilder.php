@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Asset\AssetStrategies;
+use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\DaemonExecutableBuilder;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromFilesystemExecutableBuilder;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromManifestExecutableBuilder;
@@ -34,7 +35,6 @@ use Slothsoft\Farah\Module\Asset\PathResolverStrategy\NullPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
-use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\DaemonExecutableBuilder;
 
 class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
 
@@ -168,6 +168,26 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
     private static $services = [];
 
     public function buildAssetStrategies(ManifestInterface $ownerManifest, LeanElement $element): AssetStrategies {
+        if (! $element->hasAttribute('executable-builder')) {
+            throw new \UnexpectedValueException(sprintf('Missing "executable-builder" attribute on element: %s', serialize($element)));
+        }
+
+        if (! $element->hasAttribute('path-resolver')) {
+            throw new \UnexpectedValueException(sprintf('Missing "path-resolver" attribute on element: %s', serialize($element)));
+        }
+
+        if (! $element->hasAttribute('parameter-filter')) {
+            throw new \UnexpectedValueException(sprintf('Missing "parameter-filter" attribute on element: %s', serialize($element)));
+        }
+
+        if (! $element->hasAttribute('parameter-supplier')) {
+            throw new \UnexpectedValueException(sprintf('Missing "parameter-supplier" attribute on element: %s', serialize($element)));
+        }
+
+        if (! $element->hasAttribute('instruction')) {
+            throw new \UnexpectedValueException(sprintf('Missing "instruction" attribute on element: %s', serialize($element)));
+        }
+
         return new AssetStrategies($this->newExecutableBuilder($element->getAttribute('executable-builder')), $this->newPathResolver($element->getAttribute('path-resolver')), $this->newParameterFilter($element->getAttribute('parameter-filter')), $this->newParameterSupplier($element->getAttribute('parameter-supplier')), $this->newInstruction($element->getAttribute('instruction')));
     }
 
