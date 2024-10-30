@@ -20,14 +20,15 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
 
     abstract protected static function loadSitesAsset(): AssetInterface;
 
-    private static ?AssetInterface $asset = null;
+    private static array $asset = [];
 
     protected function getSitesAsset(): AssetInterface {
-        if (self::$asset === null) {
-            self::$asset = static::loadSitesAsset();
-            Kernel::setCurrentSitemap(self::$asset);
+        $id = get_class($this);
+        if (! isset(self::$asset[$id])) {
+            self::$asset[$id] = static::loadSitesAsset();
+            Kernel::setCurrentSitemap(self::$asset[$id]);
         }
-        return self::$asset;
+        return self::$asset[$id];
     }
 
     protected function getSitesResult(): ResultInterface {
@@ -69,13 +70,14 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         }
     }
 
-    private static ?Domain $domain = null;
+    private static array $domain = [];
 
     protected function getDomain(): Domain {
-        if (self::$domain === null) {
-            self::$domain = new Domain($this->getSitesAsset());
+        $id = get_class($this);
+        if (! isset(self::$domain[$id])) {
+            self::$domain[$id] = new Domain($this->getSitesAsset());
         }
-        return self::$domain;
+        return self::$domain[$id];
     }
 
     protected function getDomainDocument(): DOMDocument {
