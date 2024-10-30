@@ -21,12 +21,13 @@ abstract class AbstractModuleTest extends AbstractTestCase {
 
     abstract protected static function getManifestAuthority(): FarahUrlAuthority;
 
+    private static ?ManifestInterface $manifest;
+
     protected function getManifest(): ManifestInterface {
-        static $manifest;
-        if ($manifest === null) {
-            $manifest = Module::resolveToManifest($this->getManifestUrl());
+        if (self::$manifest === null) {
+            self::$manifest = Module::resolveToManifest($this->getManifestUrl());
         }
-        return $manifest;
+        return self::$manifest;
     }
 
     protected function getManifestUrl(): FarahUrl {
