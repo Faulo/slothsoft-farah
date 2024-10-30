@@ -18,7 +18,7 @@ use DOMElement;
 /**
  *
  * @author Daniel Schulz
- *
+ *        
  */
 class Domain {
 

@@ -10,7 +10,7 @@ use Traversable;
 /**
  *
  * @author Daniel Schulz
- *
+ *        
  */
 class FarahUrlArguments implements IteratorAggregate, Hashable {
 
