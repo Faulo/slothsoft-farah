@@ -15,14 +15,14 @@
 	"require" : {
 		"php" : ">=7.4",
 		"php-ds/php-ds" : "^1.2",
-		"guzzlehttp/psr7" : "^1.8.4",
+		"guzzlehttp/psr7" : "^2.7",
 		"matthiasmullie/minify" : "^1.3",
 		"psr/cache" : "^1.0",
 		"psr/container" : "^1.0",
 		"psr/http-message" : "^1.0",
 		"psr/log" : "^1.0",
 		"slothsoft/blob" : "^1.0",
-		"slothsoft/core" : "^1.11.13",
+		"slothsoft/core" : "^1.11.14",
 		"laminas/laminas-router" : "^3.5"
 	},
 	"require-dev" : {
