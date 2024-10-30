@@ -14,12 +14,13 @@ abstract class AbstractManifestTest extends AbstractTestCase {
 
     abstract protected static function loadTree(): LeanElement;
 
+    private static ?LeanElement $rootElement;
+
     protected function getManifestRoot(): LeanElement {
-        static $rootElement;
-        if ($rootElement === null) {
-            $rootElement = static::loadTree();
+        if (self::$rootElement === null) {
+            self::$rootElement = static::loadTree();
         }
-        return $rootElement;
+        return self::$rootElement;
     }
 
     protected function getManifestDocument(): DOMDocument {
