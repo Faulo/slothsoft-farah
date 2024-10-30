@@ -21,7 +21,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
 
     abstract protected static function getManifestAuthority(): FarahUrlAuthority;
 
-    private static ?ManifestInterface $manifest;
+    private static ?ManifestInterface $manifest = null;
 
     protected function getManifest(): ManifestInterface {
         if (self::$manifest === null) {

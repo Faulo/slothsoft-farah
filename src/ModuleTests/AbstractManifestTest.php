@@ -14,7 +14,7 @@ abstract class AbstractManifestTest extends AbstractTestCase {
 
     abstract protected static function loadTree(): LeanElement;
 
-    private static ?LeanElement $rootElement;
+    private static ?LeanElement $rootElement = null;
 
     protected function getManifestRoot(): LeanElement {
         if (self::$rootElement === null) {

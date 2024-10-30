@@ -20,7 +20,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
 
     abstract protected static function loadSitesAsset(): AssetInterface;
 
-    private static ?AssetInterface $asset;
+    private static ?AssetInterface $asset = null;
 
     protected function getSitesAsset(): AssetInterface {
         if (self::$asset === null) {
@@ -69,7 +69,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         }
     }
 
-    private static ?Domain $domain;
+    private static ?Domain $domain = null;
 
     protected function getDomain(): Domain {
         if (self::$domain === null) {
