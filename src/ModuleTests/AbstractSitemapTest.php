@@ -57,7 +57,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         return $ret;
     }
 
-    protected function getSitesIncludesCrawl(array &$ret, FarahUrl $parentUrl, DOMDocument $document) {
+    protected function getSitesIncludesCrawl(array &$ret, FarahUrl $parentUrl, DOMDocument $document): void {
         $nodeList = $document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_INCLUDE_PAGES);
         foreach ($nodeList as $node) {
             $url = FarahUrl::createFromReference($node->getAttribute('ref'), $parentUrl);
@@ -94,7 +94,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      *
      * @depends testHasRootElement
      */
-    public function testRootElementIsDomain($rootElement) {
+    public function testRootElementIsDomain($rootElement): void {
         $this->assertEquals($rootElement->namespaceURI, DOMHelper::NS_FARAH_SITES);
         $this->assertEquals($rootElement->localName, Domain::TAG_DOMAIN);
     }
@@ -114,7 +114,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      *
      * @depends testSchemaExists
      */
-    public function testSchemaIsValidXml(string $path) {
+    public function testSchemaIsValidXml(string $path): DOMDocument {
         $dom = new DOMHelper();
         $document = $dom->load($path);
         $this->assertInstanceOf(DOMDocument::class, $document);
@@ -135,7 +135,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      *
      * @dataProvider includeProvider
      */
-    public function testIncludeExists($url) {
+    public function testIncludeExists($url): void {
         try {
             $document = Module::resolveToDOMWriter($url)->toDocument();
             $this->assertInstanceOf(DOMElement::class, $document->documentElement);
@@ -149,13 +149,13 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      * @depends testIncludeExists
      * @dataProvider includeProvider
      */
-    public function testIncludeIsValidAccordingToSchema($url) {
+    public function testIncludeIsValidAccordingToSchema($url): void {
         $document = Module::resolveToDOMWriter($url)->toDocument();
         $schema = $this->testSchemaExists($document->documentElement);
         $this->assertSchema($document, $schema);
     }
 
-    public function includeProvider() {
+    public function includeProvider(): array {
         $ret = [];
         foreach ($this->getSitesIncludes() as $key => $url) {
             $ret[$key] = [
@@ -170,7 +170,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      * @depends      testIncludeExists
      * @dataProvider pageNodeProvider
      */
-    public function testPageMustHaveEitherRefOrRedirect($node) {
+    public function testPageMustHaveEitherRefOrRedirect($node): void {
         if ($node->hasAttribute('ref')) {
             $this->assertFalse($node->hasAttribute('redirect'), '<page> must not have both ref and redirect attributes.');
             $this->assertNotEmpty($node->getAttribute('ref'), '<page> ref must not be empty.');
@@ -189,7 +189,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      * @depends      testPageMustHaveEitherRefOrRedirect
      * @dataProvider pageNodeProvider
      */
-    public function testPageResultExists($node) {
+    public function testPageResultExists($node): void {
         $path = $node->getAttribute('uri');
         if ($node->hasAttribute('ref')) {
             $this->assertEquals($node, $this->getDomain()
@@ -202,7 +202,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         }
     }
 
-    public function pageNodeProvider() {
+    public function pageNodeProvider(): array {
         $ret = [];
         foreach ($this->getDomainDocument()->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_PAGE) as $node) {
             $key = sprintf('%3d: %s', count($ret), $node->getAttribute('uri'));

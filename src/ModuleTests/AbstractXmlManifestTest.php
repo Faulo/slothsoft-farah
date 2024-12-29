@@ -5,7 +5,6 @@ namespace Slothsoft\Farah\ModuleTests;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\XML\LeanElement;
 use DOMDocument;
-use Throwable;
 
 abstract class AbstractXmlManifestTest extends AbstractManifestTest {
 

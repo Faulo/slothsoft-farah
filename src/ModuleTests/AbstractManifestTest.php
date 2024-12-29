@@ -36,7 +36,7 @@ abstract class AbstractManifestTest extends AbstractTestCase {
      *
      * @depends testHasRootElement
      */
-    public function testRootElementIsAssets() {
+    public function testRootElementIsAssets(): void {
         $this->assertEquals($this->getManifestRoot()
             ->getTag(), Manifest::TAG_ASSET_ROOT);
     }

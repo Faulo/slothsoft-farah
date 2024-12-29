@@ -10,7 +10,7 @@ use Slothsoft\Core\DOMHelper;
 
 class AbstractTestCase extends TestCase {
 
-    protected function failException(Throwable $e) {
+    protected function failException(Throwable $e): void {
         $this->fail(sprintf('%s: %s', basename(get_class($e)), $e->getMessage()));
     }
 
