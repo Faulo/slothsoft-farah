@@ -68,13 +68,8 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
      * @depends testSchemaIsValidXml
      */
     public function testManifestIsValidAccordingToSchema($manifestDocument, $schemaDocument): DOMDocument {
-        try {
-            $validateResult = $manifestDocument->schemaValidate($schemaDocument->documentURI);
-        } catch (Throwable $e) {
-            $validateResult = false;
-            $this->failException($e);
-        }
-        $this->assertTrue($validateResult, 'Asset file is invalid!');
+        $this->assertSchema($manifestDocument, $schemaDocument->documentURI);
+
         return $manifestDocument;
     }
 }

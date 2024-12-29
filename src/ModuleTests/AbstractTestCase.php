@@ -4,6 +4,9 @@ namespace Slothsoft\Farah\ModuleTests;
 
 use PHPUnit\Framework\TestCase;
 use Throwable;
+use DOMDocument;
+use DOMElement;
+use Slothsoft\Core\DOMHelper;
 
 class AbstractTestCase extends TestCase {
 
@@ -25,6 +28,37 @@ class AbstractTestCase extends TestCase {
         };
         $getProperty = $getProperty->bindTo($target, get_class($target));
         return $getProperty($name, $args);
+    }
+
+    protected function findSchemaLocation(DOMDocument $document): ?string {
+        $node = $document->documentElement;
+        $this->assertInstanceOf(DOMElement::class, $node);
+        $ns = $node->namespaceURI;
+
+        if ($ns !== null) {
+            if (strpos($ns, 'http://schema.slothsoft.net/') === 0) {
+                $version = $node->hasAttribute('version') ? $node->getAttribute('version') : '1.0';
+                $schema = explode('/', substr($ns, strlen('http://schema.slothsoft.net/')));
+                $this->assertEquals(2, count($schema), "Invalid slothsoft schema: $ns");
+                $url = "farah://slothsoft@$schema[0]/schema/$schema[1]/$version";
+                return $url;
+            }
+        }
+
+        return null;
+    }
+
+    protected function assertSchema(DOMDocument $document, string $schema): void {
+        try {
+            echo PHP_EOL . $schema . PHP_EOL . DOMHelper::loadDocument($schema)->documentURI . PHP_EOL . file_get_contents($schema) . PHP_EOL . PHP_EOL;
+
+            $validateResult = $document->schemaValidate($schema);
+        } catch (Throwable $e) {
+            $validateResult = false;
+            $this->failException($e);
+        }
+
+        $this->assertTrue($validateResult, "Slothsoft document '$document->documentURI' did not pass vaidation with '$schema'!");
     }
 }
 

@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
-<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/sitemap"
-	xmlns="http://schema.slothsoft.net/farah/sitemap" xmlns:sfs="http://schema.slothsoft.net/farah/sitemap"
-	xmlns:sfm="http://schema.slothsoft.net/farah/module" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
-	xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/sitemap" xmlns="http://schema.slothsoft.net/farah/sitemap" xmlns:sfs="http://schema.slothsoft.net/farah/sitemap"
+	xmlns:sfm="http://schema.slothsoft.net/farah/module" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary" xmlns:ssv="http://schema.slothsoft.net/schema/versioning"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
 
 	<xsd:annotation>
 		<xsd:appinfo>
@@ -36,8 +34,7 @@ This namespace defines elements to describe a sitemap, that is, a rough overview
 		</xsd:appinfo>
 	</xsd:annotation>
 
-	<xsd:import namespace="http://schema.slothsoft.net/farah/module"
-		schemaLocation="http://schema.slothsoft.net/farah/module/1.1.xsd" />
+	<xsd:import namespace="http://schema.slothsoft.net/farah/module" schemaLocation="farah://slothsoft@farah/schema/module/1.1" />
 
 	<xsd:attributeGroup name="schemaVersion">
 		<xsd:attribute name="version" type="xsd:token" use="required" fixed="1.1">

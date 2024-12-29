@@ -281,26 +281,9 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         }
 
         $document = $result->lookupDOMWriter()->toDocument();
-        $node = $document->documentElement;
 
-        $this->assertInstanceOf(DOMElement::class, $node);
-        $ns = $node->namespaceURI;
-        $version = $node->hasAttribute('version') ? $node->getAttribute('version') : '1.0';
-        if ($ns !== null) {
-            if (strpos($ns, 'http://schema.slothsoft.net/') === 0) {
-                $schema = explode('/', substr($ns, strlen('http://schema.slothsoft.net/')));
-                $this->assertEquals(2, count($schema), "Invalid slothsoft schema: $ns");
-
-                $url = "farah://slothsoft@$schema[0]/schema/$schema[1]/$version";
-
-                try {
-                    $validateResult = $document->schemaValidate($url);
-                } catch (Throwable $e) {
-                    $validateResult = false;
-                    $this->failException($e);
-                }
-                $this->assertTrue($validateResult, 'Slothsoft document did not pass its own vaidation!');
-            }
+        if ($schema = $this->findSchemaLocation($document)) {
+            $this->assertSchema($document, $schema);
         }
     }
 }

@@ -125,16 +125,10 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      *
      * @depends testSchemaIsValidXml
      */
-    public function testSitesIsValidAccordingToSchema($schemaDocument) {
-        $sitesDocument = $this->getSitesDocument();
-        try {
-            $validateResult = $sitesDocument->schemaValidate($schemaDocument->documentURI);
-        } catch (Throwable $e) {
-            $validateResult = false;
-            $this->failException($e);
-        }
-        $this->assertTrue($validateResult, 'Asset file is invalid!');
-        return $sitesDocument;
+    public function testSitesIsValidAccordingToSchema($schemaDocument): DOMDocument {
+        $document = $this->getSitesDocument();
+        $this->assertSchema($document, $schemaDocument->documentURI);
+        return $document;
     }
 
     /**
@@ -157,14 +151,8 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      */
     public function testIncludeIsValidAccordingToSchema($url) {
         $document = Module::resolveToDOMWriter($url)->toDocument();
-        try {
-            $schema = $this->testSchemaExists($document->documentElement);
-            $validateResult = $document->schemaValidate($schema);
-        } catch (Throwable $e) {
-            $validateResult = false;
-            $this->failException($e);
-        }
-        $this->assertTrue($validateResult, '<include-pages> document is invalid!');
+        $schema = $this->testSchemaExists($document->documentElement);
+        $this->assertSchema($document, $schema);
     }
 
     public function includeProvider() {
