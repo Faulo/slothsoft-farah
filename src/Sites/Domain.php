@@ -151,11 +151,18 @@ class Domain {
 
         if ($pageNode->hasAttribute('redirect')) {
             $redirectPath = $pageNode->getAttribute('redirect');
+
+            $host = parse_url($redirectPath, PHP_URL_HOST);
+            if ($host) {
+                throw new PageRedirectionException($redirectPath);
+            }
+
             switch ($redirectPath) {
                 case '..':
                     $redirectPath = $pageNode->parentNode->getAttribute('uri');
                     break;
             }
+
             $redirectNode = $this->lookupPageNode($redirectPath, $pageNode);
             throw new PageRedirectionException($redirectNode->getAttribute('uri'));
         }
