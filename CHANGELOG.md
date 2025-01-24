@@ -7,15 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.0] - 2025-01-15
+
+### Added
+- Added support for external URLs in "redirect" attribute of page nodes.
+
+
+## [1.12.0] - 2024-09-28
+
+### Fixed
+- Fixed various code inconsistencies.
+
+
 ## [1.11.0] - 2023-08-28
 
 ### Added
 - Added support for PHP version up to v8.2.
 
+
 ## [1.10.0] - 2023-04-02
 
 ### Fixed
 - `Dictionary` can no longer get stuck recursively loading the dictionary.
+
 
 ## [1.0.0] - 2018-10-08
 Initial release.

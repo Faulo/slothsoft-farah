@@ -3356,15 +3356,15 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Slothsoft-Farah-Module-Asset-UseInstructionCollection.html#property_rootUrl"
         },                {
-            "fqsen": "\\Slothsoft\\Farah\\Module\\Asset\\UseInstructionCollection\u003A\u003A\u0024documentUrl",
-            "name": "documentUrl",
+            "fqsen": "\\Slothsoft\\Farah\\Module\\Asset\\UseInstructionCollection\u003A\u003A\u0024documentUrls",
+            "name": "documentUrls",
             "summary": "",
-            "url": "classes/Slothsoft-Farah-Module-Asset-UseInstructionCollection.html#property_documentUrl"
+            "url": "classes/Slothsoft-Farah-Module-Asset-UseInstructionCollection.html#property_documentUrls"
         },                {
-            "fqsen": "\\Slothsoft\\Farah\\Module\\Asset\\UseInstructionCollection\u003A\u003A\u0024manifestUrl",
-            "name": "manifestUrl",
+            "fqsen": "\\Slothsoft\\Farah\\Module\\Asset\\UseInstructionCollection\u003A\u003A\u0024manifestUrls",
+            "name": "manifestUrls",
             "summary": "",
-            "url": "classes/Slothsoft-Farah-Module-Asset-UseInstructionCollection.html#property_manifestUrl"
+            "url": "classes/Slothsoft-Farah-Module-Asset-UseInstructionCollection.html#property_manifestUrls"
         },                {
             "fqsen": "\\Slothsoft\\Farah\\Module\\Asset\\UseInstructionCollection\u003A\u003A\u0024templateUrl",
             "name": "templateUrl",
@@ -5305,6 +5305,16 @@ Search.appendIndex(
             "name": "getObjectMethod",
             "summary": "",
             "url": "classes/Slothsoft-Farah-ModuleTests-AbstractTestCase.html#method_getObjectMethod"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\ModuleTests\\AbstractTestCase\u003A\u003AfindSchemaLocation\u0028\u0029",
+            "name": "findSchemaLocation",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-ModuleTests-AbstractTestCase.html#method_findSchemaLocation"
+        },                {
+            "fqsen": "\\Slothsoft\\Farah\\ModuleTests\\AbstractTestCase\u003A\u003AassertSchema\u0028\u0029",
+            "name": "assertSchema",
+            "summary": "",
+            "url": "classes/Slothsoft-Farah-ModuleTests-AbstractTestCase.html#method_assertSchema"
         },                {
             "fqsen": "\\Slothsoft\\Farah\\ModuleTests\\AbstractXmlManifestTest",
             "name": "AbstractXmlManifestTest",
