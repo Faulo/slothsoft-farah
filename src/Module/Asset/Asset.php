@@ -210,7 +210,7 @@ class Asset implements AssetInterface {
         } catch (HttpDownloadAssetException $e) {
             $strategies = $e->getStrategies();
             $executable = new Executable($this, $args, $strategies);
-            throw new HttpDownloadException($executable->lookupResult(FarahUrlStreamIdentifier::createEmpty()));
+            throw new HttpDownloadException($executable->lookupResult(FarahUrlStreamIdentifier::createEmpty()), $e->isInline());
         }
     }
 

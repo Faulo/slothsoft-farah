@@ -6,14 +6,21 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
 
 class HttpDownloadException extends \RuntimeException {
 
-    private $result;
+    private ResultInterface $result;
 
-    public function __construct(ResultInterface $result) {
+    private bool $isInline;
+
+    public function __construct(ResultInterface $result, bool $isInline = false) {
         $this->result = $result;
+        $this->isInline = $isInline;
     }
 
     public function getResult(): ResultInterface {
         return $this->result;
+    }
+
+    public function isInline(): bool {
+        return $this->isInline;
     }
 }
 

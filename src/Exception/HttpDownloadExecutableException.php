@@ -8,12 +8,19 @@ class HttpDownloadExecutableException extends \RuntimeException {
 
     private $strategies;
 
-    public function __construct(ResultStrategies $strategies) {
+    private bool $isInline;
+
+    public function __construct(ResultStrategies $strategies, bool $isInline = false) {
         $this->strategies = $strategies;
+        $this->isInline = $isInline;
     }
 
     public function getExecutable(): ResultStrategies {
         return $this->strategies;
+    }
+
+    public function isInline(): bool {
+        return $this->isInline;
     }
 }
 
