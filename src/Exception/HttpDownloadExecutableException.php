@@ -6,13 +6,13 @@ use Slothsoft\Farah\Module\Result\ResultStrategies;
 
 class HttpDownloadExecutableException extends \RuntimeException {
 
-    private $strategies;
+    private ResultStrategies $strategies;
 
-    private bool $isInline;
+    private bool $inline;
 
     public function __construct(ResultStrategies $strategies, bool $isInline = false) {
         $this->strategies = $strategies;
-        $this->isInline = $isInline;
+        $this->inline = $isInline;
     }
 
     public function getExecutable(): ResultStrategies {
@@ -20,7 +20,7 @@ class HttpDownloadExecutableException extends \RuntimeException {
     }
 
     public function isInline(): bool {
-        return $this->isInline;
+        return $this->inline;
     }
 }
 

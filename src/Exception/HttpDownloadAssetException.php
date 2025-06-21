@@ -6,21 +6,21 @@ use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 
 class HttpDownloadAssetException extends \RuntimeException {
 
-    private $strategies;
+    private ExecutableStrategies $strategies;
 
-    private bool $isInline;
+    private bool $inline;
 
     public function __construct(ExecutableStrategies $strategies, bool $isInline = false) {
         $this->strategies = $strategies;
-        $this->isInline = $isInline;
+        $this->inline = $isInline;
     }
 
-    public function getStrategies() {
+    public function getStrategies(): ExecutableStrategies {
         return $this->strategies;
     }
 
     public function isInline(): bool {
-        return $this->isInline;
+        return $this->inline;
     }
 }
 

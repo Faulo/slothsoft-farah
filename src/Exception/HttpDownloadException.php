@@ -8,11 +8,11 @@ class HttpDownloadException extends \RuntimeException {
 
     private ResultInterface $result;
 
-    private bool $isInline;
+    private bool $inline;
 
     public function __construct(ResultInterface $result, bool $isInline = false) {
         $this->result = $result;
-        $this->isInline = $isInline;
+        $this->inline = $isInline;
     }
 
     public function getResult(): ResultInterface {
@@ -20,7 +20,7 @@ class HttpDownloadException extends \RuntimeException {
     }
 
     public function isInline(): bool {
-        return $this->isInline;
+        return $this->inline;
     }
 }
 
