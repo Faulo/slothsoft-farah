@@ -14,7 +14,7 @@ class XmlTreeLoader implements TreeLoaderStrategyInterface {
         $xmlFile = $context->createManifestFile('manifest.xml');
 
         $tmpFile = $context->createCacheFile('manifest.tmp', null, FarahUrlArguments::createFromValueList([
-            'cwd' => getcwd()
+            'path' => $xmlFile->getRealPath()
         ]));
 
         if ($tmpFile->isFile()) {
