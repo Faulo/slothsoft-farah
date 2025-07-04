@@ -14,7 +14,7 @@
 	"type" : "library",
 	"require" : {
 		"php" : ">=7.4",
-		"php-ds/php-ds" : "^1.2",
+		"php-ds/php-ds" : "^1.7",
 		"ext-sockets" : "*",
 		"guzzlehttp/psr7" : "^2.7",
 		"matthiasmullie/minify" : "^1.3",
