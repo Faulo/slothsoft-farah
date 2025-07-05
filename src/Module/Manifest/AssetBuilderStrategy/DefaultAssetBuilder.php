@@ -160,6 +160,12 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
                 break;
             case Manifest::TAG_ASSET_ROOT:
             case Manifest::TAG_FRAGMENT:
+                $executableBuilder = FromManifestExecutableBuilder::class;
+                $pathResolver = FromManifestPathResolver::class;
+                $parameterFilter = AllowAllParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
+                $instruction = FromManifestInstruction::class;
+                break;
             case Manifest::TAG_EXTERNAL_RESOURCE: // not implemented?
             case Manifest::TAG_SOURCE: // not implemented?
             case Manifest::TAG_OPTIONS: // not implemented?

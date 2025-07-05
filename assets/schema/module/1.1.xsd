@@ -341,6 +341,7 @@ This namespace defines elements to identify assets in a Farah module.
 						<xsd:element ref="link-stylesheet" />
 						<xsd:element ref="link-script" />
 						<xsd:element ref="link-module" />
+						<xsd:element ref="param" />
 					</xsd:choice>
 				</xsd:extension>
 			</xsd:complexContent>
