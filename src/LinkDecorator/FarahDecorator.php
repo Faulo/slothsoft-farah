@@ -8,7 +8,7 @@ use DOMDocument;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class FarahDecorator implements LinkDecoratorInterface {
 
@@ -33,7 +33,7 @@ class FarahDecorator implements LinkDecoratorInterface {
             $href = str_replace('farah://', '/', (string) $url);
 
             $node = $this->targetDocument->createElementNS($this->namespace, 'link-stylesheet');
-            $node->setAttribute('href', $href);
+            $node->setAttribute('ref', $href);
             $this->rootNode->appendChild($node);
         }
     }
@@ -43,7 +43,7 @@ class FarahDecorator implements LinkDecoratorInterface {
             $href = str_replace('farah://', '/', (string) $url);
 
             $node = $this->targetDocument->createElementNS($this->namespace, 'link-script');
-            $node->setAttribute('href', $href);
+            $node->setAttribute('ref', $href);
             $this->rootNode->appendChild($node);
         }
     }
@@ -53,7 +53,7 @@ class FarahDecorator implements LinkDecoratorInterface {
             $href = str_replace('farah://', '/', (string) $url);
 
             $node = $this->targetDocument->createElementNS($this->namespace, 'link-module');
-            $node->setAttribute('href', $href);
+            $node->setAttribute('ref', $href);
             $this->rootNode->appendChild($node);
         }
     }

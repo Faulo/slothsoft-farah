@@ -331,13 +331,37 @@ This namespace defines elements to identify assets in a Farah module.
 	</xsd:element>
 
 	<!-- asset info elements -->
-	<xsd:element name="document-info" type="asset-info" />
-	<xsd:element name="fragment-info" type="asset-info" />
+	<xsd:element name="fragment-info">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset-info">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:element ref="document-info" />
+						<xsd:element ref="manifest-info" />
+						<xsd:element ref="link-stylesheet" />
+						<xsd:element ref="link-script" />
+						<xsd:element ref="link-module" />
+					</xsd:choice>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="document-info">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset-info">
+					<xsd:sequence>
+						<xsd:any processContents="skip" minOccurs="0" maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
 	<xsd:element name="manifest-info" type="asset-info" />
+
 	<xsd:complexType name="asset-info">
-		<xsd:sequence>
-			<xsd:any processContents="skip" minOccurs="0" maxOccurs="unbounded" />
-		</xsd:sequence>
 		<xsd:attribute name="name" type="xsd:token" use="optional" />
 		<xsd:attribute name="url" type="farahUrl" use="optional" />
 		<xsd:attribute name="href" type="xsd:anyURI" use="optional" />
