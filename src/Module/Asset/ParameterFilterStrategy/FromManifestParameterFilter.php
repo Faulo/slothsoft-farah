@@ -2,19 +2,19 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
 
-use Slothsoft\Core\IO\Sanitizer\StringSanitizer;
-
 /**
  *
  * @author Daniel Schulz
  *
  */
-class FromManifestParameterFilter extends AbstractMapParameterFilter {
+class FromManifestParameterFilter implements ParameterFilterStrategyInterface {
 
-    protected function createValueSanitizers(): array {
-        return [
-            'load' => new StringSanitizer()
-        ];
+    public function isAllowedName(string $name): bool {
+        return $name === 'load';
+    }
+
+    public function getValueSanitizers(): iterable {
+        return [];
     }
 }
 

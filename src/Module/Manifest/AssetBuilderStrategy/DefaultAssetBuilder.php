@@ -82,42 +82,42 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
             case Manifest::TAG_USE_DOCUMENT:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
-                $parameterFilter = DenyAllParameterFilter::class;
+                $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = UseDocumentInstruction::class;
                 break;
             case Manifest::TAG_USE_MANIFEST:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
-                $parameterFilter = DenyAllParameterFilter::class;
+                $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = UseManifestInstruction::class;
                 break;
             case Manifest::TAG_USE_TEMPLATE:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
-                $parameterFilter = DenyAllParameterFilter::class;
+                $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = UseTemplateInstruction::class;
                 break;
             case Manifest::TAG_LINK_STYLESHEET:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
-                $parameterFilter = DenyAllParameterFilter::class;
+                $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = LinkStylesheetInstruction::class;
                 break;
             case Manifest::TAG_LINK_SCRIPT:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
-                $parameterFilter = DenyAllParameterFilter::class;
+                $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = LinkScriptInstruction::class;
                 break;
             case Manifest::TAG_LINK_MODULE:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
-                $parameterFilter = DenyAllParameterFilter::class;
+                $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = LinkModuleInstruction::class;
                 break;
