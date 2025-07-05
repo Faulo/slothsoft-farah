@@ -17,15 +17,30 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
         $getUseInstructions = function () use ($rootAsset, $args): UseInstructionCollection {
             $instructions = new UseInstructionCollection();
             $instructions->rootUrl = $rootAsset->createUrl($args);
+            /** @var AssetInterface $asset */
             foreach ($rootAsset->getAssetChildren() as $asset) {
-                if ($asset->isUseManifestInstruction()) {
-                    $instructions->manifestUrls[] = $asset->createUrl($args);
-                }
-                if ($asset->isUseDocumentInstruction()) {
-                    $instructions->documentUrls[] = $asset->createUrl($args);
-                }
-                if ($asset->isUseTemplateInstruction()) {
-                    $instructions->templateUrl = $asset->createUrl($args);
+                switch ($args->get('load', '')) {
+                    case 'tree':
+                        if ($asset->isUseManifestInstruction() or $asset->isUseDocumentInstruction() or $asset->isUseTemplateInstruction()) {
+                            $instructions->documentUrls[] = $asset->createUrl($args);
+                        }
+                        break;
+                    case 'children':
+                        if ($asset->isUseManifestInstruction() or $asset->isUseDocumentInstruction() or $asset->isUseTemplateInstruction()) {
+                            $instructions->documentUrls[] = $asset->createUrl($args->withoutArgument('load'));
+                        }
+                        break;
+                    default:
+                        if ($asset->isUseManifestInstruction()) {
+                            $instructions->manifestUrls[] = $asset->createUrl($args);
+                        }
+                        if ($asset->isUseDocumentInstruction()) {
+                            $instructions->documentUrls[] = $asset->createUrl($args);
+                        }
+                        if ($asset->isUseTemplateInstruction()) {
+                            $instructions->templateUrl = $asset->createUrl($args);
+                        }
+                        break;
                 }
             }
             return $instructions;
