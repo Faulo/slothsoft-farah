@@ -18,6 +18,7 @@ This namespace defines elements to identify assets in a Farah module.
 *** Version 1.1 ***
     R20250705
         - added element <use-manifest>
+        - use xsd:token instead of xsd:normalizedString
 
 	R20200103
 		- added element <daemon>
@@ -292,8 +293,8 @@ This namespace defines elements to identify assets in a Farah module.
 			<xsd:complexContent>
 				<xsd:extension base="meta">
 					<xsd:attribute name="value" type="farahUrlArgumentValue" use="optional" />
-					<xsd:attribute name="scope" type="xsd:normalizedString" use="optional" />
-					<xsd:attribute name="type" type="xsd:normalizedString" use="optional" />
+					<xsd:attribute name="scope" type="xsd:token" use="optional" />
+					<xsd:attribute name="type" type="xsd:token" use="optional" />
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>
@@ -419,21 +420,21 @@ This namespace defines elements to identify assets in a Farah module.
 	</xsd:simpleType>
 
 	<xsd:simpleType name="farahUrlArgumentValue">
-		<xsd:restriction base="xsd:normalizedString" />
+		<xsd:restriction base="xsd:token" />
 	</xsd:simpleType>
 
 	<xsd:simpleType name="relativeFilesystemPath">
-		<xsd:restriction base="xsd:normalizedString">
+		<xsd:restriction base="xsd:token">
 		</xsd:restriction>
 	</xsd:simpleType>
 
 	<xsd:simpleType name="absoluteFilesystemPath">
-		<xsd:restriction base="xsd:normalizedString">
+		<xsd:restriction base="xsd:token">
 		</xsd:restriction>
 	</xsd:simpleType>
 
 	<xsd:simpleType name="phpClass">
-		<xsd:restriction base="xsd:normalizedString">
+		<xsd:restriction base="xsd:token">
 		</xsd:restriction>
 	</xsd:simpleType>
 
@@ -443,7 +444,7 @@ This namespace defines elements to identify assets in a Farah module.
 	</xsd:simpleType>
 
 	<xsd:simpleType name="mimeType">
-		<xsd:restriction base="xsd:normalizedString">
+		<xsd:restriction base="xsd:token">
 		</xsd:restriction>
 	</xsd:simpleType>
 
