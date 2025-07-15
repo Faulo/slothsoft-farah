@@ -20,7 +20,7 @@ pipeline {
 							callShell "docker pull ${image}"
 
 							docker.image(image).inside {
-								callShell 'composer install'
+								callShell 'composer update --prefer-lowest'
 
 								dir('.reports') {
 									deleteDir()
