@@ -27,7 +27,7 @@
 		"laminas/laminas-router" : "^3.5"
 	},
 	"require-dev" : {
-		"phpunit/phpunit" : "8.5.*"
+		"phpunit/phpunit" : "^8.5.42"
 	},
 	"suggest" : {
 		"krakjoe/pthreads-polyfill" : "^1.1",
