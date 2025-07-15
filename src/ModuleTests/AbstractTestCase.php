@@ -50,7 +50,7 @@ class AbstractTestCase extends TestCase {
 
     protected function assertSchema(DOMDocument $document, string $schema): void {
         try {
-            echo PHP_EOL . $schema . PHP_EOL . DOMHelper::loadDocument($schema)->documentURI . PHP_EOL . file_get_contents($schema) . PHP_EOL . PHP_EOL;
+            // echo PHP_EOL . $schema . PHP_EOL . DOMHelper::loadDocument($schema)->documentURI . PHP_EOL . file_get_contents($schema) . PHP_EOL . PHP_EOL;
 
             $validateResult = $document->schemaValidate($schema);
         } catch (Throwable $e) {
