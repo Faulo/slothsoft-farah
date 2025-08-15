@@ -10,7 +10,7 @@ use Traversable;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class FarahUrlArguments implements IteratorAggregate, Hashable {
 
@@ -110,6 +110,16 @@ class FarahUrlArguments implements IteratorAggregate, Hashable {
             return self::createFromValueList([
                 $key => $val
             ] + $this->data);
+        }
+    }
+
+    public function withoutArgument(string $key): FarahUrlArguments {
+        if (isset($this->data[$key])) {
+            $data = $this->data;
+            unset($data[$key]);
+            return self::createFromValueList($data);
+        } else {
+            return $this;
         }
     }
 

@@ -45,7 +45,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
                     $body = $result->lookupStreamWriter()->toStream();
                 } catch (HttpDownloadException $e) {
                     $result = $e->getResult();
-                    $fileDisposition = 'download';
+                    $fileDisposition = $e->isInline() ? 'inline' : 'download';
                     $fileName = $result->lookupFileName();
                     $fileMime = $result->lookupMimeType();
                     $fileCharset = $result->lookupCharset();

@@ -6,10 +6,14 @@ $RECYCLE.BIN/
 
 # == Composer ==
 /composer.phar
+/composer.lock
 /vendor/
 
 # == phpDocumentor ==
-/docs/tmp/
+/docs/
 
 # == PHPUnit ==
 /.phpunit.result.cache
+
+# == Slothsoft ==
+*.local

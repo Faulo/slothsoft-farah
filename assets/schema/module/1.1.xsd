@@ -1,15 +1,13 @@
 <?xml version="1.0"?>
-<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/module"
-	xmlns="http://schema.slothsoft.net/farah/module" xmlns:sfm="http://schema.slothsoft.net/farah/module"
-	xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/module" xmlns="http://schema.slothsoft.net/farah/module" xmlns:sfm="http://schema.slothsoft.net/farah/module"
+	xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xsd:annotation>
 		<xsd:appinfo>
 			<ssv:info version="1.0">
 				<ssv:name>Farah Module Manifest</ssv:name>
 				<ssv:version>1.1</ssv:version>
-				<ssv:revision>R20200103</ssv:revision>
+				<ssv:revision>R20250705</ssv:revision>
 				<ssv:prefix>sfm</ssv:prefix>
 				<ssv:namespace>http://schema.slothsoft.net/farah/module</ssv:namespace>
 				<ssv:author email="daniel.lio.schulz@gmail.com">Daniel Schulz</ssv:author>
@@ -18,6 +16,10 @@ This namespace defines elements to identify assets in a Farah module.
 				]]></ssv:description>
 				<ssv:changelog><![CDATA[
 *** Version 1.1 ***
+    R20250705
+        - added element <use-manifest>
+        - use xsd:token instead of xsd:normalizedString
+
 	R20200103
 		- added element <daemon>
 		- added attribute <module version="">
@@ -78,6 +80,7 @@ This namespace defines elements to identify assets in a Farah module.
 		<xsd:choice>
 			<xsd:element ref="import" />
 			<xsd:element ref="use-document" />
+			<xsd:element ref="use-manifest" />
 			<xsd:element ref="use-template" />
 			<xsd:element ref="link-stylesheet" />
 			<xsd:element ref="link-script" />
@@ -245,6 +248,14 @@ This namespace defines elements to identify assets in a Farah module.
 		</xsd:complexType>
 	</xsd:element>
 
+	<xsd:element name="use-manifest">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset-reference" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
 	<xsd:element name="use-template">
 		<xsd:complexType>
 			<xsd:complexContent>
@@ -282,8 +293,8 @@ This namespace defines elements to identify assets in a Farah module.
 			<xsd:complexContent>
 				<xsd:extension base="meta">
 					<xsd:attribute name="value" type="farahUrlArgumentValue" use="optional" />
-					<xsd:attribute name="scope" type="xsd:normalizedString" use="optional" />
-					<xsd:attribute name="type" type="xsd:normalizedString" use="optional" />
+					<xsd:attribute name="scope" type="xsd:token" use="optional" />
+					<xsd:attribute name="type" type="xsd:token" use="optional" />
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>
@@ -320,13 +331,38 @@ This namespace defines elements to identify assets in a Farah module.
 	</xsd:element>
 
 	<!-- asset info elements -->
-	<xsd:element name="document-info" type="asset-info" />
-	<xsd:element name="fragment-info" type="asset-info" />
+	<xsd:element name="fragment-info">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset-info">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:element ref="document-info" />
+						<xsd:element ref="manifest-info" />
+						<xsd:element ref="link-stylesheet" />
+						<xsd:element ref="link-script" />
+						<xsd:element ref="link-module" />
+						<xsd:element ref="param" />
+					</xsd:choice>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="document-info">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="asset-info">
+					<xsd:sequence>
+						<xsd:any processContents="skip" minOccurs="0" maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
 	<xsd:element name="manifest-info" type="asset-info" />
+
 	<xsd:complexType name="asset-info">
-		<xsd:sequence>
-			<xsd:any processContents="skip" minOccurs="0" maxOccurs="unbounded" />
-		</xsd:sequence>
 		<xsd:attribute name="name" type="xsd:token" use="optional" />
 		<xsd:attribute name="url" type="farahUrl" use="optional" />
 		<xsd:attribute name="href" type="xsd:anyURI" use="optional" />
@@ -409,21 +445,21 @@ This namespace defines elements to identify assets in a Farah module.
 	</xsd:simpleType>
 
 	<xsd:simpleType name="farahUrlArgumentValue">
-		<xsd:restriction base="xsd:normalizedString" />
+		<xsd:restriction base="xsd:token" />
 	</xsd:simpleType>
 
 	<xsd:simpleType name="relativeFilesystemPath">
-		<xsd:restriction base="xsd:normalizedString">
+		<xsd:restriction base="xsd:token">
 		</xsd:restriction>
 	</xsd:simpleType>
 
 	<xsd:simpleType name="absoluteFilesystemPath">
-		<xsd:restriction base="xsd:normalizedString">
+		<xsd:restriction base="xsd:token">
 		</xsd:restriction>
 	</xsd:simpleType>
 
 	<xsd:simpleType name="phpClass">
-		<xsd:restriction base="xsd:normalizedString">
+		<xsd:restriction base="xsd:token">
 		</xsd:restriction>
 	</xsd:simpleType>
 
@@ -433,7 +469,7 @@ This namespace defines elements to identify assets in a Farah module.
 	</xsd:simpleType>
 
 	<xsd:simpleType name="mimeType">
-		<xsd:restriction base="xsd:normalizedString">
+		<xsd:restriction base="xsd:token">
 		</xsd:restriction>
 	</xsd:simpleType>
 

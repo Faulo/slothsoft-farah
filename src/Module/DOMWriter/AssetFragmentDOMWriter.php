@@ -51,6 +51,15 @@ class AssetFragmentDOMWriter implements DOMWriterInterface {
 
         $targetDoc->appendChild($node);
 
+        foreach ($this->url->getArguments()->getValueList() as $key => $value) {
+            $child = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, 'sfm:param');
+            $child->setAttribute('name', $key);
+            if (is_string($value)) {
+                $child->setAttribute('value', $value);
+            }
+            $node->appendChild($child);
+        }
+
         foreach ($this->children as $child) {
             $node->appendChild($child->toElement($targetDoc));
         }

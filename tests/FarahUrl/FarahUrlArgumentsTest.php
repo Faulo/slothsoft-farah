@@ -86,5 +86,68 @@ class FarahUrlArgumentsTest extends TestCase {
         $this->assertEquals((string) $args1, (string) $args2);
         $this->assertNotEquals($args1, $args2);
     }
+
+    public function testWithSameArgument() {
+        $data = [
+            'a' => '1'
+        ];
+
+        $url1 = FarahUrlArguments::createFromValueList($data);
+        $url2 = $url1->withArgument('a', '1');
+
+        $this->assertSame($url2, $url1);
+    }
+
+    public function testWithDifferentArgument() {
+        $data = [
+            'a' => '1'
+        ];
+
+        $url1 = FarahUrlArguments::createFromValueList($data);
+        $url2 = $url1->withArgument('a', '2');
+
+        $this->assertNotSame($url2, $url1);
+        $this->assertEquals('1', $url1->get('a'));
+        $this->assertEquals('2', $url2->get('a'));
+    }
+
+    public function testWithDifferentArguments() {
+        $data = [
+            'a' => '1'
+        ];
+
+        $url1 = FarahUrlArguments::createFromValueList($data);
+        $url2 = $url1->withArgument('b', '2');
+
+        $this->assertNotSame($url2, $url1);
+        $this->assertEquals('1', $url1->get('a'));
+        $this->assertFalse($url1->has('b'));
+        $this->assertEquals('1', $url2->get('a'));
+        $this->assertEquals('2', $url2->get('b'));
+    }
+
+    public function testWithoutSameArgument() {
+        $data = [
+            'a' => '1'
+        ];
+
+        $url1 = FarahUrlArguments::createFromValueList($data);
+        $url2 = $url1->withoutArgument('a');
+
+        $this->assertNotSame($url2, $url1);
+        $this->assertEquals('1', $url1->get('a'));
+        $this->assertFalse($url2->has('a'));
+    }
+
+    public function testWithoutDifferentArgument() {
+        $data = [
+            'a' => '1'
+        ];
+
+        $url1 = FarahUrlArguments::createFromValueList($data);
+        $url2 = $url1->withoutArgument('b');
+
+        $this->assertSame($url2, $url1);
+    }
 }
 

@@ -24,6 +24,7 @@ use Slothsoft\Farah\Module\Asset\InstructionStrategy\UseManifestInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\UseTemplateInstruction;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\AllowAllParameterFilter;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\DenyAllParameterFilter;
+use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\FromManifestParameterFilter;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\ParameterFilterStrategyInterface;
 use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\FromManifestParameterSupplier;
 use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\FromReferenceParameterSupplier;
@@ -62,13 +63,15 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
             }
         }
 
-        $executableBuilder = FromManifestExecutableBuilder::class;
-        $pathResolver = FromManifestPathResolver::class;
-        $parameterFilter = AllowAllParameterFilter::class;
-        $parameterSupplier = NullParameterSupplier::class;
-        $instruction = FromManifestInstruction::class;
-
         switch ($tag) {
+            // "meta" assets
+            case Manifest::TAG_IMPORT:
+                $executableBuilder = NullExecutableBuilder::class;
+                $pathResolver = NullPathResolver::class;
+                $parameterFilter = DenyAllParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
+                $instruction = ImportChildrenInstruction::class;
+                break;
             case Manifest::TAG_PARAM:
                 $executableBuilder = NullExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
@@ -76,63 +79,103 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
                 $parameterSupplier = FromManifestParameterSupplier::class;
                 $instruction = ParameterSupplierInstruction::class;
                 break;
-            case Manifest::TAG_CUSTOM_ASSET:
-                $executableBuilder = DaemonExecutableBuilder::class;
-                $pathResolver = NullPathResolver::class;
-                $parameterFilter = DenyAllParameterFilter::class;
-                $parameterSupplier = NullParameterSupplier::class;
-                $instruction = NullInstruction::class;
-                break;
-            case Manifest::TAG_DAEMON:
-                $executableBuilder = NullExecutableBuilder::class;
-                $pathResolver = NullPathResolver::class;
-                $parameterFilter = DenyAllParameterFilter::class;
-                $parameterSupplier = NullParameterSupplier::class;
-                $instruction = NullInstruction::class;
-                break;
-            case Manifest::TAG_IMPORT:
-                $executableBuilder = NullExecutableBuilder::class;
-                $pathResolver = NullPathResolver::class;
-                $parameterFilter = DenyAllParameterFilter::class;
-                $instruction = ImportChildrenInstruction::class;
-                break;
             case Manifest::TAG_USE_DOCUMENT:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
+                $pathResolver = NullPathResolver::class;
+                $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = UseDocumentInstruction::class;
                 break;
             case Manifest::TAG_USE_MANIFEST:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
+                $pathResolver = NullPathResolver::class;
+                $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = UseManifestInstruction::class;
                 break;
             case Manifest::TAG_USE_TEMPLATE:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
+                $pathResolver = NullPathResolver::class;
+                $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = UseTemplateInstruction::class;
                 break;
             case Manifest::TAG_LINK_STYLESHEET:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
+                $pathResolver = NullPathResolver::class;
+                $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = LinkStylesheetInstruction::class;
                 break;
             case Manifest::TAG_LINK_SCRIPT:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
+                $pathResolver = NullPathResolver::class;
+                $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = LinkScriptInstruction::class;
                 break;
             case Manifest::TAG_LINK_MODULE:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
+                $pathResolver = NullPathResolver::class;
+                $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = LinkModuleInstruction::class;
                 break;
+            // "physical" assets
             case Manifest::TAG_RESOURCE:
                 $executableBuilder = FromFilesystemExecutableBuilder::class;
+                $pathResolver = FromManifestPathResolver::class;
                 $parameterFilter = DenyAllParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
+                $instruction = FromManifestInstruction::class;
+                break;
+            case Manifest::TAG_DIRECTORY:
+                $executableBuilder = FromManifestExecutableBuilder::class;
+                $pathResolver = FromManifestPathResolver::class;
+                $parameterFilter = FromManifestParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
+                $instruction = FromManifestInstruction::class;
                 break;
             case Manifest::TAG_RESOURCE_DIRECTORY:
+                $executableBuilder = FromManifestExecutableBuilder::class;
                 $pathResolver = FromFilesystemPathResolver::class;
+                $parameterFilter = FromManifestParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
+                $instruction = FromManifestInstruction::class;
+                break;
+            // "virtual" assets
+            case Manifest::TAG_DAEMON:
+                $executableBuilder = DaemonExecutableBuilder::class;
+                $pathResolver = FromManifestPathResolver::class;
                 $parameterFilter = DenyAllParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
+                $instruction = NullInstruction::class;
+                break;
+            case Manifest::TAG_CUSTOM_ASSET:
+                $executableBuilder = FromManifestExecutableBuilder::class;
+                $pathResolver = FromManifestPathResolver::class;
+                $parameterFilter = AllowAllParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
+                $instruction = FromManifestInstruction::class;
+                break;
+            case Manifest::TAG_ASSET_ROOT:
+            case Manifest::TAG_FRAGMENT:
+                $executableBuilder = FromManifestExecutableBuilder::class;
+                $pathResolver = FromManifestPathResolver::class;
+                $parameterFilter = AllowAllParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
+                $instruction = FromManifestInstruction::class;
+                break;
+            case Manifest::TAG_EXTERNAL_RESOURCE: // not implemented?
+            case Manifest::TAG_SOURCE: // not implemented?
+            case Manifest::TAG_OPTIONS: // not implemented?
+            case Manifest::TAG_CLOSURE: // not implemented?
+            default:
+                $executableBuilder = FromManifestExecutableBuilder::class;
+                $pathResolver = FromManifestPathResolver::class;
+                $parameterFilter = FromManifestParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
+                $instruction = FromManifestInstruction::class;
                 break;
         }
 

@@ -17,7 +17,7 @@ class WorkWorker extends Worker {
     }
 
     public function run() {
-        if (class_exists(ServerEnvironment::class)) {
+        if (class_exists(ServerEnvironment::class) and file_exists(ServerEnvironment::getRootDirectory() . '/vendor/autoload.php')) {
             require_once ServerEnvironment::getRootDirectory() . '/vendor/autoload.php';
         } else {
             require_once 'vendor/autoload.php';

@@ -6,14 +6,21 @@ use Slothsoft\Farah\Module\Result\ResultStrategies;
 
 class HttpDownloadExecutableException extends \RuntimeException {
 
-    private $strategies;
+    private ResultStrategies $strategies;
 
-    public function __construct(ResultStrategies $strategies) {
+    private bool $inline;
+
+    public function __construct(ResultStrategies $strategies, bool $isInline = false) {
         $this->strategies = $strategies;
+        $this->inline = $isInline;
     }
 
     public function getExecutable(): ResultStrategies {
         return $this->strategies;
+    }
+
+    public function isInline(): bool {
+        return $this->inline;
     }
 }
 

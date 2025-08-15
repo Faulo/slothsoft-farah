@@ -11,6 +11,14 @@ class WorkEntries extends Threaded {
 
     public function __construct() {
         $this->entries = new Volatile();
+
+        if (! extension_loaded('pthreads')) {
+            // Threaded::data is NULL on initialization, should be array
+            $property = new \ReflectionProperty(Threaded::class, 'data');
+            $property->setAccessible(true);
+            $property->setValue($this, []);
+            $property->setValue($this->entries, []);
+        }
     }
 
     public function append($entry): void {

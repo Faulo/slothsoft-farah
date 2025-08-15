@@ -295,6 +295,9 @@ class Dictionary {
     }
 
     public function lookupFragment($originalWord, $namespace = null, $language = null, DOMDocument $ownerDoc = null) {
+        if (! ($originalWord instanceof DOMNode)) {
+            $originalWord = (string) $originalWord;
+        }
         $word = $this->sanitizeWord($originalWord);
         $xpath = $this->getLangPath($namespace, $language);
         if (! $xpath->evaluate(sprintf(self::XPATH_EXISTS, $word))) {
@@ -309,7 +312,11 @@ class Dictionary {
             $ret->appendChild($node->ownerDocument === $ownerDoc ? $node->cloneNode(true) : $ownerDoc->importNode($node, true));
         }
         if (! $ret->hasChildNodes()) {
-            $ret->appendChild($ownerDoc->createTextNode($originalWord));
+            if ($originalWord instanceof DOMNode) {
+                $ret->appendChild($originalWord->ownerDocument === $ownerDoc ? $originalWord->cloneNode(true) : $ownerDoc->importNode($originalWord, true));
+            } else {
+                $ret->appendChild($ownerDoc->createTextNode($originalWord));
+            }
         }
         return $ret;
     }
