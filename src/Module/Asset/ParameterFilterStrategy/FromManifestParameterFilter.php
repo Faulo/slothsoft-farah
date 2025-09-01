@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
 /**
  *
  * @author Daniel Schulz
- *
+ *        
  */
 class FromManifestParameterFilter implements ParameterFilterStrategyInterface {
 

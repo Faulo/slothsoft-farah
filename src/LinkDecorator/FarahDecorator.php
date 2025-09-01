@@ -8,7 +8,7 @@ use DOMDocument;
 /**
  *
  * @author Daniel Schulz
- *
+ *        
  */
 class FarahDecorator implements LinkDecoratorInterface {
 

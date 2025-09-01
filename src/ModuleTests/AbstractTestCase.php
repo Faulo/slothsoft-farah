@@ -3,10 +3,9 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\ModuleTests;
 
 use PHPUnit\Framework\TestCase;
-use Throwable;
 use DOMDocument;
 use DOMElement;
-use Slothsoft\Core\DOMHelper;
+use Throwable;
 
 class AbstractTestCase extends TestCase {
 
