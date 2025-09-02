@@ -12,8 +12,6 @@ use DOMNodeList;
  * FromManifestExecutableBuilderTest
  *
  * @see FromManifestExecutableBuilder
- *
- * @todo auto-generated
  */
 class FromManifestExecutableBuilderTest extends TestCase {
 
