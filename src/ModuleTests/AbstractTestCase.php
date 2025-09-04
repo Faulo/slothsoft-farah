@@ -10,7 +10,7 @@ use Throwable;
 class AbstractTestCase extends TestCase {
 
     protected function failException(Throwable $e): void {
-        $this->fail(sprintf('%s: %s', basename(get_class($e)), $e->getMessage()));
+        $this->fail(sprintf('%s:%s%s%s%s', get_class($e), PHP_EOL, $e->getMessage(), PHP_EOL, $e->getTraceAsString()));
     }
 
     protected function getObjectProperty(object $target, string $name) {
