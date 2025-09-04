@@ -32,6 +32,12 @@ class Module {
         return $instance;
     }
 
+    private static FarahUrlAuthority $latestModule;
+
+    public static function getBaseUrl(): FarahUrl {
+        return FarahUrl::createFromComponents(self::$latestModule);
+    }
+
     /**
      *
      * @param FarahUrlAuthority|string $authority
@@ -45,6 +51,7 @@ class Module {
         $module = static::getInstance();
         $manifest = $module->createManifest($authority, $assetDirectory, $strategies);
         $module->setManifest($authority, $manifest);
+        self::$latestModule = $authority;
     }
 
     /**

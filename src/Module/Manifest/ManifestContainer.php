@@ -7,7 +7,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 
 class ManifestContainer {
 
-    private $map;
+    private Map $map;
 
     public function __construct() {
         $this->map = new Map();

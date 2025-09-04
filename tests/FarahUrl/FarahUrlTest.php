@@ -171,8 +171,8 @@ class FarahUrlTest extends TestCase {
      *
      * @dataProvider componentProvider
      */
-    public function testCreateFromComponents($authority, $path, $args, $fragment): void {
-        $expectedUrl = FarahUrl::createFromReference('farah://slothsoft@farah/some/path?hello=world#xml');
+    public function testCreateFromComponents(string $expectedUrl, $authority, $path, $args, $fragment): void {
+        $expectedUrl = FarahUrl::createFromReference($expectedUrl);
         $actualUrl = FarahUrl::createFromComponents($authority, $path, $args, $fragment);
 
         $this->assertEquals($expectedUrl, $actualUrl);
@@ -180,24 +180,28 @@ class FarahUrlTest extends TestCase {
 
     public function componentProvider(): iterable {
         yield 'all strings' => [
+            'farah://slothsoft@farah/some/path?hello=world#xml',
             'slothsoft@farah',
             'some/path',
             'hello=world',
             'xml'
         ];
         yield 'authority object' => [
+            'farah://slothsoft@farah/some/path?hello=world#xml',
             FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'farah'),
             'some/path',
             'hello=world',
             'xml'
         ];
         yield 'path object' => [
+            'farah://slothsoft@farah/some/path?hello=world#xml',
             'slothsoft@farah',
             FarahUrlPath::createFromString('some/path'),
             'hello=world',
             'xml'
         ];
         yield 'args object' => [
+            'farah://slothsoft@farah/some/path?hello=world#xml',
             'slothsoft@farah',
             'some/path',
             FarahUrlArguments::createFromValueList([
@@ -206,10 +210,53 @@ class FarahUrlTest extends TestCase {
             'xml'
         ];
         yield 'fragment object' => [
+            'farah://slothsoft@farah/some/path?hello=world#xml',
             'slothsoft@farah',
             'some/path',
             'hello=world',
             FarahUrlStreamIdentifier::createFromString('xml')
+        ];
+        yield 'null path' => [
+            'farah://slothsoft@farah',
+            'slothsoft@farah',
+            null,
+            null,
+            null
+        ];
+        yield 'empty path' => [
+            'farah://slothsoft@farah',
+            'slothsoft@farah',
+            '',
+            null,
+            null
+        ];
+        yield 'slash path' => [
+            'farah://slothsoft@farah',
+            'slothsoft@farah',
+            '/',
+            null,
+            null
+        ];
+        yield 'null path /' => [
+            'farah://slothsoft@farah/',
+            'slothsoft@farah',
+            null,
+            null,
+            null
+        ];
+        yield 'empty path /' => [
+            'farah://slothsoft@farah/',
+            'slothsoft@farah',
+            '',
+            null,
+            null
+        ];
+        yield 'slash path /' => [
+            'farah://slothsoft@farah/',
+            'slothsoft@farah',
+            '/',
+            null,
+            null
         ];
     }
 }

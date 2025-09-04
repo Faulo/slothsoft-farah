@@ -94,7 +94,7 @@ class FarahUrl implements UriInterface, Hashable {
 
         $authority = FarahUrlAuthority::createFromVendorAndModule($res['user'], $res['host']);
 
-        $path = FarahUrlPath::createFromString($res['path'] ?? FarahUrlPath::SEPARATOR, $contextUrl ? $contextUrl->getAssetPath() : null);
+        $path = isset($res['path']) ? FarahUrlPath::createFromString($res['path'], $contextUrl ? $contextUrl->getAssetPath() : null) : FarahUrlPath::createEmpty();
 
         $arguments = FarahUrlArguments::createFromQuery($res['query'] ?? '');
         if ($contextUrl) {

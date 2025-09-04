@@ -15,7 +15,7 @@ class FarahUrlPath implements Hashable {
     const SEPARATOR = '/';
 
     public static function createEmpty(): self {
-        return self::create('');
+        return self::create(self::SEPARATOR);
     }
 
     public static function createFromString(string $path, FarahUrlPath $base = null): self {
