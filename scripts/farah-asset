@@ -2,6 +2,7 @@
 <?php
 use Slothsoft\Farah\HTTPResponse;
 use Slothsoft\Farah\Kernel;
+use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\MessageFactory;
 use Slothsoft\Farah\Http\StatusCode;
@@ -27,7 +28,7 @@ if (count($_SERVER['argv']) !== 1) {
 }
 
 $href = $_SERVER['argv'][0];
-$url = FarahUrl::createFromReference($href, FarahUrl::createFromReference('farah://slothsoft@farah'));
+$url = FarahUrl::createFromReference($href, Module::getBaseUrl());
 
 $request = MessageFactory::createCustomRequest('GET', $url);
 $requestStrategy = new LookupAssetStrategy();
