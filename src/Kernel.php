@@ -29,12 +29,20 @@ class Kernel {
         return $field;
     }
 
-    public static function setCurrentSitemap($asset) {
+    public static function setCurrentSitemap($asset): void {
         self::currentSitemap()->setValue($asset);
     }
 
     public static function getCurrentSitemap(): AssetInterface {
         return self::currentSitemap()->getValue();
+    }
+
+    public static function hasCurrentSitemap() : bool {
+        return self::currentSitemap()->hasValue();
+    }
+
+    public static function clearCurrentSitemap() : void {
+        self::currentSitemap()->setValue(null);
     }
 
     private static function currentRequest(): ConfigurationField {

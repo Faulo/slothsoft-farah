@@ -7,6 +7,7 @@ use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\Core\IO\Writable\StreamWriterInterface;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
@@ -35,7 +36,8 @@ class Module {
     private static FarahUrlAuthority $latestModule;
 
     public static function getBaseUrl(): FarahUrl {
-        return FarahUrl::createFromComponents(self::$latestModule);
+        $authority = Kernel::hasCurrentSitemap() ? Kernel::getCurrentSitemap()->createUrl()->getAssetAuthority() : self::$latestModule;
+        return FarahUrl::createFromComponents($authority);
     }
 
     /**
