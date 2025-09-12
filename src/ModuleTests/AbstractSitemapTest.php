@@ -297,6 +297,9 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
 
                         foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'a') as $linkNode) {
                             $link = (string) $linkNode->getAttribute('href');
+                            if (strpos($link, 'mailto:') === 0) {
+                                continue;
+                            }
                             $reference = sprintf('a href="%s"', $link);
                             $links[$reference] = $link;
                         }
