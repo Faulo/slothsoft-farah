@@ -235,7 +235,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         try {
             $this->assertAsset($requestStrategy->createUrl($request));
         } catch (HttpStatusException $exception) {
-            $this->assertLessThan(300, $exception->getCode(), sprintf('Resolving link lead to HTTP status "%d"', $exception->getCode()));
+            $this->assertLessThan(300, $exception->getCode(), sprintf('Resolving link lead to HTTP status "%d":%s%s', $exception->getCode(), PHP_EOL, $exception->getMessage()));
         }
     }
 
