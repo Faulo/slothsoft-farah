@@ -6,13 +6,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
-use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Module\Module;
 
 class LookupAssetStrategy extends RequestStrategyBase {
-
-    const DEFAULT_VENDOR = 'slothsoft';
-
-    const DEFAULT_MODULE = 'farah';
 
     private static function hrefBase(): ConfigurationField {
         static $field;
@@ -35,21 +31,19 @@ class LookupAssetStrategy extends RequestStrategyBase {
         $body = $request->getParsedBody();
         $params = $request->getQueryParams();
 
+        if ($uri instanceof FarahUrl) {
+            $url = $uri;
+        } else {
+            $url = FarahUrl::createFromReference($this->extractFarahUrl($uri->getPath()), Module::getBaseUrl());
+        }
+
         if (is_array($body)) {
             $args = $body + $params;
         } else {
             $args = $params;
         }
 
-        if ($uri instanceof FarahUrl) {
-            $url = $uri;
-        } else {
-            $urlAuthority = FarahUrlAuthority::createFromVendorAndModule(self::DEFAULT_VENDOR, self::DEFAULT_MODULE);
-            $urlPath = null;
-            $urlArgs = FarahUrlArguments::createFromValueList($args);
-
-            $url = FarahUrl::createFromReference($this->extractFarahUrl($uri->getPath()), FarahUrl::createFromComponents($urlAuthority, $urlPath, $urlArgs));
-        }
+        $url = $url->withQueryArguments(FarahUrlArguments::createFromValueList($args));
 
         return $url;
     }

@@ -40,7 +40,12 @@ class LookupAssetStrategyTest extends TestCase {
 
         yield 'path with query' => [
             new Uri('/slothsoft@farah/phpinfo?a=b'),
-            FarahUrl::createFromUri(new Uri('farah://slothsoft@farah/phpinfo?a=b'))
+            FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo?a=b')
+        ];
+
+        yield 'farah url' => [
+            FarahUrl::createFromUri(new Uri('farah://slothsoft@farah/phpinfo?a=b')),
+            FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo?a=b')
         ];
     }
 }
