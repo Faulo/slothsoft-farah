@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\ModuleTests;
 use GuzzleHttp\Psr7\Uri;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Kernel;
+use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\MessageFactory;
@@ -264,7 +265,11 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             $requestStrategy = new LookupPageStrategy();
         }
 
-        $this->assertAsset($requestStrategy->createUrl($request), $message);
+        try {
+            $this->assertAsset($requestStrategy->createUrl($request), $message);
+        } catch (HttpStatusException $exception) {
+            $this->fail($message . PHP_EOL . sprintf('Resolving link lead to HTTP status "%d"', $uri, $exception->getCode()));
+        }
     }
 
     private function assertAsset(FarahUrl $url, string $message) {
