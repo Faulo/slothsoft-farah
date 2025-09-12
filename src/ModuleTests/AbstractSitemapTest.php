@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\ModuleTests;
 
 use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\Psr7\UriResolver;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\HttpStatusException;
@@ -214,10 +215,10 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      *
      * @dataProvider pageLinkProvider
      */
-    public function testPageHasValidLink(string $link): void {
+    public function testPageHasValidLink(string $context, string $link): void {
         $this->assertNotEquals('', $link, 'Link must not be empty');
 
-        $uri = new Uri($link);
+        $uri = UriResolver::resolve(new Uri($context), new Uri($link));
 
         if ($uri->getScheme() === 'farah') {
             $this->assertAsset(FarahUrl::createFromUri($uri));
@@ -318,6 +319,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
 
                         foreach ($links as $reference => $link) {
                             $provider[$page . ' ' . $reference] ??= [
+                                $page,
                                 $link
                             ];
                         }
