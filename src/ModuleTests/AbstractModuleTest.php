@@ -21,14 +21,12 @@ abstract class AbstractModuleTest extends AbstractTestCase {
 
     abstract protected static function getManifestAuthority(): FarahUrlAuthority;
 
-    private static array $manifest = [];
-
     protected function getManifest(): ManifestInterface {
-        $id = get_class($this);
-        if (! isset(self::$manifest[$id])) {
-            self::$manifest[$id] = Module::resolveToManifest($this->getManifestUrl());
-        }
-        return self::$manifest[$id];
+        $cache = TestCache::instance(get_class($this));
+
+        return $cache->retrieve('manifest', function () {
+            return Module::resolveToManifest($this->getManifestUrl());
+        });
     }
 
     protected function getManifestUrl(): FarahUrl {
@@ -66,34 +64,38 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         }
     }
 
-    public function assetReferenceProvider(): iterable {
-        $set = [];
-        foreach ($this->getReferencedAssetReferences() as $context => $path) {
-            $key = (string) $path;
-            if (! isset($set[$key])) {
-                $set[$key] = true;
-                yield $key => [
+    public function assetReferenceProvider(): array {
+        $cache = TestCache::instance(get_class($this));
+
+        return $cache->retrieve('assetReferenceProvider', function () {
+            $provider = [];
+            foreach ($this->getReferencedAssetReferences() as $context => $path) {
+                $key = (string) $path;
+                $provider[$key] ??= [
                     $path,
                     $context
                 ];
             }
-        }
+            return $provider;
+        });
     }
 
-    public function assetReferenceUrlProvider(): iterable {
-        $set = [];
-        foreach ($this->getReferencedAssetReferences() as $context => $ref) {
-            try {
-                $url = FarahUrl::createFromReference($ref, $context);
-                $key = (string) $url;
-                if (! isset($set[$key])) {
-                    $set[$key] = true;
-                    yield $key => [
+    public function assetReferenceUrlProvider(): array {
+        $cache = TestCache::instance(get_class($this));
+
+        return $cache->retrieve('assetReferenceUrlProvider', function () {
+            $provider = [];
+            foreach ($this->getReferencedAssetReferences() as $context => $ref) {
+                try {
+                    $url = FarahUrl::createFromReference($ref, $context);
+                    $key = (string) $url;
+                    $provider[$key] ??= [
                         $url
                     ];
-                }
-            } catch (Throwable $e) {}
-        }
+                } catch (Throwable $e) {}
+            }
+            return $provider;
+        });
     }
 
     private function getReferencedAssetReferences(): iterable {
@@ -184,34 +186,45 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         }
     }
 
-    public function assetLocalUrlProvider(): iterable {
-        $set = [];
-        foreach ($this->getLocalAssetPaths() as $path) {
-            try {
-                $url = $this->getManifest()->createUrl($path);
-                $key = (string) $url;
-                if (! isset($set[$key])) {
-                    $set[$key] = true;
-                    yield $key => [
+    private static array $assetLocalUrls = [];
+
+    public function assetLocalUrlProvider(): array {
+        $cache = TestCache::instance(get_class($this));
+
+        return $cache->retrieve('assetLocalUrlProvider', function () {
+            $provider = [];
+            foreach ($this->getLocalAssetPaths() as $path) {
+                try {
+                    $url = $this->getManifest()
+                        ->createUrl($path);
+                    $key = (string) $url;
+                    $provider[$key] ??= [
                         $url
                     ];
-                }
-            } catch (Throwable $e) {}
-        }
+                } catch (Throwable $e) {}
+            }
+            return $provider;
+        });
     }
 
     private function getLocalAssetPaths(): iterable {
-        return $this->buildPathIndex($this->getManifestAsset());
+        yield from $this->buildPathIndex($this->getManifestAsset());
     }
 
     private function buildPathIndex(AssetInterface $asset): iterable {
+        if ($asset->isImportSelfInstruction()) {
+            return;
+        }
+        if ($asset->isImportChildrenInstruction()) {
+            return;
+        }
+        if ($asset->createUrl()->getAssetAuthority() !== static::getManifestAuthority()) {
+            return;
+        }
+
         yield $asset->getUrlPath();
         foreach ($asset->getAssetChildren() as $childAsset) {
-            if ($childAsset->createUrl()->getAssetAuthority() === static::getManifestAuthority()) {
-                foreach ($this->buildPathIndex($childAsset) as $url) {
-                    yield $url;
-                }
-            }
+            yield from $this->buildPathIndex($childAsset);
         }
     }
 
