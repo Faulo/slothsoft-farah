@@ -207,48 +207,15 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
 
     /**
      *
-     * @depends      testPageResultExists
-     * @dataProvider pageNodeProvider
+     * @dataProvider pageLinkProvider
      */
-    public function testPageHasValidLinks(DOMElement $node): void {
-        if ($node->hasAttribute('ref')) {
-            $url = $this->getDomain()->lookupAssetUrl($node);
-            $result = Module::resolveToResult($url);
-            $mime = (string) $result->lookupMimeType();
-
-            $this->assertNotEquals('', $mime, sprintf('Asset "%s" failed to provide a mime type.', $url));
-
-            if ($mime === 'application/xml' or substr($mime, - 4) === '+xml') {
-                $document = $result->lookupDOMWriter()->toDocument();
-                $this->assertNotNull($document->documentElement, sprintf('Asset "%s" is not a valid XML document its mime type.', $url));
-
-                foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'a') as $linkNode) {
-                    $link = (string) $linkNode->getAttribute('href');
-                    $this->assertLink($link, sprintf('Invalid link: <a href="%s">', $link));
-                }
-
-                foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'img') as $linkNode) {
-                    $link = (string) $linkNode->getAttribute('src');
-                    $this->assertLink($link, sprintf('Invalid link: <img href="%s">', $link));
-                }
-
-                foreach ($document->getElementsByTagNameNS(DOMHelper::NS_XSL, 'include') as $linkNode) {
-                    $link = (string) $linkNode->getAttribute('href');
-                    $this->assertLink($link, sprintf('Invalid link: <xsl:include href="%s">', $link));
-                }
-            }
-        } else {
-            $this->markTestSkipped('Skipping validation because the page does not reference an asset."');
-        }
-    }
-
-    private function assertLink(string $link, string $message): void {
-        $this->assertNotEquals('', $link, $message);
+    public function testPageHasValidLink(string $link): void {
+        $this->assertNotEquals('', $link, 'Link must not be empty');
 
         $uri = new Uri($link);
 
         if ($uri->getScheme() === 'farah') {
-            $this->assertAsset(FarahUrl::createFromUri($uri), $message);
+            $this->assertAsset(FarahUrl::createFromUri($uri));
             return;
         }
 
@@ -266,14 +233,14 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         }
 
         try {
-            $this->assertAsset($requestStrategy->createUrl($request), $message);
+            $this->assertAsset($requestStrategy->createUrl($request));
         } catch (HttpStatusException $exception) {
-            $this->assertLessThan(300, $exception->getCode(), $message . PHP_EOL . sprintf('Resolving link lead to HTTP status "%d"', $exception->getCode()));
+            $this->assertLessThan(300, $exception->getCode(), sprintf('Resolving link lead to HTTP status "%d"', $exception->getCode()));
         }
     }
 
-    private function assertAsset(FarahUrl $url, string $message) {
-        $this->assertNotNull(Module::resolveToResult($url), $message);
+    private function assertAsset(FarahUrl $url) {
+        $this->assertNotNull(Module::resolveToResult($url), 'Referenced asset must exist.');
     }
 
     public function pageNodeProvider(): iterable {
@@ -291,6 +258,48 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             yield $node->getAttribute('uri') => [
                 $node
             ];
+        }
+    }
+
+    public function pageLinkProvider(): iterable {
+        foreach ($this->pageNodeProvider() as $page => $args) {
+            $node = $args[0];
+
+            if ($node->hasAttribute('ref')) {
+                $url = $this->getDomain()->lookupAssetUrl($node);
+                $result = Module::resolveToResult($url);
+                $mime = (string) $result->lookupMimeType();
+
+                if ($mime === 'application/xml' or substr($mime, - 4) === '+xml') {
+                    $document = $result->lookupDOMWriter()->toDocument();
+
+                    $links = [];
+
+                    foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'a') as $linkNode) {
+                        $link = (string) $linkNode->getAttribute('href');
+                        $reference = sprintf('<a href="%s">', $link);
+                        $links[$reference] = $link;
+                    }
+
+                    foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'img') as $linkNode) {
+                        $link = (string) $linkNode->getAttribute('src');
+                        $reference = sprintf('<img src="%s">', $link);
+                        $links[$reference] = $link;
+                    }
+
+                    foreach ($document->getElementsByTagNameNS(DOMHelper::NS_XSL, 'include') as $linkNode) {
+                        $link = (string) $linkNode->getAttribute('href');
+                        $reference = sprintf('<xsl:include href="%s">', $link);
+                        $links[$reference] = $link;
+                    }
+
+                    foreach ($links as $reference => $link) {
+                        yield $page . ' ' . $reference => [
+                            $link
+                        ];
+                    }
+                }
+            }
         }
     }
 }
