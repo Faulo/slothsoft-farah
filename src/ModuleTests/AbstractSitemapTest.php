@@ -160,12 +160,18 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         $this->assertSchema($document, $schema);
     }
 
-    public function includeProvider(): iterable {
-        foreach ($this->getSitesIncludes() as $key => $url) {
-            yield $key => [
-                $url
-            ];
-        }
+    public function includeProvider(): array {
+        $cache = TestCache::instance(get_class($this));
+
+        return $cache->retrieve('includeProvider', function () {
+            $provider = [];
+            foreach ($this->getSitesIncludes() as $key => $url) {
+                $provider[$key] ??= [
+                    $url
+                ];
+            }
+            return $provider;
+        });
     }
 
     /**
@@ -243,64 +249,81 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         $this->assertNotNull(Module::resolveToResult($url), 'Referenced asset must exist.');
     }
 
-    public function pageNodeProvider(): iterable {
-        foreach ($this->getDomainDocument()->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_DOMAIN) as $node) {
-            yield $node->getAttribute('uri') => [
-                $node
-            ];
-        }
-        foreach ($this->getDomainDocument()->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_PAGE) as $node) {
-            yield $node->getAttribute('uri') => [
-                $node
-            ];
-        }
-        foreach ($this->getDomainDocument()->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_FILE) as $node) {
-            yield $node->getAttribute('uri') => [
-                $node
-            ];
-        }
+    public function pageNodeProvider(): array {
+        $cache = TestCache::instance(get_class($this));
+
+        return $cache->retrieve('pageNodeProvider', function () {
+            $provider = [];
+            foreach ($this->getDomainDocument()
+                ->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_DOMAIN) as $node) {
+                $provider[$node->getAttribute('uri')] ??= [
+                    $node
+                ];
+            }
+            foreach ($this->getDomainDocument()
+                ->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_PAGE) as $node) {
+                $provider[$node->getAttribute('uri')] ??= [
+                    $node
+                ];
+            }
+            foreach ($this->getDomainDocument()
+                ->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_FILE) as $node) {
+                $provider[$node->getAttribute('uri')] ??= [
+                    $node
+                ];
+            }
+            return $provider;
+        });
     }
 
-    public function pageLinkProvider(): iterable {
-        foreach ($this->pageNodeProvider() as $page => $args) {
-            $node = $args[0];
+    public function pageLinkProvider(): array {
+        $cache = TestCache::instance(get_class($this));
 
-            if ($node->hasAttribute('ref')) {
-                $url = $this->getDomain()->lookupAssetUrl($node);
-                $result = Module::resolveToResult($url);
-                $mime = (string) $result->lookupMimeType();
+        return $cache->retrieve('pageLinkProvider', function () {
+            $provider = [];
+            foreach ($this->pageNodeProvider() as $page => $args) {
+                $node = $args[0];
 
-                if ($mime === 'application/xml' or substr($mime, - 4) === '+xml') {
-                    $document = $result->lookupDOMWriter()->toDocument();
+                if ($node->hasAttribute('ref')) {
+                    $url = $this->getDomain()
+                        ->lookupAssetUrl($node);
+                    $result = Module::resolveToResult($url);
+                    $mime = (string) $result->lookupMimeType();
 
-                    $links = [];
+                    if ($mime === 'application/xml' or substr($mime, - 4) === '+xml') {
+                        $document = $result->lookupDOMWriter()
+                            ->toDocument();
 
-                    foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'a') as $linkNode) {
-                        $link = (string) $linkNode->getAttribute('href');
-                        $reference = sprintf('a href="%s"', $link);
-                        $links[$reference] = $link;
-                    }
+                        $links = [];
 
-                    foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'img') as $linkNode) {
-                        $link = (string) $linkNode->getAttribute('src');
-                        $reference = sprintf('img src="%s"', $link);
-                        $links[$reference] = $link;
-                    }
+                        foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'a') as $linkNode) {
+                            $link = (string) $linkNode->getAttribute('href');
+                            $reference = sprintf('a href="%s"', $link);
+                            $links[$reference] = $link;
+                        }
 
-                    foreach ($document->getElementsByTagNameNS(DOMHelper::NS_XSL, 'include') as $linkNode) {
-                        $link = (string) $linkNode->getAttribute('href');
-                        $reference = sprintf('xsl:include href="%s"', $link);
-                        $links[$reference] = $link;
-                    }
+                        foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'img') as $linkNode) {
+                            $link = (string) $linkNode->getAttribute('src');
+                            $reference = sprintf('img src="%s"', $link);
+                            $links[$reference] = $link;
+                        }
 
-                    foreach ($links as $reference => $link) {
-                        yield $page . ' ' . $reference => [
-                            $link
-                        ];
+                        foreach ($document->getElementsByTagNameNS(DOMHelper::NS_XSL, 'include') as $linkNode) {
+                            $link = (string) $linkNode->getAttribute('href');
+                            $reference = sprintf('xsl:include href="%s"', $link);
+                            $links[$reference] = $link;
+                        }
+
+                        foreach ($links as $reference => $link) {
+                            $provider[$page . ' ' . $reference] ??= [
+                                $link
+                            ];
+                        }
                     }
                 }
             }
-        }
+            return $provider;
+        });
     }
 }
 
