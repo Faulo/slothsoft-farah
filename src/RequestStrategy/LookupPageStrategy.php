@@ -31,7 +31,7 @@ class LookupPageStrategy extends RequestStrategyBase {
         }
 
         try {
-            $pageNode = $this->domain->lookupPageNode($uri->getPath());
+            $pageNode = $this->domain->lookupPageNode(urldecode($uri->getPath()));
         } catch (PageRedirectionException $e) {
             $url = $e->getTargetPath();
             if (count($args)) {
