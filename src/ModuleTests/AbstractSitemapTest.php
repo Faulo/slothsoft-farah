@@ -277,6 +277,11 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     }
 
     public function pageNodeProvider(): iterable {
+        foreach ($this->getDomainDocument()->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_DOMAIN) as $node) {
+            yield $node->getAttribute('uri') => [
+                $node
+            ];
+        }
         foreach ($this->getDomainDocument()->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_PAGE) as $node) {
             yield $node->getAttribute('uri') => [
                 $node
