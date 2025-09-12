@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\MessageFactory;
 use GuzzleHttp\Psr7\Uri;
-use Laminas\Uri\UriInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * LookupAssetStrategyTest
@@ -36,6 +36,11 @@ class LookupAssetStrategyTest extends TestCase {
         yield 'path' => [
             new Uri('/slothsoft@farah/phpinfo'),
             FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo')
+        ];
+
+        yield 'path with query' => [
+            new Uri('/slothsoft@farah/phpinfo?a=b'),
+            FarahUrl::createFromUri(new Uri('farah://slothsoft@farah/phpinfo?a=b'))
         ];
     }
 }
