@@ -24,7 +24,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     protected function getManifest(): ManifestInterface {
         $cache = TestCache::instance(get_class($this));
 
-        return $cache->retrieve('manifest', function () {
+        return $cache->retrieve('getManifest', function () {
             return Module::resolveToManifest($this->getManifestUrl());
         });
     }

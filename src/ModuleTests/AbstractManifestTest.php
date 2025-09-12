@@ -14,14 +14,12 @@ abstract class AbstractManifestTest extends AbstractTestCase {
 
     abstract protected static function loadTree(): LeanElement;
 
-    private static array $rootElement = [];
-
     protected function getManifestRoot(): LeanElement {
-        $id = get_class($this);
-        if (! isset(self::$rootElement[$id])) {
-            self::$rootElement[$id] = static::loadTree();
-        }
-        return self::$rootElement[$id];
+        $cache = TestCache::instance(get_class($this));
+
+        return $cache->retrieve('getManifestRoot', function () {
+            return static::loadTree();
+        });
     }
 
     protected function getManifestDocument(): DOMDocument {
@@ -51,12 +49,8 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertInstanceOf(PathResolverStrategyInterface::class, new $className());
     }
 
-    public function customPathResolverProvider(): iterable {
-        foreach ($this->getAllAttributeValues('path-resolver') as $className) {
-            yield $className => [
-                $className
-            ];
-        }
+    public function customPathResolverProvider(): array {
+        return $this->getAllAttributeValuesProvider('path-resolver');
     }
 
     /**
@@ -69,12 +63,8 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertInstanceOf(ExecutableBuilderStrategyInterface::class, new $className());
     }
 
-    public function customExecutableBuilderProvider(): iterable {
-        foreach ($this->getAllAttributeValues('executable-builder') as $className) {
-            yield $className => [
-                $className
-            ];
-        }
+    public function customExecutableBuilderProvider(): array {
+        return $this->getAllAttributeValuesProvider('executable-builder');
     }
 
     /**
@@ -87,12 +77,8 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertInstanceOf(InstructionStrategyInterface::class, new $className());
     }
 
-    public function customInstructionProvider(): iterable {
-        foreach ($this->getAllAttributeValues('instruction') as $className) {
-            yield $className => [
-                $className
-            ];
-        }
+    public function customInstructionProvider(): array {
+        return $this->getAllAttributeValuesProvider('instruction');
     }
 
     /**
@@ -105,27 +91,32 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertInstanceOf(ParameterFilterStrategyInterface::class, new $className());
     }
 
-    public function customParameterFilterProvider(): iterable {
-        foreach ($this->getAllAttributeValues('parameter-filter') as $className) {
-            yield $className => [
-                $className
-            ];
-        }
+    public function customParameterFilterProvider(): array {
+        return $this->getAllAttributeValuesProvider('parameter-filte');
     }
 
     private function getAllAttributeValues(string $attributeName): iterable {
-        $attributes = [];
         $manifestDocument = $this->getManifestDocument();
         $nodeList = $manifestDocument->getElementsByTagName('*');
         foreach ($nodeList as $node) {
             if ($node->hasAttribute($attributeName)) {
-                $attributeValue = $node->getAttribute($attributeName);
-                if (! isset($attributes[$attributeValue])) {
-                    $attributes[$attributeValue] = true;
-                    yield $attributeValue;
-                }
+                yield $node->getAttribute($attributeName);
             }
         }
+    }
+
+    private function getAllAttributeValuesProvider(string $attributeName): array {
+        $cache = TestCache::instance(get_class($this));
+
+        return $cache->retrieve("getAllAttributeValuesProvider $attributeName", function () use ($attributeName) {
+            $provider = [];
+            foreach ($this->getAllAttributeValues($attributeName) as $className) {
+                $provider[$className] ??= [
+                    $className
+                ];
+            }
+            return $provider;
+        });
     }
 }
 
