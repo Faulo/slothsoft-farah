@@ -37,11 +37,11 @@ class Kernel {
         return self::currentSitemap()->getValue();
     }
 
-    public static function hasCurrentSitemap() : bool {
+    public static function hasCurrentSitemap(): bool {
         return self::currentSitemap()->hasValue();
     }
 
-    public static function clearCurrentSitemap() : void {
+    public static function clearCurrentSitemap(): void {
         self::currentSitemap()->setValue(null);
     }
 

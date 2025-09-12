@@ -30,7 +30,7 @@ class LookupAssetStrategy extends RequestStrategyBase {
         return self::hrefBase()->getValue();
     }
 
-    protected function createUrl(ServerRequestInterface $request): FarahUrl {
+    public function createUrl(ServerRequestInterface $request): FarahUrl {
         $uri = $request->getUri();
         $body = $request->getParsedBody();
         $params = $request->getQueryParams();

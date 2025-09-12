@@ -19,7 +19,7 @@ class LookupRouteStrategy extends RequestStrategyBase {
         $this->domain = new Domain(Kernel::getCurrentSitemap());
     }
 
-    protected function createUrl(ServerRequestInterface $serverRequest): FarahUrl {
+    public function createUrl(ServerRequestInterface $serverRequest): FarahUrl {
         $uri = $serverRequest->getUri();
         $body = $serverRequest->getParsedBody();
         $params = $serverRequest->getQueryParams();

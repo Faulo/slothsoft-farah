@@ -190,7 +190,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
         }
     }
 
-    abstract protected function createUrl(ServerRequestInterface $request): FarahUrl;
+    abstract public function createUrl(ServerRequestInterface $request): FarahUrl;
 
     private function negotiateContentCoding(string $preferred): ContentCoding {
         $accept = $this->request->getHeaderLine('accept-encoding');
