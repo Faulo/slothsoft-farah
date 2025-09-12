@@ -277,19 +277,19 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
 
                     foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'a') as $linkNode) {
                         $link = (string) $linkNode->getAttribute('href');
-                        $reference = sprintf('<a href="%s">', $link);
+                        $reference = sprintf('a href="%s"', $link);
                         $links[$reference] = $link;
                     }
 
                     foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'img') as $linkNode) {
                         $link = (string) $linkNode->getAttribute('src');
-                        $reference = sprintf('<img src="%s">', $link);
+                        $reference = sprintf('img src="%s"', $link);
                         $links[$reference] = $link;
                     }
 
                     foreach ($document->getElementsByTagNameNS(DOMHelper::NS_XSL, 'include') as $linkNode) {
                         $link = (string) $linkNode->getAttribute('href');
-                        $reference = sprintf('<xsl:include href="%s">', $link);
+                        $reference = sprintf('xsl:include href="%s"', $link);
                         $links[$reference] = $link;
                     }
 
