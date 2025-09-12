@@ -212,7 +212,6 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     public function testPageHasValidLinks(DOMElement $node): void {
         if ($node->hasAttribute('ref')) {
             $url = $this->getDomain()->lookupAssetUrl($node);
-            echo file_get_contents((string) $url);
             $result = Module::resolveToResult($url);
             switch ($result->lookupMimeType()) {
                 case 'application/xhtml+xml':
