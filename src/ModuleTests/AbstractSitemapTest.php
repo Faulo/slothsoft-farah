@@ -397,6 +397,12 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                             ] = $args;
                             foreach ($document->getElementsByTagNameNS($ns, $tag) as $linkNode) {
                                 $link = (string) $linkNode->getAttribute($attribute);
+
+                                if ($link === '') {
+                                    // use fallback attribute
+                                    $link = (string) $linkNode->getAttribute('data-' . $attribute);
+                                }
+
                                 if (isset($pages[$link])) {
                                     // page already asserted by pageNodeProvider
                                     continue;
