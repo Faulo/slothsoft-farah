@@ -218,6 +218,11 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     public function testPageHasValidLink(string $context, string $link): void {
         $this->assertNotEquals('', $link, 'Link must not be empty');
 
+        if (strpos($link, 'mailto:') === 0) {
+            $this->assertMatchesRegularExpression('~^[^\w]+@[^\w]+$~', substr($link, strlen('mailto:')));
+            return;
+        }
+
         $uri = UriResolver::resolve(new Uri($context), new Uri($link));
 
         if ($uri->getScheme() === 'farah') {
@@ -276,6 +281,29 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         });
     }
 
+    private const LINKING_ELEMENTS = [
+        [
+            DOMHelper::NS_HTML,
+            'a',
+            'href'
+        ],
+        [
+            DOMHelper::NS_HTML,
+            'img',
+            'src'
+        ],
+        [
+            DOMHelper::NS_HTML,
+            'link',
+            'href'
+        ],
+        [
+            DOMHelper::NS_XSL,
+            'include',
+            'href'
+        ]
+    ];
+
     public function pageLinkProvider(): array {
         $cache = TestCache::instance(get_class($this));
 
@@ -294,34 +322,25 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                         $document = $result->lookupDOMWriter()
                             ->toDocument();
 
-                        $links = [];
-
-                        foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'a') as $linkNode) {
-                            $link = (string) $linkNode->getAttribute('href');
-                            if (strpos($link, 'mailto:') === 0) {
-                                continue;
+                        foreach (self::LINKING_ELEMENTS as $args) {
+                            [
+                                $ns,
+                                $tag,
+                                $attribute
+                            ] = $args;
+                            foreach ($document->getElementsByTagNameNS($ns, $tag) as $linkNode) {
+                                $link = (string) $linkNode->getAttribute($attribute);
+                                $reference = implode(' ', [
+                                    $page,
+                                    $tag,
+                                    $attribute,
+                                    $link
+                                ]);
+                                $provider[$reference] ??= [
+                                    $page,
+                                    $link
+                                ];
                             }
-                            $reference = sprintf('a href="%s"', $link);
-                            $links[$reference] = $link;
-                        }
-
-                        foreach ($document->getElementsByTagNameNS(DOMHelper::NS_HTML, 'img') as $linkNode) {
-                            $link = (string) $linkNode->getAttribute('src');
-                            $reference = sprintf('img src="%s"', $link);
-                            $links[$reference] = $link;
-                        }
-
-                        foreach ($document->getElementsByTagNameNS(DOMHelper::NS_XSL, 'include') as $linkNode) {
-                            $link = (string) $linkNode->getAttribute('href');
-                            $reference = sprintf('xsl:include href="%s"', $link);
-                            $links[$reference] = $link;
-                        }
-
-                        foreach ($links as $reference => $link) {
-                            $provider[$page . ' ' . $reference] ??= [
-                                $page,
-                                $link
-                            ];
                         }
                     }
                 }
