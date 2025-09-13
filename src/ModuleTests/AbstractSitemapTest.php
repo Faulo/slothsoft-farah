@@ -292,57 +292,80 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         [
             DOMHelper::NS_HTML,
             'a',
-            'href'
+            'href',
+            true
         ],
         [
             DOMHelper::NS_HTML,
             'link',
-            'href'
+            'href',
+            true
+        ],
+        [
+            DOMHelper::NS_HTML,
+            'script',
+            'src',
+            false
         ],
         [
             DOMHelper::NS_HTML,
             'img',
-            'src'
+            'src',
+            true
+        ],
+        [
+            DOMHelper::NS_HTML,
+            'video',
+            'src',
+            false
         ],
         [
             DOMHelper::NS_HTML,
             'source',
-            'src'
+            'src',
+            true
         ],
         [
             DOMHelper::NS_HTML,
             'track',
-            'src'
+            'src',
+            true
         ],
         [
             DOMHelper::NS_HTML,
             'iframe',
-            'src'
+            'src',
+            true
         ],
         [
             DOMHelper::NS_HTML,
             'form',
-            'action'
+            'action',
+            false
         ],
         [
             DOMHelper::NS_XSL,
             'include',
-            'href'
+            'href',
+            true
         ],
         [
             DOMHelper::NS_XSL,
             'import',
-            'href'
+            'href',
+            true
         ],
         [
             DOMHelper::NS_XSD,
             'include',
-            'schemaLocation'
+            'schemaLocation',
+            true
         ],
         [
             DOMHelper::NS_XSD,
             'import',
-            'schemaLocation'
+            'schemaLocation',
+            false
         ]
     ];
 
@@ -369,12 +392,17 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                             [
                                 $ns,
                                 $tag,
-                                $attribute
+                                $attribute,
+                                $isRequired
                             ] = $args;
                             foreach ($document->getElementsByTagNameNS($ns, $tag) as $linkNode) {
                                 $link = (string) $linkNode->getAttribute($attribute);
                                 if (isset($pages[$link])) {
                                     // page already asserted by pageNodeProvider
+                                    continue;
+                                }
+
+                                if ($link === '' and ! $isRequired) {
                                     continue;
                                 }
 
