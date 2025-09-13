@@ -309,7 +309,8 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
 
         return $cache->retrieve('pageLinkProvider', function () {
             $provider = [];
-            foreach ($this->pageNodeProvider() as $page => $args) {
+            $pages = $this->pageNodeProvider();
+            foreach ($pages as $page => $args) {
                 $node = $args[0];
 
                 if ($node->hasAttribute('ref')) {
@@ -330,6 +331,11 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                             ] = $args;
                             foreach ($document->getElementsByTagNameNS($ns, $tag) as $linkNode) {
                                 $link = (string) $linkNode->getAttribute($attribute);
+                                if (isset($pages[$link])) {
+                                    // page already asserted by pageNodeProvider
+                                    continue;
+                                }
+
                                 $reference = implode(' ', [
                                     $page,
                                     $tag,
