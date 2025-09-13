@@ -12,6 +12,7 @@
 		<resource-directory name="dictionary" type="application/x-xsd+xml" />
 		<resource-directory name="module" type="application/x-xsd+xml" />
 		<resource-directory name="sitemap" type="application/x-xsd+xml" />
+		<resource-directory name="xml" type="application/x-xsd+xml" />
 	</directory>
 	<custom-asset name="sites" executable-builder="Slothsoft\Farah\Internal\SitesBuilder" />
 	<custom-asset name="request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder" />
