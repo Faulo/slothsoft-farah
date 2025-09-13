@@ -244,14 +244,21 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         }
 
         try {
-            $this->assertAsset($requestStrategy->createUrl($request));
+            $result = $this->assertAsset($requestStrategy->createUrl($request));
+            if ($id = $uri->getFragment()) {
+                $xpath = DOMHelper::loadXPath($result->lookupDOMWriter()->toDocument());
+                $count = (int) $xpath->evaluate(sprintf('count(//*[@id = "%1$s"])', $id));
+                $this->assertEquals(1, $count, sprintf('Expected page "%s" to have 1 element with ID "%s"', (string) $uri, $id));
+            }
         } catch (HttpStatusException $exception) {
             $this->assertLessThan(300, $exception->getCode(), sprintf('Resolving link lead to HTTP status "%d":%s%s', $exception->getCode(), PHP_EOL, $exception->getMessage()));
         }
     }
 
-    private function assertAsset(FarahUrl $url) {
-        $this->assertNotNull(Module::resolveToResult($url), 'Referenced asset must exist.');
+    private function assertAsset(FarahUrl $url): ResultInterface {
+        $result = Module::resolveToResult($url);
+        $this->assertNotNull($result, 'Referenced asset must exist.');
+        return $result;
     }
 
     public function pageNodeProvider(): array {
@@ -289,18 +296,53 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         ],
         [
             DOMHelper::NS_HTML,
+            'link',
+            'href'
+        ],
+        [
+            DOMHelper::NS_HTML,
             'img',
             'src'
         ],
         [
             DOMHelper::NS_HTML,
-            'link',
-            'href'
+            'source',
+            'src'
+        ],
+        [
+            DOMHelper::NS_HTML,
+            'track',
+            'src'
+        ],
+        [
+            DOMHelper::NS_HTML,
+            'iframe',
+            'src'
+        ],
+        [
+            DOMHelper::NS_HTML,
+            'form',
+            'action'
         ],
         [
             DOMHelper::NS_XSL,
             'include',
             'href'
+        ],
+        [
+            DOMHelper::NS_XSL,
+            'import',
+            'href'
+        ],
+        [
+            DOMHelper::NS_XSD,
+            'include',
+            'schemaLocation'
+        ],
+        [
+            DOMHelper::NS_XSD,
+            'import',
+            'schemaLocation'
         ]
     ];
 
