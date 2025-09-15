@@ -125,7 +125,7 @@ class Module {
         return $rootDirectory;
     }
 
-    private $manifests;
+    private ManifestContainer $manifests;
 
     private function __construct() {
         $this->manifests = new ManifestContainer();

@@ -19,53 +19,17 @@ use SplFileInfo;
 
 class Asset implements AssetInterface {
 
-    /**
-     *
-     * @var ManifestInterface
-     */
-    private $ownerManifest;
+    private ManifestInterface $ownerManifest;
 
-    /**
-     *
-     * @var LeanElement
-     */
-    private $manifestElement;
+    private LeanElement $manifestElement;
 
-    /**
-     *
-     * @var FarahUrlPath
-     */
-    private $urlPath;
+    private FarahUrlPath $urlPath;
 
-    /**
-     *
-     * @var AssetStrategies
-     */
-    private $strategies;
+    private AssetStrategies $strategies;
 
-    /**
-     *
-     * @var ExecutableContainer
-     */
-    private $executables;
+    private ExecutableContainer $executables;
 
-    /**
-     *
-     * @var Vector
-     */
-    private $assetChildren;
-
-    /**
-     *
-     * @var UseInstructionCollection
-     */
-    private $useInstructions;
-
-    /**
-     *
-     * @var LinkInstructionCollection
-     */
-    private $linkInstructions;
+    private ?Vector $assetChildren;
 
     public function __construct(ManifestInterface $ownerManifest, LeanElement $manifestElement, FarahUrlPath $urlPath, AssetStrategies $strategies) {
         $this->ownerManifest = $ownerManifest;
@@ -74,7 +38,6 @@ class Asset implements AssetInterface {
         $this->strategies = $strategies;
         $this->executables = new ExecutableContainer();
         $this->assetChildren = null;
-        // echo $this.PHP_EOL;
     }
 
     public function __toString(): string {

@@ -116,19 +116,19 @@ class Manifest implements ManifestInterface {
 
     const FILE_MANIFEST = 'manifest.xml';
 
-    private $ownerKernel;
+    private Module $ownerKernel;
 
-    private $authority;
+    private FarahUrlAuthority $authority;
 
-    private $manifestDirectory;
+    private string $manifestDirectory;
 
-    private $strategies;
+    private ManifestStrategies $strategies;
 
-    private $assets;
+    private AssetContainer $assets;
 
-    private $rootElement;
+    private ?LeanElement $rootElement = null;
 
-    private $rootAsset;
+    private ?AssetInterface $rootAsset = null;
 
     public function __construct(Module $ownerKernel, FarahUrlAuthority $authority, string $manifestDirectory, ManifestStrategies $strategies) {
         $this->ownerKernel = $ownerKernel;
@@ -156,10 +156,6 @@ class Manifest implements ManifestInterface {
                 ->traverseTo((string) $path));
         }
         return $this->assets->get($path);
-    }
-
-    public function normalizeElement(LeanElement $parent, LeanElement $element): void {
-        $this->strategies->assetBuilder->normalizeTree($parent, $element);
     }
 
     public function createAsset(LeanElement $element): AssetInterface {

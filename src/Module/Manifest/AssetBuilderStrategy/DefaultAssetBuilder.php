@@ -39,7 +39,7 @@ use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 
 class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
 
-    public function normalizeElement(LeanElement $element, ?Leanelement $parent = null): void {
+    public function normalizeElement(LeanElement $element, ?LeanElement $parent = null): void {
         $tag = $element->getTag();
         if (! $element->hasAttribute('name')) {
             $element->setAttribute('name', uniqid('asset-'));
