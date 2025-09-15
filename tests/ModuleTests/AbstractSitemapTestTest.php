@@ -5,20 +5,18 @@ namespace Slothsoft\Farah\ModuleTests;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
-use Slothsoft\Farah\Module\Asset\PathResolverStrategy\CatchAllPathResolver;
 use Slothsoft\Farah\Module\DOMWriter\DOMDocumentDOMWriter;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\DOMWriterResultBuilder;
-use DOMDocument;
-use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
-use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\AssetBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\DefaultAssetBuilder;
 use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\TreeLoaderStrategyInterface;
+use DOMDocument;
 
 /**
  * AbstractSitemapTestTest
@@ -84,12 +82,20 @@ class AbstractSitemapTestTest extends TestCase {
         return new StubSitemapTest();
     }
 
+    /**
+     *
+     * @runInSeparateProcess
+     */
     public function test_getSitesDocument() {
         $sut = $this->createSuT();
 
         $this->assertEquals($this->sitesDocument, $sut->getSitesDocumentProtected());
     }
 
+    /**
+     *
+     * @runInSeparateProcess
+     */
     public function test_pageNodeProvider() {
         $sut = $this->createSuT();
 
@@ -102,6 +108,10 @@ class AbstractSitemapTestTest extends TestCase {
         ], array_keys($actual));
     }
 
+    /**
+     *
+     * @runInSeparateProcess
+     */
     public function test_pageLinkProvider() {
         $sut = $this->createSuT();
 
