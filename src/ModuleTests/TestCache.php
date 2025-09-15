@@ -17,5 +17,9 @@ final class TestCache {
     public function retrieve(string $key, callable $generator) {
         return $this->cache[$key] ??= $generator();
     }
+
+    public function clear() {
+        $this->cache = [];
+    }
 }
 

@@ -10,11 +10,11 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 
 class DOMWriterResultBuilder implements ResultBuilderStrategyInterface {
 
-    private $writer;
+    private DOMWriterInterface $writer;
 
-    private $fileName;
+    private string $fileName;
 
-    public function __construct(DOMWriterInterface $writer, string $fileName) {
+    public function __construct(DOMWriterInterface $writer, string $fileName = 'index.xml') {
         $this->writer = $writer;
         $this->fileName = $fileName;
     }
