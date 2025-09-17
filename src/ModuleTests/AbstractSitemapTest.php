@@ -422,7 +422,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                                     $page,
                                     $tag,
                                     $attribute,
-                                    "\"$link\""
+                                    "'$link'"
                                 ]);
                                 $provider[$reference] ??= [
                                     $page,
