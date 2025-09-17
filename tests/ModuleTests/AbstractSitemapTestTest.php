@@ -2,8 +2,10 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\ModuleTests;
 
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\XML\LeanElement;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
@@ -49,8 +51,10 @@ class AbstractSitemapTestTest extends TestCase {
         $this->sitesDocument->loadXML($siteXML);
 
         $sitesAsset = $this->createStub(AssetInterface::class);
+        Kernel::setCurrentSitemap($sitesAsset);
 
-        $sitesExecutable = new Executable($sitesAsset, FarahUrlArguments::createEmpty(), new ExecutableStrategies(new DOMWriterResultBuilder(new DOMDocumentDOMWriter($this->sitesDocument))));
+        $sitesBuilder = new DOMWriterResultBuilder(new DOMDocumentDOMWriter($this->sitesDocument));
+        $sitesExecutable = new Executable($sitesAsset, FarahUrlArguments::createEmpty(), new ExecutableStrategies($sitesBuilder));
 
         $sitesAsset->method('lookupExecutable')->willReturn($sitesExecutable);
 
@@ -61,6 +65,10 @@ class AbstractSitemapTestTest extends TestCase {
         $treeLoader = $this->createStub(TreeLoaderStrategyInterface::class);
         $treeLoader->method('loadTree')->willReturnCallback(function (ManifestInterface $context): LeanElement {
             $root = LeanElement::createOneFromArray('assets', [], [
+                LeanElement::createOneFromArray('custom-asset', [
+                    'name' => 'sitemap',
+                    'executable-builder' => StubExecutableBuilder::class
+                ]),
                 LeanElement::createOneFromArray('custom-asset', [
                     'name' => 'domain-asset',
                     'executable-builder' => StubExecutableBuilder::class
@@ -373,6 +381,94 @@ class AbstractSitemapTestTest extends TestCase {
                     '.'
                 ]
             ]
+        ];
+    }
+
+    /**
+     *
+     * @runInSeparateProcess
+     * @dataProvider pageLinkProvider
+     */
+    public function test_testPageHasValidLink(string $context, string $link, bool $isValid) {
+        $sut = $this->createSuT();
+
+        if (! $isValid) {
+            $this->expectException(AssertionFailedError::class);
+        }
+
+        $sut->testPageHasValidLink($context, $link);
+    }
+
+    public function pageLinkProvider(): iterable {
+        yield '/ does exist' => [
+            '/',
+            '/',
+            true
+        ];
+        yield '/test-page/ does exist' => [
+            '/',
+            '/test-page/',
+            true
+        ];
+        yield '/test-page/test-file does exist' => [
+            '/',
+            '/test-page/test-file',
+            true
+        ];
+        yield '/missing does not exist' => [
+            '/',
+            '/missing',
+            false
+        ];
+        yield 'empty string does not exist' => [
+            '/',
+            '',
+            false
+        ];
+        yield 'farah://slothsoft@test/ does exist' => [
+            '/',
+            'farah://slothsoft@test/',
+            true
+        ];
+        yield 'farah://slothsoft@test/missing does not exist' => [
+            '/',
+            'farah://slothsoft@test/missing',
+            false
+        ];
+        yield 'farah://slothsoft@test-missing/ does not exist' => [
+            '/',
+            'farah://slothsoft@test-missing/',
+            false
+        ];
+        yield 'external host does exist' => [
+            '/',
+            'https://slothsoft.net/',
+            true
+        ];
+        yield '/test-page has a missing slash' => [
+            '/',
+            '/test-page',
+            false
+        ];
+        yield '/ => test-page does exist' => [
+            '/',
+            'test-page/',
+            true
+        ];
+        yield '/test-page => test-file does exist' => [
+            '/test-page/',
+            'test-file',
+            true
+        ];
+        yield '/test-page => .. does exist' => [
+            '/test-page/',
+            '..',
+            true
+        ];
+        yield '/test-page/. does exist' => [
+            '/test-page/',
+            '.',
+            true
         ];
     }
 }

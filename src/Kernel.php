@@ -21,7 +21,7 @@ class Kernel {
         return $instance;
     }
 
-    private static function currentSitemap(): ConfigurationField {
+    private static function currentSitemap(): AssetConfigurationField {
         static $field;
         if ($field === null) {
             $field = new AssetConfigurationField();

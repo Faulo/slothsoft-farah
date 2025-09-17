@@ -216,49 +216,44 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      * @dataProvider pageLinkProvider
      */
     public function testPageHasValidLink(string $context, string $link): void {
-        $this->assertNotEquals('', $link, 'Link must not be empty');
-
-        if (strpos($link, 'mailto:') === 0) {
-            $this->assertMatchesRegularExpression('~^mailto:\S+@\S+$~', $link);
-            return;
-        }
-
-        $uri = UriResolver::resolve(new Uri($context), new Uri($link));
-
-        if ($uri->getScheme() === 'farah') {
-            $this->assertAsset(FarahUrl::createFromUri($uri));
-            return;
-        }
-
-        if ($uri->getHost()) {
-            // external links are assumed to be fine
-            return;
-        }
-
-        $request = MessageFactory::createCustomRequest('GET', $uri);
-
-        if (preg_match('~^/[^/]+@[^/]+~', $uri->getPath())) {
-            $requestStrategy = new LookupAssetStrategy();
-        } else {
-            $requestStrategy = new LookupPageStrategy();
-        }
-
         try {
-            $result = $this->assertAsset($requestStrategy->createUrl($request));
+            $this->assertNotEquals('', $link, 'Link must not be empty');
+
+            if (strpos($link, 'mailto:') === 0) {
+                $this->assertMatchesRegularExpression('~^mailto:\S+@\S+$~', $link);
+                return;
+            }
+
+            $uri = UriResolver::resolve(new Uri($context), new Uri($link));
+
+            if ($uri->getScheme() === 'farah') {
+                $this->assertFileExists((string) $uri);
+                return;
+            }
+
+            if ($uri->getHost()) {
+                // external links are assumed to be fine
+                return;
+            }
+
+            $request = MessageFactory::createCustomRequest('GET', $uri);
+
+            if (preg_match('~^/[^/]+@[^/]+~', $uri->getPath())) {
+                $requestStrategy = new LookupAssetStrategy();
+            } else {
+                $requestStrategy = new LookupPageStrategy();
+            }
+
+            $url = $requestStrategy->createUrl($request);
+            $result = Module::resolveToResult($url);
             if ($id = $uri->getFragment()) {
                 $xpath = DOMHelper::loadXPath($result->lookupDOMWriter()->toDocument());
                 $count = (int) $xpath->evaluate(sprintf('count(//*[@id = "%1$s"])', $id));
                 $this->assertEquals(1, $count, sprintf('Expected page "%s" to have 1 element with ID "%s"', (string) $uri, $id));
             }
-        } catch (HttpStatusException $exception) {
-            $this->assertLessThan(300, $exception->getCode(), sprintf('Resolving link lead to HTTP status "%d":%s%s', $exception->getCode(), PHP_EOL, $exception->getMessage()));
+        } catch (HttpStatusException $e) {
+            $this->assertLessThan(300, $e->getCode(), sprintf('Resolving link lead to HTTP status "%d":%s%s', $e->getCode(), PHP_EOL, $e->getMessage()));
         }
-    }
-
-    private function assertAsset(FarahUrl $url): ResultInterface {
-        $result = Module::resolveToResult($url);
-        $this->assertNotNull($result, 'Referenced asset must exist.');
-        return $result;
     }
 
     public function pageNodeProvider(): array {
