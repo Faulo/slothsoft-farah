@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class FarahUrlAuthorityTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FarahUrlAuthority::class), "Failed to load class 'Slothsoft\Farah\FarahUrl\FarahUrlAuthority'!");
     }

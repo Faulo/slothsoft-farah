@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class ViewTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(View::class), "Failed to load class 'Slothsoft\Farah\Tracking\View'!");
     }

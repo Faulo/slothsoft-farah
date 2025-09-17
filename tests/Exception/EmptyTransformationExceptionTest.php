@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class EmptyTransformationExceptionTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(EmptyTransformationException::class), "Failed to load class 'Slothsoft\Farah\Exception\EmptyTransformationException'!");
     }

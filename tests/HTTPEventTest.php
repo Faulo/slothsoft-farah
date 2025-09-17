@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class HTTPEventTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(HTTPEvent::class), "Failed to load class 'Slothsoft\Farah\HTTPEvent'!");
     }

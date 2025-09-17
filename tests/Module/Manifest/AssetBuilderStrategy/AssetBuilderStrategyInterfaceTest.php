@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class AssetBuilderStrategyInterfaceTest extends TestCase {
-
+    
     public function testInterfaceExists(): void {
         $this->assertTrue(interface_exists(AssetBuilderStrategyInterface::class), "Failed to load interface 'Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\AssetBuilderStrategyInterface'!");
     }

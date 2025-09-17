@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class DefaultAssetBuilderTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(DefaultAssetBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\DefaultAssetBuilder'!");
     }

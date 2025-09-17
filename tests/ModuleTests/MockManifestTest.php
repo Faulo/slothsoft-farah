@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class MockManifestTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(MockManifest::class), "Failed to load class 'Slothsoft\Farah\ModuleTests\MockManifest'!");
     }

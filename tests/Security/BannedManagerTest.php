@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class BannedManagerTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(BannedManager::class), "Failed to load class 'Slothsoft\Farah\Security\BannedManager'!");
     }

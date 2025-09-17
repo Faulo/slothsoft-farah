@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class DecoratedDOMWriterTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(DecoratedDOMWriter::class), "Failed to load class 'Slothsoft\Farah\LinkDecorator\DecoratedDOMWriter'!");
     }

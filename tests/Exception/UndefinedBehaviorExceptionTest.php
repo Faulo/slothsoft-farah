@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class UndefinedBehaviorExceptionTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(UndefinedBehaviorException::class), "Failed to load class 'Slothsoft\Farah\Exception\UndefinedBehaviorException'!");
     }

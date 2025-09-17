@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class AssetFragmentDOMWriterTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(AssetFragmentDOMWriter::class), "Failed to load class 'Slothsoft\Farah\Module\DOMWriter\AssetFragmentDOMWriter'!");
     }

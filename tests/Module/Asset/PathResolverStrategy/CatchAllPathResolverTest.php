@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class CatchAllPathResolverTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(CatchAllPathResolver::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\PathResolverStrategy\CatchAllPathResolver'!");
     }

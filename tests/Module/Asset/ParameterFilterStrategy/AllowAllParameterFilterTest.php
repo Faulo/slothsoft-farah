@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class AllowAllParameterFilterTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(AllowAllParameterFilter::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\AllowAllParameterFilter'!");
     }

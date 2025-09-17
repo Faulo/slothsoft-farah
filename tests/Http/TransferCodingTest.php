@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class TransferCodingTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(TransferCoding::class), "Failed to load class 'Slothsoft\Farah\Http\TransferCoding'!");
     }

@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class StringStreamWrapperTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(StringStreamWrapper::class), "Failed to load class 'Slothsoft\Farah\StreamWrapper\StringStreamWrapper'!");
     }

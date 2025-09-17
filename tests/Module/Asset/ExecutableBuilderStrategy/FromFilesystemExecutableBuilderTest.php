@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class FromFilesystemExecutableBuilderTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FromFilesystemExecutableBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromFilesystemExecutableBuilder'!");
     }

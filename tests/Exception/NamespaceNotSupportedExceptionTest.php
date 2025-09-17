@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class NamespaceNotSupportedExceptionTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(NamespaceNotSupportedException::class), "Failed to load class 'Slothsoft\Farah\Exception\NamespaceNotSupportedException'!");
     }

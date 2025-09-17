@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class AbstractMapParameterFilterTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(AbstractMapParameterFilter::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\AbstractMapParameterFilter'!");
     }

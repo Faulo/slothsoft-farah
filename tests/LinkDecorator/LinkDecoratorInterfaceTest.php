@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class LinkDecoratorInterfaceTest extends TestCase {
-
+    
     public function testInterfaceExists(): void {
         $this->assertTrue(interface_exists(LinkDecoratorInterface::class), "Failed to load interface 'Slothsoft\Farah\LinkDecorator\LinkDecoratorInterface'!");
     }

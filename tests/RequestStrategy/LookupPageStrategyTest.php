@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class LookupPageStrategyTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(LookupPageStrategy::class), "Failed to load class 'Slothsoft\Farah\RequestStrategy\LookupPageStrategy'!");
     }

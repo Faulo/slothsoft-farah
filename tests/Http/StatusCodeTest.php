@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class StatusCodeTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(StatusCode::class), "Failed to load class 'Slothsoft\Farah\Http\StatusCode'!");
     }

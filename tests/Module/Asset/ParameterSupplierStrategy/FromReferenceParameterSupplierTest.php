@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class FromReferenceParameterSupplierTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FromReferenceParameterSupplier::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\FromReferenceParameterSupplier'!");
     }

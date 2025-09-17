@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class NullInstructionTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(NullInstruction::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\InstructionStrategy\NullInstruction'!");
     }

@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class RequestBuilderTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(RequestBuilder::class), "Failed to load class 'Slothsoft\Farah\Internal\RequestBuilder'!");
     }

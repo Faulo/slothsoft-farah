@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class PathResolverStrategyInterfaceTest extends TestCase {
-
+    
     public function testInterfaceExists(): void {
         $this->assertTrue(interface_exists(PathResolverStrategyInterface::class), "Failed to load interface 'Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface'!");
     }

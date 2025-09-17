@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class ExceptionContextTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(ExceptionContext::class), "Failed to load class 'Slothsoft\Farah\Exception\ExceptionContext'!");
     }

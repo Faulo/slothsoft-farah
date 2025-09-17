@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class MalformedUrlExceptionTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(MalformedUrlException::class), "Failed to load class 'Slothsoft\Farah\Exception\MalformedUrlException'!");
     }

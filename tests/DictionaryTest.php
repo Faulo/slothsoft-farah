@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class DictionaryTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(Dictionary::class), "Failed to load class 'Slothsoft\Farah\Dictionary'!");
     }

@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class AbstractDaemonServerTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(AbstractDaemonServer::class), "Failed to load class 'Slothsoft\Farah\Daemon\AbstractDaemonServer'!");
     }

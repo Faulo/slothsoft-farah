@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class ImportChildrenInstructionTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(ImportChildrenInstruction::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\InstructionStrategy\ImportChildrenInstruction'!");
     }

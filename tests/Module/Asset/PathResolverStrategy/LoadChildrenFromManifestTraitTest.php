@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class LoadChildrenFromManifestTraitTest extends TestCase {
-
+    
     public function testTraitExists(): void {
         $this->assertTrue(trait_exists(LoadChildrenFromManifestTrait::class), "Failed to load trait 'Slothsoft\Farah\Module\Asset\PathResolverStrategy\LoadChildrenFromManifestTrait'!");
     }

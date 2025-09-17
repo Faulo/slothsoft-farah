@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @todo auto-generated
  */
 class SessionTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(Session::class), "Failed to load class 'Slothsoft\Farah\Session'!");
     }
