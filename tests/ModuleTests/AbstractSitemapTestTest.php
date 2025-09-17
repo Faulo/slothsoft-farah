@@ -145,6 +145,18 @@ class AbstractSitemapTestTest extends TestCase {
             []
         ];
 
+        yield 'Use XML namespace' => [
+            '/file-asset',
+            <<<EOT
+            <html>
+                <img src="." />
+                <import href="." />
+                <include schemaLocation="." />
+            </html>
+            EOT,
+            []
+        ];
+
         yield 'Find HTML header links' => [
             '/page-asset',
             <<<EOT
@@ -338,6 +350,26 @@ class AbstractSitemapTestTest extends TestCase {
                 ],
                 "/test-page/test-file import schemaLocation '.'" => [
                     '/test-page/test-file',
+                    '.'
+                ]
+            ]
+        ];
+
+        yield 'Find data-* links' => [
+            '/domain-asset',
+            <<<EOT
+            <html xmlns="http://www.w3.org/1999/xhtml">
+                <a data-href="." />
+                <img data-src="." />
+            </html>
+            EOT,
+            [
+                "/ a href '.'" => [
+                    '/',
+                    '.'
+                ],
+                "/ img src '.'" => [
+                    '/',
                     '.'
                 ]
             ]
