@@ -145,7 +145,7 @@ class AbstractSitemapTestTest extends TestCase {
             []
         ];
 
-        yield 'HTML header elements' => [
+        yield 'Find HTML header links' => [
             '/page-asset',
             <<<EOT
             <html xmlns="http://www.w3.org/1999/xhtml">
@@ -158,22 +158,22 @@ class AbstractSitemapTestTest extends TestCase {
             </html>
             EOT,
             [
-                '/test-page/ link href .' => [
+                '/test-page/ link href "."' => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ link href ' => [
+                '/test-page/ link href ""' => [
                     '/test-page/',
                     ''
                 ],
-                '/test-page/ script src .' => [
+                '/test-page/ script src "."' => [
                     '/test-page/',
                     '.'
                 ]
             ]
         ];
 
-        yield 'HTML body elements with required sources' => [
+        yield 'Find HTML body elements with required links' => [
             '/page-asset',
             <<<EOT
             <html xmlns="http://www.w3.org/1999/xhtml">
@@ -192,50 +192,50 @@ class AbstractSitemapTestTest extends TestCase {
             </html>
             EOT,
             [
-                '/test-page/ a href .' => [
+                '/test-page/ a href "."' => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ a href ' => [
+                '/test-page/ a href ""' => [
                     '/test-page/',
                     ''
                 ],
-                '/test-page/ img src .' => [
+                '/test-page/ img src "."' => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ img src ' => [
+                '/test-page/ img src ""' => [
                     '/test-page/',
                     ''
                 ],
-                '/test-page/ iframe src .' => [
+                '/test-page/ iframe src "."' => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ iframe src ' => [
+                '/test-page/ iframe src ""' => [
                     '/test-page/',
                     ''
                 ],
-                '/test-page/ source src .' => [
+                '/test-page/ source src "."' => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ source src ' => [
+                '/test-page/ source src ""' => [
                     '/test-page/',
                     ''
                 ],
-                '/test-page/ track src .' => [
+                '/test-page/ track src "."' => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ track src ' => [
+                '/test-page/ track src ""' => [
                     '/test-page/',
                     ''
                 ]
             ]
         ];
 
-        yield 'HTML body elements with optional sources' => [
+        yield 'Find HTML body elements with optional links' => [
             '/page-asset',
             <<<EOT
             <html xmlns="http://www.w3.org/1999/xhtml">
@@ -250,22 +250,22 @@ class AbstractSitemapTestTest extends TestCase {
             </html>
             EOT,
             [
-                '/test-page/ form action .' => [
+                '/test-page/ form action "."' => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ video src .' => [
+                '/test-page/ video src "."' => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ audio src .' => [
+                '/test-page/ audio src "."' => [
                     '/test-page/',
                     '.'
                 ]
             ]
         ];
 
-        yield 'special URIs' => [
+        yield 'Include HTML special URIs' => [
             '/page-asset',
             <<<EOT
             <html xmlns="http://www.w3.org/1999/xhtml">
@@ -276,14 +276,70 @@ class AbstractSitemapTestTest extends TestCase {
             </html>
             EOT,
             [
-                '/test-page/ a href mailto:test@email' => [
+                '/test-page/ a href "mailto:test@email"' => [
                     '/test-page/',
                     'mailto:test@email'
                 ],
-                '/test-page/ img src data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==' => [
+                '/test-page/ img src "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="' => [
                     '/test-page/',
                     'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
                 ]
+            ]
+        ];
+
+        yield 'Find XSL links' => [
+            '/file-asset',
+            <<<EOT
+            <stylesheet xmlns="http://www.w3.org/1999/XSL/Transform">
+                <include href="." />
+                <include href="" />
+                <import href="." />
+                <import href="" />
+            </stylesheet>
+            EOT,
+            [
+                '/test-page/test-file include href "."' => [
+                    '/test-page/test-file',
+                    '.'
+                ],
+                '/test-page/test-file include href ""' => [
+                    '/test-page/test-file',
+                    ''
+                ],
+                '/test-page/test-file import href "."' => [
+                    '/test-page/test-file',
+                    '.'
+                ],
+                '/test-page/test-file import href ""' => [
+                    '/test-page/test-file',
+                    ''
+                ]
+            ]
+        ];
+
+        yield 'Find XSD links' => [
+            '/file-asset',
+            <<<EOT
+            <schema xmlns="http://www.w3.org/2001/XMLSchema">
+                <include schemaLocation="." />
+                <include schemaLocation="" />
+                <import schemaLocation="." />
+                <import schemaLocation="" />
+            </schema>
+            EOT,
+            [
+                '/test-page/test-file include schemaLocation "."' => [
+                    '/test-page/test-file',
+                    '.'
+                ],
+                '/test-page/test-file include schemaLocation ""' => [
+                    '/test-page/test-file',
+                    ''
+                ],
+                '/test-page/test-file import schemaLocation "."' => [
+                    '/test-page/test-file',
+                    '.'
+                ],
             ]
         ];
     }
