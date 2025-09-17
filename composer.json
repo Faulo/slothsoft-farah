@@ -36,7 +36,8 @@
 	},
 	"autoload" : {
 		"psr-4" : {
-			"Slothsoft\\Farah\\" : "src"
+			"Slothsoft\\Farah\\" : "src",
+			"Slothsoft\\Farah\\PThreads" : "src-pthreads"
 		},
 		"files" : [
 			"src/bootstrap.php"
