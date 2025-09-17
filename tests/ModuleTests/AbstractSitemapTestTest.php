@@ -339,7 +339,7 @@ class AbstractSitemapTestTest extends TestCase {
                 '/test-page/test-file import schemaLocation "."' => [
                     '/test-page/test-file',
                     '.'
-                ],
+                ]
             ]
         ];
     }
