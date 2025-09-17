@@ -18,33 +18,33 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 
 class Result implements ResultInterface {
 
-    private $ownerExecutable;
+    private ExecutableInterface $ownerExecutable;
 
-    private $type;
+    private FarahUrlStreamIdentifier $type;
 
-    private $strategies;
+    private ResultStrategies $strategies;
 
-    private $hash;
+    private ?StringWriterInterface $stringWriter = null;
 
-    private $mimeType;
+    private ?StreamWriterInterface $streamWriter = null;
 
-    private $charset;
+    private ?FileWriterInterface $fileWriter = null;
 
-    private $fileName;
+    private ?DOMWriterInterface $domWriter = null;
 
-    private $fileStat;
+    private ?ChunkWriterInterface $chunkWriter = null;
 
-    private $isBufferable;
+    private ?string $hash = null;
 
-    private $stringWriter;
+    private ?string $mimeType = null;
 
-    private $fileWriter;
+    private ?string $charset = null;
 
-    private $streamWriter;
+    private ?bool $isBufferable = null;
 
-    private $chunkWriter;
+    private ?array $fileStat = null;
 
-    private $domWriter;
+    private ?string $fileName = null;
 
     public function __construct(ExecutableInterface $ownerExecutable, FarahUrlStreamIdentifier $type, ResultStrategies $strategies) {
         $this->ownerExecutable = $ownerExecutable;

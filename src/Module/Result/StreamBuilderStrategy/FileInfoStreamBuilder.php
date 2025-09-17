@@ -17,9 +17,9 @@ use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromFileWriter;
 
 class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWriterInterface {
 
-    private $file;
+    private SplFileInfo $file;
 
-    private $fileName;
+    private ?string $fileName;
 
     public function __construct(SplFileInfo $file, ?string $fileName = null) {
         $this->file = $file;
@@ -39,7 +39,8 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWrite
     }
 
     public function buildStreamFileStatistics(ResultInterface $context): array {
-        return stat((string) $this->file);
+        $stat = stat((string) $this->file);
+        return $stat === false ? [] : $stat;
     }
 
     public function buildStreamHash(ResultInterface $context): string {

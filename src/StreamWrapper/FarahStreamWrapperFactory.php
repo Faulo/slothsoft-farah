@@ -14,7 +14,7 @@ use Slothsoft\Farah\Module\Module;
 /**
  *
  * @author Daniel Schulz
- *
+ *        
  */
 class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
 
