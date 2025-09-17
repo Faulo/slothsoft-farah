@@ -8,10 +8,12 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
 use Slothsoft\Farah\Module\DOMWriter\DOMDocumentDOMWriter;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\DOMWriterResultBuilder;
+use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\NullResultBuilder;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
 use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\DefaultAssetBuilder;
@@ -59,14 +61,17 @@ class AbstractSitemapTestTest extends TestCase {
         $treeLoader = $this->createStub(TreeLoaderStrategyInterface::class);
         $treeLoader->method('loadTree')->willReturnCallback(function (ManifestInterface $context): LeanElement {
             $root = LeanElement::createOneFromArray('assets', [], [
-                LeanElement::createOneFromArray('fragment', [
-                    'name' => 'domain-asset'
+                LeanElement::createOneFromArray('custom-asset', [
+                    'name' => 'domain-asset',
+                    'executable-builder' => StubExecutableBuilder::class
                 ]),
                 LeanElement::createOneFromArray('fragment', [
-                    'name' => 'page-asset'
+                    'name' => 'page-asset',
+                    'executable-builder' => StubExecutableBuilder::class
                 ]),
                 LeanElement::createOneFromArray('fragment', [
-                    'name' => 'file-asset'
+                    'name' => 'file-asset',
+                    'executable-builder' => StubExecutableBuilder::class
                 ])
             ]);
             $context->normalizeManifestTree($root);
@@ -111,13 +116,185 @@ class AbstractSitemapTestTest extends TestCase {
     /**
      *
      * @runInSeparateProcess
+     * @dataProvider pageAssetAndLinkProvider
      */
-    public function test_pageLinkProvider() {
+    public function test_pageLinkProvider(string $assetPath, string $assetXML, array $assetLinks) {
+        $pageDocument = new DOMDocument();
+        $pageDocument->loadXML($assetXML);
+        StubExecutableBuilder::$executables[$assetPath] = new DOMWriterResultBuilder(new DOMDocumentDOMWriter($pageDocument));
+
         $sut = $this->createSuT();
 
         $actual = $sut->pageLinkProvider();
 
-        $this->assertEquals([], $actual);
+        $this->assertEquals($assetLinks, $actual);
+    }
+
+    public function pageAssetAndLinkProvider(): iterable {
+        yield 'Skip links that are pages' => [
+            '/page-asset',
+            <<<EOT
+            <html xmlns="http://www.w3.org/1999/xhtml">
+            	<body>
+            		<a href="/" />
+            		<a href="/test-page/" />
+            		<a href="/test-page/test-file" />
+            	</body>
+            </html>
+            EOT,
+            []
+        ];
+
+        yield 'HTML header elements' => [
+            '/page-asset',
+            <<<EOT
+            <html xmlns="http://www.w3.org/1999/xhtml">
+            	<head>
+            		<link href="." />
+            		<link href="" />
+            		<script src="." />
+            		<script src="" />
+            	</head>
+            </html>
+            EOT,
+            [
+                '/test-page/ link href .' => [
+                    '/test-page/',
+                    '.'
+                ],
+                '/test-page/ link href ' => [
+                    '/test-page/',
+                    ''
+                ],
+                '/test-page/ script src .' => [
+                    '/test-page/',
+                    '.'
+                ]
+            ]
+        ];
+
+        yield 'HTML body elements with required sources' => [
+            '/page-asset',
+            <<<EOT
+            <html xmlns="http://www.w3.org/1999/xhtml">
+            	<body>
+            		<a href="." />
+            		<a href="" />
+            		<img src="." />
+            		<img src="" />
+            		<iframe src="." />
+            		<iframe src="" />
+            		<source src="." />
+            		<source src="" />
+            		<track src="." />
+            		<track src="" />
+            	</body>
+            </html>
+            EOT,
+            [
+                '/test-page/ a href .' => [
+                    '/test-page/',
+                    '.'
+                ],
+                '/test-page/ a href ' => [
+                    '/test-page/',
+                    ''
+                ],
+                '/test-page/ img src .' => [
+                    '/test-page/',
+                    '.'
+                ],
+                '/test-page/ img src ' => [
+                    '/test-page/',
+                    ''
+                ],
+                '/test-page/ iframe src .' => [
+                    '/test-page/',
+                    '.'
+                ],
+                '/test-page/ iframe src ' => [
+                    '/test-page/',
+                    ''
+                ],
+                '/test-page/ source src .' => [
+                    '/test-page/',
+                    '.'
+                ],
+                '/test-page/ source src ' => [
+                    '/test-page/',
+                    ''
+                ],
+                '/test-page/ track src .' => [
+                    '/test-page/',
+                    '.'
+                ],
+                '/test-page/ track src ' => [
+                    '/test-page/',
+                    ''
+                ]
+            ]
+        ];
+
+        yield 'HTML body elements with optional sources' => [
+            '/page-asset',
+            <<<EOT
+            <html xmlns="http://www.w3.org/1999/xhtml">
+            	<body>
+            		<form action="." />
+            		<form action="" />
+            		<video src="." />
+            		<video src="" />
+            		<audio src="." />
+            		<audio src="" />
+            	</body>
+            </html>
+            EOT,
+            [
+                '/test-page/ form action .' => [
+                    '/test-page/',
+                    '.'
+                ],
+                '/test-page/ video src .' => [
+                    '/test-page/',
+                    '.'
+                ],
+                '/test-page/ audio src .' => [
+                    '/test-page/',
+                    '.'
+                ]
+            ]
+        ];
+
+        yield 'special URIs' => [
+            '/page-asset',
+            <<<EOT
+            <html xmlns="http://www.w3.org/1999/xhtml">
+            	<body>
+            		<a href="mailto:test@email" />
+            		<img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" />
+            	</body>
+            </html>
+            EOT,
+            [
+                '/test-page/ a href mailto:test@email' => [
+                    '/test-page/',
+                    'mailto:test@email'
+                ],
+                '/test-page/ img src data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==' => [
+                    '/test-page/',
+                    'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
+                ]
+            ]
+        ];
+    }
+}
+
+class StubExecutableBuilder implements ExecutableBuilderStrategyInterface {
+
+    public static array $executables = [];
+
+    public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
+        return new ExecutableStrategies(self::$executables[(string) $context->getUrlPath()] ?? new NullResultBuilder());
     }
 }
 

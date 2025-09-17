@@ -321,6 +321,12 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         ],
         [
             DOMHelper::NS_HTML,
+            'audio',
+            'src',
+            false
+        ],
+        [
+            DOMHelper::NS_HTML,
             'source',
             'src',
             true
