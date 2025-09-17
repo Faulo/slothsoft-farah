@@ -223,6 +223,16 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         $this->assertNotEquals('', $mimeType, "Asset '$url' did not produce a mime type!");
     }
 
+    private function loadAsset(FarahUrl $url): ?ResultInterface {
+        try {
+            $result = Module::resolveToResult($url);
+            $mimeType = $result->lookupMimeType();
+            return $mimeType === '' ? null : $result;
+        } catch (Throwable $e) {
+            return null;
+        }
+    }
+
     /**
      *
      * @dataProvider pageLinkProvider
@@ -401,9 +411,8 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                     $url = $this->getDomain()
                         ->lookupAssetUrl($node);
 
-                    if (file_exists((string) $url)) {
-                        $result = Module::resolveToResult($url);
-                        $mime = (string) $result->lookupMimeType();
+                    if (file_exists((string) $url) and $result = $this->loadAsset($url)) {
+                        $mime = $result->lookupMimeType();
 
                         if ($mime === 'application/xml' or substr($mime, - 4) === '+xml') {
                             $document = $result->lookupDOMWriter()

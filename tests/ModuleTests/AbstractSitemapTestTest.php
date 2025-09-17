@@ -21,6 +21,8 @@ use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
 use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\DefaultAssetBuilder;
 use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\TreeLoaderStrategyInterface;
 use DOMDocument;
+use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
+use Slothsoft\Farah\Exception\EmptyTransformationException;
 
 /**
  * AbstractSitemapTestTest
@@ -136,6 +138,25 @@ class AbstractSitemapTestTest extends TestCase {
         $actual = $sut->pageLinkProvider();
 
         $this->assertEquals($assetLinks, $actual);
+    }
+
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function test_pageLinkProvider_canWorkWithEmptyDocuments() {
+        StubExecutableBuilder::$executables['/domain-asset'] = new DOMWriterResultBuilder(new DOMWriterFromDocumentDelegate(function (): DOMDocument {
+            throw new EmptyTransformationException('/domain-asset');
+        }));
+        StubExecutableBuilder::$executables['/page-asset'] = new DOMWriterResultBuilder(new DOMWriterFromDocumentDelegate(function (): DOMDocument {
+            return new DOMDocument();
+        }));
+
+        $sut = $this->createSuT();
+
+        $actual = $sut->pageLinkProvider();
+
+        $this->assertEquals([], $actual);
     }
 
     public function pageAssetAndLinkProvider(): iterable {
