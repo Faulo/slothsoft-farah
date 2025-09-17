@@ -6,11 +6,14 @@ use Slothsoft\Core\StreamWrapper\Psr7StreamWrapper;
 use Slothsoft\Core\StreamWrapper\StreamWrapperFactoryInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Exception\AssetPathNotFoundException;
+use Slothsoft\Farah\Exception\ModuleNotFoundException;
+use Slothsoft\Farah\Exception\IncompleteUrlException;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
 
@@ -23,9 +26,19 @@ class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
     }
 
     public function statUrl(string $url, int $flags) {
-        $url = FarahUrl::createFromReference($url);
+        try {
+            $url = FarahUrl::createFromReference($url);
+        } catch (IncompleteUrlException $e) {
+            return false;
+        }
 
-        $result = Module::resolveToResult($url);
+        try {
+            $result = Module::resolveToResult($url);
+        } catch (AssetPathNotFoundException $e) {
+            return false;
+        } catch (ModuleNotFoundException $e) {
+            return false;
+        }
 
         return $result->lookupFileStatistics();
     }
