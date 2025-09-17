@@ -363,6 +363,26 @@ class AbstractSitemapTestTest extends TestCase {
             ]
         ];
 
+        yield 'Find XInclude links' => [
+            '/file-asset',
+            <<<EOT
+            <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude">
+                <xi:include href="." />
+                <xi:include href="" />
+            </html>
+            EOT,
+            [
+                "/test-page/test-file include href '.'" => [
+                    '/test-page/test-file',
+                    '.'
+                ],
+                "/test-page/test-file include href ''" => [
+                    '/test-page/test-file',
+                    ''
+                ]
+            ]
+        ];
+
         yield 'Find data-* links' => [
             '/domain-asset',
             <<<EOT

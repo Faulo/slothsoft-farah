@@ -204,11 +204,23 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             $this->assertEquals($node, $this->getDomain()
                 ->lookupPageNode($path));
             $url = $this->getDomain()->lookupAssetUrl($node);
-            $this->assertInstanceOf(ResultInterface::class, Module::resolveToResult($url));
+            $this->assertAsset($url);
         } else {
             $this->expectException(PageRedirectionException::class);
             $this->getDomain()->lookupPageNode($path);
         }
+    }
+
+    private function assertAsset(FarahUrl $url): void {
+        try {
+            $result = Module::resolveToResult($url);
+            $mimeType = $result->lookupMimeType();
+        } catch (Throwable $e) {
+            $this->failException($e);
+            return;
+        }
+
+        $this->assertNotEquals('', $mimeType, "Asset '$url' did not produce a mime type!");
     }
 
     /**
@@ -367,6 +379,12 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             'import',
             'schemaLocation',
             false
+        ],
+        [
+            DOMHelper::NS_XINCLUDE,
+            'include',
+            'href',
+            true
         ]
     ];
 
@@ -382,47 +400,50 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                 if ($node->hasAttribute('ref')) {
                     $url = $this->getDomain()
                         ->lookupAssetUrl($node);
-                    $result = Module::resolveToResult($url);
-                    $mime = (string) $result->lookupMimeType();
 
-                    if ($mime === 'application/xml' or substr($mime, - 4) === '+xml') {
-                        $document = $result->lookupDOMWriter()
-                            ->toDocument();
+                    if (file_exists((string) $url)) {
+                        $result = Module::resolveToResult($url);
+                        $mime = (string) $result->lookupMimeType();
 
-                        foreach (self::LINKING_ELEMENTS as $args) {
-                            [
-                                $ns,
-                                $tag,
-                                $attribute,
-                                $isRequired
-                            ] = $args;
-                            foreach ($document->getElementsByTagNameNS($ns, $tag) as $linkNode) {
-                                $link = (string) $linkNode->getAttribute($attribute);
+                        if ($mime === 'application/xml' or substr($mime, - 4) === '+xml') {
+                            $document = $result->lookupDOMWriter()
+                                ->toDocument();
 
-                                if ($link === '') {
-                                    // use fallback attribute
-                                    $link = (string) $linkNode->getAttribute('data-' . $attribute);
-                                }
-
-                                if (isset($pages[$link])) {
-                                    // page already asserted by pageNodeProvider
-                                    continue;
-                                }
-
-                                if ($link === '' and ! $isRequired) {
-                                    continue;
-                                }
-
-                                $reference = implode(' ', [
-                                    $page,
+                            foreach (self::LINKING_ELEMENTS as $args) {
+                                [
+                                    $ns,
                                     $tag,
                                     $attribute,
-                                    "'$link'"
-                                ]);
-                                $provider[$reference] ??= [
-                                    $page,
-                                    $link
-                                ];
+                                    $isRequired
+                                ] = $args;
+                                foreach ($document->getElementsByTagNameNS($ns, $tag) as $linkNode) {
+                                    $link = (string) $linkNode->getAttribute($attribute);
+
+                                    if ($link === '') {
+                                        // use fallback attribute
+                                        $link = (string) $linkNode->getAttribute('data-' . $attribute);
+                                    }
+
+                                    if (isset($pages[$link])) {
+                                        // page already asserted by pageNodeProvider
+                                        continue;
+                                    }
+
+                                    if ($link === '' and ! $isRequired) {
+                                        continue;
+                                    }
+
+                                    $reference = implode(' ', [
+                                        $page,
+                                        $tag,
+                                        $attribute,
+                                        "'$link'"
+                                    ]);
+                                    $provider[$reference] ??= [
+                                        $page,
+                                        $link
+                                    ];
+                                }
                             }
                         }
                     }
