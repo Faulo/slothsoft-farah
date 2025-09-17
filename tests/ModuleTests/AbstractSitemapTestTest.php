@@ -158,15 +158,15 @@ class AbstractSitemapTestTest extends TestCase {
             </html>
             EOT,
             [
-                '/test-page/ link href "."' => [
+                "/test-page/ link href '.'" => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ link href ""' => [
+                "/test-page/ link href ''" => [
                     '/test-page/',
                     ''
                 ],
-                '/test-page/ script src "."' => [
+                "/test-page/ script src '.'" => [
                     '/test-page/',
                     '.'
                 ]
@@ -192,43 +192,43 @@ class AbstractSitemapTestTest extends TestCase {
             </html>
             EOT,
             [
-                '/test-page/ a href "."' => [
+                "/test-page/ a href '.'" => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ a href ""' => [
+                "/test-page/ a href ''" => [
                     '/test-page/',
                     ''
                 ],
-                '/test-page/ img src "."' => [
+                "/test-page/ img src '.'" => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ img src ""' => [
+                "/test-page/ img src ''" => [
                     '/test-page/',
                     ''
                 ],
-                '/test-page/ iframe src "."' => [
+                "/test-page/ iframe src '.'" => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ iframe src ""' => [
+                "/test-page/ iframe src ''" => [
                     '/test-page/',
                     ''
                 ],
-                '/test-page/ source src "."' => [
+                "/test-page/ source src '.'" => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ source src ""' => [
+                "/test-page/ source src ''" => [
                     '/test-page/',
                     ''
                 ],
-                '/test-page/ track src "."' => [
+                "/test-page/ track src '.'" => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ track src ""' => [
+                "/test-page/ track src ''" => [
                     '/test-page/',
                     ''
                 ]
@@ -250,15 +250,15 @@ class AbstractSitemapTestTest extends TestCase {
             </html>
             EOT,
             [
-                '/test-page/ form action "."' => [
+                "/test-page/ form action '.'" => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ video src "."' => [
+                "/test-page/ video src '.'" => [
                     '/test-page/',
                     '.'
                 ],
-                '/test-page/ audio src "."' => [
+                "/test-page/ audio src '.'" => [
                     '/test-page/',
                     '.'
                 ]
@@ -276,11 +276,11 @@ class AbstractSitemapTestTest extends TestCase {
             </html>
             EOT,
             [
-                '/test-page/ a href "mailto:test@email"' => [
+                "/test-page/ a href 'mailto:test@email'" => [
                     '/test-page/',
                     'mailto:test@email'
                 ],
-                '/test-page/ img src "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="' => [
+                "/test-page/ img src 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='" => [
                     '/test-page/',
                     'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
                 ]
@@ -298,19 +298,19 @@ class AbstractSitemapTestTest extends TestCase {
             </stylesheet>
             EOT,
             [
-                '/test-page/test-file include href "."' => [
+                "/test-page/test-file include href '.'" => [
                     '/test-page/test-file',
                     '.'
                 ],
-                '/test-page/test-file include href ""' => [
+                "/test-page/test-file include href ''" => [
                     '/test-page/test-file',
                     ''
                 ],
-                '/test-page/test-file import href "."' => [
+                "/test-page/test-file import href '.'" => [
                     '/test-page/test-file',
                     '.'
                 ],
-                '/test-page/test-file import href ""' => [
+                "/test-page/test-file import href ''" => [
                     '/test-page/test-file',
                     ''
                 ]
@@ -328,15 +328,15 @@ class AbstractSitemapTestTest extends TestCase {
             </schema>
             EOT,
             [
-                '/test-page/test-file include schemaLocation "."' => [
+                "/test-page/test-file include schemaLocation '.'" => [
                     '/test-page/test-file',
                     '.'
                 ],
-                '/test-page/test-file include schemaLocation ""' => [
+                "/test-page/test-file include schemaLocation ''" => [
                     '/test-page/test-file',
                     ''
                 ],
-                '/test-page/test-file import schemaLocation "."' => [
+                "/test-page/test-file import schemaLocation '.'" => [
                     '/test-page/test-file',
                     '.'
                 ]
