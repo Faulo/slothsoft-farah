@@ -255,7 +255,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             $this->assertNotEquals('', $link, 'Link must not be empty');
             
             if (strpos($link, 'mailto:') === 0) {
-                $this->assertMatchesRegularExpression('~^mailto:\S+@\S+$~', $link);
+                $this->assertMatchesRegularExpression('~^mailto:.+$~', $link);
                 return;
             }
             

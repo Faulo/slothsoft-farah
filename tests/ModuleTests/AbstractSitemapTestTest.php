@@ -561,6 +561,16 @@ class AbstractSitemapTestTest extends TestCase {
             '.',
             true
         ];
+        yield 'short mailto works' => [
+            '/',
+            'mailto:daniel.lio.schulz@gmail.com',
+            true
+        ];
+        yield 'long mailto works' => [
+            '/',
+            'mailto:Daniel Schulz <daniel.lio.schulz@gmail.com>',
+            true
+        ];
     }
 }
 

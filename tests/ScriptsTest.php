@@ -20,6 +20,7 @@ class ScriptsTest extends TestCase {
     
     /**
      *
+     * @runInSeparateProcess
      * @dataProvider someFarahAssets
      */
     public function testFarahAsset(string $url): void {
@@ -33,10 +34,10 @@ class ScriptsTest extends TestCase {
         $result = $process->getOutput();
         $errors = $process->getErrorOutput();
         
-        $this->assertEquals('', $errors, 'Calling composer failed! Command:' . PHP_EOL . $process->getCommandLine());
+        $this->assertEquals('', $errors, 'Calling composer caused output to STDERR! Command:' . PHP_EOL . $process->getCommandLine());
         
-        $this->assertEquals(0, $code, 'Calling composer failed! Command:' . PHP_EOL . $process->getCommandLine());
+        $this->assertEquals(0, $code, 'Calling composer returned non-zero code! Command:' . PHP_EOL . $process->getCommandLine());
         
-        $this->assertEquals(file_get_contents($url), $result, 'Calling composer failed! Command:' . PHP_EOL . $process->getCommandLine());
+        $this->assertEquals(file_get_contents($url), $result, 'Calling composer produced wrong asset content! Command:' . PHP_EOL . $process->getCommandLine());
     }
 }
