@@ -214,6 +214,8 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         if ($node->hasAttribute('ref')) {
             $this->assertEquals($node, $this->getDomain()
                 ->lookupPageNode($path));
+            
+            $this->getDomain()->setCurrentPageNode($node);
             $url = $this->getDomain()->lookupAssetUrl($node);
             $this->assertAsset($url);
         } else {
@@ -419,6 +421,9 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                 $node = $args[0];
                 
                 if ($node->hasAttribute('ref')) {
+                    $this->getDomain()
+                        ->setCurrentPageNode($node);
+                    
                     $url = $this->getDomain()
                         ->lookupAssetUrl($node);
                     
