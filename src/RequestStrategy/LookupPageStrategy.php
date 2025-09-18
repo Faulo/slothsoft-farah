@@ -41,7 +41,7 @@ class LookupPageStrategy extends RequestStrategyBase {
             throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_GONE, $e);
         }
         
-        $pageNode->setAttribute('current', '1');
+        $this->domain->setCurrentPageNode($pageNode);
         
         if (! $pageNode->hasAttribute('ref')) {
             throw new HttpStatusException("The URL $uri does not contain an asset.\n{$pageNode->ownerDocument->saveXML($pageNode)}", StatusCode::STATUS_NOT_IMPLEMENTED);

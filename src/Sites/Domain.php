@@ -21,7 +21,7 @@ use DOMXPath;
  */
 class Domain {
     
-    private const CURRENT_SITEMAP = 'farah://slothsoft@farah/current-sitemap';
+    public const CURRENT_SITEMAP = 'farah://slothsoft@farah/current-sitemap';
     
     public static function createWithDefaultSitemap(): Domain {
         $url = FarahUrl::createFromReference(self::CURRENT_SITEMAP);
@@ -88,6 +88,22 @@ class Domain {
         }
         
         return $pageNode;
+    }
+    
+    public function getCurrentPageNode(): ?DOMElement {
+        $currentNodes = $this->xpath->evaluate('//*[@current]');
+        return $currentNodes->length ? $currentNodes->item(0) : null;
+    }
+    
+    public function setCurrentPageNode(DOMElement $pageNode): void {
+        if ($oldNode = $this->getCurrentPageNode()) {
+            if ($oldNode === $pageNode) {
+                return;
+            }
+            $oldNode->removeAttribute('current');
+        }
+        
+        $pageNode->setAttribute('current', '1');
     }
     
     public function lookupAssetUrl(DOMElement $dataNode, array $args = []): FarahUrl {
