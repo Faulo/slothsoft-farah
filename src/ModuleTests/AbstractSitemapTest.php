@@ -206,7 +206,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     
     /**
      *
-     * @depends      testPageMustHaveEitherRefOrRedirect
+     * @depends      testPageMustHaveOneOfRefOrRedirectOrExt
      * @dataProvider pageNodeProvider
      */
     public function testPageResultExists(DOMElement $node): void {
