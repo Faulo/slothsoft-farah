@@ -3,20 +3,24 @@
 	<resource-directory name="js" type="application/javascript" />
 	<resource-directory name="xsl" type="application/xslt+xml" />
 
-	<directory name="sitemap-generator">
-		<resource name="template" type="application/xslt+xml" use="template" />
-		<resource name="prettify" type="application/xslt+xml" />
-		<use-document ref="/sites" name="sites" />
-	</directory>
 	<directory name="schema">
 		<resource-directory name="dictionary" type="application/x-xsd+xml" />
 		<resource-directory name="module" type="application/x-xsd+xml" />
 		<resource-directory name="sitemap" type="application/x-xsd+xml" />
 		<resource-directory name="xml" type="application/x-xsd+xml" />
 	</directory>
-	<custom-asset name="sites" executable-builder="Slothsoft\Farah\Internal\SitesBuilder" />
-	<custom-asset name="request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder" />
+
 	<custom-asset name="phpinfo" executable-builder="Slothsoft\Farah\Internal\PhpinfoBuilder" />
+
+	<custom-asset name="current-sitemap" executable-builder="Slothsoft\Farah\Internal\SitesBuilder" />
+	<custom-asset name="current-request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder" />
+
+	<directory name="sitemap-generator">
+		<resource name="template" type="application/xslt+xml" use="template" />
+		<resource name="prettify" type="application/xslt+xml" />
+		<use-document ref="/current-sitemap" name="sites" />
+	</directory>
+
 	<resource name="example-domain" type="application/xml" />
 	<daemon name="cli-daemon" server="Slothsoft\Farah\Internal\CLIDaemon" port="5050" />
 </assets>

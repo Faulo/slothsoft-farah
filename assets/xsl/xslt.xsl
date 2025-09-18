@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:sfx="http://schema.slothsoft.net/farah/xslt" xmlns:exsl="http://exslt.org/common"
-	xmlns:func="http://exslt.org/functions" xmlns:str="http://exslt.org/strings" extension-element-prefixes="func php"
-	xmlns:php="http://php.net/xsl">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:sfx="http://schema.slothsoft.net/farah/xslt" xmlns:exsl="http://exslt.org/common"
+	xmlns:func="http://exslt.org/functions" xmlns:str="http://exslt.org/strings" extension-element-prefixes="func php" xmlns:php="http://php.net/xsl">
 
 	<func:function name="sfx:range">
 		<xsl:param name="min" />

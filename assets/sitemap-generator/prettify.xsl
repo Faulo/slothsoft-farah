@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- Copyright (c) 2010 Dave Reid <http://drupal.org/user/53892> This file is free software: you may copy, redistribute and/or 
-	modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 
-	2 of the License, or (at your option) any later version. This file is distributed in the hope that it will be useful, but 
-	WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-	General Public License for more details. You should have received a copy of the GNU General Public License along with this 
-	program. If not, see <http://www.gnu.org/licenses/>. This file incorporates work covered by the following copyright and permission 
-	notice: Google Sitmaps Stylesheets (GSStylesheets) Project Home: http://sourceforge.net/projects/gstoolbox Copyright (c) 
-	2005 Baccou Bonneville SARL (http://www.baccoubonneville.com) License http://www.gnu.org/copyleft/lesser.html GNU/LGPL -->
+<!-- Copyright (c) 2010 Dave Reid <http://drupal.org/user/53892> This file is free software: you may copy, redistribute and/or modify it under the terms of the GNU General Public License as published by 
+	the Free Software Foundation, either version 2 of the License, or (at your option) any later version. This file is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even 
+	the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along 
+	with this program. If not, see <http://www.gnu.org/licenses/>. This file incorporates work covered by the following copyright and permission notice: Google Sitmaps Stylesheets (GSStylesheets) Project Home: 
+	http://sourceforge.net/projects/gstoolbox Copyright (c) 2005 Baccou Bonneville SARL (http://www.baccoubonneville.com) License http://www.gnu.org/copyleft/lesser.html GNU/LGPL -->
 
-<xsl:stylesheet version="1.0" xmlns:html="http://www.w3.org/1999/xhtml"
-	xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output method="html" version="5.0" encoding="utf-8" indent="yes" />
 
 	<!-- Root template -->

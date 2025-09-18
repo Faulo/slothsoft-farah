@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/module"
-	xmlns="http://schema.slothsoft.net/farah/module" xmlns:sfm="http://schema.slothsoft.net/farah/module"
-	xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/module" xmlns="http://schema.slothsoft.net/farah/module" xmlns:sfm="http://schema.slothsoft.net/farah/module"
+	xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xsd:annotation>
 		<xsd:appinfo>

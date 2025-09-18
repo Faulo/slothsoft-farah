@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:html="http://www.w3.org/1999/xhtml"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:sfm="http://schema.slothsoft.net/farah/module">
+<xsl:stylesheet version="1.0" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:sfm="http://schema.slothsoft.net/farah/module">
 
 	<xsl:template match="sfm:stylesheet" mode="sfm:html">
 		<html:link rel="stylesheet" href="{@href}" type="{@type}" />
