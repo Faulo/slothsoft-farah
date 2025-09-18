@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-	xmlns:sfs="http://schema.slothsoft.net/farah/sitemap" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
-	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:sfs="http://schema.slothsoft.net/farah/sitemap"
+	xmlns:sfd="http://schema.slothsoft.net/farah/dictionary" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	<xsl:template match="/*">
 		<xsl:processing-instruction name="xml-stylesheet">
-			href="/slothsoft@farah/sitemap-generator/prettify" type="application/xslt+xml"
+			<xsl:text>href="/slothsoft@farah/sitemap-generator/prettify" type="application/xslt+xml"</xsl:text>
 		</xsl:processing-instruction>
 
 		<urlset>
-			<xsl:apply-templates select="*[@name='sites']/sfs:domain" />
+			<xsl:apply-templates select=".//sfs:domain" />
 		</urlset>
 	</xsl:template>
 
