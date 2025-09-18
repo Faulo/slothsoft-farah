@@ -12,6 +12,9 @@
 
 	<custom-asset name="phpinfo" executable-builder="Slothsoft\Farah\Internal\PhpinfoBuilder" />
 
+	<!-- "/sites" is deprecated, use "/current-sitemap" instead -->
+	<use-document name="sites" ref="/current-sitemap" />
+
 	<custom-asset name="current-sitemap" executable-builder="Slothsoft\Farah\Internal\SitemapBuilder" />
 	<custom-asset name="current-request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder" />
 
