@@ -21,55 +21,55 @@ use DOMElement;
  *        
  */
 class Domain {
-
+    
     const TAG_INCLUDE_PAGES = 'include-pages';
-
+    
     const TAG_SITEMAP = 'sitemap';
-
+    
     const TAG_DOMAIN = 'domain';
-
+    
     const TAG_PAGE = 'page';
-
+    
     const TAG_FILE = 'file';
-
+    
     const TAG_PARAM = 'param';
-
+    
     private AssetInterface $asset;
-
+    
     private $file;
-
+    
     private $document;
-
+    
     private $domainNode;
-
+    
     private $domainName;
-
+    
     private $xpath;
-
+    
     public function __construct(AssetInterface $asset) {
         $this->asset = $asset;
     }
-
+    
     private function loadDocument() {
         if (! $this->document) {
-
+            
             $this->document = $this->asset->lookupExecutable()
                 ->lookupXmlResult()
                 ->lookupDOMWriter()
                 ->toDocument();
             $this->xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT | DOMHelper::XPATH_PHP);
             $this->domainNode = $this->document->documentElement;
-
+            
             $node = $this->domainNode;
             if (! $node) {
                 throw new EmptySitemapException($this->asset->getId());
             }
             $this->domainName = $this->domainNode->getAttribute('name');
-
+            
             $this->init();
         }
     }
-
+    
     private function init() {
         // preload all include-pages elements
         while ($nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, self::TAG_INCLUDE_PAGES) and $nodeList->length) {
@@ -97,7 +97,7 @@ class Domain {
             $this->initPageElement($node);
         }
     }
-
+    
     private function initDomainElement(DOMElement $node) {
         if (! $node->hasAttribute('title')) {
             $node->setAttribute('title', $node->getAttribute('name'));
@@ -105,7 +105,7 @@ class Domain {
         $node->setAttribute('uri', '/');
         $node->setAttribute('url', "{$this->getProtocol()}://{$this->getDomainName()}/");
     }
-
+    
     private function initPageElement(DOMElement $node) {
         $name = $node->getAttribute('name');
         if ($node->hasAttribute('ext')) {
@@ -121,68 +121,68 @@ class Domain {
                     break;
             }
         }
-
+        
         if (! $node->hasAttribute('title')) {
             $node->setAttribute('title', $name);
         }
         $node->setAttribute('uri', $uri);
         $node->setAttribute('url', "{$this->getProtocol()}://{$this->getDomainName()}$uri");
     }
-
+    
     public function getDocument(): DOMDocument {
         $this->loadDocument();
-
+        
         return $this->document;
     }
-
+    
     public function lookupPageNode(string $path, DOMElement $contextNode = null): DOMElement {
         $this->loadDocument();
-
+        
         $path = str_pad($path, 1, '/');
         if ($contextNode === null or $path[0] === '/') {
             $contextNode = $this->domainNode;
         }
         $query = $this->path2expr($path, '[self::sfs:page | self::sfs:file]');
         $pageNode = $this->xpath->evaluate($query, $contextNode)->item(0);
-
+        
         if (! $pageNode) {
             throw new PageNotFoundException($path);
         }
-
+        
         if ($pageNode->hasAttribute('redirect')) {
             $redirectPath = $pageNode->getAttribute('redirect');
-
+            
             $host = parse_url($redirectPath, PHP_URL_HOST);
             if ($host) {
                 throw new PageRedirectionException($redirectPath);
             }
-
+            
             switch ($redirectPath) {
                 case '..':
                     $redirectPath = $pageNode->parentNode->getAttribute('uri');
                     break;
             }
-
+            
             $redirectNode = $this->lookupPageNode($redirectPath, $pageNode);
             throw new PageRedirectionException($redirectNode->getAttribute('uri'));
         }
-
+        
         if ($pageNode->getAttribute('uri') !== $path) {
             throw new PageRedirectionException($pageNode->getAttribute('uri'));
         }
-
+        
         return $pageNode;
     }
-
+    
     public function lookupAssetUrl(DOMElement $dataNode, array $args = []): FarahUrl {
         $vendorName = $this->findVendorName($dataNode);
         $moduleName = $this->findModuleName($dataNode);
         $args += $this->findParameters($dataNode);
         $ref = $dataNode->getAttribute('ref');
-
+        
         return FarahUrl::createFromReference($ref, FarahUrl::createFromComponents(FarahUrlAuthority::createFromVendorAndModule($vendorName, $moduleName), null, FarahUrlArguments::createFromValueList($args)));
     }
-
+    
     private function path2expr(string $path, string $filter = ''): string {
         $path = array_filter(explode('/', $path), 'strlen');
         $qry = [
@@ -193,7 +193,7 @@ class Domain {
         }
         return implode('/', $qry);
     }
-
+    
     // @deprecated
     private function findUri(DOMElement $pageNode): string {
         if ($pageNode->hasAttribute('ext')) {
@@ -230,23 +230,23 @@ class Domain {
         }
         return $ret;
     }
-
+    
     private function getDomainName(): string {
         return $this->domainName;
     }
-
+    
     private function getProtocol(): string {
         return 'http'; // TODO: where to put this?
     }
-
+    
     private function findModuleName(DOMElement $node): string {
         return $this->xpath->evaluate('string(ancestor-or-self::*[@module][1]/@module)', $node);
     }
-
+    
     private function findVendorName(DOMElement $node): string {
         return $this->xpath->evaluate('string(ancestor-or-self::*[@vendor][1]/@vendor)', $node);
     }
-
+    
     private function findParameters(DOMElement $node): array {
         $ret = [];
         foreach ($this->xpath->evaluate('ancestor-or-self::*/sfm:param', $node) as $paramNode) {
@@ -254,14 +254,14 @@ class Domain {
         }
         return $ret;
     }
-
+    
     public function toRoutes(): array {
         $this->loadDocument();
         return [
             $this->domainName => $this->toRoute($this->domainNode, FarahUrl::createFromReference('farah://slothsoft@farah/'))
         ];
     }
-
+    
     private function toRoute(DOMElement $pageNode, FarahUrl $contextUrl): array {
         if ($pageNode->hasAttribute('module')) {
             $module = $pageNode->getAttribute('module');
@@ -282,7 +282,7 @@ class Domain {
                 $pageName = $pageNode->getAttribute('name');
                 break;
         }
-
+        
         $children = [];
         $params = [];
         foreach ($pageNode->childNodes as $node) {
@@ -306,7 +306,7 @@ class Domain {
             ],
             'child_routes' => $children
         ];
-
+        
         if ($pageNode->hasAttribute('ref')) {
             $route['may_terminate'] = true;
             $ref = $pageNode->getAttribute('ref');

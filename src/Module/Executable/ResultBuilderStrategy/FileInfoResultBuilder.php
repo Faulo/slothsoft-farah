@@ -9,13 +9,13 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileInfoStreamBuilder;
 use SplFileInfo;
 
 class FileInfoResultBuilder implements ResultBuilderStrategyInterface {
-
+    
     private $file;
-
+    
     public function __construct(SplFileInfo $file) {
         $this->file = $file;
     }
-
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         $streamBuilder = new FileInfoStreamBuilder($this->file);
         return new ResultStrategies($streamBuilder);

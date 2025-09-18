@@ -14,37 +14,37 @@ use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 abstract class MessageFactory {
-
+    
     public static function createServerRequest(): ServerRequestInterface {
         return ServerRequest::fromGlobals();
     }
-
+    
     public static function createCustomRequest(string $method, UriInterface $uri, $body = null): ServerRequestInterface {
         $serverRequest = new ServerRequest($method, $uri, [], $body, $_SERVER['SERVER_PROTOCOL'], $_SERVER);
         $params = [];
         parse_str($uri->getQuery(), $params);
         return $serverRequest->withQueryParams($params);
     }
-
+    
     public static function createServerResponse(int $statusCode, array $headers, StreamInterface $stream = null): ResponseInterface {
         return new Response($statusCode, $headers, $stream);
     }
-
+    
     public static function createStreamFromResource($resource): StreamInterface {
         return new Stream($resource);
     }
-
+    
     public static function createStreamFromContents(string $contents): StreamInterface {
         $handle = fopen('php://temp', StreamWrapperInterface::MODE_CREATE_READWRITE);
         fwrite($handle, $contents);
         rewind($handle);
         return self::createStreamFromResource($handle);
     }
-
+    
     public static function createStreamFromFile(HTTPFile $file): StreamInterface {
         return self::createStreamFromResource(fopen($file->getPath(), StreamWrapperInterface::MODE_OPEN_READONLY));
     }
-
+    
     public static function createStreamFromUrl(FarahUrl $url): StreamInterface {
         return self::createStreamFromResource(fopen((string) $url, StreamWrapperInterface::MODE_OPEN_READONLY));
     }

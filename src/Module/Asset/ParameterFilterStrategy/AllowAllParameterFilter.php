@@ -8,11 +8,11 @@ namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
  *        
  */
 class AllowAllParameterFilter implements ParameterFilterStrategyInterface {
-
+    
     public function isAllowedName(string $name): bool {
         return true;
     }
-
+    
     public function getValueSanitizers(): iterable {
         return [];
     }

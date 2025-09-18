@@ -14,26 +14,26 @@ use DOMNodeList;
  * @see FromManifestExecutableBuilder
  */
 class FromManifestExecutableBuilderTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FromManifestExecutableBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromManifestExecutableBuilder'!");
     }
-
+    
     /**
      *
      * @dataProvider provideURLsAndQuery
      */
     public function testManifestContainsDocument(string $url, string $query): void {
         FileSystem::removeDir(ServerEnvironment::getCacheDirectory(), true);
-
+        
         $xpath = DOMHelper::loadXPath(DOMHelper::loadDocument($url));
-
+        
         /** @var DOMNodeList $result */
         $result = $xpath->evaluate($query);
-
+        
         $this->assertGreaterThan(0, $result->length);
     }
-
+    
     public static function provideURLsAndQuery(): array {
         return [
             "No parameter should load manifest-info" => [

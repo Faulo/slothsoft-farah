@@ -10,29 +10,29 @@ use Generator;
 use Throwable;
 
 abstract class AbstractDaemonServer implements ChunkWriterInterface {
-
+    
     public const DAEMON_DOMAIN = AF_INET;
-
+    
     public const DAEMON_TYPE = SOCK_STREAM;
-
+    
     public const DAEMON_PROTOCOL = SOL_TCP;
-
+    
     public const DAEMON_ADDRESS = '127.0.0.1';
-
+    
     public const STDOUT = 1;
-
+    
     public const STDERR = 2;
-
+    
     private $port;
-
+    
     private $socket;
-
+    
     private $isRunning;
-
+    
     public function __construct(int $port) {
         $this->port = $port;
     }
-
+    
     public function init(FarahUrlArguments $args) {
         $this->socket = socket_create(static::DAEMON_DOMAIN, static::DAEMON_TYPE, static::DAEMON_PROTOCOL);
         socket_bind($this->socket, static::DAEMON_ADDRESS, $this->port);
@@ -40,9 +40,9 @@ abstract class AbstractDaemonServer implements ChunkWriterInterface {
         socket_set_nonblock($this->socket);
         $this->onInitialize($args);
     }
-
+    
     public abstract function onInitialize(FarahUrlArguments $args): void;
-
+    
     public function toChunks(): Generator {
         $this->isRunning = true;
         while ($this->isRunning) {
@@ -75,17 +75,17 @@ abstract class AbstractDaemonServer implements ChunkWriterInterface {
             }
         }
     }
-
+    
     public abstract function onMessage($message): iterable;
-
+    
     public function stop() {
         $this->isRunning = false;
     }
-
+    
     protected function log(string $message): iterable {
         yield static::STDERR => sprintf('[%s] %s%s', date(DateTimeFormatter::FORMAT_DATETIME), $message, PHP_EOL);
     }
-
+    
     protected function respondWith(string $message): iterable {
         yield static::STDOUT => $message;
     }

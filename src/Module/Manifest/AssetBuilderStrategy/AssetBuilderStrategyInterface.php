@@ -7,9 +7,9 @@ use Slothsoft\Farah\Module\Asset\AssetStrategies;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 
 interface AssetBuilderStrategyInterface {
-
+    
     public function normalizeElement(LeanElement $element, ?LeanElement $parent = null): void;
-
+    
     public function buildAssetStrategies(ManifestInterface $ownerManifest, LeanElement $element): AssetStrategies;
 }
 

@@ -5,50 +5,50 @@ namespace Slothsoft\Farah\Tracking;
 use Slothsoft\Core\ServerEnvironment;
 
 class Tick {
-
+    
     protected static $logTick;
-
+    
     public static function log() {
         if (! self::$logTick) {
             self::$logTick = new Tick();
         }
         self::$logTick->append();
     }
-
+    
     protected $functionList;
-
+    
     protected $functionFile;
-
+    
     protected $lastFunction;
-
+    
     protected $timelineList;
-
+    
     protected $timelineFile;
-
+    
     protected $lastTimeline;
-
+    
     protected $lastTime;
-
+    
     protected function __construct() {
         $this->create();
     }
-
+    
     public function __destruct() {
         $this->save();
     }
-
+    
     protected function create() {
         $this->lastTime = get_execution_time();
-
+        
         $this->functionList = [];
         $this->functionFile = ServerEnvironment::getLogDirectory() . 'tracking.tick.function.log';
         file_put_contents($this->functionFile, '');
-
+        
         $this->timelineList = [];
         $this->timelineFile = ServerEnvironment::getLogDirectory() . 'tracking.tick.timeline.log';
         file_put_contents($this->timelineFile, '');
     }
-
+    
     protected function save() {
         $arr = $this->functionList;
         arsort($arr);
@@ -59,7 +59,7 @@ class Tick {
         file_put_contents($this->functionFile, implode(PHP_EOL, $arr));
         file_put_contents($this->timelineFile, implode(PHP_EOL, $this->timelineList));
     }
-
+    
     protected function append() {
         $mode = true;
         if ($mode) {
@@ -73,7 +73,7 @@ class Tick {
             $backtraceList = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             array_shift($backtraceList);
             array_shift($backtraceList);
-
+            
             $funcList = [];
             foreach ($backtraceList as $backtrace) {
                 $func = isset($backtrace['class'], $backtrace['type']) ? $backtrace['class'] . $backtrace['type'] . $backtrace['function'] : $backtrace['function'];

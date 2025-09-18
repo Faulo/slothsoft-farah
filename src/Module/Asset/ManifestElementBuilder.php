@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\Module\Asset;
 use Slothsoft\Core\XML\LeanElement;
 
 class ManifestElementBuilder {
-
+    
     public static function createResource(string $name, string $path, string $type): LeanElement {
         return LeanElement::createOneFromArray('resource', [
             'name' => $name,
@@ -13,7 +13,7 @@ class ManifestElementBuilder {
             'type' => $type
         ]);
     }
-
+    
     public static function createResourceDirectory(string $name, string $path, string $type): LeanElement {
         return LeanElement::createOneFromArray('resource-directory', [
             'name' => $name,

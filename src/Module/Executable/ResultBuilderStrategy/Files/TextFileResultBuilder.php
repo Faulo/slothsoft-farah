@@ -8,7 +8,7 @@ use DOMElement;
 
 class TextFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterDocumentFromElementTrait;
-
+    
     public function toElement(DOMDocument $targetDoc): DOMElement {
         $element = $targetDoc->createElement('text');
         $element->textContent = file_get_contents((string) $this->file);

@@ -17,22 +17,22 @@ use Slothsoft\Farah\Module\Module;
  *        
  */
 class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
-
+    
     public function createStreamWrapper(string $url, string $mode, int $options) {
         $url = FarahUrl::createFromReference($url);
-
+        
         $stream = Module::resolveToStreamWriter($url)->toStream();
-
+        
         return new Psr7StreamWrapper($stream);
     }
-
+    
     public function statUrl(string $url, int $flags) {
         try {
             $url = FarahUrl::createFromReference($url);
         } catch (IncompleteUrlException $e) {
             return false;
         }
-
+        
         try {
             return Module::resolveToResult($url)->lookupFileStatistics();
         } catch (EmptyTransformationException $e) {

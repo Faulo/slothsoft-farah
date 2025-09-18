@@ -10,17 +10,17 @@ use SplFileInfo;
 
 class FileInfoDOMWriter implements DOMWriterInterface {
     use DOMWriterDocumentFromElementTrait;
-
+    
     /**
      *
      * @var SplFileInfo
      */
     private $file;
-
+    
     public function __construct(SplFileInfo $file) {
         $this->file = $file;
     }
-
+    
     public function toElement(DOMDocument $targetDoc): DOMElement {
         $node = $targetDoc->createElement($this->file->getType());
         $node->setAttribute('name', $this->file->getFilename());
@@ -29,7 +29,7 @@ class FileInfoDOMWriter implements DOMWriterInterface {
             $node->setAttribute('modification-time', $this->file->getMTime());
             $node->setAttribute('modification-date', date(DATE_W3C, $this->file->getMTime()));
         }
-
+        
         return $node;
     }
 }

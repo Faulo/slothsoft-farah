@@ -16,11 +16,11 @@ use Error;
  * @see FarahStreamWrapperFactory
  */
 class FarahStreamWrapperFactoryTest extends TestCase {
-
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FarahStreamWrapperFactory::class), "Failed to load class 'Slothsoft\Farah\StreamWrapper\FarahStreamWrapperFactory'!");
     }
-
+    
     /**
      *
      * @dataProvider fileExceptionProvider
@@ -32,7 +32,7 @@ class FarahStreamWrapperFactoryTest extends TestCase {
             $this->assertFileExists($uri);
         }
     }
-
+    
     /**
      *
      * @dataProvider fileExceptionProvider
@@ -45,31 +45,31 @@ class FarahStreamWrapperFactoryTest extends TestCase {
             $this->assertThat(file_get_contents($uri), new LogicalNot(new IsEqual('')));
         }
     }
-
+    
     public function fileExceptionProvider(): iterable {
         yield 'farah://slothsoft@farah/ does exist' => [
             'farah://slothsoft@farah/'
         ];
-
+        
         yield 'farah://slothsoft@farah does exist' => [
             'farah://slothsoft@farah'
         ];
-
+        
         yield 'farah://slothsoft@farah/missing does not exist' => [
             'farah://slothsoft@farah/missing',
             AssetPathNotFoundException::class
         ];
-
+        
         yield 'farah://slothsoft@farah-missing does not exist' => [
             'farah://slothsoft@farah-missing',
             ModuleNotFoundException::class
         ];
-
+        
         yield 'farah://slothsoft@ does not exist' => [
             'farah://slothsoft@',
             Error::class
         ];
-
+        
         yield 'farah://slothsoft-missing does not exist' => [
             'farah://slothsoft-missing',
             IncompleteUrlException::class

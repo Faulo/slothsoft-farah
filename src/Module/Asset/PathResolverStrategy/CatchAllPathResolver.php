@@ -12,7 +12,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
  */
 class CatchAllPathResolver implements PathResolverStrategyInterface {
     use LoadChildrenFromManifestTrait;
-
+    
     public function resolvePath(AssetInterface $context, string $name): LeanElement {
         return $context->getManifestElement();
     }

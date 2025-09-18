@@ -16,7 +16,7 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\FileWriterResultBuil
  *        
  */
 class PhpinfoBuilder implements ExecutableBuilderStrategyInterface {
-
+    
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $delegate = function (): string {
             ob_start();

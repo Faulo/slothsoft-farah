@@ -8,7 +8,7 @@ use DOMDocument;
 
 class XmlFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterElementFromDocumentTrait;
-
+    
     public function toDocument(): DOMDocument {
         $document = DOMHelper::loadDocument((string) $this->file);
         $document->documentURI = (string) $this->url;

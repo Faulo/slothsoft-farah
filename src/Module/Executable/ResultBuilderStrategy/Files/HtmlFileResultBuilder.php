@@ -7,7 +7,7 @@ use DOMDocument;
 
 class HtmlFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterElementFromDocumentTrait;
-
+    
     public function toDocument(): DOMDocument {
         $doc = new DOMDocument();
         $doc->loadHTMLFile((string) $this->file);

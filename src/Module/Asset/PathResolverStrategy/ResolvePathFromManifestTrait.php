@@ -7,7 +7,7 @@ use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 trait ResolvePathFromManifestTrait {
-
+    
     public function resolvePath(AssetInterface $context, string $name): LeanElement {
         foreach ($context->getManifestElement()->getChildren() as $element) {
             if ($element->getAttribute('name') === $name) {

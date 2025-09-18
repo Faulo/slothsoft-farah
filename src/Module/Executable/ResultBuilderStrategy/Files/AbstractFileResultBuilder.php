@@ -16,16 +16,16 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileInfoStreamBuilder;
 use SplFileInfo;
 
 abstract class AbstractFileResultBuilder implements ResultBuilderStrategyInterface, FileWriterInterface, DOMWriterInterface {
-
+    
     protected $url;
-
+    
     protected $file;
-
+    
     public function __construct(FarahUrl $url, SplFileInfo $file) {
         $this->url = $url;
         $this->file = $file;
     }
-
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         if ($type === Executable::resultIsXml()) {
             $streamBuilder = new DOMWriterStreamBuilder(new DOMWriterMemoryCache($this), $this->file->getFilename());
@@ -34,7 +34,7 @@ abstract class AbstractFileResultBuilder implements ResultBuilderStrategyInterfa
         }
         return new ResultStrategies($streamBuilder);
     }
-
+    
     public function toFile(): SplFileInfo {
         return $this->file;
     }

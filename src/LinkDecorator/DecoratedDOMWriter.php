@@ -7,34 +7,34 @@ use DOMDocument;
 use DOMElement;
 
 class DecoratedDOMWriter implements DOMWriterInterface {
-
+    
     private $source;
-
+    
     /**
      *
      * @var iterable
      */
     private $stylesheets;
-
+    
     /**
      *
      * @var iterable
      */
     private $scripts;
-
+    
     /**
      *
      * @var iterable
      */
     private $modules;
-
+    
     public function __construct(DOMWriterInterface $source, iterable $stylesheets, iterable $scripts, iterable $modules) {
         $this->source = $source;
         $this->stylesheets = $stylesheets;
         $this->scripts = $scripts;
         $this->modules = $modules;
     }
-
+    
     public function toElement(DOMDocument $targetDoc): DOMElement {
         $element = $this->source->toElement($targetDoc);
         $decorator = DecoratorFactory::createForElement($element);
@@ -43,7 +43,7 @@ class DecoratedDOMWriter implements DOMWriterInterface {
         $decorator->linkModules(...$this->modules);
         return $element;
     }
-
+    
     public function toDocument(): DOMDocument {
         $document = $this->source->toDocument();
         $decorator = DecoratorFactory::createForDocument($document);

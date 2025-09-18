@@ -24,7 +24,7 @@ use DOMDocument;
 use Exception;
 
 class HTTPResponse {
-
+    
     public static function cacheDurations(): CascadingDictionary {
         static $field;
         if ($field === null) {
@@ -32,51 +32,51 @@ class HTTPResponse {
         }
         return $field;
     }
-
+    
     public static function inventCacheDuration(string $mimeType): int {
         return self::cacheDurations()[$mimeType] ?? self::$httpConfig['cache-duration'];
     }
-
+    
     const CHUNK_EOL = "\r\n";
-
+    
     const STATUS_OK = 200;
-
+    
     const STATUS_NO_CONTENT = 204;
-
+    
     const STATUS_PARTIAL_CONTENT = 206;
-
+    
     const STATUS_MULTIPLE_CHOICES = 300;
-
+    
     const STATUS_MOVED_PERMANENTLY = 301;
-
+    
     const STATUS_SEE_OTHER = 303;
-
+    
     const STATUS_NOT_MODIFIED = 304;
-
+    
     const STATUS_TEMPORARY_REDIRECT = 307;
-
+    
     const STATUS_PERMANENT_REDIRECT = 308;
-
+    
     const STATUS_BAD_REQUEST = 400;
-
+    
     const STATUS_UNAUTHORIZED = 401;
-
+    
     const STATUS_NOT_FOUND = 404;
-
+    
     const STATUS_METHOD_NOT_ALLOWED = 405;
-
+    
     const STATUS_GONE = 410;
-
+    
     const STATUS_PRECONDITION_FAILED = 412;
-
+    
     const STATUS_REQUESTED_RANGE_NOT_SATISFIABLE = 416;
-
+    
     const STATUS_INTERNAL_SERVER_ERROR = 500;
-
+    
     const STATUS_NOT_IMPLEMENTED = 501;
-
+    
     const STATUS_HTTP_VERSION_NOT_SUPPORTED = 505;
-
+    
     protected static $httpConfig = [
         'date-format' => 'D, d M Y H:i:s \\G\\M\\T',
         'doc-timestamp' => false, // "rendering took X seconds and Y MB"
@@ -88,7 +88,7 @@ class HTTPResponse {
         'chunk-size' => 256 * Memory::ONE_KILOBYTE, // transfer-encoding
         'gzip-level' => 9 // encoding-level
     ];
-
+    
     protected static $httpStatusCodes = [
         self::STATUS_OK => 'OK',
         self::STATUS_NO_CONTENT => 'No Content',
@@ -110,36 +110,36 @@ class HTTPResponse {
         self::STATUS_NOT_IMPLEMENTED => 'Not Implemented',
         self::STATUS_HTTP_VERSION_NOT_SUPPORTED => 'HTTP Version Not Supported'
     ];
-
+    
     const CONTENT_ENCODING_RAW = 'identity';
-
+    
     const CONTENT_ENCODING_GZIP = 'gzip';
-
+    
     protected $supportedContentEncodings = [
         self::CONTENT_ENCODING_RAW,
         self::CONTENT_ENCODING_GZIP
     ];
-
+    
     const TRANSFER_ENCODING_RAW = 'identity';
-
+    
     const TRANSFER_ENCODING_CHUNKED = 'chunked';
-
+    
     protected $supportedTransferEncodings = [
         self::TRANSFER_ENCODING_RAW,
         self::TRANSFER_ENCODING_CHUNKED
     ];
-
+    
     const BODY_STRING = 1;
-
+    
     // body = output string
     const BODY_FILE = 2;
-
+    
     // body = path to file
     const BODY_STREAM = 3;
-
+    
     // body = HTTPStream
     const BODY_COMMAND = 4;
-
+    
     // body = HTTPCommand
     public static function setHttpConfig(array $config) {
         foreach (self::$httpConfig as $key => &$val) {
@@ -150,61 +150,61 @@ class HTTPResponse {
         }
         unset($val);
     }
-
+    
     public static function calcEtag($data): string {
         return md5((string) $data);
     }
-
+    
     protected $headerList;
-
+    
     protected $body;
-
+    
     protected $bodyType;
-
+    
     protected $bodyLength;
-
+    
     protected $rangeStart;
-
+    
     protected $rangeEnd;
-
+    
     protected $method;
-
+    
     protected $status;
-
+    
     protected $charset;
-
+    
     protected $contentEncoding;
-
+    
     protected $contentEncodingList;
-
+    
     protected $transferEncoding;
-
+    
     protected $transferEncodingList;
-
+    
     protected $mime;
-
+    
     protected $language;
-
+    
     protected $fileName;
-
+    
     protected $fileExt;
-
+    
     protected $fileDisposition;
-
+    
     protected $ifNoneMatch;
-
+    
     protected $ifModifiedSince;
-
+    
     protected $supportedNegotiations;
-
+    
     protected $protocolName;
-
+    
     protected $protocolMajorVersion;
-
+    
     protected $protocolMinorVersion;
-
+    
     public $includeBody = true;
-
+    
     public function __construct() {
         $this->charset = 'UTF-8';
         $this->mime = 'text/plain';
@@ -221,15 +221,15 @@ class HTTPResponse {
         $this->fileExt = 'txt';
         $this->fileDisposition = 'inline';
         $this->ifNoneMatch = null;
-
+        
         $this->method = HTTPRequest::METHOD_GET;
         $this->protocolName = HTTPRequest::PROTOCOL_HTTP;
         $this->protocolMajorVersion = 1;
         $this->protocolMinorVersion = 1;
-
+        
         $this->headerList = [];
     }
-
+    
     public function setRequest(HTTPRequest $httpRequest) {
         $this->setMethod($httpRequest->method);
         $this->setContentEncoding($httpRequest->getHeader('accept-encoding', ''));
@@ -243,7 +243,7 @@ class HTTPResponse {
         $this->protocolMajorVersion = $httpRequest->protocolMajorVersion;
         $this->protocolMinorVersion = $httpRequest->protocolMinorVersion;
     }
-
+    
     public function addTrackingInfo(array &$env) {
         $env['RESPONSE_TIME'] = get_execution_time();
         $env['RESPONSE_MEMORY'] = sprintf('%.2f', memory_get_peak_usage() / 1048576);
@@ -260,13 +260,13 @@ class HTTPResponse {
             $env['RESPONSE_INPUT'] = $input;
         }
     }
-
+    
     public function send() {
         if (! headers_sent() and ! connection_aborted()) {
             if ($this->bodyHasChanged() === false) {
                 $this->setStatus(self::STATUS_NOT_MODIFIED);
             }
-
+            
             if ($this->status === self::STATUS_OK and $this->rangeStart !== $this->rangeEnd) {
                 $this->setStatus(self::STATUS_PARTIAL_CONTENT);
             }
@@ -277,7 +277,7 @@ class HTTPResponse {
                 $this->rangeEnd = $this->bodyLength;
             }
             $this->sendHeaderList();
-
+            
             switch ($this->method) {
                 case HTTPRequest::METHOD_OPTIONS:
                 case HTTPRequest::METHOD_HEAD:
@@ -288,28 +288,28 @@ class HTTPResponse {
             }
         }
     }
-
+    
     public function addHeader($key, $val, $param = null) {
         $key = strtolower(trim($key));
         $this->headerList[$key] = $param === null ? $val : vsprintf($val, $param);
     }
-
+    
     public function removeHeader($key) {
         $key = strtolower(trim($key));
         unset($this->headerList[$key]);
     }
-
+    
     public function getHeader($key) {
         $key = strtolower($key);
         return isset($this->headerList[$key]) ? $this->headerList[$key] : null;
     }
-
+    
     public function addNegotiation($negotiation) {
         if (! in_array($negotiation, $this->supportedNegotiations)) {
             $this->supportedNegotiations[] = $negotiation;
         }
     }
-
+    
     public function removeNegotiation($negotiation) {
         foreach ($this->supportedNegotiations as $i => $tmp) {
             if ($tmp === $negotiation) {
@@ -319,7 +319,7 @@ class HTTPResponse {
         }
         return false;
     }
-
+    
     public function setLanguage($language) {
         $this->language = $language;
         if ($language) {
@@ -330,22 +330,22 @@ class HTTPResponse {
             $this->removeNegotiation('accept-language');
         }
     }
-
+    
     public function setFileName($fileName) {
         $this->fileName = $fileName;
     }
-
+    
     public function setFileExt($fileExt, $guessMime = false) {
         $this->fileExt = $fileExt;
         if ($guessMime) {
             $this->mime = MimeTypeDictionary::guessMime($this->fileExt);
         }
     }
-
+    
     public function setMethod($method) {
         $this->method = $method;
     }
-
+    
     public function setStatus($code, $message = '') {
         if (isset(self::$httpStatusCodes[$code])) {
             $this->status = $code;
@@ -361,11 +361,11 @@ class HTTPResponse {
             }
         }
     }
-
+    
     public function getStatus() {
         return $this->status;
     }
-
+    
     public function setRange(string $range) {
         $match = [];
         if (preg_match('/^bytes=(\d*)-(\d*)(.*)$/', $range, $match)) {
@@ -377,23 +377,23 @@ class HTTPResponse {
             }
         }
     }
-
+    
     public function setDownload($isDownload) {
         $this->fileDisposition = $isDownload ? 'attachment' : 'inline';
     }
-
+    
     public function setRedirect($uri, $permanent = false, $forceGET = false) {
         $this->setStatus($forceGET ? self::STATUS_SEE_OTHER : ($permanent ? self::STATUS_PERMANENT_REDIRECT : self::STATUS_TEMPORARY_REDIRECT));
         $this->addHeader('location', $uri);
         // $this->setBody($uri);
     }
-
+    
     public function setMoved($uri, $permanent = false) {
         $this->setStatus($permanent ? self::STATUS_MOVED_PERMANENTLY : self::STATUS_TEMPORARY_REDIRECT);
         $this->addHeader('location', $uri);
         $this->setBody($uri);
     }
-
+    
     public function setFile($filePath, $fileName = null) {
         if ($fileName === null) {
             $fileName = basename($filePath);
@@ -409,7 +409,7 @@ class HTTPResponse {
         }
         if ($filePath = (string) $filePath) {
             $this->setStatus(self::STATUS_OK);
-
+            
             $size = FileSystem::size($filePath);
             $changetime = FileSystem::changetime($filePath);
             if ($size > self::$httpConfig['download-size']) {
@@ -429,7 +429,7 @@ class HTTPResponse {
         }
         // $this->addHeader('content-type', 'application/octet-stream');
     }
-
+    
     public function setStream(HTTPStream $stream) {
         $this->setStatus(self::STATUS_OK);
         $this->body = $stream;
@@ -446,7 +446,7 @@ class HTTPResponse {
             default:
                 break;
         }
-
+        
         $headerList = $this->body->getHeaderList();
         foreach ($headerList as $key => $val) {
             $this->addHeader($key, $val);
@@ -458,7 +458,7 @@ class HTTPResponse {
             $this->charset = $charset;
         }
     }
-
+    
     public function setCommand(HTTPCommand $command) {
         $this->setStatus(self::STATUS_OK);
         $this->body = $command;
@@ -467,7 +467,7 @@ class HTTPResponse {
         $this->bodyLength = null;
         $this->bodyType = self::BODY_COMMAND;
         $this->contentEncoding = self::CONTENT_ENCODING_RAW;
-
+        
         $headerList = $this->body->getHeaderList();
         foreach ($headerList as $key => $val) {
             $this->addHeader($key, $val);
@@ -479,13 +479,13 @@ class HTTPResponse {
             $this->charset = $charset;
         }
     }
-
+    
     public function getDocument() {
         $retDoc = new DOMDocument();
         $retDoc->loadXML($this->body);
         return $retDoc;
     }
-
+    
     public function getDocumentElement(DOMDocument $targetDoc) {
         $ret = null;
         if ($doc = $this->getDocument()) {
@@ -497,12 +497,12 @@ class HTTPResponse {
         }
         return $ret;
     }
-
+    
     public function setExceptionContext(ExceptionContext $exception) {
         $this->setDocument($exception->toDocument());
         $this->status = self::STATUS_INTERNAL_SERVER_ERROR;
     }
-
+    
     public function setDocument(DOMDocument $doc) {
         if ($doc->documentURI and $fileName = basename($doc->documentURI)) {
             $this->setFile(null, $fileName);
@@ -517,7 +517,7 @@ class HTTPResponse {
         if ($this->charset) {
             $doc->encoding = $this->charset;
         }
-
+        
         $ns = $doc->documentElement ? $doc->documentElement->namespaceURI : null;
         $doctype = null;
         switch ($ns) {
@@ -539,11 +539,11 @@ class HTTPResponse {
             $this->setFileExt($ext, false);
         }
         $this->setStatus(self::STATUS_OK);
-
+        
         if ($doctype) {
             $doc->insertBefore($doctype, $doc->documentElement);
         }
-
+        
         if (self::$httpConfig['doc-timestamp']) {
             printf(Kernel::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576);
             $this->setEtag(self::calcEtag($doc->saveXML()), false);
@@ -554,7 +554,7 @@ class HTTPResponse {
             $this->setEtag(self::calcEtag($this->body), true);
         }
     }
-
+    
     public function setBody($data) {
         $data = (string) $data;
         if (in_array(self::CONTENT_ENCODING_GZIP, $this->contentEncodingList)) {
@@ -567,11 +567,11 @@ class HTTPResponse {
         $this->bodyLength = strlen($this->body);
         $this->bodyType = self::BODY_STRING;
     }
-
+    
     public function getBody() {
         return $this->body;
     }
-
+    
     protected function bodyHasChanged() {
         $ret = true;
         $date = $this->getHeader('last-modified');
@@ -585,17 +585,17 @@ class HTTPResponse {
         }
         return $ret;
     }
-
+    
     public function setEtag($etag, $isStrong = true) { // https://tools.ietf.org/html/rfc7232#section-2.3
         $etag = sprintf('%s"%s"', $isStrong ? '' : 'W/', $etag);
         $this->addHeader('etag', $etag);
     }
-
+    
     public function setLastModified($time = null, $isStrong = true) {
         $date = gmdate(self::$httpConfig['date-format'], $time === null ? time() : $time);
         $this->addHeader('last-modified', $date);
     }
-
+    
     public function setContentEncoding(string $contentEncoding) {
         if (strlen($contentEncoding) and $contentEncodingList = explode(',', $contentEncoding)) {
             foreach ($contentEncodingList as $contentEncoding) {
@@ -606,7 +606,7 @@ class HTTPResponse {
             }
         }
     }
-
+    
     protected function sendHeaderList() {
         // $this->addHeader('connection', 'Keep-Alive');
         if ($this->rangeEnd !== null) {
@@ -664,7 +664,7 @@ class HTTPResponse {
         flush();
         $this->headerList = [];
     }
-
+    
     protected function sendBody() {
         if ($this->includeBody) {
             set_time_limit(Seconds::DAY);
@@ -680,7 +680,7 @@ class HTTPResponse {
                     $start = $this->rangeStart;
                     $end = $this->rangeEnd;
                     $length = $end - $start;
-
+                    
                     if ($handle = fopen($this->body, 'rb')) {
                         if ($start < PHP_INT_MAX) {
                             fseek($handle, $start, SEEK_SET);
@@ -766,7 +766,7 @@ class HTTPResponse {
             $this->sendBodyEnd();
         }
     }
-
+    
     protected function sendBodyChunk($chunk) {
         switch ($this->transferEncoding) {
             case self::TRANSFER_ENCODING_RAW:
@@ -784,7 +784,7 @@ class HTTPResponse {
                 break;
         }
     }
-
+    
     protected function sendBodyEnd() {
         switch ($this->transferEncoding) {
             case self::TRANSFER_ENCODING_RAW:

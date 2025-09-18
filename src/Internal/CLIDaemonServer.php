@@ -12,9 +12,9 @@ use Symfony\Component\Process\Process;
  *        
  */
 class CLIDaemonServer extends AbstractDaemonServer {
-
+    
     public function onInitialize(FarahUrlArguments $args): void {}
-
+    
     public function onMessage($message): iterable {
         assert(is_array($message));
         $process = new Process($message);

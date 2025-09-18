@@ -16,22 +16,22 @@ use SplFileInfo;
  *        
  */
 interface AssetInterface {
-
+    
     public function __toString(): string;
-
+    
     /**
      *
      * @return LeanElement
      */
     public function getManifestElement(): LeanElement;
-
+    
     /**
      * Get all child assets.
      *
      * @return AssetInterface[]
      */
     public function getAssetChildren(): iterable;
-
+    
     /**
      * Traverse to a descendant asset.
      *
@@ -39,7 +39,7 @@ interface AssetInterface {
      * @return AssetInterface
      */
     public function traverseTo(string $path): AssetInterface;
-
+    
     /**
      * Create a FarahUrl for this asset, with arguments and stream set as supplied.
      *
@@ -48,14 +48,14 @@ interface AssetInterface {
      * @return FarahUrl
      */
     public function createUrl($args = null, $fragment = null): FarahUrl;
-
+    
     /**
      * Get the FarahUrlPath for this asset.
      *
      * @return FarahUrlPath|NULL
      */
     public function getUrlPath(): FarahUrlPath;
-
+    
     /**
      * Get the filesystem entry for this asset.
      * This might be a file, a directory, or it might not physically exist.
@@ -63,7 +63,7 @@ interface AssetInterface {
      * @return FarahUrlPath|NULL
      */
     public function getFileInfo(): SplFileInfo;
-
+    
     /**
      * Create the executable for this asset, with the arguments supplied.
      *
@@ -71,32 +71,32 @@ interface AssetInterface {
      * @return ExecutableInterface
      */
     public function lookupExecutable(FarahUrlArguments $args = null): ExecutableInterface;
-
+    
     public function isImportSelfInstruction(): bool;
-
+    
     public function isImportChildrenInstruction(): bool;
-
+    
     public function isUseManifestInstruction(): bool;
-
+    
     public function isUseTemplateInstruction(): bool;
-
+    
     public function isUseDocumentInstruction(): bool;
-
+    
     public function isLinkStylesheetInstruction(): bool;
-
+    
     public function isLinkScriptInstruction(): bool;
-
+    
     public function isLinkModuleInstruction(): bool;
-
+    
     public function isParameterSupplierInstruction(): bool;
-
+    
     /**
      * Set any missing attributes according to the manifest's AssetBuilderStrategy.
      *
      * @param LeanElement $child
      */
     public function normalizeManifestElement(LeanElement $child): void;
-
+    
     /**
      * Get the parameters supplied by this assets's ParameterSupplierStrategy.
      *

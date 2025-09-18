@@ -10,33 +10,33 @@ use DOMDocument;
 
 class TransformationDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
-
+    
     /**
      *
      * @var DOMWriterInterface
      */
     private $source;
-
+    
     /**
      *
      * @var DOMWriterInterface
      */
     private $template;
-
+    
     public function __construct(DOMWriterInterface $source, DOMWriterInterface $template) {
         $this->source = $source;
         $this->template = $template;
     }
-
+    
     public function toDocument(): DOMDocument {
         $dom = new DOMHelper();
-
+        
         $resultDoc = $dom->transformToDocument($this->source, $this->template);
-
+        
         if (! $resultDoc->documentElement) {
             throw new EmptyTransformationException($this->source->toDocument()->documentElement->getAttribute('url'));
         }
-
+        
         return $resultDoc;
     }
 }

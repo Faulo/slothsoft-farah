@@ -24,7 +24,7 @@ use OutOfBoundsException;
 use SplFileInfo;
 
 class Module {
-
+    
     private static function getInstance(): self {
         static $instance;
         if ($instance === null) {
@@ -32,14 +32,14 @@ class Module {
         }
         return $instance;
     }
-
+    
     private static FarahUrlAuthority $latestModule;
-
+    
     public static function getBaseUrl(): FarahUrl {
         $authority = Kernel::hasCurrentSitemap() ? Kernel::getCurrentSitemap()->createUrl()->getAssetAuthority() : self::$latestModule;
         return FarahUrl::createFromComponents($authority);
     }
-
+    
     /**
      *
      * @param FarahUrlAuthority|string $authority
@@ -55,7 +55,7 @@ class Module {
         $module->setManifest($authority, $manifest);
         self::$latestModule = $authority;
     }
-
+    
     /**
      *
      * @param FarahUrlAuthority|string $authority
@@ -64,39 +64,39 @@ class Module {
     public static function registerWithXmlManifestAndDefaultAssets($authority, string $assetDirectory): void {
         static::register($authority, $assetDirectory, new ManifestStrategies(new XmlTreeLoader(), new DefaultAssetBuilder()));
     }
-
+    
     public static function resolveToManifest(FarahUrl $url): ManifestInterface {
         return static::getInstance()->getManifest($url->getAssetAuthority());
     }
-
+    
     public static function resolveToAsset(FarahUrl $url): AssetInterface {
         return static::resolveToManifest($url)->lookupAsset($url->getAssetPath());
     }
-
+    
     public static function resolveToExecutable(FarahUrl $url): ExecutableInterface {
         return static::resolveToAsset($url)->lookupExecutable($url->getArguments());
     }
-
+    
     public static function resolveToResult(FarahUrl $url): ResultInterface {
         return static::resolveToExecutable($url)->lookupResult($url->getStreamIdentifier());
     }
-
+    
     public static function resolveToDOMWriter(FarahUrl $url): DOMWriterInterface {
         return static::resolveToResult($url)->lookupDOMWriter();
     }
-
+    
     public static function resolveToFileWriter(FarahUrl $url): FileWriterInterface {
         return static::resolveToResult($url)->lookupFileWriter();
     }
-
+    
     public static function resolveToStreamWriter(FarahUrl $url): StreamWriterInterface {
         return static::resolveToResult($url)->lookupStreamWriter();
     }
-
+    
     public static function resolveToChunkWriter(FarahUrl $url): ChunkWriterInterface {
         return static::resolveToResult($url)->lookupChunkWriter();
     }
-
+    
     public function createCachedFile(string $fileName, FarahUrl $context): SplFileInfo {
         $path = $this->buildPath(ServerEnvironment::getCacheDirectory(), $context);
         if (! is_dir($path)) {
@@ -104,7 +104,7 @@ class Module {
         }
         return new \SplFileInfo($path . DIRECTORY_SEPARATOR . $fileName);
     }
-
+    
     public function createDataFile(string $fileName, FarahUrl $context): SplFileInfo {
         $path = $this->buildPath(ServerEnvironment::getDataDirectory(), $context);
         if (! is_dir($path)) {
@@ -112,7 +112,7 @@ class Module {
         }
         return new \SplFileInfo($path . DIRECTORY_SEPARATOR . $fileName);
     }
-
+    
     private function buildPath(string $rootDirectory, FarahUrl $context): string {
         $rootDirectory .= DIRECTORY_SEPARATOR . $context->getAssetAuthority()->getVendor();
         $rootDirectory .= DIRECTORY_SEPARATOR . $context->getAssetAuthority()->getModule();
@@ -124,21 +124,21 @@ class Module {
         }
         return $rootDirectory;
     }
-
+    
     private ManifestContainer $manifests;
-
+    
     private function __construct() {
         $this->manifests = new ManifestContainer();
     }
-
+    
     private function createManifest(FarahUrlAuthority $authority, string $assetDirectory, ManifestStrategies $strategies): ManifestInterface {
         return new Manifest($this, $authority, $assetDirectory, $strategies);
     }
-
+    
     private function setManifest(FarahUrlAuthority $authority, ManifestInterface $manifest): void {
         $this->manifests->put($authority, $manifest);
     }
-
+    
     private function getManifest(FarahUrlAuthority $authority): ManifestInterface {
         try {
             return $this->manifests->get($authority);

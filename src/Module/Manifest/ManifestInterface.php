@@ -11,7 +11,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use SplFileInfo;
 
 interface ManifestInterface {
-
+    
     /**
      * The Farah URL that represents this module.
      * $this === Module::resolveToManifest($this->getId())
@@ -19,7 +19,7 @@ interface ManifestInterface {
      * @return string
      */
     public function getId(): string;
-
+    
     /**
      * Build a Farah URL for the given path, with this module's URL as base.
      *
@@ -29,21 +29,21 @@ interface ManifestInterface {
      * @return FarahUrl
      */
     public function createUrl($path = null, $args = null, $fragment = null): FarahUrl;
-
+    
     /**
      *
      * @param FarahUrlPath|string $path
      * @return AssetInterface
      */
     public function lookupAsset($path): AssetInterface;
-
+    
     /**
      *
      * @param LeanElement $element
      * @return AssetInterface
      */
     public function createAsset(LeanElement $element): AssetInterface;
-
+    
     /**
      * Returns a handle for a file inside the asset directory of this manifest.
      *
@@ -51,7 +51,7 @@ interface ManifestInterface {
      * @return SplFileInfo
      */
     public function createManifestFile(string $fileName): SplFileInfo;
-
+    
     /**
      *
      * @param string $fileName
@@ -61,7 +61,7 @@ interface ManifestInterface {
      * @return SplFileInfo
      */
     public function createCacheFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo;
-
+    
     /**
      *
      * @param string $fileName
@@ -71,7 +71,7 @@ interface ManifestInterface {
      * @return SplFileInfo
      */
     public function createDataFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo;
-
+    
     /**
      * Set any missing attributes according to the AssetBuilderStrategy.
      *
@@ -79,7 +79,7 @@ interface ManifestInterface {
      * @param LeanElement $child
      */
     public function normalizeManifestElement(LeanElement $parent, LeanElement $child): void;
-
+    
     /*
      * Set any missing attributes in the whole tree according to the AssetBuilderStrategy.
      *

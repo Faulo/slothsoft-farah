@@ -8,7 +8,7 @@ use DOMElement;
 
 class Base64FileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterDocumentFromElementTrait;
-
+    
     public function toElement(DOMDocument $targetDoc): DOMElement {
         $element = $targetDoc->createElement('base64');
         $element->textContent = base64_encode(file_get_contents((string) $this->file));

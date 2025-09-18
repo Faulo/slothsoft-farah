@@ -8,9 +8,9 @@ use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
 interface ExecutableInterface {
-
+    
     public function getUrlArguments(): FarahUrlArguments;
-
+    
     /**
      * Create a FarahUrl for this operation, with stream set as supplied.
      *
@@ -18,7 +18,7 @@ interface ExecutableInterface {
      * @return FarahUrl
      */
     public function createUrl($fragment = null): FarahUrl;
-
+    
     /**
      * Create the result of this executable, in the representation type specified.
      *
@@ -26,9 +26,9 @@ interface ExecutableInterface {
      * @return ResultInterface
      */
     public function lookupResult($type): ResultInterface;
-
+    
     public function lookupDefaultResult(): ResultInterface;
-
+    
     public function lookupXmlResult(): ResultInterface;
 }
 

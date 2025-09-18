@@ -5,13 +5,13 @@ namespace Slothsoft\Farah\ResponseStrategy;
 use Psr\Http\Message\ResponseInterface;
 
 class SendHeaderAndBodyStrategy implements ResponseStrategyInterface {
-
+    
     public function process(ResponseInterface $response) {
         if (! headers_sent()) {
             $header = new SendHeaderStrategy();
             $header->process($response);
             flush();
-
+            
             if ($response->getBody()) {
                 $body = new SendBodyStrategy();
                 $body->process($response);

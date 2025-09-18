@@ -18,37 +18,37 @@ use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Core\MimeTypeDictionary;
 
 abstract class AbstractModuleTest extends AbstractTestCase {
-
+    
     abstract protected static function getManifestAuthority(): FarahUrlAuthority;
-
+    
     protected function getManifest(): ManifestInterface {
         $cache = TestCache::instance(get_class($this));
-
+        
         return $cache->retrieve('getManifest', function () {
             return Module::resolveToManifest($this->getManifestUrl());
         });
     }
-
+    
     protected function getManifestUrl(): FarahUrl {
         return FarahUrl::createFromComponents(static::getManifestAuthority());
     }
-
+    
     protected function getManifestAsset(): AssetInterface {
         return $this->getManifest()->lookupAsset('/');
     }
-
+    
     protected function getManifestDocument(): DOMDocument {
         return $this->getManifestMethod('getRootElement')->toDocument();
     }
-
+    
     protected function getManifestProperty(string $name) {
         return $this->getObjectProperty($this->getManifest(), $name);
     }
-
+    
     protected function getManifestMethod(string $name) {
         return $this->getObjectMethod($this->getManifest(), $name);
     }
-
+    
     /**
      *
      * @dataProvider assetReferenceProvider
@@ -63,10 +63,10 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             $this->failException($e);
         }
     }
-
+    
     public function assetReferenceProvider(): array {
         $cache = TestCache::instance(get_class($this));
-
+        
         return $cache->retrieve('assetReferenceProvider', function () {
             $provider = [];
             foreach ($this->getReferencedAssetReferences() as $context => $path) {
@@ -79,10 +79,10 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             return $provider;
         });
     }
-
+    
     public function assetReferenceUrlProvider(): array {
         $cache = TestCache::instance(get_class($this));
-
+        
         return $cache->retrieve('assetReferenceUrlProvider', function () {
             $provider = [];
             foreach ($this->getReferencedAssetReferences() as $context => $ref) {
@@ -97,7 +97,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             return $provider;
         });
     }
-
+    
     private function getReferencedAssetReferences(): iterable {
         $manifestDocument = $this->getManifestDocument();
         $nodeList = $manifestDocument->getElementsByTagName('*');
@@ -107,7 +107,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             }
         }
     }
-
+    
     private function getContextUrlForManifestNode(DOMElement $node): FarahUrl {
         $path = [];
         while ($node->parentNode instanceof DOMElement) {
@@ -123,7 +123,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         $path = FarahUrlPath::createFromString($path);
         return $this->getManifestUrl()->withAssetPath($path);
     }
-
+    
     /**
      *
      * @dataProvider assetReferenceUrlProvider
@@ -136,7 +136,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             $this->failException($e);
         }
     }
-
+    
     /**
      *
      * @dataProvider assetReferenceUrlProvider
@@ -151,7 +151,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             $this->failException($e);
         }
     }
-
+    
     /**
      *
      * @dataProvider assetReferenceUrlProvider
@@ -168,7 +168,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             $this->failException($e);
         }
     }
-
+    
     /**
      *
      * @dataProvider assetReferenceUrlProvider
@@ -185,12 +185,12 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             $this->failException($e);
         }
     }
-
+    
     private static array $assetLocalUrls = [];
-
+    
     public function assetLocalUrlProvider(): array {
         $cache = TestCache::instance(get_class($this));
-
+        
         return $cache->retrieve('assetLocalUrlProvider', function () {
             $provider = [];
             foreach ($this->getLocalAssetPaths() as $path) {
@@ -206,11 +206,11 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             return $provider;
         });
     }
-
+    
     private function getLocalAssetPaths(): iterable {
         yield from $this->buildPathIndex($this->getManifestAsset());
     }
-
+    
     private function buildPathIndex(AssetInterface $asset): iterable {
         if ($asset->isImportSelfInstruction()) {
             return;
@@ -221,13 +221,13 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         if ($asset->createUrl()->getAssetAuthority() !== static::getManifestAuthority()) {
             return;
         }
-
+        
         yield $asset->getUrlPath();
         foreach ($asset->getAssetChildren() as $childAsset) {
             yield from $this->buildPathIndex($childAsset);
         }
     }
-
+    
     /**
      *
      * @dataProvider assetLocalUrlProvider
@@ -242,7 +242,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             $this->failException($e);
         }
     }
-
+    
     /**
      *
      * @dataProvider assetLocalUrlProvider
@@ -259,7 +259,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             $this->failException($e);
         }
     }
-
+    
     /**
      *
      * @dataProvider assetLocalUrlProvider
@@ -276,7 +276,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             $this->failException($e);
         }
     }
-
+    
     /**
      *
      * @depends      testLocalResultExists
@@ -287,14 +287,14 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         $executable = $asset->lookupExecutable();
         $result = $executable->lookupDefaultResult();
         $mimeType = $result->lookupMimeType();
-
+        
         if (! MimeTypeDictionary::isXml($mimeType)) {
             $this->markTestSkipped("Won't attempt to validate non-XML resource '$mimeType'");
             return;
         }
-
+        
         $document = $result->lookupDOMWriter()->toDocument();
-
+        
         if ($schema = $this->findSchemaLocation($document)) {
             $this->assertSchema($document, $schema);
         }

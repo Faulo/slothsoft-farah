@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\Tracking;
 use Slothsoft\Core\DBMS\Table;
 
 class LogTable {
-
+    
     /*
      * protected $colList = [
      * 'REQUEST_TIME_DATE', 'RESPONSE_TIME', 'RESPONSE_MEMORY', 'REMOTE_ADDR', 'RESPONSE_STATUS',
@@ -30,21 +30,21 @@ class LogTable {
      * //
      */
     protected $archive;
-
+    
     protected $dbmsTable;
-
+    
     protected $columnConfig;
-
+    
     public function __construct(Archive $archive, Table $dbmsTable) {
         $this->ownerArchive = $archive;
         $this->dbmsTable = $dbmsTable;
         $config = $this->ownerArchive->getConfig();
         $this->columnConfig = $config['logColumns'];
     }
-
+    
     public function install() {
         if (! $this->dbmsTable->tableExists()) {
-
+            
             $sqlCols = [];
             $sqlCols['id'] = 'int NOT NULL AUTO_INCREMENT';
             $sqlCols['data'] = 'longtext NOT NULL';
@@ -61,11 +61,11 @@ class LogTable {
             $this->dbmsTable->createTable($sqlCols, $sqlKeys);
         }
     }
-
+    
     public function getName() {
         return $this->dbmsTable->getName();
     }
-
+    
     public function insert($id, $json, array $data) {
         $sql = [];
         $sql['id'] = $id;
@@ -75,27 +75,27 @@ class LogTable {
         }
         return $this->dbmsTable->insert($sql, $sql);
     }
-
+    
     public function delete($id) {
         return $this->dbmsTable->delete($id);
     }
-
+    
     public function selectGroup($column, array $filter, $sql) {
         if (isset($filter[$column])) {
             unset($filter[$column]);
         }
         return $this->dbmsTable->select(sprintf('DISTINCT %s', $column), $filter, sprintf('%s ORDER BY %s', $sql, $column));
     }
-
+    
     public function selectCount(array $filter, $sql) {
         $res = $this->dbmsTable->select('COUNT(*)', $filter, $sql);
         return reset($res);
     }
-
+    
     public function select(array $filter, $sql, $page, $limit) {
         return $this->dbmsTable->select(array_keys($this->columnConfig), $filter, sprintf('%s ORDER BY id DESC LIMIT %d, %d', $sql, $page * $limit, $limit));
     }
-
+    
     public function fixIndex() {
         foreach ($this->columnConfig as $key => $column) {
             if ($column['searchable'] or $column['groupable']) {
@@ -107,7 +107,7 @@ class LogTable {
             }
         }
     }
-
+    
     public function fixRollback(Table $tempTable) {
         $ret = 0;
         $rowList = $this->dbmsTable->select();

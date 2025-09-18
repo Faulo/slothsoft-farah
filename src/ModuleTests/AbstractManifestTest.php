@@ -11,25 +11,25 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
 use DOMDocument;
 
 abstract class AbstractManifestTest extends AbstractTestCase {
-
+    
     abstract protected static function loadTree(): LeanElement;
-
+    
     protected function getManifestRoot(): LeanElement {
         $cache = TestCache::instance(get_class($this));
-
+        
         return $cache->retrieve('getManifestRoot', function () {
             return static::loadTree();
         });
     }
-
+    
     protected function getManifestDocument(): DOMDocument {
         return $this->getManifestRoot()->toDocument();
     }
-
+    
     public function testHasRootElement(): void {
         $this->assertInstanceOf(LeanElement::class, $this->getManifestRoot());
     }
-
+    
     /**
      *
      * @depends testHasRootElement
@@ -38,7 +38,7 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertEquals($this->getManifestRoot()
             ->getTag(), Manifest::TAG_ASSET_ROOT);
     }
-
+    
     /**
      *
      * @dataProvider customPathResolverProvider
@@ -48,11 +48,11 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(PathResolverStrategyInterface::class, new $className());
     }
-
+    
     public function customPathResolverProvider(): array {
         return $this->getAllAttributeValuesProvider('path-resolver');
     }
-
+    
     /**
      *
      * @dataProvider customExecutableBuilderProvider
@@ -62,11 +62,11 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(ExecutableBuilderStrategyInterface::class, new $className());
     }
-
+    
     public function customExecutableBuilderProvider(): array {
         return $this->getAllAttributeValuesProvider('executable-builder');
     }
-
+    
     /**
      *
      * @dataProvider customInstructionProvider
@@ -76,11 +76,11 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(InstructionStrategyInterface::class, new $className());
     }
-
+    
     public function customInstructionProvider(): array {
         return $this->getAllAttributeValuesProvider('instruction');
     }
-
+    
     /**
      *
      * @dataProvider customParameterFilterProvider
@@ -90,11 +90,11 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(ParameterFilterStrategyInterface::class, new $className());
     }
-
+    
     public function customParameterFilterProvider(): array {
         return $this->getAllAttributeValuesProvider('parameter-filte');
     }
-
+    
     private function getAllAttributeValues(string $attributeName): iterable {
         $manifestDocument = $this->getManifestDocument();
         $nodeList = $manifestDocument->getElementsByTagName('*');
@@ -104,10 +104,10 @@ abstract class AbstractManifestTest extends AbstractTestCase {
             }
         }
     }
-
+    
     private function getAllAttributeValuesProvider(string $attributeName): array {
         $cache = TestCache::instance(get_class($this));
-
+        
         return $cache->retrieve("getAllAttributeValuesProvider $attributeName", function () use ($attributeName) {
             $provider = [];
             foreach ($this->getAllAttributeValues($attributeName) as $className) {

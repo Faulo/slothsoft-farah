@@ -7,11 +7,11 @@ use Exception;
 use Slothsoft\Core\ServerEnvironment;
 
 class Manager {
-
+    
     protected static $dbName = 'tracking';
-
+    
     protected static $archive = null;
-
+    
     public static function getArchive() {
         if (! self::$archive) {
             $db = DBMSManager::getDatabase(self::$dbName);
@@ -19,12 +19,12 @@ class Manager {
         }
         return self::$archive;
     }
-
+    
     public static function getView() {
         $archive = self::getArchive();
         return new View($archive);
     }
-
+    
     public static function track(array $request) {
         try {
             $archive = self::getArchive();

@@ -6,14 +6,14 @@ use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 interface PathResolverStrategyInterface {
-
+    
     /**
      *
      * @param AssetInterface $context
      * @return LeanElement[]
      */
     public function loadChildren(AssetInterface $context): iterable;
-
+    
     /**
      *
      * @param AssetInterface $context

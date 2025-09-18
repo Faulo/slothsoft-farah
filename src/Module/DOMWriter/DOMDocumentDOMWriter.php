@@ -8,13 +8,13 @@ use DOMDocument;
 
 class DOMDocumentDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
-
+    
     private DOMDocument $document;
-
+    
     public function __construct(DOMDocument $document) {
         $this->document = $document;
     }
-
+    
     public function toDocument(): DOMDocument {
         return $this->document;
     }

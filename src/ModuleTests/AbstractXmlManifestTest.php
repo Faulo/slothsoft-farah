@@ -7,19 +7,19 @@ use Slothsoft\Core\XML\LeanElement;
 use DOMDocument;
 
 abstract class AbstractXmlManifestTest extends AbstractManifestTest {
-
+    
     abstract protected static function getManifestDirectory(): string;
-
+    
     protected static function getManifestFile(): string {
         return static::getManifestDirectory() . DIRECTORY_SEPARATOR . 'manifest.xml';
     }
-
+    
     protected static function loadTree(): LeanElement {
         return LeanElement::createTreeFromDOMDocument(DOMHelper::loadDocument(static::getManifestFile()));
     }
-
+    
     const SCHEMA_URL = 'farah://slothsoft@farah/schema/module/';
-
+    
     /**
      *
      * @depends testManifestIsValidXml
@@ -30,7 +30,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
         $this->assertFileExists($path, 'Schema file not found!');
         return $path;
     }
-
+    
     /**
      *
      * @depends testSchemaExists
@@ -41,7 +41,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
         $this->assertInstanceOf(DOMDocument::class, $document);
         return $document;
     }
-
+    
     /**
      */
     public function testManifestExists(): string {
@@ -49,7 +49,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
         $this->assertFileExists($path, 'Asset file not found!');
         return $path;
     }
-
+    
     /**
      *
      * @depends testManifestExists
@@ -60,7 +60,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
         $this->assertInstanceOf(DOMDocument::class, $document);
         return $document;
     }
-
+    
     /**
      *
      * @depends testManifestIsValidXml
@@ -68,7 +68,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
      */
     public function testManifestIsValidAccordingToSchema($manifestDocument, $schemaDocument): DOMDocument {
         $this->assertSchema($manifestDocument, $schemaDocument->documentURI);
-
+        
         return $manifestDocument;
     }
 }

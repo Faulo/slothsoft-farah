@@ -19,7 +19,7 @@ use DOMDocument;
  *        
  */
 class SitesBuilder implements ExecutableBuilderStrategyInterface {
-
+    
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $writer = new DOMWriterFromDocumentDelegate(function (): DOMDocument {
             try {

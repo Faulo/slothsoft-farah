@@ -6,7 +6,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 class FromReferenceParameterSupplier implements ParameterSupplierStrategyInterface {
-
+    
     public function supplyParameters(AssetInterface $context): iterable {
         $element = $context->getManifestElement();
         $url = FarahUrl::createFromReference($element->getAttribute('ref'), $context->createUrl());

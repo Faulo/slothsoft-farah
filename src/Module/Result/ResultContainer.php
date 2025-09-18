@@ -11,21 +11,21 @@ use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
  *        
  */
 class ResultContainer {
-
+    
     private $map;
-
+    
     public function __construct() {
         $this->map = new Map();
     }
-
+    
     public function put(FarahUrlStreamIdentifier $id, ResultInterface $item) {
         $this->map->put($id, $item);
     }
-
+    
     public function get(FarahUrlStreamIdentifier $id): ResultInterface {
         return $this->map->get($id);
     }
-
+    
     public function has(FarahUrlStreamIdentifier $id): bool {
         return $this->map->hasKey($id);
     }

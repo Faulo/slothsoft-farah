@@ -12,18 +12,18 @@ use Laminas\Http\Request;
 use Laminas\Router\Http\TreeRouteStack;
 
 class LookupRouteStrategy extends RequestStrategyBase {
-
+    
     private $domain;
-
+    
     public function __construct() {
         $this->domain = new Domain(Kernel::getCurrentSitemap());
     }
-
+    
     public function createUrl(ServerRequestInterface $serverRequest): FarahUrl {
         $uri = $serverRequest->getUri();
         $body = $serverRequest->getParsedBody();
         $params = $serverRequest->getQueryParams();
-
+        
         $stack = new TreeRouteStack();
         $stack->addRoutes($this->domain->toRoutes());
         $zendRequest = new Request();
@@ -34,23 +34,23 @@ class LookupRouteStrategy extends RequestStrategyBase {
             (string) $uri => $match
         ]);
         die();
-
+        
         if (is_array($body)) {
             $args = $body + $params;
         } else {
             $args = $params;
         }
-
+        
         if ($uri instanceof FarahUrl) {
             $url = $uri;
         } else {
             $urlAuthority = FarahUrlAuthority::createFromVendorAndModule(self::DEFAULT_VENDOR, self::DEFAULT_MODULE);
             $urlPath = null;
             $urlArgs = FarahUrlArguments::createFromValueList($args);
-
+            
             $url = FarahUrl::createFromReference($this->extractFarahUrl($uri->getPath()), FarahUrl::createFromComponents($urlAuthority, $urlPath, $urlArgs));
         }
-
+        
         return $url;
     }
 }

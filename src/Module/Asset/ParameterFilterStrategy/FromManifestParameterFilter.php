@@ -8,11 +8,11 @@ namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
  *        
  */
 class FromManifestParameterFilter implements ParameterFilterStrategyInterface {
-
+    
     public function isAllowedName(string $name): bool {
         return $name === 'load';
     }
-
+    
     public function getValueSanitizers(): iterable {
         return [];
     }

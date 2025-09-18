@@ -9,14 +9,14 @@ use Throwable;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 
 class XmlTreeLoader implements TreeLoaderStrategyInterface {
-
+    
     public function loadTree(ManifestInterface $context): LeanElement {
         $xmlFile = $context->createManifestFile('manifest.xml');
-
+        
         $tmpFile = $context->createCacheFile('manifest.tmp', null, FarahUrlArguments::createFromValueList([
             'path' => $xmlFile->getRealPath()
         ]));
-
+        
         if ($tmpFile->isFile()) {
             if ($tmpFile->getMTime() > $xmlFile->getMTime()) {
                 try {
@@ -31,7 +31,7 @@ class XmlTreeLoader implements TreeLoaderStrategyInterface {
                 } catch (Throwable $e) {}
             }
         }
-
+        
         $dom = new DOMHelper();
         $element = LeanElement::createTreeFromDOMDocument($dom->loadDocument($xmlFile->getRealPath()));
         if ($context) {

@@ -10,14 +10,14 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ChunkWriterResultBui
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\NullResultBuilder;
 
 class DaemonExecutableBuilder implements ExecutableBuilderStrategyInterface {
-
+    
     private bool $todo = true;
-
+    
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         if ($this->todo) {
             return new ExecutableStrategies(new NullResultBuilder());
         }
-
+        
         $name = $context->getManifestElement()->getAttribute('name');
         $server = $context->getManifestElement()->getAttribute('server');
         $port = $context->getManifestElement()->getAttribute('port');

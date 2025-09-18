@@ -10,35 +10,35 @@ use DOMDocument;
 
 class TranslationDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
-
+    
     /**
      *
      * @var DOMWriterInterface
      */
     private $source;
-
+    
     /**
      *
      * @var Dictionary
      */
     private $dict;
-
+    
     /**
      *
      * @var FarahUrl
      */
     private $context;
-
+    
     public function __construct(DOMWriterInterface $source, Dictionary $dict, FarahUrl $context) {
         $this->source = $source;
         $this->dict = $dict;
         $this->context = $context;
     }
-
+    
     public function toDocument(): DOMDocument {
         $document = $this->source->toDocument();
         $this->dict->translateDoc($document, $this->context);
-
+        
         return $document;
     }
 }

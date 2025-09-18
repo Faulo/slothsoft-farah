@@ -19,7 +19,7 @@ use DOMElement;
  *        
  */
 class RequestBuilder implements ExecutableBuilderStrategyInterface {
-
+    
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $closure = function (DOMDocument $targetDoc): DOMElement {
             try {

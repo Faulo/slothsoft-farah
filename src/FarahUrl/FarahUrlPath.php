@@ -11,13 +11,13 @@ use Slothsoft\Farah\Exception\MalformedUrlException;
  *        
  */
 class FarahUrlPath implements Hashable {
-
+    
     const SEPARATOR = '/';
-
+    
     public static function createEmpty(): self {
         return self::create(self::SEPARATOR);
     }
-
+    
     public static function createFromString(string $path, FarahUrlPath $base = null): self {
         if ($base and substr($path, 0, 1) !== self::SEPARATOR) {
             return self::create(self::normalize($base . self::SEPARATOR . $path));
@@ -25,7 +25,7 @@ class FarahUrlPath implements Hashable {
             return self::create(self::normalize($path));
         }
     }
-
+    
     private static function create(string $id): self {
         static $cache = [];
         if (! isset($cache[$id])) {
@@ -33,7 +33,7 @@ class FarahUrlPath implements Hashable {
         }
         return $cache[$id];
     }
-
+    
     private static function normalize(string $path): string {
         $segments = [];
         if ($path !== '') {
@@ -57,21 +57,21 @@ class FarahUrlPath implements Hashable {
         }
         return self::SEPARATOR . implode(self::SEPARATOR, $segments);
     }
-
+    
     private $id;
-
+    
     private function __construct(string $id) {
         $this->id = $id;
     }
-
+    
     public function __toString(): string {
         return $this->id;
     }
-
+    
     public function equals($obj): bool {
         return ($obj instanceof self and ((string) $this === (string) $obj));
     }
-
+    
     public function hash() {
         return (string) $this;
     }

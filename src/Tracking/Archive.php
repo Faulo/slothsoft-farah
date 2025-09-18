@@ -7,21 +7,21 @@ use Slothsoft\Core\DBMS\Database;
 use Slothsoft\Farah\HTTPRequest;
 
 class Archive {
-
+    
     const PREPARE_OK = 1;
-
+    
     const PREPARE_UPDATE = 2;
-
+    
     const PREPARE_DELETE = 4;
-
+    
     protected $db;
-
+    
     protected $tempTable = 'temp';
-
+    
     protected $backupTable = 'backup';
-
+    
     protected $logTableDefault = '/getPage.php';
-
+    
     protected $logTableList = [
         '/getCache.php' => 'log_cache',
         '/getData.php' => 'log_data',
@@ -34,7 +34,7 @@ class Archive {
         'LookupPageStrategy' => 'lookup_page',
         'LookupRouteStrategy' => 'lookup_route'
     ];
-
+    
     protected $config = [
         'version' => 12,
         'parseLimit' => 1000,
@@ -178,15 +178,15 @@ class Archive {
             ]
         ]
     ];
-
+    
     public function __construct(Database $db) {
         $this->db = $db;
-
+        
         foreach ($this->config['logColumns'] as &$column) {
             $column = array_merge($this->config['defaultColumn'], $column);
         }
         unset($column);
-
+        
         $this->tempTable = $this->db->getTable($this->tempTable);
         $this->backupTable = $this->db->getTable($this->backupTable);
         foreach ($this->logTableList as &$table) {
@@ -194,12 +194,12 @@ class Archive {
         }
         unset($table);
     }
-
+    
     public function install() {
         if (! $this->db->databaseExists()) {
             $this->db->createDatabase();
         }
-
+        
         if (! $this->tempTable->tableExists()) {
             $sqlCols = [
                 'id' => 'int NOT NULL AUTO_INCREMENT',
@@ -213,16 +213,16 @@ class Archive {
             ];
             $this->tempTable->createTable($sqlCols, $sqlKeys);
         }
-
+        
         foreach ($this->logTableList as $table) {
             $table->install();
         }
     }
-
+    
     public function getConfig() {
         return $this->config;
     }
-
+    
     public function insertTemp($time, array $data, $id = null) {
         $ret = null;
         if ($id === null) {
@@ -242,25 +242,25 @@ class Archive {
         }
         return $ret;
     }
-
+    
     public function updateOutdated(array $idList) {
         $this->tempTable->update([
             'version' => $this->config['version']
         ], $idList);
     }
-
+    
     public function getOutdated() {
         return $this->tempTable->select('id', sprintf('version < %d LIMIT %d', $this->config['version'], $this->config['parseLimit']));
     }
-
+    
     public function getCurrent() {
         return $this->tempTable->select('id', sprintf('version = %d LIMIT %d', $this->config['version'], $this->config['parseLimit']));
     }
-
+    
     public function getLogTableList() {
         return $this->logTableList;
     }
-
+    
     public function getLogTableByURI($uri) {
         $ret = $this->logTableList[$this->logTableDefault];
         foreach ($this->logTableList as $test => $table) {
@@ -271,11 +271,11 @@ class Archive {
         }
         return $ret;
     }
-
+    
     public function getLogTableByStrategy($strategy) {
         return $this->logTableList[$strategy];
     }
-
+    
     protected function fixTemp() {
         // fix temp table
         $ret = 0;
@@ -291,9 +291,9 @@ class Archive {
                 $data = json_decode($row['data'], true);
                 if (is_array($data)) {
                     $update = false;
-
+                    
                     // HTTPRequest::prepareEnvironment($data);
-
+                    
                     if ($update) {
                         $this->tempTable->update([
                             'data' => json_encode($data)
@@ -306,13 +306,13 @@ class Archive {
         }
         return $ret;
     }
-
+    
     protected function fixIndex() {
         foreach ($this->logTableList as $table) {
             $table->fixIndeX();
         }
     }
-
+    
     protected function fixRollback() {
         // rollback temp table to log
         ini_set('memory_limit', '2G');
@@ -324,7 +324,7 @@ class Archive {
         }
         return false;
     }
-
+    
     public function backup() {
         $ret = 0;
         while ($idList = $this->getCurrent()) {
@@ -341,7 +341,7 @@ class Archive {
             die("...done! $ret entries backupped.");
         }
     }
-
+    
     public function parse() {
         // my_dump($this->fixRollback()); die;
         // $this->fixTemp();
@@ -361,7 +361,7 @@ class Archive {
                 if (is_array($data)) {
                     $status = $this->prepareData($data);
                     $table = isset($data['RESPONSE_STRATEGY']) ? $this->getLogTableByStrategy($data['RESPONSE_STRATEGY']) : $this->getLogTableByURI($data['REQUEST_URI']);
-
+                    
                     switch ($status) {
                         // just insert into log
                         case self::PREPARE_OK:
@@ -392,24 +392,24 @@ class Archive {
         }
         return $ret;
     }
-
+    
     protected function prepareData(array &$data) {
         $ret = self::PREPARE_OK;
-
+        
         // preset null
         foreach (array_keys($this->config['logColumns']) as $key) {
             if (! isset($data[$key])) {
                 $data[$key] = null;
             }
         }
-
+        
         // HTTPRequest
         $backup = json_encode($data);
         HTTPRequest::prepareEnvironment($data);
         if ($backup !== json_encode($data)) {
             $ret = self::PREPARE_UPDATE;
         }
-
+        
         /*
          * if ($data['REQUEST_TURING'] === 'shell' and $data['REQUEST_URI'][0] === 'D') {
          * $data['REQUEST_URI'] = sprintf('/%s%s', basename($data['REQUEST_URI']), $data['PATH_INFO']);
@@ -417,7 +417,7 @@ class Archive {
          * }
          * //
          */
-
+        
         /*
          * $status = (int) $data['RESPONSE_STATUS'];
          * if ($data['RESPONSE_STATUS'] !== $status) {
@@ -431,17 +431,17 @@ class Archive {
          * }
          * //
          */
-
+        
         return $ret;
     }
-
+    
     public function import() {
         $ret = 0;
         $step = 1000;
         $dbName = 'cms';
         $tableName = 'access_log';
         $dbmsTable = Manager::getTable($dbName, $tableName);
-
+        
         for ($i = 0; $rowList = $dbmsTable->select(true, sprintf('1 LIMIT %d, %d', $i, $step)); $i += $step) {
             foreach ($rowList as $row) {
                 $id = (int) array_shift($row);

@@ -11,15 +11,15 @@ use DOMDocument;
  *        
  */
 interface LinkDecoratorInterface {
-
+    
     public function setNamespace(string $ns);
-
+    
     public function setTarget(DOMDocument $document);
-
+    
     public function linkStylesheets(FarahUrl ...$stylesheets);
-
+    
     public function linkScripts(FarahUrl ...$scripts);
-
+    
     public function linkModules(FarahUrl ...$modules);
 }
 

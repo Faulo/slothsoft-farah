@@ -12,16 +12,16 @@ use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamWriterStreamBuilder;
 
 class SwitchToCliResultBuilder implements ResultBuilderStrategyInterface {
-
+    
     private $resultBuilder;
-
+    
     private $fileName;
-
+    
     public function __construct(ResultBuilderStrategyInterface $resultBuilder, string $fileName) {
         $this->resultBuilder = $resultBuilder;
         $this->fileName = $fileName;
     }
-
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         if (PHP_SAPI === 'cli') {
             return $this->resultBuilder->buildResultStrategies($context, $type);
