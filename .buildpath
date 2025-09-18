@@ -6,6 +6,11 @@
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
+	<buildpathentry kind="src" path="src-pthreads">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
 	<buildpathentry kind="src" path="tests">
 		<attributes>
 			<attribute name="composer" value="source"/>
