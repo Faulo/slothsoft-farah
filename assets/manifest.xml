@@ -12,7 +12,7 @@
 
 	<custom-asset name="phpinfo" executable-builder="Slothsoft\Farah\Internal\PhpinfoBuilder" />
 
-	<custom-asset name="current-sitemap" executable-builder="Slothsoft\Farah\Internal\SitesBuilder" />
+	<custom-asset name="current-sitemap" executable-builder="Slothsoft\Farah\Internal\SitemapBuilder" />
 	<custom-asset name="current-request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder" />
 
 	<directory name="sitemap-generator">

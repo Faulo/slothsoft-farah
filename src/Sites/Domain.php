@@ -2,18 +2,17 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Sites;
 
+use Laminas\Router\Http\RouteMatch;
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\Farah\Exception\EmptySitemapException;
 use Slothsoft\Farah\Exception\PageNotFoundException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\Asset\AssetInterface;
-use Laminas\Router\Http\RouteMatch;
 use DOMDocument;
 use DOMElement;
+use DOMXPath;
 
 /**
  *
@@ -22,125 +21,42 @@ use DOMElement;
  */
 class Domain {
     
-    const TAG_INCLUDE_PAGES = 'include-pages';
+    private const CURRENT_SITEMAP = 'farah://slothsoft@farah/current-sitemap';
     
-    const TAG_SITEMAP = 'sitemap';
-    
-    const TAG_DOMAIN = 'domain';
-    
-    const TAG_PAGE = 'page';
-    
-    const TAG_FILE = 'file';
-    
-    const TAG_PARAM = 'param';
-    
-    private AssetInterface $asset;
-    
-    private $file;
-    
-    private $document;
-    
-    private $domainNode;
-    
-    private $domainName;
-    
-    private $xpath;
-    
-    public function __construct(AssetInterface $asset) {
-        $this->asset = $asset;
+    public static function createWithDefaultSitemap(): Domain {
+        $url = FarahUrl::createFromReference(self::CURRENT_SITEMAP);
+        return new self(Module::resolveToDOMWriter($url)->toDocument());
     }
     
-    private function loadDocument() {
-        if (! $this->document) {
-            
-            $this->document = $this->asset->lookupExecutable()
-                ->lookupXmlResult()
-                ->lookupDOMWriter()
-                ->toDocument();
-            $this->xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT | DOMHelper::XPATH_PHP);
-            $this->domainNode = $this->document->documentElement;
-            
-            $node = $this->domainNode;
-            if (! $node) {
-                throw new EmptySitemapException($this->asset->getId());
-            }
-            $this->domainName = $this->domainNode->getAttribute('name');
-            
-            $this->init();
-        }
-    }
+    public const TAG_INCLUDE_PAGES = 'include-pages';
     
-    private function init() {
-        // preload all include-pages elements
-        while ($nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, self::TAG_INCLUDE_PAGES) and $nodeList->length) {
-            $dataNodeList = [];
-            foreach ($nodeList as $node) {
-                $dataNodeList[] = $node;
-            }
-            foreach ($dataNodeList as $dataNode) {
-                $url = $this->lookupAssetUrl($dataNode);
-                $result = Module::resolveToResult($url);
-                $node = $result->toElement($this->document);
-                while ($node->hasChildNodes()) {
-                    $dataNode->parentNode->insertBefore($node->firstChild, $dataNode);
-                }
-                $dataNode->parentNode->removeChild($dataNode);
-            }
-        }
-        $this->initDomainElement($this->domainNode);
-        $nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, self::TAG_PAGE);
-        foreach ($nodeList as $node) {
-            $this->initPageElement($node);
-        }
-        $nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, self::TAG_FILE);
-        foreach ($nodeList as $node) {
-            $this->initPageElement($node);
-        }
-    }
+    public const TAG_SITEMAP = 'sitemap';
     
-    private function initDomainElement(DOMElement $node) {
-        if (! $node->hasAttribute('title')) {
-            $node->setAttribute('title', $node->getAttribute('name'));
-        }
-        $node->setAttribute('uri', '/');
-        $node->setAttribute('url', "{$this->getProtocol()}://{$this->getDomainName()}/");
-    }
+    public const TAG_DOMAIN = 'domain';
     
-    private function initPageElement(DOMElement $node) {
-        $name = $node->getAttribute('name');
-        if ($node->hasAttribute('ext')) {
-            $uri = $node->getAttribute('ext');
-        } else {
-            $parentUri = $node->parentNode->getAttribute('uri');
-            switch ($node->localName) {
-                case self::TAG_PAGE:
-                    $uri = $parentUri . $name . '/';
-                    break;
-                case self::TAG_FILE:
-                    $uri = $parentUri . $name;
-                    break;
-            }
-        }
-        
-        if (! $node->hasAttribute('title')) {
-            $node->setAttribute('title', $name);
-        }
-        $node->setAttribute('uri', $uri);
-        $node->setAttribute('url', "{$this->getProtocol()}://{$this->getDomainName()}$uri");
+    public const TAG_PAGE = 'page';
+    
+    public const TAG_FILE = 'file';
+    
+    public const TAG_PARAM = 'param';
+    
+    private DOMDocument $document;
+    
+    private DOMXPath $xpath;
+    
+    public function __construct(DOMDocument $document) {
+        $this->document = $document;
+        $this->xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT | DOMHelper::XPATH_PHP);
     }
     
     public function getDocument(): DOMDocument {
-        $this->loadDocument();
-        
         return $this->document;
     }
     
     public function lookupPageNode(string $path, DOMElement $contextNode = null): DOMElement {
-        $this->loadDocument();
-        
         $path = str_pad($path, 1, '/');
         if ($contextNode === null or $path[0] === '/') {
-            $contextNode = $this->domainNode;
+            $contextNode = $this->getDomainNode();
         }
         $query = $this->path2expr($path, '[self::sfs:page | self::sfs:file]');
         $pageNode = $this->xpath->evaluate($query, $contextNode)->item(0);
@@ -231,8 +147,12 @@ class Domain {
         return $ret;
     }
     
+    private function getDomainNode(): DOMElement {
+        return $this->document->documentElement;
+    }
+    
     private function getDomainName(): string {
-        return $this->domainName;
+        return $this->getDomainNode()->getAttribute('name');
     }
     
     private function getProtocol(): string {
@@ -258,7 +178,7 @@ class Domain {
     public function toRoutes(): array {
         $this->loadDocument();
         return [
-            $this->domainName => $this->toRoute($this->domainNode, FarahUrl::createFromReference('farah://slothsoft@farah/'))
+            $this->getDomainName() => $this->toRoute($this->getDomainNode(), FarahUrl::createFromReference('farah://slothsoft@farah/'))
         ];
     }
     

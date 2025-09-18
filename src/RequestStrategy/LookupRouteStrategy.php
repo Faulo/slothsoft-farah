@@ -2,24 +2,21 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\RequestStrategy;
 
+use Laminas\Http\Request;
+use Laminas\Router\Http\TreeRouteStack;
 use Psr\Http\Message\ServerRequestInterface;
-use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Sites\Domain;
-use Laminas\Http\Request;
-use Laminas\Router\Http\TreeRouteStack;
 
 class LookupRouteStrategy extends RequestStrategyBase {
     
-    private $domain;
-    
-    public function __construct() {
-        $this->domain = new Domain(Kernel::getCurrentSitemap());
-    }
+    private ?Domain $domain = null;
     
     public function createUrl(ServerRequestInterface $serverRequest): FarahUrl {
+        $this->domain ??= Domain::createWithDefaultSitemap();
+        
         $uri = $serverRequest->getUri();
         $body = $serverRequest->getParsedBody();
         $params = $serverRequest->getQueryParams();

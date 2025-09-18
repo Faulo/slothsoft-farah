@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\RequestStrategy;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\PageNotFoundException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
@@ -13,13 +12,11 @@ use Slothsoft\Farah\Sites\Domain;
 
 class LookupPageStrategy extends RequestStrategyBase {
     
-    private $domain;
-    
-    public function __construct() {
-        $this->domain = new Domain(Kernel::getCurrentSitemap());
-    }
+    private ?Domain $domain = null;
     
     public function createUrl(ServerRequestInterface $request): FarahUrl {
+        $this->domain ??= Domain::createWithDefaultSitemap();
+        
         $uri = $request->getUri();
         $body = $request->getParsedBody();
         $params = $request->getQueryParams();

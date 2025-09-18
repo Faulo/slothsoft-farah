@@ -22,7 +22,7 @@ use Throwable;
 
 abstract class AbstractSitemapTest extends AbstractTestCase {
     
-    const SCHEMA_URL = 'farah://slothsoft@farah/schema/sitemap/';
+    private const SCHEMA_URL = 'farah://slothsoft@farah/schema/sitemap/';
     
     abstract protected static function loadSitesAsset(): AssetInterface;
     
@@ -81,7 +81,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         $cache = TestCache::instance(get_class($this));
         
         return $cache->retrieve('getDomain', function () {
-            return new Domain($this->getSitesAsset());
+            return Domain::createWithDefaultSitemap();
         });
     }
     
