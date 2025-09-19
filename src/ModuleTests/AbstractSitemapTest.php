@@ -375,6 +375,12 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         ],
         [
             DOMHelper::NS_HTML,
+            'embed',
+            'src',
+            true
+        ],
+        [
+            DOMHelper::NS_HTML,
             'form',
             'action',
             false

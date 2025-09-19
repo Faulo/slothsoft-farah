@@ -279,6 +279,8 @@ class AbstractSitemapTestTest extends TestCase {
             		<source src="" />
             		<track src="." />
             		<track src="" />
+                    <embed src="." />
+            		<embed src="" />
             	</body>
             </html>
             EOT,
@@ -320,6 +322,14 @@ class AbstractSitemapTestTest extends TestCase {
                     '.'
                 ],
                 "/test-page/ track src ''" => [
+                    '/test-page/',
+                    ''
+                ],
+                "/test-page/ embed src '.'" => [
+                    '/test-page/',
+                    '.'
+                ],
+                "/test-page/ embed src ''" => [
                     '/test-page/',
                     ''
                 ]
