@@ -51,4 +51,27 @@ class ModuleTest extends TestCase {
         
         $this->assertEquals($expected, $actual);
     }
+    
+    public function test_clearAllCachedAssets_isNecessary(): void {
+        // phpinfo() prints the current time, so it's a good cache check
+        $expected = file_get_contents('farah://slothsoft@farah/phpinfo');
+        
+        sleep(1);
+        
+        $actual = file_get_contents('farah://slothsoft@farah/phpinfo');
+        
+        $this->assertEquals($expected, $actual);
+    }
+    
+    public function test_clearAllCachedAssets_works(): void {
+        // phpinfo() prints the current time, so it's a good cache check
+        $expected = file_get_contents('farah://slothsoft@farah/phpinfo');
+        
+        sleep(1);
+        Module::clearAllCachedAssets();
+        
+        $actual = file_get_contents('farah://slothsoft@farah/phpinfo');
+        
+        $this->assertNotEquals($expected, $actual);
+    }
 }

@@ -158,6 +158,10 @@ class Manifest implements ManifestInterface {
         return $this->assets->get($path);
     }
     
+    public function clearCachedAssets(): void {
+        $this->assets->clear();
+    }
+    
     public function createAsset(LeanElement $element): AssetInterface {
         $strategies = $this->strategies->assetBuilder->buildAssetStrategies($this, $element);
         return new Asset($this, $element, FarahUrlPath::createFromString($element->getAttribute('assetpath')), $strategies);

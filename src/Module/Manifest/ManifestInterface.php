@@ -38,6 +38,10 @@ interface ManifestInterface {
     public function lookupAsset($path): AssetInterface;
     
     /**
+     */
+    public function clearCachedAssets(): void;
+    
+    /**
      *
      * @param LeanElement $element
      * @return AssetInterface

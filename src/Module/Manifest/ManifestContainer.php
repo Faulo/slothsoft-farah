@@ -4,8 +4,10 @@ namespace Slothsoft\Farah\Module\Manifest;
 
 use Ds\Map;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use IteratorAggregate;
+use Traversable;
 
-class ManifestContainer {
+class ManifestContainer implements IteratorAggregate {
     
     private Map $map;
     
@@ -27,6 +29,10 @@ class ManifestContainer {
     
     public function clear(): void {
         $this->map->clear();
+    }
+    
+    public function getIterator(): Traversable {
+        return $this->map->getIterator();
     }
 }
 

@@ -16,6 +16,8 @@ class MockManifest implements ManifestInterface {
     
     public function lookupAsset($path): AssetInterface {}
     
+    public function clearCachedAssets(): void {}
+    
     public function createAsset(LeanElement $element): AssetInterface {}
     
     public function getId(): string {}

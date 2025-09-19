@@ -146,5 +146,12 @@ class Module {
             throw new ModuleNotFoundException((string) $authority, null, $e);
         }
     }
+    
+    public static function clearAllCachedAssets(): void {
+        $module = self::getInstance();
+        foreach ($module->manifests as $manifest) {
+            $manifest->clearCachedAssets();
+        }
+    }
 }
 
