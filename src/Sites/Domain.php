@@ -106,6 +106,12 @@ class Domain {
         $pageNode->setAttribute('current', '1');
     }
     
+    public function clearCurrentPageNode(): void {
+        if ($oldNode = $this->getCurrentPageNode()) {
+            $oldNode->removeAttribute('current');
+        }
+    }
+    
     public function lookupAssetUrl(DOMElement $dataNode, array $args = []): FarahUrl {
         $vendorName = $this->findVendorName($dataNode);
         $moduleName = $this->findModuleName($dataNode);

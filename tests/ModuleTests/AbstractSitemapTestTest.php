@@ -23,6 +23,7 @@ use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
 use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\DefaultAssetBuilder;
 use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\TreeLoaderStrategyInterface;
+use Slothsoft\Farah\Sites\Domain;
 use DOMDocument;
 
 /**
@@ -483,6 +484,26 @@ class AbstractSitemapTestTest extends TestCase {
                 ]
             ]
         ];
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function test_pageLinkProvider_doesNotTouchSitemap() {
+        $sut = $this->createSuT();
+        
+        $expected = file_get_contents(Domain::CURRENT_SITEMAP);
+        
+        $actual = $this->sitesDocument->saveXML();
+        
+        $this->assertEquals($expected, $actual, "Setting up test sitemap failed!");
+        
+        $sut->pageLinkProvider();
+        
+        $actual = $this->sitesDocument->saveXML();
+        
+        $this->assertEquals($expected, $actual, "pageLinkProvider changed the sitemap!");
     }
     
     /**

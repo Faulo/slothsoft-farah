@@ -478,6 +478,9 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                             }
                         }
                     }
+                    
+                    $this->getDomain()
+                        ->clearCurrentPageNode();
                 }
             }
             return $provider;
