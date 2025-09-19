@@ -12,7 +12,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlPath;
  */
 class AssetContainer {
     
-    private $map;
+    private Map $map;
     
     public function __construct() {
         $this->map = new Map();
@@ -28,6 +28,10 @@ class AssetContainer {
     
     public function has(FarahUrlPath $id): bool {
         return $this->map->hasKey($id);
+    }
+    
+    public function clear(): void {
+        $this->map->clear();
     }
 }
 

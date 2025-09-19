@@ -24,5 +24,9 @@ class ManifestContainer {
     public function has(FarahUrlAuthority $id): bool {
         return $this->map->hasKey($id);
     }
+    
+    public function clear(): void {
+        $this->map->clear();
+    }
 }
 
