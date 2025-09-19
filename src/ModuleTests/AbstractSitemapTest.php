@@ -427,6 +427,8 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                 $node = $args[0];
                 
                 if ($node->hasAttribute('ref')) {
+                    Module::clearAllCachedAssets();
+                    
                     $this->getDomain()
                         ->setCurrentPageNode($node);
                     
@@ -481,6 +483,8 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                     
                     $this->getDomain()
                         ->clearCurrentPageNode();
+                    
+                    Module::clearAllCachedAssets();
                 }
             }
             return $provider;
