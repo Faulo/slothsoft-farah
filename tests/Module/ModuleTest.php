@@ -52,26 +52,43 @@ class ModuleTest extends TestCase {
         $this->assertEquals($expected, $actual);
     }
     
-    public function test_clearAllCachedAssets_isNecessary(): void {
-        // phpinfo() prints the current time, so it's a good cache check
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function test_clearAllCachedAssets_phpinfoPrintsServer(): void {
+        $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets';
         $expected = file_get_contents('farah://slothsoft@farah/phpinfo');
-        
-        sleep(1);
-        
-        $actual = file_get_contents('farah://slothsoft@farah/phpinfo');
-        
-        $this->assertEquals($expected, $actual);
+        $this->assertStringContainsString('test_clearAllCachedAssets', $expected);
     }
     
-    public function test_clearAllCachedAssets_works(): void {
-        // phpinfo() prints the current time, so it's a good cache check
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function test_clearAllCachedAssets_isNecessary(): void {
+        $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets expected';
         $expected = file_get_contents('farah://slothsoft@farah/phpinfo');
+        $this->assertStringContainsString('test_clearAllCachedAssets expected', $expected);
         
-        sleep(1);
+        $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets actual';
+        $actual = file_get_contents('farah://slothsoft@farah/phpinfo');
+        $this->assertStringContainsString('test_clearAllCachedAssets expected', $actual);
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function test_clearAllCachedAssets_works(): void {
+        $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets expected';
+        $expected = file_get_contents('farah://slothsoft@farah/phpinfo');
+        $this->assertStringContainsString('test_clearAllCachedAssets expected', $expected);
+        
         Module::clearAllCachedAssets();
         
+        $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets actual';
         $actual = file_get_contents('farah://slothsoft@farah/phpinfo');
-        
-        $this->assertNotEquals($expected, $actual);
+        $this->assertStringContainsString('test_clearAllCachedAssets actual', $actual);
     }
 }
