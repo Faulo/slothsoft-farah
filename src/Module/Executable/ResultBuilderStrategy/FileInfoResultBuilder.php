@@ -10,7 +10,7 @@ use SplFileInfo;
 
 class FileInfoResultBuilder implements ResultBuilderStrategyInterface {
     
-    private $file;
+    private SplFileInfo $file;
     
     public function __construct(SplFileInfo $file) {
         $this->file = $file;

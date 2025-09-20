@@ -17,9 +17,9 @@ use SplFileInfo;
 
 abstract class AbstractFileResultBuilder implements ResultBuilderStrategyInterface, FileWriterInterface, DOMWriterInterface {
     
-    protected $url;
+    protected FarahUrl $url;
     
-    protected $file;
+    protected SplFileInfo $file;
     
     public function __construct(FarahUrl $url, SplFileInfo $file) {
         $this->url = $url;

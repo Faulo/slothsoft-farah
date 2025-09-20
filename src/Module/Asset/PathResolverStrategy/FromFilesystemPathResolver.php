@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Module\Asset\PathResolverStrategy;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\XML\LeanElement;
+use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\ManifestElementBuilder;
 
@@ -50,7 +51,11 @@ class FromFilesystemPathResolver implements PathResolverStrategyInterface {
             if ($extension !== '') {
                 $path .= ".$extension";
             }
-            $child = ManifestElementBuilder::createResource($name, $path, $type);
+            if (is_file($directory . DIRECTORY_SEPARATOR . $path)) {
+                $child = ManifestElementBuilder::createResource($name, $path, $type);
+            } else {
+                throw new AssetPathNotFoundException($context, $name);
+            }
         }
         
         $context->normalizeManifestElement($child);
