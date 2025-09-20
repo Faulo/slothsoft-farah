@@ -25,8 +25,11 @@ class FromFilesystemPathResolverTest extends TestCase {
     public function test_resolvePath(string $url, ?string $exception = null): void {
         if ($exception) {
             $this->expectException($exception);
+            Module::resolveToFileWriter(FarahUrl::createFromReference($url));
+        } else {
+            $file = Module::resolveToFileWriter(FarahUrl::createFromReference($url))->toFile();
+            $this->assertFileExists($file->getRealPath());
         }
-        Module::resolveToFileWriter(FarahUrl::createFromReference($url));
     }
     
     public function pathProvider(): iterable {
