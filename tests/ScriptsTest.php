@@ -12,8 +12,8 @@ class ScriptsTest extends TestCase {
             'farah://slothsoft@farah/' => [
                 'farah://slothsoft@farah/'
             ],
-            'farah://slothsoft@core/' => [
-                'farah://slothsoft@core/'
+            'farah://slothsoft@farah/js/DOMHelper' => [
+                'farah://slothsoft@farah/js/DOMHelper'
             ]
         ];
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <assets xmlns="http://schema.slothsoft.net/farah/module" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
 	<resource-directory name="js" type="application/javascript" />
+	<resource-directory name="js-core" type="application/javascript" />
 	<resource-directory name="xsl" type="application/xslt+xml" />
 
 	<directory name="schema">
@@ -26,4 +27,29 @@
 
 	<resource name="example-domain" type="application/xml" />
 	<daemon name="cli-daemon" server="Slothsoft\Farah\Internal\CLIDaemon" port="5050" />
+
+	<fragment name="api">
+		<fragment name="DOM">
+			<link-script ref="/js-core/DOM" />
+			<link-script ref="/js-core/DOMHelper" />
+			<import ref="/api/HTML5" />
+			<import ref="/api/XPath" />
+			<import ref="/api/XSLT" />
+		</fragment>
+		<fragment name="DOMHelper">
+			<link-script ref="/js-core/DOMHelper" />
+			<link-script ref="/js-core/NS" />
+		</fragment>
+		<fragment name="HTML5">
+		</fragment>
+		<fragment name="XPath">
+			<link-script ref="/js-core/NS" />
+			<link-script ref="/js-core/XPath" />
+		</fragment>
+		<fragment name="XSLT">
+			<link-script ref="/js-core/NS" />
+			<link-script ref="/js-core/XSLT" />
+			<import ref="/api/XPath" />
+		</fragment>
+	</fragment>
 </assets>

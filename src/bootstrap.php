@@ -12,8 +12,6 @@ use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\StreamWrapper\FarahStreamWrapperFactory;
 StreamWrapperRegistrar::registerStreamWrapper('farah', new FarahStreamWrapperFactory());
 
-Module::registerWithXmlManifestAndDefaultAssets('slothsoft@core', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets-core');
-
 ContentCoding::registerEncodingFilter('gzip', new ZlibFilteredStreamFactory(ZLIB_ENCODING_GZIP));
 ContentCoding::registerEncodingFilter('deflate', new ZlibFilteredStreamFactory(ZLIB_ENCODING_DEFLATE));
 

@@ -41,9 +41,9 @@ class ModuleTest extends TestCase {
     }
     
     public function testGetBaseUrlUsesKernelSitemap(): void {
-        $expected = FarahUrl::createFromReference('farah://slothsoft@core');
+        $expected = FarahUrl::createFromReference('farah://slothsoft@farah');
         
-        Kernel::setCurrentSitemap('farah://slothsoft@core/');
+        Kernel::setCurrentSitemap('farah://slothsoft@farah/');
         
         $actual = Module::getBaseUrl();
         
