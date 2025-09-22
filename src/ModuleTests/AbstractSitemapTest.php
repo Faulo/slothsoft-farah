@@ -292,28 +292,25 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         }
     }
     
+    private const PAGE_NODE_TAGS = [
+        Domain::TAG_DOMAIN,
+        Domain::TAG_PAGE,
+        Domain::TAG_FILE
+    ];
+    
     public function pageNodeProvider(): array {
         $cache = TestCache::instance(get_class($this));
         
         return $cache->retrieve('pageNodeProvider', function () {
             $provider = [];
-            foreach ($this->getDomainDocument()
-                ->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_DOMAIN) as $node) {
-                $provider[$node->getAttribute('uri')] ??= [
-                    $node
-                ];
-            }
-            foreach ($this->getDomainDocument()
-                ->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_PAGE) as $node) {
-                $provider[$node->getAttribute('uri')] ??= [
-                    $node
-                ];
-            }
-            foreach ($this->getDomainDocument()
-                ->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_FILE) as $node) {
-                $provider[$node->getAttribute('uri')] ??= [
-                    $node
-                ];
+            $document = $this->getDomainDocument();
+            foreach (self::PAGE_NODE_TAGS as $tag) {
+                foreach ($document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, $tag) as $node) {
+                    $uri = $node->getAttribute('uri');
+                    $provider[$uri] ??= [
+                        $node
+                    ];
+                }
             }
             return $provider;
         });
