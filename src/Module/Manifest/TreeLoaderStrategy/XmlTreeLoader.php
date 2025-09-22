@@ -6,12 +6,17 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Throwable;
+use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 
 class XmlTreeLoader implements TreeLoaderStrategyInterface {
     
     public function loadTree(ManifestInterface $context): LeanElement {
         $xmlFile = $context->createManifestFile('manifest.xml');
+        
+        if (! $xmlFile->isFile()) {
+            throw new FileNotFoundException($xmlFile);
+        }
         
         $tmpFile = $context->createCacheFile('manifest.tmp', null, FarahUrlArguments::createFromValueList([
             'path' => $xmlFile->getRealPath()
@@ -34,10 +39,10 @@ class XmlTreeLoader implements TreeLoaderStrategyInterface {
         
         $dom = new DOMHelper();
         $element = LeanElement::createTreeFromDOMDocument($dom->loadDocument($xmlFile->getRealPath()));
-        if ($context) {
-            $context->normalizeManifestTree($element);
-            file_put_contents((string) $tmpFile, serialize($element));
-        }
+        
+        $context->normalizeManifestTree($element);
+        file_put_contents((string) $tmpFile, serialize($element));
+        
         return $element;
     }
 }
