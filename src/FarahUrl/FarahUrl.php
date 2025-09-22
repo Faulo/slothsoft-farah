@@ -151,8 +151,13 @@ class FarahUrl implements UriInterface, Hashable {
         return $this->path;
     }
     
-    public function getArguments(): FarahUrlArguments // TOOD: rename to getQueryArguments
-    {
+    /**
+     *
+     * @todo rename to getQueryArguments
+     *      
+     * @return FarahUrlArguments
+     */
+    public function getArguments(): FarahUrlArguments {
         return $this->args;
     }
     

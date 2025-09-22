@@ -90,6 +90,7 @@ class FarahUrlTest extends TestCase {
         $urls['farah://slothsoft@farah'] = 'farah://slothsoft@farah/';
         $urls['farah://slothsoft@farah/'] = 'farah://slothsoft@farah/';
         $urls['farah://slothsoft@farah/tmp/..'] = 'farah://slothsoft@farah/';
+        $urls['farah://slothsoft@farah/.'] = 'farah://slothsoft@farah/';
         $urls['farah://slothsoft@farah/./'] = 'farah://slothsoft@farah/';
         $urls['farah://slothsoft@farah/./#'] = 'farah://slothsoft@farah/';
         $urls['farah://slothsoft@farah/./#xml'] = 'farah://slothsoft@farah/#xml';
@@ -97,6 +98,7 @@ class FarahUrlTest extends TestCase {
         $urls['farah://slothsoft@farah/asset'] = 'farah://slothsoft@farah/asset';
         $urls['farah://slothsoft@farah/asset/'] = 'farah://slothsoft@farah/asset';
         $urls['farah://slothsoft@farah/asset/tmp/..'] = 'farah://slothsoft@farah/asset';
+        $urls['farah://slothsoft@farah/asset/tmp/../'] = 'farah://slothsoft@farah/asset';
         
         foreach ($urls as $ref => $expected) {
             yield $ref => [

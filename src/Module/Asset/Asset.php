@@ -86,7 +86,16 @@ class Asset implements AssetInterface {
             return $this;
         }
         
-        list ($name, $descendantPath) = explode('/', "$path/", 2);
+        $position = strpos($path, FarahUrlPath::SEPARATOR);
+        
+        if ($position === false) {
+            $name = $path;
+            $descendantPath = '';
+        } else {
+            $name = substr($path, 0, $position);
+            $descendantPath = substr($path, $position + 1);
+        }
+        
         $element = $this->strategies->pathResolver->resolvePath($this, $name);
         $asset = $this->ownerManifest->createAsset($element);
         

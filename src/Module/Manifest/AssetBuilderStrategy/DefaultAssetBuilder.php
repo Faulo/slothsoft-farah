@@ -37,6 +37,7 @@ use Slothsoft\Farah\Module\Asset\PathResolverStrategy\NullPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 
 class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
     
@@ -57,7 +58,7 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
         }
         if ($parent) {
             if (! $element->hasAttribute('assetpath')) {
-                $element->setAttribute('assetpath', $parent->getAttribute('assetpath') . '/' . $element->getAttribute('name'));
+                $element->setAttribute('assetpath', $parent->getAttribute('assetpath') . FarahUrlPath::SEPARATOR . $element->getAttribute('name'));
             }
             if (! $element->hasAttribute('realpath')) {
                 $element->setAttribute('realpath', $parent->getAttribute('realpath') . DIRECTORY_SEPARATOR . $element->getAttribute('path'));

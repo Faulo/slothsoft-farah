@@ -114,12 +114,9 @@ class Module {
         $rootDirectory .= DIRECTORY_SEPARATOR . $context->getAssetAuthority()->getVendor();
         $rootDirectory .= DIRECTORY_SEPARATOR . $context->getAssetAuthority()->getModule();
         
-        $path = $context->getAssetPath();
-        if (DIRECTORY_SEPARATOR !== '/') {
-            $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
-        }
-        if ($path !== DIRECTORY_SEPARATOR) {
-            $rootDirectory .= $path;
+        $path = $context->getAssetPath()->getSegments();
+        if ($path !== []) {
+            $rootDirectory .= DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $path);
         }
         
         $rootDirectory .= DIRECTORY_SEPARATOR . md5((string) $context->getArguments());

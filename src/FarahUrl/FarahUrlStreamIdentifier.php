@@ -27,7 +27,7 @@ class FarahUrlStreamIdentifier implements Hashable {
         return $cache[$id];
     }
     
-    private $id;
+    private string $id;
     
     private function __construct(string $id) {
         $this->id = $id;

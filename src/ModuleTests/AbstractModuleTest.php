@@ -119,8 +119,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             $node = $node->parentNode;
         }
         $path = array_reverse($path);
-        $path = implode('/', $path);
-        $path = FarahUrlPath::createFromString($path);
+        $path = FarahUrlPath::createFromSegments($path);
         return $this->getManifestUrl()->withAssetPath($path);
     }
     

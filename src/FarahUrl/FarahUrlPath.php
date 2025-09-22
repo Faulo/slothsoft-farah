@@ -12,10 +12,14 @@ use Slothsoft\Farah\Exception\MalformedUrlException;
  */
 class FarahUrlPath implements Hashable {
     
-    const SEPARATOR = '/';
+    public const SEPARATOR = '/';
     
     public static function createEmpty(): self {
-        return self::create(self::SEPARATOR);
+        return self::create([]);
+    }
+    
+    public static function createFromSegments(array $segments): self {
+        return self::create($segments);
     }
     
     public static function createFromString(string $path, FarahUrlPath $base = null): self {
@@ -26,15 +30,16 @@ class FarahUrlPath implements Hashable {
         }
     }
     
-    private static function create(string $id): self {
+    private static function create(array $segments): self {
         static $cache = [];
+        $id = self::SEPARATOR . implode(self::SEPARATOR, $segments);
         if (! isset($cache[$id])) {
-            $cache[$id] = new self($id);
+            $cache[$id] = new self($id, $segments);
         }
         return $cache[$id];
     }
     
-    private static function normalize(string $path): string {
+    private static function normalize(string $path): array {
         $segments = [];
         if ($path !== '') {
             foreach (explode(self::SEPARATOR, str_replace('\\', self::SEPARATOR, $path)) as $val) {
@@ -55,17 +60,24 @@ class FarahUrlPath implements Hashable {
                 }
             }
         }
-        return self::SEPARATOR . implode(self::SEPARATOR, $segments);
+        return $segments;
     }
     
-    private $id;
+    private string $id;
     
-    private function __construct(string $id) {
+    private array $segments;
+    
+    private function __construct(string $id, array $segments) {
         $this->id = $id;
+        $this->segments = $segments;
     }
     
     public function __toString(): string {
         return $this->id;
+    }
+    
+    public function getSegments(): array {
+        return $this->segments;
     }
     
     public function equals($obj): bool {

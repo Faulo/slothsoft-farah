@@ -33,11 +33,11 @@ class FarahUrlAuthority implements Hashable {
         return $cache[$id];
     }
     
-    private $id;
+    private string $id;
     
-    private $vendor;
+    private string $vendor;
     
-    private $module;
+    private string $module;
     
     private function __construct(string $id, string $vendor, string $module) {
         $this->id = $id;
