@@ -357,6 +357,9 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             $provider = [];
             $localUrls = $this->assetLocalUrlProvider();
             $crawler = new LinkCrawler(new Set(array_keys($localUrls)));
+            
+            Module::clearAllCachedAssets();
+            
             foreach ($localUrls as $asset => $args) {
                 $url = $args[0];
                 
@@ -376,6 +379,9 @@ abstract class AbstractModuleTest extends AbstractTestCase {
                     }
                 }
             }
+            
+            Module::clearAllCachedAssets();
+            
             return $provider;
         });
     }

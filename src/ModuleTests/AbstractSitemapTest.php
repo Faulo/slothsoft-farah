@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\ModuleTests;
 
+use Ds\Set;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Slothsoft\Core\DOMHelper;
@@ -201,7 +202,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             return;
         }
         
-        $this->fail('<page> must have either ref or redirect attribute.');
+        $this->fail('<page> must have either ref or redirect or ext attribute.' . PHP_EOL . $node->ownerDocument->saveXML($node));
     }
     
     /**
@@ -318,111 +319,13 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         });
     }
     
-    private const LINKING_ELEMENTS = [
-        [
-            DOMHelper::NS_HTML,
-            'a',
-            'href',
-            true
-        ],
-        [
-            DOMHelper::NS_HTML,
-            'link',
-            'href',
-            true
-        ],
-        [
-            DOMHelper::NS_HTML,
-            'script',
-            'src',
-            false
-        ],
-        [
-            DOMHelper::NS_HTML,
-            'img',
-            'src',
-            true
-        ],
-        [
-            DOMHelper::NS_HTML,
-            'video',
-            'src',
-            false
-        ],
-        [
-            DOMHelper::NS_HTML,
-            'audio',
-            'src',
-            false
-        ],
-        [
-            DOMHelper::NS_HTML,
-            'source',
-            'src',
-            true
-        ],
-        [
-            DOMHelper::NS_HTML,
-            'track',
-            'src',
-            true
-        ],
-        [
-            DOMHelper::NS_HTML,
-            'iframe',
-            'src',
-            true
-        ],
-        [
-            DOMHelper::NS_HTML,
-            'embed',
-            'src',
-            true
-        ],
-        [
-            DOMHelper::NS_HTML,
-            'form',
-            'action',
-            false
-        ],
-        [
-            DOMHelper::NS_XSL,
-            'include',
-            'href',
-            true
-        ],
-        [
-            DOMHelper::NS_XSL,
-            'import',
-            'href',
-            true
-        ],
-        [
-            DOMHelper::NS_XSD,
-            'include',
-            'schemaLocation',
-            true
-        ],
-        [
-            DOMHelper::NS_XSD,
-            'import',
-            'schemaLocation',
-            false
-        ],
-        [
-            DOMHelper::NS_XINCLUDE,
-            'include',
-            'href',
-            true
-        ]
-    ];
-    
     public function pageLinkProvider(): array {
         $cache = TestCache::instance(get_class($this));
         
         return $cache->retrieve('pageLinkProvider', function () {
             $provider = [];
             $pages = $this->pageNodeProvider();
+            $crawler = new LinkCrawler(new Set(array_keys($pages)));
             foreach ($pages as $page => $args) {
                 $node = $args[0];
                 
@@ -442,41 +345,11 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                             $document = $result->lookupDOMWriter()
                                 ->toDocument();
                             
-                            foreach (self::LINKING_ELEMENTS as $args) {
-                                [
-                                    $ns,
-                                    $tag,
-                                    $attribute,
-                                    $isRequired
-                                ] = $args;
-                                foreach ($document->getElementsByTagNameNS($ns, $tag) as $linkNode) {
-                                    $link = (string) $linkNode->getAttribute($attribute);
-                                    
-                                    if ($link === '') {
-                                        // use fallback attribute
-                                        $link = (string) $linkNode->getAttribute('data-' . $attribute);
-                                    }
-                                    
-                                    if (isset($pages[$link])) {
-                                        // page already asserted by pageNodeProvider
-                                        continue;
-                                    }
-                                    
-                                    if ($link === '' and ! $isRequired) {
-                                        continue;
-                                    }
-                                    
-                                    $reference = implode(' ', [
-                                        $page,
-                                        $tag,
-                                        $attribute,
-                                        "'$link'"
-                                    ]);
-                                    $provider[$reference] ??= [
-                                        $page,
-                                        $link
-                                    ];
-                                }
+                            foreach ($crawler->crawlDocument($document) as $reference => $link) {
+                                $provider["$page $reference"] ??= [
+                                    $page,
+                                    $link
+                                ];
                             }
                         }
                     }
