@@ -16,6 +16,9 @@ This namespace defines elements to identify assets in a Farah module.
 				]]></ssv:description>
 				<ssv:changelog><![CDATA[
 *** Version 1.1 ***
+    R20250922
+        - added element <manifest-directory>
+
     R20250705
         - added element <use-manifest>
         - use xsd:token instead of xsd:normalizedString
@@ -67,6 +70,7 @@ This namespace defines elements to identify assets in a Farah module.
 			<xsd:element ref="directory" />
 			<xsd:element ref="resource" />
 			<xsd:element ref="resource-directory" />
+			<xsd:element ref="manifest-directory" />
 		</xsd:choice>
 	</xsd:group>
 
@@ -211,6 +215,19 @@ This namespace defines elements to identify assets in a Farah module.
 						<xsd:group ref="resource-meta" />
 					</xsd:choice>
 					<xsd:attribute name="type" type="mimeType" use="required" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="manifest-directory">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="physical-asset">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:group ref="assets" />
+						<xsd:group ref="asset-meta" />
+					</xsd:choice>
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>

@@ -41,6 +41,8 @@ class Manifest implements ManifestInterface {
     
     const TAG_RESOURCE_DIRECTORY = 'resource-directory';
     
+    const TAG_MANIFEST_DIRECTORY = 'manifest-directory';
+    
     const TAG_TEMPLATE_RESOURCE = 'template-resource';
     
     // meta tags
@@ -176,7 +178,7 @@ class Manifest implements ManifestInterface {
     }
     
     public function createDataFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo {
-        return $this->ownerKernel->createCachedFile($fileName, $this->createUrl($path, $args, $fragment));
+        return $this->ownerKernel->createDataFile($fileName, $this->createUrl($path, $args, $fragment));
     }
     
     private function getRootAsset(): AssetInterface {

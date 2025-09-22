@@ -10,7 +10,7 @@ interface PathResolverStrategyInterface {
     /**
      *
      * @param AssetInterface $context
-     * @return LeanElement[]
+     * @return string[]
      */
     public function loadChildren(AssetInterface $context): iterable;
     

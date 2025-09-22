@@ -7,8 +7,15 @@ use RuntimeException;
 
 class AssetPathNotFoundException extends RuntimeException {
     
-    public function __construct(AssetInterface $asset, string $missingPath) {
-        parent::__construct("Asset '{$asset->getUrlPath()}' does not contain an asset '$missingPath'!");
+    public function __construct(AssetInterface $asset, string $missingPath, ?array $validPaths = null) {
+        $message = "Asset '{$asset->getUrlPath()}' does not contain an asset '$missingPath'!";
+        
+        if ($validPaths !== null) {
+            $message .= PHP_EOL;
+            $message .= sprintf('  Existing assets are: [%s]', implode(', ', $validPaths));
+        }
+        
+        parent::__construct($message);
     }
 }
 

@@ -4,7 +4,10 @@ namespace Slothsoft\Farah\Module;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\Kernel;
+use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
 
 /**
@@ -90,5 +93,59 @@ class ModuleTest extends TestCase {
         $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets actual';
         $actual = file_get_contents('farah://slothsoft@farah/phpinfo');
         $this->assertStringContainsString('test_clearAllCachedAssets actual', $actual);
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function testCanNotLoadMissingModule(): void {
+        $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test');
+        Module::registerWithXmlManifestAndDefaultAssets($authority, 'test-files/missing');
+        
+        $this->expectException(FileNotFoundException::class);
+        Module::resolveToResult(FarahUrl::createFromComponents($authority));
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function testCanLoadTestModule(): ManifestInterface {
+        $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test');
+        Module::registerWithXmlManifestAndDefaultAssets($authority, 'test-files' . DIRECTORY_SEPARATOR . 'test-module');
+        $manifest = Module::resolveToManifest(FarahUrl::createFromComponents($authority));
+        $this->assertNotNull($manifest);
+        return $manifest;
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     * @dataProvider modulePathProvider
+     * @depends testCanLoadTestModule
+     */
+    public function testModuleUsesManifestDirectory(string $path, ManifestInterface $manifest): void {
+        $mime = $manifest->lookupAsset($path)
+            ->lookupExecutable()
+            ->lookupDefaultResult()
+            ->lookupMimeType();
+        
+        $this->assertEquals('application/xml', $mime);
+    }
+    
+    public function modulePathProvider(): iterable {
+        yield 'main module' => [
+            '/'
+        ];
+        yield 'main module fragment' => [
+            '/test'
+        ];
+        yield 'sub module' => [
+            '/submodule'
+        ];
+        yield 'sub module fragment' => [
+            '/submodule/test'
+        ];
     }
 }

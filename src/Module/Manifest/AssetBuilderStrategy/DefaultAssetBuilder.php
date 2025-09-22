@@ -32,6 +32,7 @@ use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\NullParameterSupplier
 use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\ParameterSupplierStrategyInterface;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\FromFilesystemPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\FromManifestPathResolver;
+use Slothsoft\Farah\Module\Asset\PathResolverStrategy\FromSubManifestPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\NullPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
@@ -139,6 +140,13 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
             case Manifest::TAG_RESOURCE_DIRECTORY:
                 $executableBuilder = FromManifestExecutableBuilder::class;
                 $pathResolver = FromFilesystemPathResolver::class;
+                $parameterFilter = FromManifestParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
+                $instruction = FromManifestInstruction::class;
+                break;
+            case Manifest::TAG_MANIFEST_DIRECTORY:
+                $executableBuilder = FromManifestExecutableBuilder::class;
+                $pathResolver = FromSubManifestPathResolver::class;
                 $parameterFilter = FromManifestParameterFilter::class;
                 $parameterSupplier = NullParameterSupplier::class;
                 $instruction = FromManifestInstruction::class;
