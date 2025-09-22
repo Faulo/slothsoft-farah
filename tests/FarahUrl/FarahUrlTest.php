@@ -81,7 +81,8 @@ class FarahUrlTest extends TestCase {
      */
     public function testAbsoluteUrlParsing(string $expected, string $ref): void {
         $url = FarahUrl::createFromReference($ref);
-        $this->assertEquals($expected, (string) $url);
+        
+        $this->assertSame(FarahUrl::createFromReference($expected), $url);
     }
     
     public function absoluteUrlProvider(): iterable {
@@ -114,7 +115,8 @@ class FarahUrlTest extends TestCase {
         $path = FarahUrlPath::createFromString('/testing');
         $url = FarahUrl::createFromComponents($authority, $path);
         $url = FarahUrl::createFromReference($ref, $url);
-        $this->assertEquals($expected, (string) $url);
+        
+        $this->assertSame(FarahUrl::createFromReference($expected), $url);
     }
     
     public function relativeUrlProvider(): iterable {
@@ -175,7 +177,7 @@ class FarahUrlTest extends TestCase {
         $expectedUrl = FarahUrl::createFromReference($expectedUrl);
         $actualUrl = FarahUrl::createFromComponents($authority, $path, $args, $fragment);
         
-        $this->assertEquals($expectedUrl, $actualUrl);
+        $this->assertSame($expectedUrl, $actualUrl);
     }
     
     public function componentProvider(): iterable {
