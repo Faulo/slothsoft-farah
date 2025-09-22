@@ -8,6 +8,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
+use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use SplFileInfo;
 
 /**
@@ -18,6 +19,12 @@ use SplFileInfo;
 interface AssetInterface {
     
     public function __toString(): string;
+    
+    /**
+     *
+     * @return ManifestInterface
+     */
+    public function getManifest(): ManifestInterface;
     
     /**
      *

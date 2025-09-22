@@ -44,6 +44,10 @@ class Asset implements AssetInterface {
         return (string) $this->createUrl();
     }
     
+    public function getManifest(): ManifestInterface {
+        return $this->ownerManifest;
+    }
+    
     public function getManifestElement(): LeanElement {
         return $this->manifestElement;
     }
