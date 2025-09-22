@@ -2,7 +2,11 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\ModuleTests;
 
+use Ds\Set;
+use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\Psr7\UriResolver;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
+use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
@@ -11,10 +15,14 @@ use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use Slothsoft\Farah\RequestStrategy\LookupAssetStrategy;
+use Slothsoft\Farah\RequestStrategy\LookupPageStrategy;
 use DOMDocument;
 use DOMElement;
 use Throwable;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
+use Slothsoft\Farah\Http\MessageFactory;
+use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\MimeTypeDictionary;
 
 abstract class AbstractModuleTest extends AbstractTestCase {
@@ -185,8 +193,6 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         }
     }
     
-    private static array $assetLocalUrls = [];
-    
     public function assetLocalUrlProvider(): array {
         $cache = TestCache::instance(get_class($this));
         
@@ -297,6 +303,81 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         if ($schema = $this->findSchemaLocation($document)) {
             $this->assertSchema($document, $schema);
         }
+    }
+    
+    /**
+     *
+     * @dataProvider assetLinkProvider
+     */
+    public function testAssetHasValidLink(string $context, string $link): void {
+        try {
+            $this->assertNotEquals('', $link, 'Link must not be empty');
+            
+            if (strpos($link, 'mailto:') === 0) {
+                $this->assertMatchesRegularExpression('~^mailto:.+$~', $link);
+                return;
+            }
+            
+            $uri = UriResolver::resolve(new Uri($context), new Uri($link));
+            
+            if ($uri->getScheme() === 'farah') {
+                $this->assertFileExists((string) $uri);
+                return;
+            }
+            
+            if ($uri->getHost()) {
+                // external links are assumed to be fine
+                return;
+            }
+            
+            $request = MessageFactory::createCustomRequest('GET', $uri);
+            
+            if (preg_match('~^/[^/]+@[^/]+~', $uri->getPath())) {
+                $requestStrategy = new LookupAssetStrategy();
+            } else {
+                $requestStrategy = new LookupPageStrategy();
+            }
+            
+            $url = $requestStrategy->createUrl($request);
+            $result = Module::resolveToResult($url);
+            if ($id = $uri->getFragment()) {
+                $xpath = DOMHelper::loadXPath($result->lookupDOMWriter()->toDocument());
+                $count = (int) $xpath->evaluate(sprintf('count(//*[@id = "%1$s"])', $id));
+                $this->assertEquals(1, $count, sprintf('Expected page "%s" to have 1 element with ID "%s"', (string) $uri, $id));
+            }
+        } catch (HttpStatusException $e) {
+            $this->assertLessThan(300, $e->getCode(), sprintf('Resolving link lead to HTTP status "%d":%s%s', $e->getCode(), PHP_EOL, $e->getMessage()));
+        }
+    }
+    
+    public function assetLinkProvider(): array {
+        $cache = TestCache::instance(get_class($this));
+        
+        return $cache->retrieve('assetLinkProvider', function () {
+            $provider = [];
+            $localUrls = $this->assetLocalUrlProvider();
+            $crawler = new LinkCrawler(new Set(array_keys($localUrls)));
+            foreach ($localUrls as $asset => $args) {
+                $url = $args[0];
+                
+                if (file_exists($asset) and $result = Module::resolveToResult($url)) {
+                    $mime = $result->lookupMimeType();
+                    
+                    if ($mime === 'application/xml' or substr($mime, - 4) === '+xml') {
+                        $document = $result->lookupDOMWriter()
+                            ->toDocument();
+                        
+                        foreach ($crawler->crawlDocument($document) as $reference => $link) {
+                            $provider["$asset $reference"] ??= [
+                                $asset,
+                                $link
+                            ];
+                        }
+                    }
+                }
+            }
+            return $provider;
+        });
     }
 }
 
