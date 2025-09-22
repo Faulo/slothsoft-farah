@@ -27,9 +27,7 @@ class Cache {
     public function getPath($uri, $cacheDir = '') {
         $path = $this->sanitizeName($uri);
         $ret = $this->rootDir . $cacheDir;
-        if (! is_dir($ret)) {
-            mkdir($ret, 0777, true);
-        }
+        FileSystem::ensureDirectory($ret);
         return realpath($ret) . DIRECTORY_SEPARATOR . $path;
     }
     

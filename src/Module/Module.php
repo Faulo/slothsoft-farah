@@ -22,6 +22,7 @@ use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\XmlTreeLoader;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use OutOfBoundsException;
 use SplFileInfo;
+use Slothsoft\Core\FileSystem;
 
 class Module {
     
@@ -99,29 +100,35 @@ class Module {
     
     public function createCachedFile(string $fileName, FarahUrl $context): SplFileInfo {
         $path = $this->buildPath(ServerEnvironment::getCacheDirectory(), $context);
-        if (! is_dir($path)) {
-            mkdir($path, 0777, true);
-        }
+        FileSystem::ensureDirectory($path);
         return new \SplFileInfo($path . DIRECTORY_SEPARATOR . $fileName);
     }
     
     public function createDataFile(string $fileName, FarahUrl $context): SplFileInfo {
         $path = $this->buildPath(ServerEnvironment::getDataDirectory(), $context);
-        if (! is_dir($path)) {
-            mkdir($path, 0777, true);
-        }
+        FileSystem::ensureDirectory($path);
         return new \SplFileInfo($path . DIRECTORY_SEPARATOR . $fileName);
     }
     
     private function buildPath(string $rootDirectory, FarahUrl $context): string {
         $rootDirectory .= DIRECTORY_SEPARATOR . $context->getAssetAuthority()->getVendor();
         $rootDirectory .= DIRECTORY_SEPARATOR . $context->getAssetAuthority()->getModule();
-        $rootDirectory .= $context->getAssetPath();
+        
+        $path = $context->getAssetPath();
+        if (DIRECTORY_SEPARATOR !== '/') {
+            $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+        }
+        if ($path !== DIRECTORY_SEPARATOR) {
+            $rootDirectory .= $path;
+        }
+        
         $rootDirectory .= DIRECTORY_SEPARATOR . md5((string) $context->getArguments());
+        
         $fragment = (string) $context->getStreamIdentifier();
         if ($fragment !== '') {
             $rootDirectory .= "-$fragment";
         }
+        
         return $rootDirectory;
     }
     

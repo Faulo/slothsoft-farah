@@ -121,15 +121,15 @@ class FarahUrl implements UriInterface, Hashable {
         return $cache[$id];
     }
     
-    private $id;
+    private string $id;
     
-    private $authority;
+    private FarahUrlAuthority $authority;
     
-    private $path;
+    private FarahUrlPath $path;
     
-    private $args;
+    private FarahUrlArguments $args;
     
-    private $fragment;
+    private FarahUrlStreamIdentifier $fragment;
     
     private function __construct(string $id, FarahUrlAuthority $authority, FarahUrlPath $path, FarahUrlArguments $args, FarahUrlStreamIdentifier $fragment) {
         $this->id = $id;
