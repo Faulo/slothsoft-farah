@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\ModuleTests;
 use Ds\Set;
 use Slothsoft\Core\DOMHelper;
 use DOMDocument;
+use Slothsoft\Farah\Dictionary;
 
 final class LinkCrawler {
     
@@ -153,6 +154,10 @@ final class LinkCrawler {
                 $isRequired
             ] = $args;
             foreach ($document->getElementsByTagNameNS($ns, $tag) as $linkNode) {
+                if ($linkNode->hasAttribute(Dictionary::XPATH_DICT_ATTR_REPLACE)) {
+                    continue;
+                }
+                
                 $link = (string) $linkNode->getAttribute($attribute);
                 
                 if ($link === '') {
