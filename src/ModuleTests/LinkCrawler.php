@@ -133,7 +133,6 @@ final class LinkCrawler {
                 yield from self::LINKING_ELEMENTS_XINCLUDE;
                 break;
             default:
-                yield from self::LINKING_ELEMENTS_HTML;
                 yield from self::LINKING_ELEMENTS_XINCLUDE;
                 break;
         }
