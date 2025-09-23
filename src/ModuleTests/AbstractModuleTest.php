@@ -5,6 +5,8 @@ namespace Slothsoft\Farah\ModuleTests;
 use Ds\Set;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
@@ -12,18 +14,15 @@ use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\FarahUrl\FarahUrlPath;
+use Slothsoft\Farah\Http\MessageFactory;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\RequestStrategy\LookupAssetStrategy;
-use Slothsoft\Farah\RequestStrategy\LookupPageStrategy;
 use DOMDocument;
 use DOMElement;
 use Throwable;
-use Slothsoft\Farah\FarahUrl\FarahUrlPath;
-use Slothsoft\Farah\Http\MessageFactory;
-use Slothsoft\Core\DOMHelper;
-use Slothsoft\Core\MimeTypeDictionary;
 
 abstract class AbstractModuleTest extends AbstractTestCase {
     
@@ -318,32 +317,39 @@ abstract class AbstractModuleTest extends AbstractTestCase {
                 return;
             }
             
-            $uri = UriResolver::resolve(new Uri($context), new Uri($link));
+            $linkUri = new Uri($link);
             
-            if ($uri->getScheme() === 'farah') {
-                $this->assertFileExists((string) $uri);
+            if ($linkUri->getScheme() === 'farah') {
+                $this->assertFileExists((string) $linkUri);
                 return;
             }
             
-            if ($uri->getHost()) {
+            if ($linkUri->getHost()) {
                 // external links are assumed to be fine
                 return;
             }
             
-            $request = MessageFactory::createCustomRequest('GET', $uri);
-            
-            if (preg_match('~^/[^/]+@[^/]+~', $uri->getPath())) {
+            if (preg_match('~^/[^/]+@[^/]+~', $linkUri->getPath())) {
+                $request = MessageFactory::createCustomRequest('GET', $linkUri);
                 $requestStrategy = new LookupAssetStrategy();
-            } else {
-                $requestStrategy = new LookupPageStrategy();
+                $linkUri = $requestStrategy->createUrl($request);
+                
+                $this->assertFileExists((string) $linkUri);
+                return;
             }
             
-            $url = $requestStrategy->createUrl($request);
-            $result = Module::resolveToResult($url);
-            if ($id = $uri->getFragment()) {
-                $xpath = DOMHelper::loadXPath($result->lookupDOMWriter()->toDocument());
-                $count = (int) $xpath->evaluate(sprintf('count(//*[@id = "%1$s"])', $id));
-                $this->assertEquals(1, $count, sprintf('Expected page "%s" to have 1 element with ID "%s"', (string) $uri, $id));
+            $contextUri = new Uri($context);
+            $uri = UriResolver::resolve($contextUri, $linkUri);
+            
+            if ($uri->getAuthority() === $contextUri->getAuthority() and $uri->getHost() === $contextUri->getHost() and $uri->getPath() === $contextUri->getPath()) {
+                // we point to self
+                if ($id = $linkUri->getFragment()) {
+                    $uri = $uri->withFragment('');
+                    $document = DOMHelper::loadDocument((string) $uri);
+                    $xpath = DOMHelper::loadXPath($document);
+                    $count = (int) $xpath->evaluate(sprintf('count(//*[@id = "%1$s"])', $id));
+                    $this->assertEquals(1, $count, sprintf('Expected page "%s" to have 1 element with ID "%s"', (string) $uri, $id));
+                }
             }
         } catch (HttpStatusException $e) {
             $this->assertLessThan(300, $e->getCode(), sprintf('Resolving link lead to HTTP status "%d":%s%s', $e->getCode(), PHP_EOL, $e->getMessage()));
