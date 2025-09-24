@@ -8,11 +8,28 @@
 		<xsl:param name="step" select="1" />
 
 		<xsl:choose>
+			<xsl:when test="not($step)">
+				<func:result select="sfx:range($min, $max)" />
+			</xsl:when>
 			<xsl:when test="$min &lt; $max">
 				<func:result select="str:split($min)/text() | sfx:range($min + $step, $max, $step)" />
 			</xsl:when>
 			<xsl:otherwise>
 				<func:result select="str:split($max)/text()" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</func:function>
+
+	<func:function name="sfx:id">
+		<xsl:param name="context" select="." />
+		<xsl:param name="suffix" select="''" />
+
+		<xsl:choose>
+			<xsl:when test="string($suffix) = ''">
+				<func:result select="concat('id-', count($context/preceding::* | $context/ancestor::*))" />
+			</xsl:when>
+			<xsl:otherwise>
+				<func:result select="concat('id-', count($context/preceding::* | $context/ancestor::*), '-', $suffix)" />
 			</xsl:otherwise>
 		</xsl:choose>
 	</func:function>

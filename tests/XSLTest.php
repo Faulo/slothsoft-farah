@@ -4,6 +4,7 @@ namespace Slothsoft\Farah;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
+use DOMDocument;
 
 class XSLTest extends TestCase {
     
@@ -13,6 +14,16 @@ class XSLTest extends TestCase {
                 'farah://slothsoft@farah/xsl/graph',
                 'test-files/graph.xml',
                 'test-files/graph.svg'
+            ],
+            'farah://slothsoft@farah/xsl/xslt sfx:range' => [
+                'test-files/xslt.xsl',
+                'test-files/xslt-range.xml',
+                'test-files/xslt-range.xml'
+            ],
+            'farah://slothsoft@farah/xsl/xslt sfx:id' => [
+                'test-files/xslt.xsl',
+                'test-files/xslt-id.xml',
+                'test-files/xslt-id.xml'
             ]
         ];
     }
@@ -21,13 +32,14 @@ class XSLTest extends TestCase {
      *
      * @dataProvider exampleProvider
      */
-    public function test_xslTemplate(string $templateUrl, string $inputFile, string $expectedFile): void {
+    public function test_xslTemplate(string $templateFile, string $inputFile, string $expectedFile): void {
         $dom = new DOMHelper();
-        $actualDocument = $dom->transformToDocument($inputFile, $templateUrl);
+        $actualDocument = $dom->transformToDocument($inputFile, $templateFile);
         $actualDocument->formatOutput = true;
         $actual = $actualDocument->saveXML();
         
-        $expectedDocument = $dom->load($expectedFile);
+        $expectedDocument = new DOMDocument();
+        $expectedDocument->load($expectedFile, LIBXML_NOBLANKS);
         $expectedDocument->formatOutput = true;
         $expected = $expectedDocument->saveXML();
         

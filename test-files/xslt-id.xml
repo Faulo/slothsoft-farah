@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<test xmlns:sfx="http://schema.slothsoft.net/farah/xslt" xmlns:exsl="http://exslt.org/common" xmlns:str="http://exslt.org/strings">
+	<id id="id-1">
+		<id id="id-2-test" suffix="test" />
+		<id id="id-3" />
+	</id>
+	<id id="id-4">
+		<id id="id-5">
+			<id id="id-6" />
+		</id>
+		<id id="id-7" />
+	</id>
+	<id id="id-8" />
+</test>

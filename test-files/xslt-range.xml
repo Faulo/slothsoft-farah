@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<test xmlns:sfx="http://schema.slothsoft.net/farah/xslt" xmlns:exsl="http://exslt.org/common" xmlns:str="http://exslt.org/strings">
+	<range min="0" max="3" step="1">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</range>
+	<range min="10" max="13" step="2">
+		<item>10</item>
+		<item>12</item>
+		<item>13</item>
+	</range>
+	<range min="-2" max="0">
+		<item>-2</item>
+		<item>-1</item>
+		<item>0</item>
+	</range>
+</test>
