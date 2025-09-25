@@ -126,9 +126,6 @@ class Asset implements AssetInterface {
             $args = $args->withArguments($this->getManifestArguments());
         }
         $args = $this->applyParameterFilter($args);
-        if ($url = $this->getReferencedUrl()) {
-            return Module::resolveToExecutable($url->withQueryArguments($args));
-        }
         if (! $this->executables->has($args)) {
             $this->executables->put($args, $this->createExecutable($args));
         }
@@ -230,9 +227,13 @@ class Asset implements AssetInterface {
         $this->ownerManifest->normalizeManifestElement($this->manifestElement, $child);
     }
     
-    private function getReferencedUrl(): ?FarahUrl {
+    private function getReferencedUrl(): FarahUrl {
+        if ($this->manifestElement->getAttribute(Manifest::ATTR_REFERENCE)) {
+            throw new \UnexpectedValueException(sprintf('Missing "%s" attribute on element: %s', Manifest::ATTR_REFERENCE, serialize($this->manifestElement)));
+        }
+        
         $ref = $this->manifestElement->getAttribute(Manifest::ATTR_REFERENCE, '');
-        return $ref === '' ? null : FarahUrl::createFromReference($ref, $this->createUrl());
+        return FarahUrl::createFromReference($ref, $this->createUrl());
     }
 }
 

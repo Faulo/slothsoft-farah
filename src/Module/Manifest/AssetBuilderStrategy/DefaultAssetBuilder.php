@@ -82,7 +82,7 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
                 $instruction = ParameterSupplierInstruction::class;
                 break;
             case Manifest::TAG_USE_DOCUMENT:
-                $executableBuilder = NullExecutableBuilder::class;
+                $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
                 $parameterFilter = DenyAllParameterFilter::class;
                 $parameterSupplier = NullParameterSupplier::class;
