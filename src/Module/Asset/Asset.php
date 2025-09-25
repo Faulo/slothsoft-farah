@@ -228,7 +228,7 @@ class Asset implements AssetInterface {
     }
     
     private function getReferencedUrl(): FarahUrl {
-        if ($this->manifestElement->getAttribute(Manifest::ATTR_REFERENCE)) {
+        if (! $this->manifestElement->hasAttribute(Manifest::ATTR_REFERENCE)) {
             throw new \UnexpectedValueException(sprintf('Missing "%s" attribute on element: %s', Manifest::ATTR_REFERENCE, serialize($this->manifestElement)));
         }
         
