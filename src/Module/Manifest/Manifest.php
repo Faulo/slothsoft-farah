@@ -108,6 +108,16 @@ class Manifest implements ManifestInterface {
     
     const ATTR_USE_MODULE = 'module';
     
+    const ATTR_EXECUTABLE_BUILDER = 'executable-builder';
+    
+    const ATTR_PATH_RESOLVER = 'path-resolver';
+    
+    const ATTR_PARAMETER_FILTER = 'parameter-filter';
+    
+    const ATTR_PARAMETER_SUPPLIER = 'parameter-supplier';
+    
+    const ATTR_INSTRUCTION = 'instruction';
+    
     const ATTR_PARAM_KEY = 'name';
     
     const ATTR_PARAM_VAL = 'value';

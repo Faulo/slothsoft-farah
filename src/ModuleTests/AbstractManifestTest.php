@@ -50,7 +50,7 @@ abstract class AbstractManifestTest extends AbstractTestCase {
     }
     
     public function customPathResolverProvider(): array {
-        return $this->getAllAttributeValuesProvider('path-resolver');
+        return $this->getAllAttributeValuesProvider(Manifest::ATTR_PATH_RESOLVER);
     }
     
     /**
@@ -64,7 +64,7 @@ abstract class AbstractManifestTest extends AbstractTestCase {
     }
     
     public function customExecutableBuilderProvider(): array {
-        return $this->getAllAttributeValuesProvider('executable-builder');
+        return $this->getAllAttributeValuesProvider(Manifest::ATTR_EXECUTABLE_BUILDER);
     }
     
     /**
@@ -78,7 +78,7 @@ abstract class AbstractManifestTest extends AbstractTestCase {
     }
     
     public function customInstructionProvider(): array {
-        return $this->getAllAttributeValuesProvider('instruction');
+        return $this->getAllAttributeValuesProvider(Manifest::ATTR_INSTRUCTION);
     }
     
     /**

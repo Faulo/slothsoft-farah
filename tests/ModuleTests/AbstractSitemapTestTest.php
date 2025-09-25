@@ -19,6 +19,7 @@ use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\DOMWriterResultBuilder;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\NullResultBuilder;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
 use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\DefaultAssetBuilder;
@@ -69,20 +70,20 @@ class AbstractSitemapTestTest extends TestCase {
         $treeLoader->method('loadTree')->willReturnCallback(function (ManifestInterface $context): LeanElement {
             $root = LeanElement::createOneFromArray('assets', [], [
                 LeanElement::createOneFromArray('custom-asset', [
-                    'name' => 'sitemap',
-                    'executable-builder' => StubExecutableBuilder::class
+                    Manifest::ATTR_NAME => 'sitemap',
+                    Manifest::ATTR_EXECUTABLE_BUILDER => StubExecutableBuilder::class
                 ]),
                 LeanElement::createOneFromArray('custom-asset', [
-                    'name' => 'domain-asset',
-                    'executable-builder' => StubExecutableBuilder::class
+                    Manifest::ATTR_NAME => 'domain-asset',
+                    Manifest::ATTR_EXECUTABLE_BUILDER => StubExecutableBuilder::class
                 ]),
                 LeanElement::createOneFromArray('fragment', [
-                    'name' => 'page-asset',
-                    'executable-builder' => StubExecutableBuilder::class
+                    Manifest::ATTR_NAME => 'page-asset',
+                    Manifest::ATTR_EXECUTABLE_BUILDER => StubExecutableBuilder::class
                 ]),
                 LeanElement::createOneFromArray('fragment', [
-                    'name' => 'file-asset',
-                    'executable-builder' => StubExecutableBuilder::class
+                    Manifest::ATTR_NAME => 'file-asset',
+                    Manifest::ATTR_EXECUTABLE_BUILDER => StubExecutableBuilder::class
                 ])
             ]);
             $context->normalizeManifestTree($root);

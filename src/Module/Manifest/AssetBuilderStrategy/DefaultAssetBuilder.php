@@ -192,24 +192,24 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
             $element->setAttribute(Manifest::ATTR_USE, Manifest::ATTR_USE_MANIFEST);
         }
         
-        if (! $element->hasAttribute('executable-builder')) {
-            $element->setAttribute('executable-builder', $executableBuilder);
+        if (! $element->hasAttribute(Manifest::ATTR_EXECUTABLE_BUILDER)) {
+            $element->setAttribute(Manifest::ATTR_EXECUTABLE_BUILDER, $executableBuilder);
         }
         
-        if (! $element->hasAttribute('path-resolver')) {
-            $element->setAttribute('path-resolver', $pathResolver);
+        if (! $element->hasAttribute(Manifest::ATTR_PATH_RESOLVER)) {
+            $element->setAttribute(Manifest::ATTR_PATH_RESOLVER, $pathResolver);
         }
         
-        if (! $element->hasAttribute('parameter-filter')) {
-            $element->setAttribute('parameter-filter', $parameterFilter);
+        if (! $element->hasAttribute(Manifest::ATTR_PARAMETER_FILTER)) {
+            $element->setAttribute(Manifest::ATTR_PARAMETER_FILTER, $parameterFilter);
         }
         
-        if (! $element->hasAttribute('parameter-supplier')) {
-            $element->setAttribute('parameter-supplier', $parameterSupplier);
+        if (! $element->hasAttribute(Manifest::ATTR_PARAMETER_SUPPLIER)) {
+            $element->setAttribute(Manifest::ATTR_PARAMETER_SUPPLIER, $parameterSupplier);
         }
         
-        if (! $element->hasAttribute('instruction')) {
-            $element->setAttribute('instruction', $instruction);
+        if (! $element->hasAttribute(Manifest::ATTR_INSTRUCTION)) {
+            $element->setAttribute(Manifest::ATTR_INSTRUCTION, $instruction);
         }
         
         foreach ($element->getChildren() as $child) {
@@ -220,27 +220,27 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
     private static $services = [];
     
     public function buildAssetStrategies(ManifestInterface $ownerManifest, LeanElement $element): AssetStrategies {
-        if (! $element->hasAttribute('executable-builder')) {
-            throw new \UnexpectedValueException(sprintf('Missing "executable-builder" attribute on element: %s', serialize($element)));
+        if (! $element->hasAttribute(Manifest::ATTR_EXECUTABLE_BUILDER)) {
+            throw new \UnexpectedValueException(sprintf('Missing "%s" attribute on element: %s', Manifest::ATTR_EXECUTABLE_BUILDER, serialize($element)));
         }
         
-        if (! $element->hasAttribute('path-resolver')) {
-            throw new \UnexpectedValueException(sprintf('Missing "path-resolver" attribute on element: %s', serialize($element)));
+        if (! $element->hasAttribute(Manifest::ATTR_PATH_RESOLVER)) {
+            throw new \UnexpectedValueException(sprintf('Missing "%s" attribute on element: %s', Manifest::ATTR_PATH_RESOLVER, serialize($element)));
         }
         
-        if (! $element->hasAttribute('parameter-filter')) {
-            throw new \UnexpectedValueException(sprintf('Missing "parameter-filter" attribute on element: %s', serialize($element)));
+        if (! $element->hasAttribute(Manifest::ATTR_PARAMETER_FILTER)) {
+            throw new \UnexpectedValueException(sprintf('Missing "%s" attribute on element: %s', Manifest::ATTR_PARAMETER_FILTER, serialize($element)));
         }
         
-        if (! $element->hasAttribute('parameter-supplier')) {
-            throw new \UnexpectedValueException(sprintf('Missing "parameter-supplier" attribute on element: %s', serialize($element)));
+        if (! $element->hasAttribute(Manifest::ATTR_PARAMETER_SUPPLIER)) {
+            throw new \UnexpectedValueException(sprintf('Missing "%s" attribute on element: %s', Manifest::ATTR_PARAMETER_SUPPLIER, serialize($element)));
         }
         
-        if (! $element->hasAttribute('instruction')) {
-            throw new \UnexpectedValueException(sprintf('Missing "instruction" attribute on element: %s', serialize($element)));
+        if (! $element->hasAttribute(Manifest::ATTR_INSTRUCTION)) {
+            throw new \UnexpectedValueException(sprintf('Missing "%s" attribute on element: %s', Manifest::ATTR_INSTRUCTION, serialize($element)));
         }
         
-        return new AssetStrategies($this->newExecutableBuilder($element->getAttribute('executable-builder')), $this->newPathResolver($element->getAttribute('path-resolver')), $this->newParameterFilter($element->getAttribute('parameter-filter')), $this->newParameterSupplier($element->getAttribute('parameter-supplier')), $this->newInstruction($element->getAttribute('instruction')));
+        return new AssetStrategies($this->newExecutableBuilder($element->getAttribute(Manifest::ATTR_EXECUTABLE_BUILDER)), $this->newPathResolver($element->getAttribute(Manifest::ATTR_PATH_RESOLVER)), $this->newParameterFilter($element->getAttribute(Manifest::ATTR_PARAMETER_FILTER)), $this->newParameterSupplier($element->getAttribute(Manifest::ATTR_PARAMETER_SUPPLIER)), $this->newInstruction($element->getAttribute(Manifest::ATTR_INSTRUCTION)));
     }
     
     private function newExecutableBuilder(string $className): ExecutableBuilderStrategyInterface {
