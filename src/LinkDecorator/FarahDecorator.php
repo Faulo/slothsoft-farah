@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\LinkDecorator;
 
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 use DOMDocument;
 
 /**
@@ -32,8 +33,8 @@ class FarahDecorator implements LinkDecoratorInterface {
         foreach ($stylesheets as $url) {
             $href = str_replace('farah://', '/', (string) $url);
             
-            $node = $this->targetDocument->createElementNS($this->namespace, 'link-stylesheet');
-            $node->setAttribute('ref', $href);
+            $node = $this->targetDocument->createElementNS($this->namespace, Manifest::TAG_LINK_STYLESHEET);
+            $node->setAttribute(Manifest::ATTR_REFERENCE, $href);
             $this->rootNode->appendChild($node);
         }
     }
@@ -42,8 +43,8 @@ class FarahDecorator implements LinkDecoratorInterface {
         foreach ($scripts as $url) {
             $href = str_replace('farah://', '/', (string) $url);
             
-            $node = $this->targetDocument->createElementNS($this->namespace, 'link-script');
-            $node->setAttribute('ref', $href);
+            $node = $this->targetDocument->createElementNS($this->namespace, Manifest::TAG_LINK_SCRIPT);
+            $node->setAttribute(Manifest::ATTR_REFERENCE, $href);
             $this->rootNode->appendChild($node);
         }
     }
@@ -52,8 +53,8 @@ class FarahDecorator implements LinkDecoratorInterface {
         foreach ($modules as $url) {
             $href = str_replace('farah://', '/', (string) $url);
             
-            $node = $this->targetDocument->createElementNS($this->namespace, 'link-module');
-            $node->setAttribute('ref', $href);
+            $node = $this->targetDocument->createElementNS($this->namespace, Manifest::TAG_LINK_MODULE);
+            $node->setAttribute(Manifest::ATTR_REFERENCE, $href);
             $this->rootNode->appendChild($node);
         }
     }

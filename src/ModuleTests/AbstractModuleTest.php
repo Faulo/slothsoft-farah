@@ -18,6 +18,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\Http\MessageFactory;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\RequestStrategy\LookupAssetStrategy;
 use DOMDocument;
@@ -109,8 +110,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         $manifestDocument = $this->getManifestDocument();
         $nodeList = $manifestDocument->getElementsByTagName('*');
         foreach ($nodeList as $node) {
-            if ($node->hasAttribute('ref')) {
-                yield $this->getContextUrlForManifestNode($node) => $node->getAttribute('ref');
+            if ($node->hasAttribute(Manifest::ATTR_REFERENCE)) {
+                yield $this->getContextUrlForManifestNode($node) => $node->getAttribute(Manifest::ATTR_REFERENCE);
             }
         }
     }
@@ -118,8 +119,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     private function getContextUrlForManifestNode(DOMElement $node): FarahUrl {
         $path = [];
         while ($node->parentNode instanceof DOMElement) {
-            if ($node->hasAttribute('name')) {
-                $path[] = $node->getAttribute('name');
+            if ($node->hasAttribute(Manifest::ATTR_NAME)) {
+                $path[] = $node->getAttribute(Manifest::ATTR_NAME);
             } else {
                 $path[] = '*';
             }

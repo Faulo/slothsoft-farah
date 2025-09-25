@@ -43,25 +43,25 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
     
     public function normalizeElement(LeanElement $element, ?LeanElement $parent = null): void {
         $tag = $element->getTag();
-        if (! $element->hasAttribute('name')) {
-            $element->setAttribute('name', uniqid('asset-'));
+        if (! $element->hasAttribute(Manifest::ATTR_NAME)) {
+            $element->setAttribute(Manifest::ATTR_NAME, uniqid('asset-'));
         }
-        if (! $element->hasAttribute('path')) {
-            $path = $element->getAttribute('name');
-            if ($tag === Manifest::TAG_RESOURCE and $element->hasAttribute('type')) {
-                $extension = MimeTypeDictionary::guessExtension($element->getAttribute('type'));
+        if (! $element->hasAttribute(Manifest::ATTR_PATH)) {
+            $path = $element->getAttribute(Manifest::ATTR_NAME);
+            if ($tag === Manifest::TAG_RESOURCE and $element->hasAttribute(Manifest::ATTR_TYPE)) {
+                $extension = MimeTypeDictionary::guessExtension($element->getAttribute(Manifest::ATTR_TYPE));
                 if ($extension !== '') {
                     $path .= ".$extension";
                 }
             }
-            $element->setAttribute('path', $path);
+            $element->setAttribute(Manifest::ATTR_PATH, $path);
         }
         if ($parent) {
-            if (! $element->hasAttribute('assetpath')) {
-                $element->setAttribute('assetpath', $parent->getAttribute('assetpath') . FarahUrlPath::SEPARATOR . $element->getAttribute('name'));
+            if (! $element->hasAttribute(Manifest::ATTR_ASSETPATH)) {
+                $element->setAttribute(Manifest::ATTR_ASSETPATH, $parent->getAttribute(Manifest::ATTR_ASSETPATH) . FarahUrlPath::SEPARATOR . $element->getAttribute(Manifest::ATTR_NAME));
             }
-            if (! $element->hasAttribute('realpath')) {
-                $element->setAttribute('realpath', $parent->getAttribute('realpath') . DIRECTORY_SEPARATOR . $element->getAttribute('path'));
+            if (! $element->hasAttribute(Manifest::ATTR_REALPATH)) {
+                $element->setAttribute(Manifest::ATTR_REALPATH, $parent->getAttribute(Manifest::ATTR_REALPATH) . DIRECTORY_SEPARATOR . $element->getAttribute(Manifest::ATTR_PATH));
             }
         }
         
@@ -82,10 +82,10 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
                 $instruction = ParameterSupplierInstruction::class;
                 break;
             case Manifest::TAG_USE_DOCUMENT:
-                $executableBuilder = FromReferenceExecutableBuilder::class;
+                $executableBuilder = NullExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
-                $parameterFilter = AllowAllParameterFilter::class;
-                $parameterSupplier = FromReferenceParameterSupplier::class;
+                $parameterFilter = DenyAllParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
                 $instruction = UseDocumentInstruction::class;
                 break;
             case Manifest::TAG_USE_MANIFEST:
@@ -188,8 +188,8 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
                 break;
         }
         
-        if (! $element->hasAttribute('use')) {
-            $element->setAttribute('use', 'manifest');
+        if (! $element->hasAttribute(Manifest::ATTR_USE)) {
+            $element->setAttribute(Manifest::ATTR_USE, Manifest::ATTR_USE_MANIFEST);
         }
         
         if (! $element->hasAttribute('executable-builder')) {

@@ -9,6 +9,7 @@ use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
 use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\TransformationResultBuilder;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 
 class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
@@ -19,13 +20,13 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
             $instructions->rootUrl = $rootAsset->createUrl($args);
             /** @var AssetInterface $asset */
             foreach ($rootAsset->getAssetChildren() as $asset) {
-                switch ($args->get('load', '')) {
-                    case 'tree':
+                switch ($args->get(Manifest::PARAM_LOAD, '')) {
+                    case Manifest::PARAM_LOAD_TREE:
                         if ($asset->isUseManifestInstruction() or $asset->isUseDocumentInstruction() or $asset->isUseTemplateInstruction()) {
                             $instructions->documentUrls[] = $asset->createUrl($args);
                         }
                         break;
-                    case 'children':
+                    case Manifest::PARAM_LOAD_CHILDREN:
                         if ($asset->isUseManifestInstruction() or $asset->isUseDocumentInstruction() or $asset->isUseTemplateInstruction()) {
                             $instructions->documentUrls[] = $asset->createUrl($args->withoutArgument('load'));
                         }

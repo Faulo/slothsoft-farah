@@ -60,6 +60,12 @@ class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInt
         $this->loadDocument();
         
         $data = [];
+        foreach ($this->document->getElementsByTagName('*') as $node) {
+            if ($node->hasAttribute('uri')) {
+                $data[] = $node->getAttribute('uri');
+            }
+        }
+        
         return json_encode($data);
     }
     

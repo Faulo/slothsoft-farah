@@ -88,6 +88,12 @@ class Manifest implements ManifestInterface {
     
     const ATTR_REFERENCE = 'ref';
     
+    const ATTR_IMPORT = 'import';
+    
+    const ATTR_IMPORT_SELF = 'self';
+    
+    const ATTR_IMPORT_CHILDREN = 'children';
+    
     const ATTR_USE = 'use';
     
     const ATTR_USE_MANIFEST = 'manifest';
@@ -100,20 +106,20 @@ class Manifest implements ManifestInterface {
     
     const ATTR_USE_SCRIPT = 'script';
     
+    const ATTR_USE_MODULE = 'module';
+    
     const ATTR_PARAM_KEY = 'name';
     
     const ATTR_PARAM_VAL = 'value';
     
-    const EVENT_USE_DOCUMENT = 'use-document';
+    // params
+    const PARAM_LOAD = 'load';
     
-    const EVENT_USE_TEMPLATE = 'use-template';
+    const PARAM_LOAD_TREE = 'tree';
     
-    const EVENT_USE_SCRIPT = 'use-script';
+    const PARAM_LOAD_CHILDREN = 'children';
     
-    const EVENT_USE_STYLESHEET = 'use-stylesheet';
-    
-    const EVENT_SET_PARAMETER = 'set-parameter';
-    
+    // misc
     const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
     
     const FILE_MANIFEST = 'manifest.xml';

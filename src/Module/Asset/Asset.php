@@ -14,6 +14,7 @@ use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableContainer;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use SplFileInfo;
 
@@ -122,7 +123,6 @@ class Asset implements AssetInterface {
         if ($args === null) {
             $args = $this->getManifestArguments();
         } else {
-            // $args = $this->getManifestArguments()->withArguments($args);
             $args = $args->withArguments($this->getManifestArguments());
         }
         $args = $this->applyParameterFilter($args);
@@ -231,7 +231,7 @@ class Asset implements AssetInterface {
     }
     
     private function getReferencedUrl(): ?FarahUrl {
-        $ref = $this->manifestElement->getAttribute('ref', '');
+        $ref = $this->manifestElement->getAttribute(Manifest::ATTR_REFERENCE, '');
         return $ref === '' ? null : FarahUrl::createFromReference($ref, $this->createUrl());
     }
 }
