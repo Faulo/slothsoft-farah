@@ -84,8 +84,8 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
             case Manifest::TAG_USE_DOCUMENT:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
-                $parameterFilter = DenyAllParameterFilter::class;
-                $parameterSupplier = NullParameterSupplier::class;
+                $parameterFilter = AllowAllParameterFilter::class;
+                $parameterSupplier = FromReferenceParameterSupplier::class;
                 $instruction = UseDocumentInstruction::class;
                 break;
             case Manifest::TAG_USE_MANIFEST:
