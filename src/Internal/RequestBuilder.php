@@ -30,7 +30,7 @@ class RequestBuilder implements ExecutableBuilderStrategyInterface {
             return $node;
         };
         $writer = new DOMWriterFromElementDelegate($closure);
-        $resultBuilder = new DOMWriterResultBuilder($writer, 'request.xml');
+        $resultBuilder = new DOMWriterResultBuilder($writer, 'request');
         return new ExecutableStrategies($resultBuilder);
     }
 }

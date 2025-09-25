@@ -6,11 +6,7 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrateg
 
 class ExecutableStrategies {
     
-    /**
-     *
-     * @var ResultBuilderStrategyInterface
-     */
-    public $resultBuilder;
+    public ResultBuilderStrategyInterface $resultBuilder;
     
     public function __construct(ResultBuilderStrategyInterface $resultBuilder) {
         $this->resultBuilder = $resultBuilder;

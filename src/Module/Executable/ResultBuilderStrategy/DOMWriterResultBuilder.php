@@ -14,7 +14,7 @@ class DOMWriterResultBuilder implements ResultBuilderStrategyInterface {
     
     private string $fileName;
     
-    public function __construct(DOMWriterInterface $writer, string $fileName = 'index.xml') {
+    public function __construct(DOMWriterInterface $writer, string $fileName = 'index') {
         $this->writer = $writer;
         $this->fileName = $fileName;
     }

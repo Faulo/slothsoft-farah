@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
-use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
@@ -10,63 +9,43 @@ use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\Core\IO\Writable\StreamWriterInterface;
 use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Core\IO\Writable\Adapter\ChunkWriterFromStringWriter;
+use Slothsoft\Core\IO\Writable\Adapter\DOMWriterFromStringWriter;
 use Slothsoft\Core\IO\Writable\Adapter\FileWriterFromStringWriter;
 use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromStringWriter;
-use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromDOMWriter;
 use Slothsoft\Farah\Module\Result\ResultInterface;
-use DOMDocument;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface {
+class StringWriterStreamBuilder implements StreamBuilderStrategyInterface {
     
-    private DOMWriterInterface $writer;
+    private StringWriterInterface $writer;
     
     private string $documentName;
     
-    public function __construct(DOMWriterInterface $writer, string $documentName = 'document') {
+    private string $extension;
+    
+    private string $charset;
+    
+    public function __construct(StringWriterInterface $writer, string $documentName = 'data', string $extension = 'txt', string $charset = 'UTF-8') {
         $this->writer = $writer;
         $this->documentName = $documentName;
-    }
-    
-    private function getDocument(): DOMDocument {
-        return $this->writer->toDocument();
-    }
-    
-    private ?string $namespace = null;
-    
-    private function getNamespace(): string {
-        if ($this->namespace === null) {
-            if ($root = $this->getDocument()->documentElement) {
-                $this->namespace = $root->namespaceURI ?? '';
-            } else {
-                $this->namespace = '';
-            }
-        }
-        return $this->namespace;
-    }
-    
-    private ?string $extension = null;
-    
-    private function getExtension(): string {
-        return $this->extension ??= DOMHelper::guessExtension($this->getNamespace());
+        $this->extension = $extension;
+        $this->charset = $charset;
     }
     
     public function buildStreamMimeType(ResultInterface $context): string {
-        $extension = $this->getExtension();
-        return MimeTypeDictionary::guessMime($extension);
+        return MimeTypeDictionary::guessMime($this->extension);
     }
     
     public function buildStreamCharset(ResultInterface $context): string {
-        return $this->getDocument()->encoding ?? 'UTF-8';
+        return $this->charset;
     }
     
     public function buildStreamFileName(ResultInterface $context): string {
-        $extension = $this->getExtension();
-        return "$this->documentName.$extension";
+        return $this->extension === '' ? $this->documentName : "$this->documentName.$this->extension";
     }
     
     public function buildStreamFileStatistics(ResultInterface $context): array {
@@ -74,7 +53,7 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface {
     }
     
     public function buildStreamHash(ResultInterface $context): string {
-        return md5($this->buildStringWriter($context)->toString());
+        return md5($this->writer->toString());
     }
     
     public function buildStreamIsBufferable(ResultInterface $context): bool {
@@ -82,23 +61,23 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface {
     }
     
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface {
-        return new StreamWriterFromStringWriter($this->buildStringWriter($context));
+        return new StreamWriterFromStringWriter($this->writer);
     }
     
     public function buildFileWriter(ResultInterface $context): FileWriterInterface {
-        return new FileWriterFromStringWriter($this->buildStringWriter($context));
+        return new FileWriterFromStringWriter($this->writer);
     }
     
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface {
-        return $this->writer;
+        return new DOMWriterFromStringWriter($this->writer);
     }
     
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface {
-        return new ChunkWriterFromStringWriter($this->buildStringWriter($context));
+        return new ChunkWriterFromStringWriter($this->writer);
     }
     
     public function buildStringWriter(ResultInterface $context): StringWriterInterface {
-        return new StringWriterFromDOMWriter($this->writer);
+        return $this->writer;
     }
 }
 

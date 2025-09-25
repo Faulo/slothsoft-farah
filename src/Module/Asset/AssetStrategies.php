@@ -10,15 +10,15 @@ use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\ParameterSupplierStra
 
 class AssetStrategies {
     
-    public $executableBuilder;
+    public ExecutableBuilderStrategyInterface $executableBuilder;
     
-    public $pathResolver;
+    public PathResolverStrategyInterface $pathResolver;
     
-    public $parameterFilter;
+    public ParameterFilterStrategyInterface $parameterFilter;
     
-    public $parameterSupplier;
+    public ParameterSupplierStrategyInterface $parameterSupplier;
     
-    public $instruction;
+    public InstructionStrategyInterface $instruction;
     
     public function __construct(ExecutableBuilderStrategyInterface $executableBuilder, PathResolverStrategyInterface $pathResolver, ParameterFilterStrategyInterface $parameterFilter, ParameterSupplierStrategyInterface $parameterSupplier, InstructionStrategyInterface $instruction) {
         $this->executableBuilder = $executableBuilder;

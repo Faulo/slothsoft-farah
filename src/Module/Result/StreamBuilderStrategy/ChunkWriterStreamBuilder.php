@@ -16,11 +16,11 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
 
 class ChunkWriterStreamBuilder implements StreamBuilderStrategyInterface {
     
-    private $writer;
+    private ChunkWriterInterface $writer;
     
-    private $fileName;
+    private string $fileName;
     
-    private $isBufferable;
+    private bool $isBufferable;
     
     public function __construct(ChunkWriterInterface $writer, string $fileName, bool $isBufferable = true) {
         $this->writer = $writer;

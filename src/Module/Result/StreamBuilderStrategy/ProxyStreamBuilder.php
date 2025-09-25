@@ -11,7 +11,7 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
 
 class ProxyStreamBuilder implements StreamBuilderStrategyInterface {
     
-    private $proxy;
+    private ResultInterface $proxy;
     
     public function __construct(ResultInterface $proxy) {
         $this->proxy = $proxy;

@@ -5,15 +5,19 @@ namespace Slothsoft\Farah\Internal;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\EmptySitemapException;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
-use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\DOMWriterResultBuilder;
+use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\MapResultBuilder;
+use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
+use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StringWriterStreamBuilder;
 use Slothsoft\Farah\Sites\Domain;
 use DOMDocument;
 use DOMElement;
@@ -23,7 +27,7 @@ use DOMElement;
  * @author Daniel Schulz
  *        
  */
-class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInterface {
+class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInterface, StringWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
     private ?AssetInterface $asset = null;
@@ -41,7 +45,8 @@ class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInt
             $this->domainProtocol = $protocol;
         }
         
-        $resultBuilder = new DOMWriterResultBuilder($this, 'sitemap.xml');
+        $resultBuilder = new MapResultBuilder(new DOMWriterStreamBuilder($this, 'sitemap'));
+        $resultBuilder->addStreamBuilder(FarahUrlStreamIdentifier::createFromString('json'), new StringWriterStreamBuilder($this, 'sitemap'));
         return new ExecutableStrategies($resultBuilder);
     }
     
@@ -49,6 +54,13 @@ class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInt
         $this->loadDocument();
         
         return $this->document;
+    }
+    
+    public function toString(): string {
+        $this->loadDocument();
+        
+        $data = [];
+        return json_encode($data);
     }
     
     private function loadDocument(): void {

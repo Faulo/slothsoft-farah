@@ -6,11 +6,7 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamBuilderStrategyInt
 
 class ResultStrategies {
     
-    /**
-     *
-     * @var StreamBuilderStrategyInterface
-     */
-    public $streamBuilder;
+    public StreamBuilderStrategyInterface $streamBuilder;
     
     public function __construct(StreamBuilderStrategyInterface $streamBuilder) {
         $this->streamBuilder = $streamBuilder;

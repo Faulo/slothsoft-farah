@@ -145,40 +145,42 @@ final class LinkCrawler {
     }
     
     public function crawlDocument(DOMDocument $document): iterable {
-        foreach ($this->getLinkingElements((string) $document->documentElement->namespaceURI) as $args) {
-            [
-                $ns,
-                $tag,
-                $attribute,
-                $isRequired
-            ] = $args;
-            foreach ($document->getElementsByTagNameNS($ns, $tag) as $linkNode) {
-                if ($linkNode->hasAttribute(Dictionary::XPATH_DICT_ATTR_REPLACE)) {
-                    continue;
-                }
-                
-                $link = (string) $linkNode->getAttribute($attribute);
-                
-                if ($link === '') {
-                    // use fallback attribute
-                    $link = (string) $linkNode->getAttribute('data-' . $attribute);
-                }
-                
-                if ($this->whitelist->contains($link)) {
-                    continue;
-                }
-                
-                if ($link === '' and ! $isRequired) {
-                    continue;
-                }
-                
-                $reference = implode(' ', [
+        if ($document->documentElement) {
+            foreach ($this->getLinkingElements((string) $document->documentElement->namespaceURI) as $args) {
+                [
+                    $ns,
                     $tag,
                     $attribute,
-                    "'$link'"
-                ]);
-                
-                yield $reference => $link;
+                    $isRequired
+                ] = $args;
+                foreach ($document->getElementsByTagNameNS($ns, $tag) as $linkNode) {
+                    if ($linkNode->hasAttribute(Dictionary::XPATH_DICT_ATTR_REPLACE)) {
+                        continue;
+                    }
+                    
+                    $link = (string) $linkNode->getAttribute($attribute);
+                    
+                    if ($link === '') {
+                        // use fallback attribute
+                        $link = (string) $linkNode->getAttribute('data-' . $attribute);
+                    }
+                    
+                    if ($this->whitelist->contains($link)) {
+                        continue;
+                    }
+                    
+                    if ($link === '' and ! $isRequired) {
+                        continue;
+                    }
+                    
+                    $reference = implode(' ', [
+                        $tag,
+                        $attribute,
+                        "'$link'"
+                    ]);
+                    
+                    yield $reference => $link;
+                }
             }
         }
     }

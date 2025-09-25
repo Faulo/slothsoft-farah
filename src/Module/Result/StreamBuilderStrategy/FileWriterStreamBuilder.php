@@ -16,9 +16,9 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
 
 class FileWriterStreamBuilder implements StreamBuilderStrategyInterface {
     
-    private $writer;
+    private FileWriterInterface $writer;
     
-    private $fileName;
+    private string $fileName;
     
     public function __construct(FileWriterInterface $writer, string $fileName) {
         $this->writer = $writer;
