@@ -498,11 +498,12 @@ This namespace defines elements to identify assets in a Farah module.
 	</xsd:simpleType>
 	<xsd:simpleType name="assetUse">
 		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="manifest" />
 			<xsd:enumeration value="document" />
 			<xsd:enumeration value="template" />
-			<xsd:enumeration value="manifest" />
-			<xsd:enumeration value="script" />
 			<xsd:enumeration value="stylesheet" />
+			<xsd:enumeration value="script" />
+			<xsd:enumeration value="module" />
 		</xsd:restriction>
 	</xsd:simpleType>
 </xsd:schema>

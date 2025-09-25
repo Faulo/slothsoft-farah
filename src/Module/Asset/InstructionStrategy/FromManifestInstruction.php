@@ -28,15 +28,15 @@ class FromManifestInstruction implements InstructionStrategyInterface {
     }
     
     public function isLinkStylesheet(AssetInterface $context): bool {
-        return $context->getManifestElement()->getAttribute('link', '') === Manifest::ATTR_USE_STYLESHEET;
+        return $context->getManifestElement()->getAttribute(Manifest::ATTR_USE, '') === Manifest::ATTR_USE_STYLESHEET;
     }
     
     public function isLinkScript(AssetInterface $context): bool {
-        return $context->getManifestElement()->getAttribute('link', '') === Manifest::ATTR_USE_SCRIPT;
+        return $context->getManifestElement()->getAttribute(Manifest::ATTR_USE, '') === Manifest::ATTR_USE_SCRIPT;
     }
     
     public function isLinkModule(AssetInterface $context): bool {
-        return $context->getManifestElement()->getAttribute('link', '') === Manifest::ATTR_USE_MODULE;
+        return $context->getManifestElement()->getAttribute(Manifest::ATTR_USE, '') === Manifest::ATTR_USE_MODULE;
     }
     
     public function isParameterSupplier(AssetInterface $context): bool {
