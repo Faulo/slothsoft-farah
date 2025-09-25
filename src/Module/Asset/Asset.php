@@ -232,7 +232,7 @@ class Asset implements AssetInterface {
             throw new \UnexpectedValueException(sprintf('Missing "%s" attribute on element: %s', Manifest::ATTR_REFERENCE, serialize($this->manifestElement)));
         }
         
-        $ref = $this->manifestElement->getAttribute(Manifest::ATTR_REFERENCE, '');
+        $ref = $this->manifestElement->getAttribute(Manifest::ATTR_REFERENCE);
         return FarahUrl::createFromReference($ref, $this->createUrl());
     }
 }
