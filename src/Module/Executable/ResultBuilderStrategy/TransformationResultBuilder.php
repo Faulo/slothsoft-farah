@@ -17,6 +17,7 @@ use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
+use Closure;
 
 class TransformationResultBuilder implements ResultBuilderStrategyInterface {
     
@@ -32,24 +33,24 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
         return FarahUrlStreamIdentifier::createFromString('xsl-template');
     }
     
-    private callable $getUseInstructions;
+    private Closure $getUseInstructions;
     
-    private callable $getLinkInstructions;
+    private Closure $getLinkInstructions;
     
     private bool $translateResult;
     
     public function __construct(callable $getUseInstructions, callable $getLinkInstructions, bool $translateResult = true) {
-        $this->getUseInstructions = $getUseInstructions;
-        $this->getLinkInstructions = $getLinkInstructions;
+        $this->getUseInstructions = Closure::fromCallable($getUseInstructions);
+        $this->getLinkInstructions = Closure::fromCallable($getLinkInstructions);
         $this->translateResult = $translateResult;
     }
     
-    private function getUseInstructionsNow(): UseInstructionCollection {
+    private function getUseInstructionsTyped(): UseInstructionCollection {
         return ($this->getUseInstructions)();
     }
     
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
-        $instructions = $this->getUseInstructionsNow();
+        $instructions = $this->getUseInstructionsTyped();
         
         if ($instructions->templateUrl and $type === static::resultIsXslTemplate()) {
             $writer = Module::resolveToDOMWriter($instructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));

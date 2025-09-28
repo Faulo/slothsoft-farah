@@ -13,7 +13,7 @@ class UseInstructionCollection {
     
     public Set $manifestUrls;
     
-    public ?FarahUrl $templateUrl;
+    public ?FarahUrl $templateUrl = null;
     
     public function __construct(FarahUrl $rootUrl) {
         $this->rootUrl = $rootUrl;
