@@ -11,11 +11,7 @@ use SplFileInfo;
 class FileInfoDOMWriter implements DOMWriterInterface {
     use DOMWriterDocumentFromElementTrait;
     
-    /**
-     *
-     * @var SplFileInfo
-     */
-    private $file;
+    private SplFileInfo $file;
     
     public function __construct(SplFileInfo $file) {
         $this->file = $file;

@@ -11,23 +11,11 @@ use DOMDocument;
 class TranslationDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
-    /**
-     *
-     * @var DOMWriterInterface
-     */
-    private $source;
+    private DOMWriterInterface $source;
     
-    /**
-     *
-     * @var Dictionary
-     */
-    private $dict;
+    private Dictionary $dict;
     
-    /**
-     *
-     * @var FarahUrl
-     */
-    private $context;
+    private FarahUrl $context;
     
     public function __construct(DOMWriterInterface $source, Dictionary $dict, FarahUrl $context) {
         $this->source = $source;

@@ -8,6 +8,7 @@ use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
 
@@ -288,7 +289,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-use-document/test'
                     ],
                     'print-fragment' => [
-                        'type' => 'xml'
+                        'type' => Executable::RESULT_IS_XML
                     ]
                 ]
             ],

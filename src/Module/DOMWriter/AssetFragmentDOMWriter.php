@@ -12,21 +12,12 @@ use DOMImplementation;
 class AssetFragmentDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
-    /**
-     *
-     * @var FarahUrl
-     */
-    private $url;
+    private FarahUrl $url;
     
-    /**
-     *
-     * @var DOMWriterInterface[]
-     */
-    private $children;
+    private array $children = [];
     
     public function __construct(FarahUrl $url) {
         $this->url = $url;
-        $this->children = [];
     }
     
     public function appendChild(DOMWriterInterface $child) {

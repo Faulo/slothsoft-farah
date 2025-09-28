@@ -9,22 +9,19 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 use DOMDocument;
 use DOMElement;
+use Slothsoft\Farah\Module\Executable\Executable;
 
 class AssetDocumentDOMWriter implements DOMWriterInterface {
     use DOMWriterDocumentFromElementTrait;
     
-    /**
-     *
-     * @var FarahUrl
-     */
-    private $url;
+    private FarahUrl $url;
     
     public function __construct(FarahUrl $url) {
         $this->url = $url;
     }
     
     public function toElement(DOMDocument $targetDoc): DOMElement {
-        $childNode = Module::resolveToDOMWriter($this->url->withFragment('xml'))->toElement($targetDoc);
+        $childNode = Module::resolveToDOMWriter($this->url->withFragment(Executable::RESULT_IS_XML))->toElement($targetDoc);
         
         $ns = (string) $childNode->namespaceURI;
         $name = basename((string) $this->url->getAssetPath());

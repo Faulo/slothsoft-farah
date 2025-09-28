@@ -12,11 +12,7 @@ use DOMElement;
 class AssetManifestDOMWriter implements DOMWriterInterface {
     use DOMWriterDocumentFromElementTrait;
     
-    /**
-     *
-     * @var FarahUrl
-     */
-    private $url;
+    private FarahUrl $url;
     
     public function __construct(FarahUrl $url) {
         $this->url = $url;
