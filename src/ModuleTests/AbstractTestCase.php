@@ -3,8 +3,8 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\ModuleTests;
 
 use PHPUnit\Framework\TestCase;
+use Slothsoft\Farah\Schema\SchemaLocator;
 use DOMDocument;
-use DOMElement;
 use Throwable;
 
 class AbstractTestCase extends TestCase {
@@ -30,21 +30,8 @@ class AbstractTestCase extends TestCase {
     }
     
     protected function findSchemaLocation(DOMDocument $document): ?string {
-        $node = $document->documentElement;
-        $this->assertInstanceOf(DOMElement::class, $node);
-        $ns = $node->namespaceURI;
-        
-        if ($ns !== null) {
-            if (strpos($ns, 'http://schema.slothsoft.net/') === 0) {
-                $version = $node->hasAttribute('version') ? $node->getAttribute('version') : '1.0';
-                $schema = explode('/', substr($ns, strlen('http://schema.slothsoft.net/')));
-                $this->assertEquals(2, count($schema), "Invalid slothsoft schema: $ns");
-                $url = "farah://slothsoft@$schema[0]/schema/$schema[1]/$version";
-                return $url;
-            }
-        }
-        
-        return null;
+        $locator = new SchemaLocator();
+        return $locator->findSchemaLocation($document);
     }
     
     protected function assertSchema(DOMDocument $document, string $schema): void {

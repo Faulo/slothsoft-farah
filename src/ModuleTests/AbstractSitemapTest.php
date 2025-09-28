@@ -68,7 +68,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     protected function getSitesIncludesCrawl(array &$ret, FarahUrl $parentUrl, DOMDocument $document): void {
         $nodeList = $document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_INCLUDE_PAGES);
         foreach ($nodeList as $node) {
-            $url = FarahUrl::createFromReference($node->getAttribute('ref'), $parentUrl);
+            $url = FarahUrl::createFromReference($node->getAttribute(Domain::ATTR_REFERENCE), $parentUrl);
             $ret[(string) $url] = $url;
             trigger_error("<include-pages> is deprecated (referencing $url)", E_USER_DEPRECATED);
             try {

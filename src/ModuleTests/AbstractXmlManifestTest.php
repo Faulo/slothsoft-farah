@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\ModuleTests;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\XML\LeanElement;
 use DOMDocument;
+use Slothsoft\Farah\Schema\SchemaLocator;
 
 abstract class AbstractXmlManifestTest extends AbstractManifestTest {
     
@@ -18,15 +19,14 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
         return LeanElement::createTreeFromDOMDocument(DOMHelper::loadDocument(static::getManifestFile()));
     }
     
-    const SCHEMA_URL = 'farah://slothsoft@farah/schema/module/';
-    
     /**
      *
      * @depends testManifestIsValidXml
      */
-    public function testSchemaExists($manifestDocument): string {
-        $version = $manifestDocument->documentElement->hasAttribute('version') ? $manifestDocument->documentElement->getAttribute('version') : '1.0';
-        $path = static::SCHEMA_URL . $version;
+    public function testSchemaExists(DOMDocument $manifestDocument): string {
+        $locator = new SchemaLocator();
+        $path = $locator->findSchemaLocation($manifestDocument);
+        $this->assertNotNull($path, 'Failed to determine schema!');
         $this->assertFileExists($path, 'Schema file not found!');
         return $path;
     }
@@ -66,7 +66,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
      * @depends testManifestIsValidXml
      * @depends testSchemaIsValidXml
      */
-    public function testManifestIsValidAccordingToSchema($manifestDocument, $schemaDocument): DOMDocument {
+    public function testManifestIsValidAccordingToSchema(DOMDocument $manifestDocument, DOMDocument $schemaDocument): DOMDocument {
         $this->assertSchema($manifestDocument, $schemaDocument->documentURI);
         
         return $manifestDocument;

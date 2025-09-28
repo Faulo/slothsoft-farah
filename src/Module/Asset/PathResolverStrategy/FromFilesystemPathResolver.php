@@ -8,6 +8,7 @@ use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\ManifestElementBuilder;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 
 /**
  *
@@ -18,9 +19,9 @@ class FromFilesystemPathResolver implements PathResolverStrategyInterface {
     
     public function loadChildren(AssetInterface $context): iterable {
         $element = $context->getManifestElement();
-        $desiredMime = $element->getAttribute('type', '*/*');
+        $desiredMime = $element->getAttribute(Manifest::ATTR_TYPE, '*/*');
         $desiredExtension = MimeTypeDictionary::guessExtension($desiredMime);
-        $path = $element->getAttribute('realpath');
+        $path = $element->getAttribute(Manifest::ATTR_REALPATH);
         
         $filePathList = FileSystem::scanDir($path, FileSystem::SCANDIR_EXCLUDE_DIRS);
         foreach ($filePathList as $filePath) {
@@ -39,9 +40,9 @@ class FromFilesystemPathResolver implements PathResolverStrategyInterface {
     
     public function resolvePath(AssetInterface $context, string $name): LeanElement {
         $element = $context->getManifestElement();
-        $type = $element->getAttribute('type', '*/*');
+        $type = $element->getAttribute(Manifest::ATTR_TYPE, '*/*');
         $extension = MimeTypeDictionary::guessExtension($type);
-        $directory = $element->getAttribute('realpath');
+        $directory = $element->getAttribute(Manifest::ATTR_REALPATH);
         
         $path = $name;
         

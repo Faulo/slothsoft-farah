@@ -28,6 +28,7 @@ class Domain {
         return new self(Module::resolveToDOMWriter($url)->toDocument());
     }
     
+    // tags
     public const TAG_INCLUDE_PAGES = 'include-pages';
     
     public const TAG_SITEMAP = 'sitemap';
@@ -39,6 +40,9 @@ class Domain {
     public const TAG_FILE = 'file';
     
     public const TAG_PARAM = 'param';
+    
+    // attributes
+    public const ATTR_REFERENCE = 'ref';
     
     private DOMDocument $document;
     

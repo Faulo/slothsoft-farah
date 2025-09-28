@@ -116,7 +116,7 @@ class Asset implements AssetInterface {
     }
     
     public function getFileInfo(): SplFileInfo {
-        return new SplFileInfo($this->manifestElement->getAttribute('realpath'));
+        return new SplFileInfo($this->manifestElement->getAttribute(Manifest::ATTR_REALPATH));
     }
     
     public function lookupExecutable(FarahUrlArguments $args = null): ExecutableInterface {

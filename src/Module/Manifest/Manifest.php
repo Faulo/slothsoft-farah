@@ -15,124 +15,126 @@ use SplFileInfo;
 class Manifest implements ManifestInterface {
     
     // asset tags
-    const TAG_FRAGMENT = 'fragment';
+    public const TAG_FRAGMENT = 'fragment';
     
-    const TAG_CONTAINER = 'container';
+    public const TAG_CONTAINER = 'container';
     
-    const TAG_EXTERNAL_RESOURCE = 'external-resource';
+    public const TAG_EXTERNAL_RESOURCE = 'external-resource';
     
-    const TAG_CUSTOM_ASSET = 'custom-asset';
+    public const TAG_CUSTOM_ASSET = 'custom-asset';
     
-    const TAG_DAEMON = 'daemon';
+    public const TAG_DAEMON = 'daemon';
     
     // runtime-only asset tags
-    const TAG_DOCUMENT = 'document';
+    public const TAG_DOCUMENT = 'document';
     
-    const TAG_ERROR = 'error';
+    public const TAG_ERROR = 'error';
     
-    const TAG_CLOSURE = 'closure';
+    public const TAG_CLOSURE = 'closure';
     
     // physical asset tags
-    const TAG_ASSET_ROOT = 'assets';
+    public const TAG_ASSET_ROOT = 'assets';
     
-    const TAG_RESOURCE = 'resource';
+    public const TAG_RESOURCE = 'resource';
     
-    const TAG_DIRECTORY = 'directory';
+    public const TAG_DIRECTORY = 'directory';
     
-    const TAG_RESOURCE_DIRECTORY = 'resource-directory';
+    public const TAG_RESOURCE_DIRECTORY = 'resource-directory';
     
-    const TAG_MANIFEST_DIRECTORY = 'manifest-directory';
+    public const TAG_MANIFEST_DIRECTORY = 'manifest-directory';
     
-    const TAG_TEMPLATE_RESOURCE = 'template-resource';
+    public const TAG_TEMPLATE_RESOURCE = 'template-resource';
     
     // meta tags
-    const TAG_SOURCE = 'source';
+    public const TAG_SOURCE = 'source';
     
-    const TAG_OPTIONS = 'options';
+    public const TAG_OPTIONS = 'options';
     
-    const TAG_PARAM = 'param';
+    public const TAG_PARAM = 'param';
     
     // instruction tags
-    const TAG_IMPORT = 'import';
+    public const TAG_IMPORT = 'import';
     
-    const TAG_USE_DOCUMENT = 'use-document';
+    public const TAG_USE_DOCUMENT = 'use-document';
     
-    const TAG_USE_TEMPLATE = 'use-template';
+    public const TAG_USE_TEMPLATE = 'use-template';
     
-    const TAG_USE_MANIFEST = 'use-manifest';
+    public const TAG_USE_MANIFEST = 'use-manifest';
     
-    const TAG_LINK_STYLESHEET = 'link-stylesheet';
+    public const TAG_LINK_STYLESHEET = 'link-stylesheet';
     
-    const TAG_LINK_SCRIPT = 'link-script';
+    public const TAG_LINK_SCRIPT = 'link-script';
     
-    const TAG_LINK_MODULE = 'link-module';
+    public const TAG_LINK_MODULE = 'link-module';
     
     // attributes
-    const ATTR_NAME = 'name';
+    public const ATTR_NAME = 'name';
     
-    const ATTR_ID = 'url';
+    public const ATTR_ID = 'url';
     
-    const ATTR_HREF = 'href';
+    public const ATTR_HREF = 'href';
     
-    const ATTR_SRC = 'src';
+    public const ATTR_SRC = 'src';
     
-    const ATTR_ALIAS = 'as';
+    public const ATTR_ALIAS = 'as';
     
-    const ATTR_PATH = 'path';
+    public const ATTR_PATH = 'path';
     
-    const ATTR_TYPE = 'type';
+    public const ATTR_TYPE = 'type';
     
-    const ATTR_REALPATH = 'realpath';
+    public const ATTR_REALPATH = 'realpath';
     
-    const ATTR_ASSETPATH = 'assetpath';
+    public const ATTR_ASSETPATH = 'assetpath';
     
-    const ATTR_REFERENCE = 'ref';
+    public const ATTR_REFERENCE = 'ref';
     
-    const ATTR_IMPORT = 'import';
+    public const ATTR_IMPORT = 'import';
     
-    const ATTR_IMPORT_SELF = 'self';
+    public const ATTR_IMPORT_SELF = 'self';
     
-    const ATTR_IMPORT_CHILDREN = 'children';
+    public const ATTR_IMPORT_CHILDREN = 'children';
     
-    const ATTR_USE = 'use';
+    public const ATTR_USE = 'use';
     
-    const ATTR_USE_MANIFEST = 'manifest';
+    public const ATTR_URL = 'url';
     
-    const ATTR_USE_DOCUMENT = 'document';
+    public const ATTR_USE_MANIFEST = 'manifest';
     
-    const ATTR_USE_TEMPLATE = 'template';
+    public const ATTR_USE_DOCUMENT = 'document';
     
-    const ATTR_USE_STYLESHEET = 'stylesheet';
+    public const ATTR_USE_TEMPLATE = 'template';
     
-    const ATTR_USE_SCRIPT = 'script';
+    public const ATTR_USE_STYLESHEET = 'stylesheet';
     
-    const ATTR_USE_MODULE = 'module';
+    public const ATTR_USE_SCRIPT = 'script';
     
-    const ATTR_EXECUTABLE_BUILDER = 'executable-builder';
+    public const ATTR_USE_MODULE = 'module';
     
-    const ATTR_PATH_RESOLVER = 'path-resolver';
+    public const ATTR_EXECUTABLE_BUILDER = 'executable-builder';
     
-    const ATTR_PARAMETER_FILTER = 'parameter-filter';
+    public const ATTR_PATH_RESOLVER = 'path-resolver';
     
-    const ATTR_PARAMETER_SUPPLIER = 'parameter-supplier';
+    public const ATTR_PARAMETER_FILTER = 'parameter-filter';
     
-    const ATTR_INSTRUCTION = 'instruction';
+    public const ATTR_PARAMETER_SUPPLIER = 'parameter-supplier';
     
-    const ATTR_PARAM_KEY = 'name';
+    public const ATTR_INSTRUCTION = 'instruction';
     
-    const ATTR_PARAM_VAL = 'value';
+    public const ATTR_PARAM_KEY = 'name';
+    
+    public const ATTR_PARAM_VAL = 'value';
     
     // params
-    const PARAM_LOAD = 'load';
+    public const PARAM_LOAD = 'load';
     
-    const PARAM_LOAD_TREE = 'tree';
+    public const PARAM_LOAD_TREE = 'tree';
     
-    const PARAM_LOAD_CHILDREN = 'children';
+    public const PARAM_LOAD_CHILDREN = 'children';
     
     // misc
-    const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
+    private const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
     
-    const FILE_MANIFEST = 'manifest.xml';
+    private const FILE_MANIFEST = 'manifest.xml';
     
     private Module $ownerKernel;
     
@@ -182,7 +184,7 @@ class Manifest implements ManifestInterface {
     
     public function createAsset(LeanElement $element): AssetInterface {
         $strategies = $this->strategies->assetBuilder->buildAssetStrategies($this, $element);
-        return new Asset($this, $element, FarahUrlPath::createFromString($element->getAttribute('assetpath')), $strategies);
+        return new Asset($this, $element, FarahUrlPath::createFromString($element->getAttribute(self::ATTR_ASSETPATH)), $strategies);
     }
     
     public function createManifestFile(string $fileName): SplFileInfo {

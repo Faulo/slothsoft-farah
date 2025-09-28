@@ -6,22 +6,15 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 use DOMDocument;
 
 class TransformationDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
-    /**
-     *
-     * @var DOMWriterInterface
-     */
-    private $source;
+    private DOMWriterInterface $source;
     
-    /**
-     *
-     * @var DOMWriterInterface
-     */
-    private $template;
+    private DOMWriterInterface $template;
     
     public function __construct(DOMWriterInterface $source, DOMWriterInterface $template) {
         $this->source = $source;
@@ -34,7 +27,7 @@ class TransformationDOMWriter implements DOMWriterInterface {
         $resultDoc = $dom->transformToDocument($this->source, $this->template);
         
         if (! $resultDoc->documentElement) {
-            throw new EmptyTransformationException($this->source->toDocument()->documentElement->getAttribute('url'));
+            throw new EmptyTransformationException($this->source->toDocument()->documentElement->getAttribute(Manifest::ATTR_ID));
         }
         
         return $resultDoc;
