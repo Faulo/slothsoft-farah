@@ -16,8 +16,7 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $rootAsset = $context;
         $getUseInstructions = function () use ($rootAsset, $args): UseInstructionCollection {
-            $instructions = new UseInstructionCollection();
-            $instructions->rootUrl = $rootAsset->createUrl($args);
+            $instructions = new UseInstructionCollection($rootAsset->createUrl($args));
             /** @var AssetInterface $asset */
             foreach ($rootAsset->getAssetChildren() as $asset) {
                 switch ($args->get(Manifest::PARAM_LOAD, '')) {

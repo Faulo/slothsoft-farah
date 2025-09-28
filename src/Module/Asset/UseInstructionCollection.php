@@ -3,38 +3,30 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Asset;
 
 use Ds\Set;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 class UseInstructionCollection {
     
-    /**
-     *
-     * @var AssetInterface
-     */
-    public $rootUrl;
+    public FarahUrl $rootUrl;
     
     /**
      *
      * @var AssetInterface[]
      */
-    public $documentUrls;
+    public Set $documentUrls;
     
     /**
      *
      * @var AssetInterface[]
      */
-    public $manifestUrls;
+    public Set $manifestUrls;
     
-    /**
-     *
-     * @var AssetInterface
-     */
-    public $templateUrl;
+    public ?FarahUrl $templateUrl;
     
-    public function __construct() {
-        $this->rootUrl = null;
+    public function __construct(FarahUrl $rootUrl) {
+        $this->rootUrl = $rootUrl;
         $this->documentUrls = new Set();
         $this->manifestUrls = new Set();
-        $this->templateUrl = null;
     }
 }
 

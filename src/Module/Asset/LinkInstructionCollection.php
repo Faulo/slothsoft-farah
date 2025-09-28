@@ -6,23 +6,11 @@ use Ds\Set;
 
 class LinkInstructionCollection {
     
-    /**
-     *
-     * @var Set
-     */
-    public $stylesheetUrls;
+    public Set $stylesheetUrls;
     
-    /**
-     *
-     * @var Set
-     */
-    public $scriptUrls;
+    public Set $scriptUrls;
     
-    /**
-     *
-     * @var Set
-     */
-    public $moduleUrls;
+    public Set $moduleUrls;
     
     public function __construct() {
         $this->stylesheetUrls = new Set();

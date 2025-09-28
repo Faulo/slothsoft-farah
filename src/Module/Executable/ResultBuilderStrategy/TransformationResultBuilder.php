@@ -7,6 +7,7 @@ use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\LinkDecorator\DecoratedDOMWriter;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\DOMWriter\AssetDocumentDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\AssetFragmentDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\AssetManifestDOMWriter;
@@ -31,11 +32,11 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
         return FarahUrlStreamIdentifier::createFromString('xsl-template');
     }
     
-    private $getUseInstructions;
+    private callable $getUseInstructions;
     
-    private $getLinkInstructions;
+    private callable $getLinkInstructions;
     
-    private $translateResult;
+    private bool $translateResult;
     
     public function __construct(callable $getUseInstructions, callable $getLinkInstructions, bool $translateResult = true) {
         $this->getUseInstructions = $getUseInstructions;
@@ -43,11 +44,15 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
         $this->translateResult = $translateResult;
     }
     
+    private function getUseInstructionsNow(): UseInstructionCollection {
+        return ($this->getUseInstructions)();
+    }
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
-        $instructions = ($this->getUseInstructions)();
+        $instructions = $this->getUseInstructionsNow();
         
         if ($instructions->templateUrl and $type === static::resultIsXslTemplate()) {
-            $writer = Module::resolveToDOMWriter($instructions->templateUrl->withFragment(Executable::RESULT_IS_XML));
+            $writer = Module::resolveToDOMWriter($instructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
         } else {
             $writer = new AssetFragmentDOMWriter($instructions->rootUrl);
             
@@ -60,7 +65,7 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
             }
             
             if ($instructions->templateUrl and $type !== static::resultIsXslSource()) {
-                $template = Module::resolveToDOMWriter($instructions->templateUrl->withFragment(Executable::RESULT_IS_XML));
+                $template = Module::resolveToDOMWriter($instructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
                 $writer = new TransformationDOMWriter($writer, $template);
                 if ($this->translateResult) {
                     $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $instructions->rootUrl);

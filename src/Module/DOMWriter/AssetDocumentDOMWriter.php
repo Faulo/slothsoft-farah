@@ -21,7 +21,7 @@ class AssetDocumentDOMWriter implements DOMWriterInterface {
     }
     
     public function toElement(DOMDocument $targetDoc): DOMElement {
-        $childNode = Module::resolveToDOMWriter($this->url->withFragment(Executable::RESULT_IS_XML))->toElement($targetDoc);
+        $childNode = Module::resolveToDOMWriter($this->url->withStreamIdentifier(Executable::resultIsXml()))->toElement($targetDoc);
         
         $ns = (string) $childNode->namespaceURI;
         $name = basename((string) $this->url->getAssetPath());
