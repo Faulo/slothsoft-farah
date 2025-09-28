@@ -14,6 +14,7 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\TextFileResult
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\XmlFileResultBuilder;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use SplFileInfo;
+use Slothsoft\Core\MimeTypeDictionary;
 
 class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
@@ -26,13 +27,13 @@ class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterf
     }
     
     private function createResultBuilderForType(FarahUrl $url, SplFileInfo $file, string $type): ResultBuilderStrategyInterface {
-        if ($type === 'application/xml' or substr($type, - 4) === '+xml') {
+        if (MimeTypeDictionary::isXml($type)) {
             return new XmlFileResultBuilder($url, $file);
         }
-        if ($type === 'text/html') {
+        if (MimeTypeDictionary::isHtml($type)) {
             return new HtmlFileResultBuilder($url, $file);
         }
-        if ($type === 'application/javascript' or $type === 'application/json' or substr($type, 0, 5) === 'text/') {
+        if (MimeTypeDictionary::isText($type)) {
             return new TextFileResultBuilder($url, $file);
         }
         return new Base64FileResultBuilder($url, $file);

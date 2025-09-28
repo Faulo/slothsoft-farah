@@ -302,6 +302,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         
         if ($schema = $this->findSchemaLocation($document)) {
             $this->assertSchema($document, $schema);
+        } else {
+            $this->markTestSkipped("Won't attempt to validate resource in unknown namespace '{$document->documentElement->namespaceURI}'");
         }
     }
     
@@ -373,7 +375,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
                 if (file_exists($asset) and $result = Module::resolveToResult($url)) {
                     $mime = $result->lookupMimeType();
                     
-                    if ($mime === 'application/xml' or substr($mime, - 4) === '+xml') {
+                    if (MimeTypeDictionary::isXml($mime)) {
                         $document = $result->lookupDOMWriter()
                             ->toDocument();
                         

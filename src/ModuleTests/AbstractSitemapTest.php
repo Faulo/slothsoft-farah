@@ -6,6 +6,7 @@ use Ds\Set;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
@@ -338,7 +339,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                     if (file_exists((string) $url) and $result = $this->loadAsset($url)) {
                         $mime = $result->lookupMimeType();
                         
-                        if ($mime === 'application/xml' or substr($mime, - 4) === '+xml') {
+                        if (MimeTypeDictionary::isXml($mime)) {
                             $document = $result->lookupDOMWriter()
                                 ->toDocument();
                             
