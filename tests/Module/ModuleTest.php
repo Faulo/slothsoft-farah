@@ -107,16 +107,22 @@ class ModuleTest extends TestCase {
         Module::resolveToResult(FarahUrl::createFromComponents($authority));
     }
     
+    private function loadTestModule(string $directory): ManifestInterface {
+        $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test');
+        Module::registerWithXmlManifestAndDefaultAssets($authority, $directory);
+        return Module::resolveToManifest(FarahUrl::createFromComponents($authority));
+    }
+    
     /**
      *
      * @runInSeparateProcess
      */
-    public function testCanLoadTestModule(): ManifestInterface {
-        $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test');
-        Module::registerWithXmlManifestAndDefaultAssets($authority, 'test-files' . DIRECTORY_SEPARATOR . 'test-module');
-        $manifest = Module::resolveToManifest(FarahUrl::createFromComponents($authority));
+    public function testCanLoadTestModule(): string {
+        $directory = 'test-files' . DIRECTORY_SEPARATOR . 'test-module';
+        $manifest = $this->loadTestModule($directory);
         $this->assertNotNull($manifest);
-        return $manifest;
+        $this->assertEquals($manifest, Module::resolveToManifest($manifest->createUrl()));
+        return $directory;
     }
     
     /**
@@ -125,7 +131,8 @@ class ModuleTest extends TestCase {
      * @dataProvider modulePathProvider
      * @depends testCanLoadTestModule
      */
-    public function testModuleUsesManifestDirectory(string $path, ManifestInterface $manifest): void {
+    public function testModuleUsesManifestDirectory(string $path, string $manifestDirectory): void {
+        $manifest = $this->loadTestModule($manifestDirectory);
         $mime = $manifest->lookupAsset($path)
             ->lookupExecutable()
             ->lookupDefaultResult()
@@ -147,5 +154,69 @@ class ModuleTest extends TestCase {
         yield 'sub module fragment' => [
             '/submodule/test'
         ];
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function testCanLoadImportModule(): string {
+        $directory = 'test-files' . DIRECTORY_SEPARATOR . 'test-import';
+        $manifest = $this->loadTestModule($directory);
+        $this->assertNotNull($manifest);
+        $this->assertEquals($manifest, Module::resolveToManifest($manifest->createUrl()));
+        return $directory;
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     * @dataProvider importPathProvider
+     * @depends testCanLoadImportModule
+     */
+    public function testModuleCanImportAssets(string $path, string $manifestDirectory): void {
+        $manifest = $this->loadTestModule($manifestDirectory);
+        $mime = $manifest->lookupAsset($path)
+            ->lookupExecutable()
+            ->lookupDefaultResult()
+            ->lookupMimeType();
+        
+        $this->assertEquals('application/xml', $mime);
+    }
+    
+    public function importPathProvider(): iterable {
+        $hierarchy = [
+            'import' => [
+                'test' => []
+            ],
+            'result-import' => [
+                'test' => []
+            ],
+            'result-use-child' => [
+                'test' => []
+            ],
+            'result-use-root' => [
+                'import' => [
+                    'test' => []
+                ]
+            ]
+        ];
+        
+        function traverse(array $hierarchy, array $segments = []): iterable {
+            yield $segments;
+            foreach ($hierarchy as $key => $value) {
+                yield from traverse($value, [
+                    ...$segments,
+                    $key
+                ]);
+            }
+        }
+        
+        foreach (traverse($hierarchy) as $segments) {
+            $path = '/' . implode('/', $segments);
+            yield $path => [
+                $path
+            ];
+        }
     }
 }
