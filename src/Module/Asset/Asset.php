@@ -126,10 +126,6 @@ class Asset implements AssetInterface {
             $args = $args->withArguments($this->getManifestArguments());
         }
         $args = $this->applyParameterFilter($args);
-        if ($this->hasReferencedUrl()) {
-            $url = $this->getReferencedUrl();
-            return Module::resolveToExecutable($url->withQueryArguments($args));
-        }
         if (! $this->executables->has($args)) {
             $this->executables->put($args, $this->createExecutable($args));
         }
@@ -229,10 +225,6 @@ class Asset implements AssetInterface {
     
     public function normalizeManifestElement(LeanElement $child): void {
         $this->ownerManifest->normalizeManifestElement($this->manifestElement, $child);
-    }
-    
-    private function hasReferencedUrl(): bool {
-        return $this->manifestElement->hasAttribute(Manifest::ATTR_REFERENCE);
     }
     
     private function getReferencedUrl(): FarahUrl {
