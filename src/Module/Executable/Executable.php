@@ -26,29 +26,13 @@ class Executable implements ExecutableInterface {
         return FarahUrlStreamIdentifier::createFromString(self::RESULT_IS_XML);
     }
     
-    /**
-     *
-     * @var AssetInterface
-     */
-    private $ownerAsset;
+    private AssetInterface $ownerAsset;
     
-    /**
-     *
-     * @var FarahUrlArguments
-     */
-    private $args;
+    private FarahUrlArguments $args;
     
-    /**
-     *
-     * @var ExecutableStrategies
-     */
-    private $strategies;
+    private ExecutableStrategies $strategies;
     
-    /**
-     *
-     * @var ResultContainer
-     */
-    private $results;
+    private ResultContainer $results;
     
     public function __construct(AssetInterface $ownerAsset, FarahUrlArguments $args, ExecutableStrategies $strategies) {
         $this->ownerAsset = $ownerAsset;

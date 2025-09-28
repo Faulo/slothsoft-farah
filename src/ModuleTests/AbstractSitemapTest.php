@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\UriResolver;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Kernel;
+use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
@@ -288,6 +289,11 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                 $count = (int) $xpath->evaluate(sprintf('count(//*[@id = "%1$s"])', $id));
                 $this->assertEquals(1, $count, sprintf('Expected page "%s" to have 1 element with ID "%s"', (string) $uri, $id));
             }
+        } catch (HttpDownloadException $e) {
+            $stream = $e->getResult()
+                ->lookupStreamWriter()
+                ->toStream();
+            $this->assertNotNull($stream);
         } catch (HttpStatusException $e) {
             $this->assertLessThan(300, $e->getCode(), sprintf('Resolving link lead to HTTP status "%d":%s%s', $e->getCode(), PHP_EOL, $e->getMessage()));
         }

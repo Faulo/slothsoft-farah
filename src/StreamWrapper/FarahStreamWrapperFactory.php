@@ -10,6 +10,8 @@ use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Exception\HttpDownloadException;
+use Slothsoft\Farah\Exception\HttpStatusException;
 
 /**
  *
@@ -35,6 +37,10 @@ class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
         
         try {
             return Module::resolveToResult($url)->lookupFileStatistics();
+        } catch (HttpDownloadException $e) {
+            return true;
+        } catch (HttpStatusException $e) {
+            return $e->getCode() < 400;
         } catch (EmptyTransformationException $e) {
             return false;
         } catch (AssetPathNotFoundException $e) {

@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\UriResolver;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
+use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
@@ -63,8 +64,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
      */
     public function testAssetReferenceIsValid(string $ref, FarahUrl $context): void {
         try {
-            FarahUrl::createFromReference($ref, $context);
-            $this->assertTrue(true);
+            $url = FarahUrl::createFromReference($ref, $context);
+            $this->assertNotNull($url);
         } catch (MalformedUrlException $e) {
             $this->failException($e);
         } catch (ProtocolNotSupportedException $e) {
@@ -182,12 +183,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
      */
     public function testReferencedResultExists(FarahUrl $url): void {
         try {
-            Module::resolveToResult($url);
-            $this->assertTrue(true);
-        } catch (ModuleNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (AssetPathNotFoundException $e) {
-            $this->assertTrue(true);
+            $result = Module::resolveToResult($url);
+            $this->assertNotNull($result);
         } catch (Throwable $e) {
             $this->failException($e);
         }
@@ -271,12 +268,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
      */
     public function testLocalResultExists(FarahUrl $url): void {
         try {
-            Module::resolveToResult($url);
-            $this->assertTrue(true);
-        } catch (ModuleNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (AssetPathNotFoundException $e) {
-            $this->assertTrue(true);
+            $result = Module::resolveToResult($url);
+            $this->assertNotNull($result);
         } catch (Throwable $e) {
             $this->failException($e);
         }
@@ -354,6 +347,11 @@ abstract class AbstractModuleTest extends AbstractTestCase {
                     $this->assertEquals(1, $count, sprintf('Expected page "%s" to have 1 element with ID "%s"', (string) $uri, $id));
                 }
             }
+        } catch (HttpDownloadException $e) {
+            $stream = $e->getResult()
+                ->lookupStreamWriter()
+                ->toStream();
+            $this->assertNotNull($stream);
         } catch (HttpStatusException $e) {
             $this->assertLessThan(300, $e->getCode(), sprintf('Resolving link lead to HTTP status "%d":%s%s', $e->getCode(), PHP_EOL, $e->getMessage()));
         }
