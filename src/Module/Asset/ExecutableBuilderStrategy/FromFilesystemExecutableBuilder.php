@@ -32,7 +32,7 @@ class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterf
         if ($type === 'text/html') {
             return new HtmlFileResultBuilder($url, $file);
         }
-        if ($type === 'application/javascript' or substr($type, 0, 5) === 'text/') {
+        if ($type === 'application/javascript' or $type === 'application/json' or substr($type, 0, 5) === 'text/') {
             return new TextFileResultBuilder($url, $file);
         }
         return new Base64FileResultBuilder($url, $file);
