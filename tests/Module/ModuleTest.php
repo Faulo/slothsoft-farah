@@ -275,4 +275,31 @@ class ModuleTest extends TestCase {
             ]
         ];
     }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     * @dataProvider importUrlProvider
+     * @depends testCanLoadImportModule
+     */
+    public function testModuleCanServeImport(string $expectedPath, string $actualPath, string $manifestDirectory): void {
+        $manifest = $this->loadTestModule($manifestDirectory);
+        $expectedUrl = $manifest->createUrl($expectedPath);
+        $actualUrl = $manifest->createUrl($actualPath);
+        
+        $this->assertFileEquals((string) $expectedUrl, (string) $actualUrl);
+    }
+    
+    public function importUrlProvider(): iterable {
+        return [
+            '/result-use-manifest' => [
+                '/import/test',
+                '/result-use-manifest/test'
+            ],
+            '/result-use-document' => [
+                '/import/test',
+                '/result-use-document/test'
+            ]
+        ];
+    }
 }
