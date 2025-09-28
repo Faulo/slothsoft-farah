@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
 use PHPUnit\Framework\TestCase;
+use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
@@ -214,5 +215,64 @@ class ModuleTest extends TestCase {
                 $path
             ];
         }
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     * @dataProvider importContentProvider
+     * @depends testCanLoadImportModule
+     */
+    public function testModuleDoesImportInfo(string $path, array $elements, string $manifestDirectory): void {
+        $manifest = $this->loadTestModule($manifestDirectory);
+        $url = $manifest->createUrl($path);
+        
+        $document = DOMHelper::loadDocument((string) $url);
+        $this->assertNotNull($document, "Failed to load document '$url'");
+        $document->formatOutput = true;
+        $xpath = DOMHelper::loadXPath($document);
+        
+        foreach ($elements as $element) {
+            list ($tag, $url) = explode(' ', $element);
+            $query = sprintf('boolean(//sfm:%s[@url = "%s"])', $tag, $url);
+            
+            $result = $xpath->evaluate($query);
+            
+            $this->assertTrue($result, "Failed to find element '$tag' with url '$url' in '$url':" . PHP_EOL . $document->saveXML());
+        }
+    }
+    
+    public function importContentProvider(): iterable {
+        return [
+            '/import' => [
+                '/import',
+                [
+                    'fragment-info farah://slothsoft@test/import',
+                    'manifest-info farah://slothsoft@test/import/test'
+                ]
+            ],
+            '/result-import' => [
+                '/result-import',
+                [
+                    'fragment-info farah://slothsoft@test/result-import',
+                    'manifest-info farah://slothsoft@test/import/test'
+                ]
+            ],
+            '/result-use-manifest' => [
+                '/result-use-manifest',
+                [
+                    'fragment-info farah://slothsoft@test/result-use-manifest',
+                    'manifest-info farah://slothsoft@test/result-use-manifest/test'
+                ]
+            ],
+            '/result-use-document' => [
+                '/result-use-document',
+                [
+                    'fragment-info farah://slothsoft@test/result-use-document',
+                    'document-info farah://slothsoft@test/result-use-document/test',
+                    'fragment-info farah://slothsoft@test/import/test'
+                ]
+            ]
+        ];
     }
 }
