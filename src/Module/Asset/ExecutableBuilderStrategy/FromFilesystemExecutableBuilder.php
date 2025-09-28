@@ -12,13 +12,14 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\Base64FileResu
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\HtmlFileResultBuilder;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\TextFileResultBuilder;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\XmlFileResultBuilder;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 use SplFileInfo;
 
 class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
-        $path = $context->getManifestElement()->getAttribute('realpath');
-        $type = $context->getManifestElement()->getAttribute('type', '*/*');
+        $path = $context->getManifestElement()->getAttribute(Manifest::ATTR_REALPATH);
+        $type = $context->getManifestElement()->getAttribute(Manifest::ATTR_TYPE, '*/*');
         
         $resultBuilder = $this->createResultBuilderForType($context->createUrl($args), FileInfoFactory::createFromPath($path), $type);
         return new ExecutableStrategies($resultBuilder);
@@ -31,7 +32,7 @@ class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterf
         if ($type === 'text/html') {
             return new HtmlFileResultBuilder($url, $file);
         }
-        if ($type === 'application/javascript' or strpos($type, 'text/')) {
+        if ($type === 'application/javascript' or substr($type, 0, 5) === 'text/') {
             return new TextFileResultBuilder($url, $file);
         }
         return new Base64FileResultBuilder($url, $file);
