@@ -17,7 +17,7 @@
 	<use-document name="sites" ref="/current-sitemap" />
 
 	<custom-asset name="current-sitemap" executable-builder="Slothsoft\Farah\Internal\SitemapBuilder">
-		<use-document name="json" ref="..#json" />
+		<use-manifest name="json" ref="..#json" />
 	</custom-asset>
 	<custom-asset name="current-request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder" />
 

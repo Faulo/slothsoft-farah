@@ -286,9 +286,6 @@ class ModuleTest extends TestCase {
                     ],
                     'document-info' => [
                         'url' => 'farah://slothsoft@test/result-use-document/test'
-                    ],
-                    'fragment-info' => [
-                        'url' => 'farah://slothsoft@test/import/test'
                     ]
                 ]
             ],
@@ -340,6 +337,10 @@ class ModuleTest extends TestCase {
             '/result-use-document' => [
                 '/import/test',
                 '/result-use-document/test'
+            ],
+            '/result-use-document#xml' => [
+                '/import/test#xml',
+                '/result-use-document/test#xml'
             ],
             '/result-use-template' => [
                 '/import/test',
