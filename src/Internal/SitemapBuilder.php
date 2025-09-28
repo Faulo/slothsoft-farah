@@ -46,7 +46,7 @@ class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInt
         }
         
         $resultBuilder = new MapResultBuilder(new DOMWriterStreamBuilder($this, 'sitemap'));
-        $resultBuilder->addStreamBuilder(FarahUrlStreamIdentifier::createFromString('json'), new StringWriterStreamBuilder($this, 'sitemap'));
+        $resultBuilder->addStreamBuilder(FarahUrlStreamIdentifier::createFromString('json'), new StringWriterStreamBuilder($this, 'sitemap', 'json'));
         return new ExecutableStrategies($resultBuilder);
     }
     
