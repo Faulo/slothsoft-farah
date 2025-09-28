@@ -15,7 +15,7 @@ class FromReferenceExecutableBuilder implements ExecutableBuilderStrategyInterfa
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $ref = $context->getManifestElement()->getAttribute(Manifest::ATTR_REFERENCE);
         $url = FarahUrl::createFromReference($ref, $context->createUrl());
-        $resultBuilder = new ProxyResultBuilder(Module::resolveToResult($url));
+        $resultBuilder = new ProxyResultBuilder(Module::resolveToExecutable($url), $url->getStreamIdentifier());
         return new ExecutableStrategies($resultBuilder);
     }
 }
