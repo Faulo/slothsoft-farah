@@ -225,7 +225,7 @@ class ModuleTest extends TestCase {
      */
     public function testModuleDoesImportInfo(string $path, array $elements, string $manifestDirectory): void {
         $manifest = $this->loadTestModule($manifestDirectory);
-        $url = $manifest->createUrl($path);
+        $url = FarahUrl::createFromReference($path, $manifest->createUrl());
         
         $document = DOMHelper::loadDocument((string) $url);
         $this->assertNotNull($document, "Failed to load document '$url'");
@@ -286,6 +286,23 @@ class ModuleTest extends TestCase {
                     ],
                     'document-info' => [
                         'url' => 'farah://slothsoft@test/result-use-document/test'
+                    ],
+                    'print-fragment' => [
+                        'type' => 'xml'
+                    ]
+                ]
+            ],
+            '/result-use-document-with-hash' => [
+                '/result-use-document-with-hash',
+                [
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-document-with-hash'
+                    ],
+                    'document-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-document-with-hash/test'
+                    ],
+                    'print-fragment' => [
+                        'type' => 'hash'
                     ]
                 ]
             ],
@@ -322,8 +339,8 @@ class ModuleTest extends TestCase {
      */
     public function testModuleCanServeImport(string $expectedPath, string $actualPath, string $manifestDirectory): void {
         $manifest = $this->loadTestModule($manifestDirectory);
-        $expectedUrl = $manifest->createUrl($expectedPath);
-        $actualUrl = $manifest->createUrl($actualPath);
+        $expectedUrl = FarahUrl::createFromReference($expectedPath, $manifest->createUrl());
+        $actualUrl = FarahUrl::createFromReference($actualPath, $manifest->createUrl());
         
         $this->assertFileEquals((string) $expectedUrl, (string) $actualUrl);
     }
@@ -338,10 +355,6 @@ class ModuleTest extends TestCase {
                 '/import/test',
                 '/result-use-document/test'
             ],
-            '/result-use-document#xml' => [
-                '/import/test#xml',
-                '/result-use-document/test#xml'
-            ],
             '/result-use-template' => [
                 '/import/test',
                 '/result-use-template/test'
@@ -353,6 +366,10 @@ class ModuleTest extends TestCase {
             '/result-link-script' => [
                 '/import/test',
                 '/result-link-script/test'
+            ],
+            '/result-use-document-with-hash' => [
+                '/import/test#hash',
+                '/result-use-document-with-hash/test'
             ]
         ];
     }

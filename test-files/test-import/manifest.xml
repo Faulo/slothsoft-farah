@@ -16,6 +16,10 @@
 		<use-document ref="/import/test" name="test" />
 	</fragment>
 
+	<fragment name="result-use-document-with-hash">
+		<use-document ref="/import/test#hash" name="test" />
+	</fragment>
+
 	<fragment name="result-use-template">
 		<use-template ref="/import/test" name="test" />
 	</fragment>
