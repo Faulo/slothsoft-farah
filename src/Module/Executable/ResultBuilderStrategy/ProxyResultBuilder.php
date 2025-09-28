@@ -14,9 +14,9 @@ class ProxyResultBuilder implements ResultBuilderStrategyInterface {
     
     private FarahUrlStreamIdentifier $defaultType;
     
-    public function __construct(ExecutableInterface $proxy, FarahUrlStreamIdentifier $defaultType) {
+    public function __construct(ExecutableInterface $proxy, ?FarahUrlStreamIdentifier $defaultType = null) {
         $this->proxy = $proxy;
-        $this->defaultType = $defaultType;
+        $this->defaultType = $defaultType ?? Executable::resultIsDefault();
     }
     
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
