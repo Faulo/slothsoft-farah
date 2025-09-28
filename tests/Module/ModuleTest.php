@@ -232,13 +232,14 @@ class ModuleTest extends TestCase {
         $document->formatOutput = true;
         $xpath = DOMHelper::loadXPath($document);
         
-        foreach ($elements as $element) {
-            list ($tag, $url) = explode(' ', $element);
-            $query = sprintf('boolean(//sfm:%s[@url = "%s"])', $tag, $url);
-            
-            $result = $xpath->evaluate($query);
-            
-            $this->assertTrue($result, "Failed to find element '$tag' with url '$url' in '$url':" . PHP_EOL . $document->saveXML());
+        foreach ($elements as $tag => $attributes) {
+            foreach ($attributes as $name => $value) {
+                $query = sprintf('boolean(//sfm:%s[@%s = "%s"])', $tag, $name, $value);
+                
+                $result = $xpath->evaluate($query);
+                
+                $this->assertTrue($result, "Failed to find element '$tag' with $name '$value' in '$url':" . PHP_EOL . $document->saveXML());
+            }
         }
     }
     
@@ -247,30 +248,70 @@ class ModuleTest extends TestCase {
             '/import' => [
                 '/import',
                 [
-                    'fragment-info farah://slothsoft@test/import',
-                    'manifest-info farah://slothsoft@test/import/test'
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/import'
+                    ],
+                    'manifest-info' => [
+                        'url' => 'farah://slothsoft@test/import/test'
+                    ]
                 ]
             ],
             '/result-import' => [
                 '/result-import',
                 [
-                    'fragment-info farah://slothsoft@test/result-import',
-                    'manifest-info farah://slothsoft@test/import/test'
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/result-import'
+                    ],
+                    'manifest-info' => [
+                        'url' => 'farah://slothsoft@test/import/test'
+                    ]
                 ]
             ],
             '/result-use-manifest' => [
                 '/result-use-manifest',
                 [
-                    'fragment-info farah://slothsoft@test/result-use-manifest',
-                    'manifest-info farah://slothsoft@test/result-use-manifest/test'
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-manifest'
+                    ],
+                    'manifest-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-manifest/test'
+                    ]
                 ]
             ],
             '/result-use-document' => [
                 '/result-use-document',
                 [
-                    'fragment-info farah://slothsoft@test/result-use-document',
-                    'document-info farah://slothsoft@test/result-use-document/test',
-                    'fragment-info farah://slothsoft@test/import/test'
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-document'
+                    ],
+                    'document-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-document/test'
+                    ],
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/import/test'
+                    ]
+                ]
+            ],
+            '/result-link-stylesheet' => [
+                '/result-link-stylesheet',
+                [
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/result-link-stylesheet'
+                    ],
+                    'link-stylesheet' => [
+                        'ref' => '/slothsoft@test/result-link-stylesheet/test'
+                    ]
+                ]
+            ],
+            '/result-link-script' => [
+                '/result-link-script',
+                [
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/result-link-script'
+                    ],
+                    'link-script' => [
+                        'ref' => '/slothsoft@test/result-link-script/test'
+                    ]
                 ]
             ]
         ];
@@ -299,6 +340,18 @@ class ModuleTest extends TestCase {
             '/result-use-document' => [
                 '/import/test',
                 '/result-use-document/test'
+            ],
+            '/result-use-template' => [
+                '/import/test',
+                '/result-use-template/test'
+            ],
+            '/result-link-stylesheet' => [
+                '/import/test',
+                '/result-link-stylesheet/test'
+            ],
+            '/result-link-script' => [
+                '/import/test',
+                '/result-link-script/test'
             ]
         ];
     }

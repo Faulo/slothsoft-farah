@@ -15,4 +15,16 @@
 	<fragment name="result-use-document">
 		<use-document ref="/import/test" name="test" />
 	</fragment>
+
+	<fragment name="result-use-template">
+		<use-template ref="/import/test" name="test" />
+	</fragment>
+
+	<fragment name="result-link-stylesheet">
+		<link-stylesheet ref="/import/test" name="test" />
+	</fragment>
+
+	<fragment name="result-link-script">
+		<link-script ref="/import/test" name="test" />
+	</fragment>
 </assets>
