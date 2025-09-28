@@ -9,16 +9,8 @@ class UseInstructionCollection {
     
     public FarahUrl $rootUrl;
     
-    /**
-     *
-     * @var AssetInterface[]
-     */
     public Set $documentUrls;
     
-    /**
-     *
-     * @var AssetInterface[]
-     */
     public Set $manifestUrls;
     
     public ?FarahUrl $templateUrl;
