@@ -8,11 +8,11 @@
 		<import ref="/import" />
 	</fragment>
 
-	<fragment name="result-use-child">
-		<use-document ref="/import/test" name="test" />
+	<fragment name="result-use-manifest">
+		<use-manifest ref="/import/test" name="test" />
 	</fragment>
 
-	<fragment name="result-use-root">
-		<use-document ref="/import" name="import" />
+	<fragment name="result-use-document">
+		<use-document ref="/import/test" name="test" />
 	</fragment>
 </assets>

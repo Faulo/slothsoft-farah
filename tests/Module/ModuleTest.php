@@ -189,16 +189,12 @@ class ModuleTest extends TestCase {
             'import' => [
                 'test' => []
             ],
-            'result-import' => [
+            'result-import' => [],
+            'result-use-manifest' => [
                 'test' => []
             ],
-            'result-use-child' => [
+            'result-use-document' => [
                 'test' => []
-            ],
-            'result-use-root' => [
-                'import' => [
-                    'test' => []
-                ]
             ]
         ];
         
