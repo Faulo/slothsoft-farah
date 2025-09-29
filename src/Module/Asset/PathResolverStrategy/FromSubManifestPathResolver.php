@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Asset\PathResolverStrategy;
 
+use Ds\Map;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Exception\FileNotFoundException;
@@ -13,13 +14,15 @@ use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 
 class FromSubManifestPathResolver implements PathResolverStrategyInterface {
     
-    private ?LeanElement $subManifest = null;
+    private Map $assets;
     
-    private array $children = [];
+    public function __construct() {
+        $this->assets = new Map();
+    }
     
-    private function loadSubManifest(AssetInterface $context): void {
-        if ($this->subManifest) {
-            return;
+    private function loadSubManifest(AssetInterface $context): array {
+        if ($this->assets->hasKey($context)) {
+            return $this->assets->get($context);
         }
         
         $manifest = $context->getManifest();
@@ -38,27 +41,26 @@ class FromSubManifestPathResolver implements PathResolverStrategyInterface {
         
         if ($tmpFile->isFile()) {
             if ($tmpFile->getMTime() > $xmlFile->getMTime()) {
+                $children = [];
                 try {
-                    $this->subManifest = unserialize(file_get_contents((string) $tmpFile), [
+                    $subManifest = unserialize(file_get_contents((string) $tmpFile), [
                         'allowed_classes' => [
                             LeanElement::class
                         ]
                     ]);
                     
-                    foreach ($this->subManifest->getChildren() as $child) {
+                    foreach ($subManifest->getChildren() as $child) {
                         $name = $child->getAttribute(Manifest::ATTR_NAME);
-                        $this->children[$name] = $child;
+                        $children[$name] = $child;
                     }
-                    
-                    return;
-                } catch (Throwable $e) {
-                    $this->children = [];
-                }
+                } catch (Throwable $e) {}
+                $this->assets->put($context, $children);
+                return $children;
             }
         }
         
         $dom = new DOMHelper();
-        $this->subManifest = LeanElement::createTreeFromDOMDocument($dom->loadDocument($xmlFile->getRealPath()));
+        $subManifest = LeanElement::createTreeFromDOMDocument($dom->loadDocument($xmlFile->getRealPath()));
         
         foreach ([
             Manifest::ATTR_ID,
@@ -67,32 +69,36 @@ class FromSubManifestPathResolver implements PathResolverStrategyInterface {
             Manifest::ATTR_PATH,
             Manifest::ATTR_REALPATH
         ] as $attr) {
-            $this->subManifest->setAttribute($attr, $element->getAttribute($attr));
+            $subManifest->setAttribute($attr, $element->getAttribute($attr));
         }
         
-        foreach ($this->subManifest->getChildren() as $child) {
-            $manifest->normalizeManifestElement($child, $this->subManifest);
+        $children = [];
+        foreach ($subManifest->getChildren() as $child) {
+            $manifest->normalizeManifestElement($child, $subManifest);
             $name = $child->getAttribute(Manifest::ATTR_NAME);
-            $this->children[$name] = $child;
+            $children[$name] = $child;
         }
         
-        file_put_contents((string) $tmpFile, serialize($this->subManifest));
+        file_put_contents((string) $tmpFile, serialize($subManifest));
+        
+        $this->assets->put($context, $children);
+        return $children;
     }
     
     public function loadChildren(AssetInterface $context): iterable {
-        $this->loadSubManifest($context);
+        $children = $this->loadSubManifest($context);
         
-        return array_keys($this->children);
+        return array_keys($children);
     }
     
     public function resolvePath(AssetInterface $context, string $name): LeanElement {
-        $this->loadSubManifest($context);
+        $children = $this->loadSubManifest($context);
         
-        if (! isset($this->children[$name])) {
-            throw new AssetPathNotFoundException($context, $name, array_keys($this->children));
+        if (! isset($children[$name])) {
+            throw new AssetPathNotFoundException($context, $name, array_keys($children));
         }
         
-        return $this->children[$name];
+        return $children[$name];
     }
 }
 
