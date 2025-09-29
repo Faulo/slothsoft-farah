@@ -6,7 +6,7 @@ abstract class AbstractMapParameterFilter implements ParameterFilterStrategyInte
     
     abstract protected function createValueSanitizers(): array;
     
-    private $map;
+    private array $map;
     
     public function __construct() {
         $this->map = $this->createValueSanitizers();
