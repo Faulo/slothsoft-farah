@@ -188,14 +188,15 @@ class ModuleTest extends TestCase {
     public function importPathProvider(): iterable {
         $hierarchy = [
             'import' => [
-                'test' => []
+                'query' => [],
+                'fragment' => []
             ],
             'result-import' => [],
             'result-use-manifest' => [
-                'test' => []
+                'fragment' => []
             ],
             'result-use-document' => [
-                'test' => []
+                'fragment' => []
             ]
         ];
         
@@ -252,7 +253,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/import'
                     ],
                     'manifest-info' => [
-                        'url' => 'farah://slothsoft@test/import/test'
+                        'url' => 'farah://slothsoft@test/import/fragment'
                     ]
                 ]
             ],
@@ -263,7 +264,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-import'
                     ],
                     'manifest-info' => [
-                        'url' => 'farah://slothsoft@test/import/test'
+                        'url' => 'farah://slothsoft@test/import/fragment'
                     ]
                 ]
             ],
@@ -274,7 +275,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-use-manifest'
                     ],
                     'manifest-info' => [
-                        'url' => 'farah://slothsoft@test/result-use-manifest/test'
+                        'url' => 'farah://slothsoft@test/result-use-manifest/fragment'
                     ]
                 ]
             ],
@@ -285,7 +286,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-use-document'
                     ],
                     'document-info' => [
-                        'url' => 'farah://slothsoft@test/result-use-document/test'
+                        'url' => 'farah://slothsoft@test/result-use-document/fragment'
                     ],
                     'print-fragment' => [
                         'type' => 'xml'
@@ -299,10 +300,42 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-use-document-with-hash'
                     ],
                     'document-info' => [
-                        'url' => 'farah://slothsoft@test/result-use-document-with-hash/test'
+                        'url' => 'farah://slothsoft@test/result-use-document-with-hash/fragment'
                     ],
                     'print-fragment' => [
                         'type' => 'xml'
+                    ]
+                ]
+            ],
+            '/result-use-document-with-query' => [
+                '/result-use-document-with-query',
+                [
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-document-with-query'
+                    ],
+                    'document-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-document-with-query/query'
+                    ],
+                    'print-query' => [
+                        'args' => 'a=1&c'
+                    ]
+                ]
+            ],
+            '/result-use-document-with-query-and-arguments' => [
+                '/result-use-document-with-query?a=2&d',
+                [
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-document-with-query?a=2&d'
+                    ],
+                    'param' => [
+                        'name' => 'a',
+                        'value' => '2'
+                    ],
+                    'document-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-document-with-query/query?a=2&d'
+                    ],
+                    'print-query' => [
+                        'args' => 'a=2&c&d'
                     ]
                 ]
             ],
@@ -313,7 +346,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-link-stylesheet'
                     ],
                     'link-stylesheet' => [
-                        'ref' => '/slothsoft@test/result-link-stylesheet/test'
+                        'ref' => '/slothsoft@test/result-link-stylesheet/fragment'
                     ]
                 ]
             ],
@@ -324,7 +357,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-link-script'
                     ],
                     'link-script' => [
-                        'ref' => '/slothsoft@test/result-link-script/test'
+                        'ref' => '/slothsoft@test/result-link-script/fragment'
                     ]
                 ]
             ]
@@ -348,28 +381,28 @@ class ModuleTest extends TestCase {
     public function importUrlProvider(): iterable {
         return [
             '/result-use-manifest' => [
-                '/import/test',
-                '/result-use-manifest/test'
+                '/import/fragment',
+                '/result-use-manifest/fragment'
             ],
             '/result-use-document' => [
-                '/import/test',
-                '/result-use-document/test'
+                '/import/fragment',
+                '/result-use-document/fragment'
             ],
             '/result-use-template' => [
-                '/import/test',
-                '/result-use-template/test'
+                '/import/fragment',
+                '/result-use-template/fragment'
             ],
             '/result-link-stylesheet' => [
-                '/import/test',
-                '/result-link-stylesheet/test'
+                '/import/fragment',
+                '/result-link-stylesheet/fragment'
             ],
             '/result-link-script' => [
-                '/import/test',
-                '/result-link-script/test'
+                '/import/fragment',
+                '/result-link-script/fragment'
             ],
             '/result-use-document-with-hash' => [
-                '/import/test#hash',
-                '/result-use-document-with-hash/test'
+                '/import/fragment#hash',
+                '/result-use-document-with-hash/fragment'
             ]
         ];
     }

@@ -4,6 +4,7 @@ namespace Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy;
 
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\XML\LeanElement;
+use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\Module\Asset\AssetStrategies;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\DaemonExecutableBuilder;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
@@ -27,7 +28,6 @@ use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\DenyAllParameterFilter;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\FromManifestParameterFilter;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\ParameterFilterStrategyInterface;
 use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\FromManifestParameterSupplier;
-use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\FromReferenceParameterSupplier;
 use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\NullParameterSupplier;
 use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\ParameterSupplierStrategyInterface;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\FromFilesystemPathResolver;
@@ -37,7 +37,6 @@ use Slothsoft\Farah\Module\Asset\PathResolverStrategy\NullPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
-use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 
 class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
     
@@ -85,42 +84,42 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
                 $parameterFilter = AllowAllParameterFilter::class;
-                $parameterSupplier = FromReferenceParameterSupplier::class;
+                $parameterSupplier = NullParameterSupplier::class;
                 $instruction = UseDocumentInstruction::class;
                 break;
             case Manifest::TAG_USE_MANIFEST:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
                 $parameterFilter = AllowAllParameterFilter::class;
-                $parameterSupplier = FromReferenceParameterSupplier::class;
+                $parameterSupplier = NullParameterSupplier::class;
                 $instruction = UseManifestInstruction::class;
                 break;
             case Manifest::TAG_USE_TEMPLATE:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
                 $parameterFilter = AllowAllParameterFilter::class;
-                $parameterSupplier = FromReferenceParameterSupplier::class;
+                $parameterSupplier = NullParameterSupplier::class;
                 $instruction = UseTemplateInstruction::class;
                 break;
             case Manifest::TAG_LINK_STYLESHEET:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
                 $parameterFilter = AllowAllParameterFilter::class;
-                $parameterSupplier = FromReferenceParameterSupplier::class;
+                $parameterSupplier = NullParameterSupplier::class;
                 $instruction = LinkStylesheetInstruction::class;
                 break;
             case Manifest::TAG_LINK_SCRIPT:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
                 $parameterFilter = AllowAllParameterFilter::class;
-                $parameterSupplier = FromReferenceParameterSupplier::class;
+                $parameterSupplier = NullParameterSupplier::class;
                 $instruction = LinkScriptInstruction::class;
                 break;
             case Manifest::TAG_LINK_MODULE:
                 $executableBuilder = FromReferenceExecutableBuilder::class;
                 $pathResolver = NullPathResolver::class;
                 $parameterFilter = AllowAllParameterFilter::class;
-                $parameterSupplier = FromReferenceParameterSupplier::class;
+                $parameterSupplier = NullParameterSupplier::class;
                 $instruction = LinkModuleInstruction::class;
                 break;
             // "physical" assets
@@ -142,7 +141,7 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
                 $executableBuilder = FromManifestExecutableBuilder::class;
                 $pathResolver = FromFilesystemPathResolver::class;
                 $parameterFilter = FromManifestParameterFilter::class;
-                $parameterSupplier = NullParameterSupplier::class;
+                $parameterSupplier = FromManifestParameterSupplier::class;
                 $instruction = FromManifestInstruction::class;
                 break;
             case Manifest::TAG_MANIFEST_DIRECTORY:

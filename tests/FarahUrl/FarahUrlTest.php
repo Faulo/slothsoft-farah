@@ -263,5 +263,50 @@ class FarahUrlTest extends TestCase {
             null
         ];
     }
+    
+    /**
+     *
+     * @dataProvider withAdditionalQueryArgumentsProvider
+     */
+    public function test_withAdditionalQueryArguments(string $url, string $query, string $expected): void {
+        $url = FarahUrl::createFromReference($url);
+        $args = FarahUrlArguments::createFromQuery($query);
+        $expected = FarahUrl::createFromReference($expected);
+        
+        $this->assertSame($expected, $url->withAdditionalQueryArguments($args));
+    }
+    
+    public function withAdditionalQueryArgumentsProvider(): iterable {
+        yield 'no query stays' => [
+            'farah://slothsoft@farah/?a=b',
+            '',
+            'farah://slothsoft@farah/?a=b'
+        ];
+        yield 'add query adds' => [
+            'farah://slothsoft@farah/?a=b',
+            'c=d',
+            'farah://slothsoft@farah/?a=b&c=d'
+        ];
+        yield 'add query sorts' => [
+            'farah://slothsoft@farah/?c=d',
+            'a=b',
+            'farah://slothsoft@farah/?a=b&a=b&c=d'
+        ];
+        yield 'add query overwrites' => [
+            'farah://slothsoft@farah/?a=b',
+            'a=1',
+            'farah://slothsoft@farah/?a=1'
+        ];
+        yield 'add query overwrites null' => [
+            'farah://slothsoft@farah/?a=b',
+            'a=',
+            'farah://slothsoft@farah/?a'
+        ];
+        yield 'add query overwrites array' => [
+            'farah://slothsoft@farah/?a[]=b',
+            'a[]=1',
+            'farah://slothsoft@farah/?a[]=1'
+        ];
+    }
 }
 
