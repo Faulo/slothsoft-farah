@@ -23,7 +23,6 @@ class FarahUrlArguments implements IteratorAggregate, Hashable {
         foreach ($argsList as $args) {
             $data += $args->getValueList();
         }
-        ksort($data);
         return self::createFromValueList($data);
     }
     
@@ -33,18 +32,30 @@ class FarahUrlArguments implements IteratorAggregate, Hashable {
         }
         $valueList = [];
         parse_str($query, $valueList);
-        return self::create($query, $query, $valueList);
+        return self::createFromValueList($valueList);
     }
     
     public static function createFromValueList(array $valueList): FarahUrlArguments {
-        $query = http_build_query($valueList);
-        $id = $query;
-        foreach ($valueList as $key => $val) {
-            if (is_array($val) and empty($val)) {
-                $id .= sprintf('&%s[]', $key);
+        ksort($valueList);
+        $query = [];
+        foreach ($valueList as $key => $value) {
+            $key = rawurlencode((string) $key);
+            if (is_array($value)) {
+                if (empty($value)) {
+                    $query[] = $key . '[]';
+                } else {
+                    foreach ($value as $subValue) {
+                        $subValue = rawurlencode((string) $subValue);
+                        $query[] = $key . '[]' . ($subValue === '' ? '' : '=' . $subValue);
+                    }
+                }
+            } else {
+                $value = rawurlencode((string) $value);
+                $query[] = $key . ($value === '' ? '' : '=' . $value);
             }
         }
-        return self::create($id, $query, $valueList);
+        $id = implode('&', $query);
+        return self::create($id, $id, $valueList);
     }
     
     private static function create(string $id, string $query, array $valueList): FarahUrlArguments {

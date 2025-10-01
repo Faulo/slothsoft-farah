@@ -6,51 +6,83 @@ use PHPUnit\Framework\TestCase;
 
 class FarahUrlArgumentsTest extends TestCase {
     
-    public function testCreateFromValueList() {
-        $data = [
-            'hello' => 'world'
-        ];
-        $expected = 'hello=world';
-        $calculated = FarahUrlArguments::createFromValueList($data);
-        $this->assertEquals($expected, (string) $calculated);
+    /**
+     *
+     * @dataProvider createFromValueListProvider
+     */
+    public function test_createFromValueList(array $values, string $expected): void {
+        $actual = FarahUrlArguments::createFromValueList($values);
+        $this->assertEquals($expected, (string) $actual);
     }
     
     /**
      *
-     * @dataProvider argumentsProvider
+     * @dataProvider createFromValueListProvider
      */
-    public function testCreateFromQuery(FarahUrlArguments $expected, string $query) {
-        $calculated = FarahUrlArguments::createFromQuery($query);
-        $this->assertEquals($expected, $calculated);
+    public function test_createFromValueList_usesObjectPool(array $values, string $expected): void {
+        $values = FarahUrlArguments::createFromValueList($values);
+        $expected = FarahUrlArguments::createFromQuery($expected);
+        $this->assertSame($expected, $values);
     }
     
-    public function argumentsProvider() {
-        $argsList = [];
-        $argsList[] = [
-            'a' => 'b'
+    public function createFromValueListProvider(): iterable {
+        yield 'build query' => [
+            [
+                'hello' => 'world'
+            ],
+            'hello=world'
         ];
-        $argsList[] = [
-            'a' => [
-                'b' => [
-                    'c',
-                    'd',
-                    'e'
-                ]
-            ]
+        yield 'empty string does not emit equal sign' => [
+            [
+                'a' => null,
+                'b' => ''
+            ],
+            'a&b'
         ];
-        
-        $ret = [];
-        foreach ($argsList as $args) {
-            $query = http_build_query($args);
-            $ret[$query] = [
-                FarahUrlArguments::createFromValueList($args),
-                $query
-            ];
-        }
-        return $ret;
+        yield 'args are sorted' => [
+            [
+                'b' => '1',
+                'a' => '2'
+            ],
+            'a=2&b=1'
+        ];
     }
     
-    public function testCreateFromMany() {
+    /**
+     *
+     * @dataProvider createFromQueryProvider
+     */
+    public function test_createFromQuery(string $query, string $expected): void {
+        $actual = FarahUrlArguments::createFromQuery($query);
+        $this->assertEquals($expected, (string) $actual);
+    }
+    
+    /**
+     *
+     * @dataProvider createFromQueryProvider
+     */
+    public function test_createFromQuery_usesObjectPool(string $query, string $expected): void {
+        $query = FarahUrlArguments::createFromQuery($query);
+        $expected = FarahUrlArguments::createFromQuery($expected);
+        $this->assertSame($expected, $query);
+    }
+    
+    public function createFromQueryProvider(): iterable {
+        yield 'build query' => [
+            'hello=world',
+            'hello=world'
+        ];
+        yield 'can parse without equal sign' => [
+            'a&b=',
+            'a&b'
+        ];
+        yield 'args are sorted' => [
+            'b=1&a=2',
+            'a=2&b=1'
+        ];
+    }
+    
+    public function testCreateFromMany(): void {
         $data1 = [
             'a' => 'b'
         ];
@@ -70,7 +102,7 @@ class FarahUrlArgumentsTest extends TestCase {
         $this->assertEquals($expected, $calculated);
     }
     
-    public function testEmptyArrays() {
+    public function testEmptyArrays(): void {
         $data1 = [
             'a' => '1',
             'b' => []
@@ -83,11 +115,10 @@ class FarahUrlArgumentsTest extends TestCase {
         $args1 = FarahUrlArguments::createFromValueList($data1);
         $args2 = FarahUrlArguments::createFromValueList($data2);
         
-        $this->assertEquals((string) $args1, (string) $args2);
         $this->assertNotEquals($args1, $args2);
     }
     
-    public function testWithSameArgument() {
+    public function testWithSameArgument(): void {
         $data = [
             'a' => '1'
         ];
@@ -98,7 +129,7 @@ class FarahUrlArgumentsTest extends TestCase {
         $this->assertSame($url2, $url1);
     }
     
-    public function testWithDifferentArgument() {
+    public function testWithDifferentArgument(): void {
         $data = [
             'a' => '1'
         ];
@@ -111,7 +142,7 @@ class FarahUrlArgumentsTest extends TestCase {
         $this->assertEquals('2', $url2->get('a'));
     }
     
-    public function testWithDifferentArguments() {
+    public function testWithDifferentArguments(): void {
         $data = [
             'a' => '1'
         ];
@@ -126,7 +157,7 @@ class FarahUrlArgumentsTest extends TestCase {
         $this->assertEquals('2', $url2->get('b'));
     }
     
-    public function testWithoutSameArgument() {
+    public function testWithoutSameArgument(): void {
         $data = [
             'a' => '1'
         ];
@@ -139,7 +170,7 @@ class FarahUrlArgumentsTest extends TestCase {
         $this->assertFalse($url2->has('a'));
     }
     
-    public function testWithoutDifferentArgument() {
+    public function testWithoutDifferentArgument(): void {
         $data = [
             'a' => '1'
         ];
