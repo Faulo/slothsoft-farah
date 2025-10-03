@@ -4,6 +4,7 @@ namespace Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy;
 
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\XML\LeanElement;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\Module\Asset\AssetStrategies;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\DaemonExecutableBuilder;
@@ -37,13 +38,31 @@ use Slothsoft\Farah\Module\Asset\PathResolverStrategy\NullPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 
 class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
+    
+    private FarahUrlAuthority $module;
+    
+    public function __construct(FarahUrlAuthority $module) {
+        $this->module = $module;
+    }
     
     public function normalizeElement(LeanElement $element, ?LeanElement $parent = null): void {
         $tag = $element->getTag();
         if (! $element->hasAttribute(Manifest::ATTR_NAME)) {
-            $element->setAttribute(Manifest::ATTR_NAME, uniqid('asset-'));
+            $name = uniqid('asset-');
+            if ($element->hasAttribute(Manifest::ATTR_REFERENCE) and $parent) {
+                $url = FarahUrl::createFromComponents($this->module, $parent->getAttribute(Manifest::ATTR_ASSETPATH) . FarahUrlPath::SEPARATOR . $name);
+                $url = FarahUrl::createFromReference($element->getAttribute(Manifest::ATTR_REFERENCE), $url);
+                $name = basename($url->getPath());
+                if ($name === '') {
+                    $name = $url->getHost();
+                }
+                $element->setAttribute(Manifest::ATTR_NAME, $name);
+            } else {
+                $element->setAttribute(Manifest::ATTR_NAME, $name);
+            }
         }
         if (! $element->hasAttribute(Manifest::ATTR_PATH)) {
             $path = $element->getAttribute(Manifest::ATTR_NAME);

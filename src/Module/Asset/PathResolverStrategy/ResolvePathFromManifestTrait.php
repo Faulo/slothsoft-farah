@@ -15,7 +15,12 @@ trait ResolvePathFromManifestTrait {
                 return $element;
             }
         }
-        throw new AssetPathNotFoundException($context, $name);
+        
+        $children = [];
+        foreach ($context->getManifestElement()->getChildren() as $element) {
+            $children[] = $element->getAttribute(Manifest::ATTR_NAME);
+        }
+        throw new AssetPathNotFoundException($context, $name, $children);
     }
 }
 

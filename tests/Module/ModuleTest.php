@@ -4,12 +4,14 @@ namespace Slothsoft\Farah\Module;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\FileSystem;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
+use Slothsoft\Core\ServerEnvironment;
 
 /**
  * ModuleTest
@@ -109,6 +111,7 @@ class ModuleTest extends TestCase {
     }
     
     private function loadTestModule(string $directory): ManifestInterface {
+        FileSystem::removeDir(ServerEnvironment::getCacheDirectory(), true);
         $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test');
         Module::registerWithXmlManifestAndDefaultAssets($authority, $directory);
         return Module::resolveToManifest(FarahUrl::createFromComponents($authority));
@@ -197,6 +200,18 @@ class ModuleTest extends TestCase {
             ],
             'result-use-document' => [
                 'fragment' => []
+            ],
+            'result-use-document-no-name' => [
+                'fragment' => []
+            ],
+            'result-use-document-no-name-traversal' => [
+                'fragment' => []
+            ],
+            'result-use-document-no-name-root' => [
+                'test' => []
+            ],
+            'result-use-document-no-name-farah' => [
+                'farah' => []
             ]
         ];
         
@@ -280,6 +295,20 @@ class ModuleTest extends TestCase {
                 ]
             ],
             '/result-use-document' => [
+                '/result-use-document',
+                [
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-document'
+                    ],
+                    'document-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-document/fragment'
+                    ],
+                    'print-fragment' => [
+                        'type' => 'xml'
+                    ]
+                ]
+            ],
+            '/result-use-document-no-name' => [
                 '/result-use-document',
                 [
                     'fragment-info' => [

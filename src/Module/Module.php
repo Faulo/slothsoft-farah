@@ -63,7 +63,10 @@ class Module {
      * @param string $assetDirectory
      */
     public static function registerWithXmlManifestAndDefaultAssets($authority, string $assetDirectory): void {
-        static::register($authority, $assetDirectory, new ManifestStrategies(new XmlTreeLoader(), new DefaultAssetBuilder()));
+        if (is_string($authority)) {
+            $authority = FarahUrlAuthority::createFromHttpAuthority($authority);
+        }
+        static::register($authority, $assetDirectory, new ManifestStrategies(new XmlTreeLoader(), new DefaultAssetBuilder($authority)));
     }
     
     public static function resolveToManifest(FarahUrl $url): ManifestInterface {

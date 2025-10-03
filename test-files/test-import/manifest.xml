@@ -17,6 +17,22 @@
 		<use-document ref="/import/fragment" name="fragment" />
 	</fragment>
 
+	<fragment name="result-use-document-no-name">
+		<use-document ref="/import/fragment" />
+	</fragment>
+
+	<fragment name="result-use-document-no-name-traversal">
+		<use-document ref="../../import/query/../fragment/." />
+	</fragment>
+
+	<fragment name="result-use-document-no-name-root">
+		<use-document ref="/" />
+	</fragment>
+
+	<fragment name="result-use-document-no-name-farah">
+		<use-document ref="//slothsoft@farah" />
+	</fragment>
+
 	<fragment name="result-use-document-with-hash">
 		<use-document ref="/import/fragment#hash" name="fragment" />
 	</fragment>

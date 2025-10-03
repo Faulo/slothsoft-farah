@@ -90,11 +90,13 @@ class AbstractSitemapTestTest extends TestCase {
             return $root;
         });
         
-        $assetBuilder = new DefaultAssetBuilder();
+        $module = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test');
+        
+        $assetBuilder = new DefaultAssetBuilder($module);
         
         $manifest = new ManifestStrategies($treeLoader, $assetBuilder);
         
-        Module::register(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test'), '.', $manifest);
+        Module::register($module, '.', $manifest);
         
         return new StubSitemapTest();
     }
