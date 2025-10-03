@@ -202,18 +202,10 @@ class ModuleTest extends TestCase {
             'result-use-document' => [
                 'fragment' => []
             ],
-            'result-use-document-no-name' => [
-                'fragment' => []
-            ],
-            'result-use-document-no-name-traversal' => [
-                'fragment' => []
-            ],
-            'result-use-document-no-name-root' => [
-                'test' => []
-            ],
-            'result-use-document-no-name-farah' => [
-                'farah' => []
-            ],
+            'result-use-document-no-name' => [],
+            'result-use-document-no-name-traversal' => [],
+            'result-use-document-no-name-root' => [],
+            'result-use-document-no-name-farah' => [],
             'result-use-document-renamed' => [
                 'renamed' => []
             ],
@@ -282,18 +274,6 @@ class ModuleTest extends TestCase {
             '/result-use-document/fragment',
             Manifest::ATTR_REFERENCE,
             'farah://slothsoft@test/import/fragment'
-        ];
-        
-        yield 'use-document ref traversal' => [
-            '/result-use-document-no-name-traversal/fragment',
-            Manifest::ATTR_REFERENCE,
-            'farah://slothsoft@test/import/fragment'
-        ];
-        
-        yield 'use-document module traversal' => [
-            '/result-use-document-no-name-farah/farah',
-            Manifest::ATTR_REFERENCE,
-            'farah://slothsoft@farah/'
         ];
         
         yield 'use-manifest url not renamed' => [

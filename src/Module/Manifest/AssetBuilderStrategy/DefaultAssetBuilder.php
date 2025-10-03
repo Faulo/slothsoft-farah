@@ -60,6 +60,8 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
             $element->setAttribute(Manifest::ATTR_REFERENCE, (string) $url);
         }
         
+        $tag = $element->getTag();
+        
         if (! $element->hasAttribute(Manifest::ATTR_NAME)) {
             if ($element->hasAttribute(Manifest::ATTR_REFERENCE)) {
                 $url = FarahUrl::createFromReference($element->getAttribute(Manifest::ATTR_REFERENCE));
@@ -67,14 +69,13 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
                 if ($name === '') {
                     $name = $url->getHost();
                 }
+                $name = uniqid("$tag-$name-");
             } else {
-                $name = uniqid('asset-');
+                $name = uniqid("$tag-");
             }
             
             $element->setAttribute(Manifest::ATTR_NAME, $name);
         }
-        
-        $tag = $element->getTag();
         
         if (! $element->hasAttribute(Manifest::ATTR_PATH)) {
             $path = $element->getAttribute(Manifest::ATTR_NAME);
