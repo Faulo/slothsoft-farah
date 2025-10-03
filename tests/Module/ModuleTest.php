@@ -289,6 +289,30 @@ class ModuleTest extends TestCase {
             Manifest::ATTR_REFERENCE,
             'farah://slothsoft@farah/'
         ];
+        
+        yield 'use-manifest url not renamed' => [
+            '/result-use-manifest-renamed/renamed',
+            Manifest::ATTR_REFERENCE,
+            'farah://slothsoft@test/import/fragment'
+        ];
+        
+        yield 'use-manifest name renamed' => [
+            '/result-use-manifest-renamed/renamed',
+            Manifest::ATTR_NAME,
+            'renamed'
+        ];
+        
+        yield 'use-document url not renamed' => [
+            '/result-use-document-renamed/renamed',
+            Manifest::ATTR_REFERENCE,
+            'farah://slothsoft@test/import/fragment'
+        ];
+        
+        yield 'use-document name renamed' => [
+            '/result-use-document-renamed/renamed',
+            Manifest::ATTR_NAME,
+            'renamed'
+        ];
     }
     
     /**
@@ -445,6 +469,30 @@ class ModuleTest extends TestCase {
                     ],
                     'link-script' => [
                         'ref' => '/slothsoft@test/import/fragment'
+                    ]
+                ]
+            ],
+            '/result-use-manifest-renamed' => [
+                '/result-use-manifest-renamed',
+                [
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-manifest-renamed'
+                    ],
+                    'manifest-info' => [
+                        'url' => 'farah://slothsoft@test/import/fragment',
+                        'name' => 'renamed'
+                    ]
+                ]
+            ],
+            '/result-use-document-renamed' => [
+                '/result-use-document-renamed',
+                [
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-document-renamed'
+                    ],
+                    'document-info' => [
+                        'url' => 'farah://slothsoft@test/import/fragment',
+                        'name' => 'renamed'
                     ]
                 ]
             ]

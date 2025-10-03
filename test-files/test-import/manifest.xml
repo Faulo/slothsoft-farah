@@ -9,12 +9,24 @@
 		<import ref="/import" />
 	</fragment>
 
+	<fragment name="result-import-farah">
+		<import ref="//slothsoft@farah/api/DOM" />
+	</fragment>
+
 	<fragment name="result-use-manifest">
 		<use-manifest ref="/import/fragment" name="fragment" />
 	</fragment>
 
+	<fragment name="result-use-manifest-renamed">
+		<use-manifest ref="/import/fragment" name="renamed" />
+	</fragment>
+
 	<fragment name="result-use-document">
 		<use-document ref="/import/fragment" name="fragment" />
+	</fragment>
+
+	<fragment name="result-use-document-renamed">
+		<use-document ref="/import/fragment" name="renamed" />
 	</fragment>
 
 	<fragment name="result-use-document-no-name">
