@@ -39,6 +39,7 @@ use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterf
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use InvalidArgumentException;
 
 class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
     
@@ -49,21 +50,32 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
     }
     
     public function normalizeElement(LeanElement $element, ?LeanElement $parent = null): void {
-        $tag = $element->getTag();
+        if ($element->hasAttribute(Manifest::ATTR_REFERENCE)) {
+            if (! $parent) {
+                throw new InvalidArgumentException("References on root are not allowed.");
+            }
+            
+            $url = FarahUrl::createFromComponents($this->module, $parent->getAttribute(Manifest::ATTR_ASSETPATH) . FarahUrlPath::SEPARATOR . '_');
+            $url = FarahUrl::createFromReference($element->getAttribute(Manifest::ATTR_REFERENCE), $url);
+            $element->setAttribute(Manifest::ATTR_REFERENCE, (string) $url);
+        }
+        
         if (! $element->hasAttribute(Manifest::ATTR_NAME)) {
-            $name = uniqid('asset-');
-            if ($element->hasAttribute(Manifest::ATTR_REFERENCE) and $parent) {
-                $url = FarahUrl::createFromComponents($this->module, $parent->getAttribute(Manifest::ATTR_ASSETPATH) . FarahUrlPath::SEPARATOR . $name);
-                $url = FarahUrl::createFromReference($element->getAttribute(Manifest::ATTR_REFERENCE), $url);
+            if ($element->hasAttribute(Manifest::ATTR_REFERENCE)) {
+                $url = FarahUrl::createFromReference($element->getAttribute(Manifest::ATTR_REFERENCE));
                 $name = basename($url->getPath());
                 if ($name === '') {
                     $name = $url->getHost();
                 }
-                $element->setAttribute(Manifest::ATTR_NAME, $name);
             } else {
-                $element->setAttribute(Manifest::ATTR_NAME, $name);
+                $name = uniqid('asset-');
             }
+            
+            $element->setAttribute(Manifest::ATTR_NAME, $name);
         }
+        
+        $tag = $element->getTag();
+        
         if (! $element->hasAttribute(Manifest::ATTR_PATH)) {
             $path = $element->getAttribute(Manifest::ATTR_NAME);
             if ($tag === Manifest::TAG_RESOURCE and $element->hasAttribute(Manifest::ATTR_TYPE)) {
@@ -74,6 +86,7 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
             }
             $element->setAttribute(Manifest::ATTR_PATH, $path);
         }
+        
         if ($parent) {
             if (! $element->hasAttribute(Manifest::ATTR_ASSETPATH)) {
                 $element->setAttribute(Manifest::ATTR_ASSETPATH, $parent->getAttribute(Manifest::ATTR_ASSETPATH) . FarahUrlPath::SEPARATOR . $element->getAttribute(Manifest::ATTR_NAME));

@@ -9,6 +9,7 @@ use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
 use Slothsoft\Core\ServerEnvironment;
@@ -231,6 +232,63 @@ class ModuleTest extends TestCase {
                 $path
             ];
         }
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     * @dataProvider importAttributeProvider
+     * @depends testCanLoadImportModule
+     */
+    public function testModuleDoesNormalizeAttributes(string $path, string $attribute, string $value, string $manifestDirectory): void {
+        $manifest = $this->loadTestModule($manifestDirectory);
+        $element = $manifest->lookupAsset($path)->getManifestElement();
+        
+        $this->assertEquals($value, $element->getAttribute($attribute));
+    }
+    
+    public function importAttributeProvider(): iterable {
+        yield 'module name' => [
+            '/',
+            Manifest::ATTR_NAME,
+            'test'
+        ];
+        
+        yield 'module assetpath' => [
+            '/',
+            Manifest::ATTR_ASSETPATH,
+            ''
+        ];
+        
+        yield 'fragment assetpath' => [
+            '/import',
+            Manifest::ATTR_ASSETPATH,
+            '/import'
+        ];
+        
+        yield 'use-manifest ref' => [
+            '/result-use-manifest/fragment',
+            Manifest::ATTR_REFERENCE,
+            'farah://slothsoft@test/import/fragment'
+        ];
+        
+        yield 'use-document ref' => [
+            '/result-use-document/fragment',
+            Manifest::ATTR_REFERENCE,
+            'farah://slothsoft@test/import/fragment'
+        ];
+        
+        yield 'use-document ref traversal' => [
+            '/result-use-document-no-name-traversal/fragment',
+            Manifest::ATTR_REFERENCE,
+            'farah://slothsoft@test/import/fragment'
+        ];
+        
+        yield 'use-document module traversal' => [
+            '/result-use-document-no-name-farah/farah',
+            Manifest::ATTR_REFERENCE,
+            'farah://slothsoft@farah/'
+        ];
     }
     
     /**
