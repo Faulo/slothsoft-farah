@@ -29,6 +29,10 @@
 		<use-document ref="/import/fragment" name="renamed" />
 	</fragment>
 
+	<fragment name="result-use-document-nested">
+		<use-document ref="/result-use-document-renamed/renamed" name="nested" />
+	</fragment>
+
 	<fragment name="result-use-document-no-name">
 		<use-document ref="/import/fragment" />
 	</fragment>

@@ -213,6 +213,12 @@ class ModuleTest extends TestCase {
             ],
             'result-use-document-no-name-farah' => [
                 'farah' => []
+            ],
+            'result-use-document-renamed' => [
+                'renamed' => []
+            ],
+            'result-use-document-nested' => [
+                'nested' => []
             ]
         ];
         
@@ -312,6 +318,18 @@ class ModuleTest extends TestCase {
             '/result-use-document-renamed/renamed',
             Manifest::ATTR_NAME,
             'renamed'
+        ];
+        
+        yield 'use-document name nested' => [
+            '/result-use-document-nested/nested',
+            Manifest::ATTR_NAME,
+            'nested'
+        ];
+        
+        yield 'use-document url nested' => [
+            '/result-use-document-nested/nested',
+            Manifest::ATTR_REFERENCE,
+            'farah://slothsoft@test/result-use-document-renamed/renamed'
         ];
     }
     
@@ -493,6 +511,18 @@ class ModuleTest extends TestCase {
                     'document-info' => [
                         'url' => 'farah://slothsoft@test/import/fragment',
                         'name' => 'renamed'
+                    ]
+                ]
+            ],
+            '/result-use-document-nested' => [
+                '/result-use-document-nested',
+                [
+                    'fragment-info' => [
+                        'url' => 'farah://slothsoft@test/result-use-document-nested'
+                    ],
+                    'document-info' => [
+                        'url' => 'farah://slothsoft@test/import/fragment',
+                        'name' => 'nested'
                     ]
                 ]
             ]
