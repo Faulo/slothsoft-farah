@@ -60,12 +60,12 @@ class Asset implements AssetInterface {
             foreach ($this->strategies->pathResolver->loadChildren($this) as $childPath) {
                 $childAsset = $this->traverseTo($childPath);
                 if ($childAsset->isImportSelfInstruction()) {
-                    $referencedAsset = Module::resolveToAsset($childAsset->createUrl());
+                    $referencedAsset = Module::resolveToAsset($childAsset->createRealUrl());
                     yield $referencedAsset;
                     $this->assetChildren[] = $referencedAsset;
                 }
                 if ($childAsset->isImportChildrenInstruction()) {
-                    $referencedAsset = Module::resolveToAsset($childAsset->createUrl());
+                    $referencedAsset = Module::resolveToAsset($childAsset->createRealUrl());
                     foreach ($referencedAsset->getAssetChildren() as $importedAsset) {
                         yield $importedAsset;
                         $this->assetChildren[] = $importedAsset;

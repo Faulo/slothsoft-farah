@@ -22,23 +22,23 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
                 switch ($args->get(Manifest::PARAM_LOAD, '')) {
                     case Manifest::PARAM_LOAD_TREE:
                         if ($asset->isUseManifestInstruction() or $asset->isUseDocumentInstruction() or $asset->isUseTemplateInstruction()) {
-                            $instructions->documentUrls[] = $asset->createUrl($args);
+                            $instructions->documentUrls[] = $asset->createRealUrl($args);
                         }
                         break;
                     case Manifest::PARAM_LOAD_CHILDREN:
                         if ($asset->isUseManifestInstruction() or $asset->isUseDocumentInstruction() or $asset->isUseTemplateInstruction()) {
-                            $instructions->documentUrls[] = $asset->createUrl($args->withoutArgument('load'));
+                            $instructions->documentUrls[] = $asset->createRealUrl($args->withoutArgument('load'));
                         }
                         break;
                     default:
                         if ($asset->isUseManifestInstruction()) {
-                            $instructions->manifestUrls[] = $asset->createUrl($args);
+                            $instructions->manifestUrls[] = $asset->createRealUrl($args);
                         }
                         if ($asset->isUseDocumentInstruction()) {
-                            $instructions->documentUrls[] = $asset->createUrl($args);
+                            $instructions->documentUrls[] = $asset->createRealUrl($args);
                         }
                         if ($asset->isUseTemplateInstruction()) {
-                            $instructions->templateUrl = $asset->createUrl($args);
+                            $instructions->templateUrl = $asset->createRealUrl($args);
                         }
                         break;
                 }
@@ -54,17 +54,17 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
             /** @var AssetInterface $asset */
             foreach ($currentAsset->getAssetChildren() as $asset) {
                 if ($asset->isUseDocumentInstruction()) {
-                    $url = $asset->lookupExecutable($args)->createUrl();
+                    $url = $asset->lookupExecutable($args)->createRealUrl();
                     $instructions->mergeWith($getLinkInstructions(Module::resolveToAsset($url)));
                 }
                 if ($asset->isLinkStylesheetInstruction()) {
-                    $instructions->stylesheetUrls[] = $asset->lookupExecutable($args)->createUrl();
+                    $instructions->stylesheetUrls[] = $asset->lookupExecutable($args)->createRealUrl();
                 }
                 if ($asset->isLinkScriptInstruction()) {
-                    $instructions->scriptUrls[] = $asset->lookupExecutable($args)->createUrl();
+                    $instructions->scriptUrls[] = $asset->lookupExecutable($args)->createRealUrl();
                 }
                 if ($asset->isLinkModuleInstruction()) {
-                    $instructions->moduleUrls[] = $asset->lookupExecutable($args)->createUrl();
+                    $instructions->moduleUrls[] = $asset->lookupExecutable($args)->createRealUrl();
                 }
             }
             return $instructions;
