@@ -51,6 +51,7 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
                 $currentAsset = $rootAsset;
             }
             $instructions = new LinkInstructionCollection();
+            /** @var AssetInterface $asset */
             foreach ($currentAsset->getAssetChildren() as $asset) {
                 if ($asset->isUseDocumentInstruction()) {
                     $url = $asset->lookupExecutable($args)->createUrl();

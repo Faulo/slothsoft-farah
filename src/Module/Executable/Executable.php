@@ -78,5 +78,9 @@ class Executable implements ExecutableInterface {
     public function createUrl($fragment = null): FarahUrl {
         return $this->ownerAsset->createUrl($this->args, $fragment);
     }
+    
+    public function createRealUrl($fragment = null): FarahUrl {
+        return $this->ownerAsset->createRealUrl($this->args, $fragment);
+    }
 }
 

@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\LinkDecorator;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use DOMDocument;
+use DOMElement;
 
 /**
  *
@@ -13,11 +14,11 @@ use DOMDocument;
  */
 class FarahDecorator implements LinkDecoratorInterface {
     
-    private $namespace;
+    private string $namespace;
     
-    private $targetDocument;
+    private DOMDocument $targetDocument;
     
-    private $rootNode;
+    private DOMElement $rootNode;
     
     public function setNamespace(string $namespace) {
         $this->namespace = $namespace;

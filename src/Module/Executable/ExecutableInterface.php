@@ -20,6 +20,15 @@ interface ExecutableInterface {
     public function createUrl($fragment = null): FarahUrl;
     
     /**
+     * Create a FarahUrl for this operation, with stream set as supplied.
+     * Follows any ref attributes, if present.
+     *
+     * @param FarahUrlStreamIdentifier|string $fragment
+     * @return FarahUrl
+     */
+    public function createRealUrl($fragment = null): FarahUrl;
+    
+    /**
      * Create the result of this executable, in the representation type specified.
      *
      * @param FarahUrlStreamIdentifier|string $type

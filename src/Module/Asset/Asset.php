@@ -56,6 +56,7 @@ class Asset implements AssetInterface {
     public function getAssetChildren(): iterable {
         if ($this->assetChildren === null) {
             $this->assetChildren = new Vector();
+            /** @var string $childPath */
             foreach ($this->strategies->pathResolver->loadChildren($this) as $childPath) {
                 $childAsset = $this->traverseTo($childPath);
                 if ($childAsset->isImportSelfInstruction()) {
@@ -74,9 +75,7 @@ class Asset implements AssetInterface {
                 $this->assetChildren[] = $childAsset;
             }
         } else {
-            foreach ($this->assetChildren as $asset) {
-                yield $asset;
-            }
+            yield from $this->assetChildren;
         }
     }
     
@@ -108,28 +107,26 @@ class Asset implements AssetInterface {
     }
     
     public function createUrl($args = null, $fragment = null): FarahUrl {
-        if ($this->manifestElement->hasAttribute(Manifest::ATTR_REFERENCE)) {
-            $url = $this->manifestElement->getAttribute(Manifest::ATTR_REFERENCE);
-            $url = FarahUrl::createFromReference($url);
-            
-            if ($args !== null) {
-                if (is_string($args)) {
-                    $args = FarahUrlArguments::createFromQuery($args);
-                }
-                $url = $url->withAdditionalQueryArguments($args);
-            }
-            
-            if ($fragment !== null) {
-                if (is_string($fragment)) {
-                    $fragment = FarahUrlStreamIdentifier::createFromString($fragment);
-                }
-                $url = $url->withStreamIdentifier($fragment);
-            }
-            
-            return $url;
+        return $this->ownerManifest->createUrl($this->getUrlPath(), $args, $fragment);
+    }
+    
+    public function createRealUrl($args = null, $fragment = null): FarahUrl {
+        if (! $this->manifestElement->hasAttribute(Manifest::ATTR_REFERENCE)) {
+            return $this->createUrl($args, $fragment);
         }
         
-        return $this->ownerManifest->createUrl($this->getUrlPath(), $args, $fragment);
+        $ref = $this->manifestElement->getAttribute(Manifest::ATTR_REFERENCE);
+        $url = FarahUrl::createFromReference($ref);
+        
+        if ($args !== null) {
+            $url = $url->withAdditionalQueryArguments($args instanceof FarahUrlArguments ? $args : FarahUrlArguments::createFromQuery((string) $args));
+        }
+        
+        if ($fragment !== null) {
+            $url = $url->withStreamIdentifier($fragment instanceof FarahUrlStreamIdentifier ? $fragment : FarahUrlStreamIdentifier::createFromString((string) $fragment));
+        }
+        
+        return $url;
     }
     
     public function getUrlPath(): FarahUrlPath {

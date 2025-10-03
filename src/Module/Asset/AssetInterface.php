@@ -57,6 +57,16 @@ interface AssetInterface {
     public function createUrl($args = null, $fragment = null): FarahUrl;
     
     /**
+     * Create a FarahUrl for this asset, with arguments and stream set as supplied.
+     * Follows any ref attributes, if present.
+     *
+     * @param FarahUrlArguments|string $args
+     * @param FarahUrlStreamIdentifier|string $fragment
+     * @return FarahUrl
+     */
+    public function createRealUrl($args = null, $fragment = null): FarahUrl;
+    
+    /**
      * Get the FarahUrlPath for this asset.
      *
      * @return FarahUrlPath|NULL
