@@ -348,7 +348,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-use-manifest'
                     ],
                     'manifest-info' => [
-                        'url' => 'farah://slothsoft@test/result-use-manifest/fragment'
+                        'url' => 'farah://slothsoft@test/import/fragment'
                     ]
                 ]
             ],
@@ -359,7 +359,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-use-document'
                     ],
                     'document-info' => [
-                        'url' => 'farah://slothsoft@test/result-use-document/fragment'
+                        'url' => 'farah://slothsoft@test/import/fragment'
                     ],
                     'print-fragment' => [
                         'type' => 'xml'
@@ -373,7 +373,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-use-document'
                     ],
                     'document-info' => [
-                        'url' => 'farah://slothsoft@test/result-use-document/fragment'
+                        'url' => 'farah://slothsoft@test/import/fragment'
                     ],
                     'print-fragment' => [
                         'type' => 'xml'
@@ -387,7 +387,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-use-document-with-hash'
                     ],
                     'document-info' => [
-                        'url' => 'farah://slothsoft@test/result-use-document-with-hash/fragment'
+                        'url' => 'farah://slothsoft@test/import/fragment#hash'
                     ],
                     'print-fragment' => [
                         'type' => 'xml'
@@ -401,7 +401,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-use-document-with-query'
                     ],
                     'document-info' => [
-                        'url' => 'farah://slothsoft@test/result-use-document-with-query/query'
+                        'url' => 'farah://slothsoft@test/import/query?a=1&c'
                     ],
                     'print-query' => [
                         'args' => 'a=1&c'
@@ -419,7 +419,7 @@ class ModuleTest extends TestCase {
                         'value' => '2'
                     ],
                     'document-info' => [
-                        'url' => 'farah://slothsoft@test/result-use-document-with-query/query?a=2&d'
+                        'url' => 'farah://slothsoft@test/import/query?a=2&c&d'
                     ],
                     'print-query' => [
                         'args' => 'a=2&c&d'
@@ -433,7 +433,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-link-stylesheet'
                     ],
                     'link-stylesheet' => [
-                        'ref' => '/slothsoft@test/result-link-stylesheet/fragment'
+                        'ref' => '/slothsoft@test/import/fragment'
                     ]
                 ]
             ],
@@ -444,7 +444,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-link-script'
                     ],
                     'link-script' => [
-                        'ref' => '/slothsoft@test/result-link-script/fragment'
+                        'ref' => '/slothsoft@test/import/fragment'
                     ]
                 ]
             ]

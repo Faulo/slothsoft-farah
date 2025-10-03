@@ -59,12 +59,12 @@ class Asset implements AssetInterface {
             foreach ($this->strategies->pathResolver->loadChildren($this) as $childPath) {
                 $childAsset = $this->traverseTo($childPath);
                 if ($childAsset->isImportSelfInstruction()) {
-                    $referencedAsset = Module::resolveToAsset($childAsset->getReferencedUrl());
+                    $referencedAsset = Module::resolveToAsset($childAsset->createUrl());
                     yield $referencedAsset;
                     $this->assetChildren[] = $referencedAsset;
                 }
                 if ($childAsset->isImportChildrenInstruction()) {
-                    $referencedAsset = Module::resolveToAsset($childAsset->getReferencedUrl());
+                    $referencedAsset = Module::resolveToAsset($childAsset->createUrl());
                     foreach ($referencedAsset->getAssetChildren() as $importedAsset) {
                         yield $importedAsset;
                         $this->assetChildren[] = $importedAsset;
@@ -108,6 +108,27 @@ class Asset implements AssetInterface {
     }
     
     public function createUrl($args = null, $fragment = null): FarahUrl {
+        if ($this->manifestElement->hasAttribute(Manifest::ATTR_REFERENCE)) {
+            $url = $this->manifestElement->getAttribute(Manifest::ATTR_REFERENCE);
+            $url = FarahUrl::createFromReference($url);
+            
+            if ($args !== null) {
+                if (is_string($args)) {
+                    $args = FarahUrlArguments::createFromQuery($args);
+                }
+                $url = $url->withAdditionalQueryArguments($args);
+            }
+            
+            if ($fragment !== null) {
+                if (is_string($fragment)) {
+                    $fragment = FarahUrlStreamIdentifier::createFromString($fragment);
+                }
+                $url = $url->withStreamIdentifier($fragment);
+            }
+            
+            return $url;
+        }
+        
         return $this->ownerManifest->createUrl($this->getUrlPath(), $args, $fragment);
     }
     
@@ -225,15 +246,6 @@ class Asset implements AssetInterface {
     
     public function normalizeManifestElement(LeanElement $child): void {
         $this->ownerManifest->normalizeManifestElement($this->manifestElement, $child);
-    }
-    
-    private function getReferencedUrl(): FarahUrl {
-        if (! $this->manifestElement->hasAttribute(Manifest::ATTR_REFERENCE)) {
-            throw new \UnexpectedValueException(sprintf('Missing "%s" attribute on element: %s', Manifest::ATTR_REFERENCE, serialize($this->manifestElement)));
-        }
-        
-        $ref = $this->manifestElement->getAttribute(Manifest::ATTR_REFERENCE);
-        return FarahUrl::createFromReference($ref, $this->createUrl());
     }
 }
 
