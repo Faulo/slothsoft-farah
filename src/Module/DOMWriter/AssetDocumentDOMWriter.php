@@ -16,19 +16,21 @@ class AssetDocumentDOMWriter implements DOMWriterInterface {
     
     private FarahUrl $url;
     
-    public function __construct(FarahUrl $url) {
+    private string $name;
+    
+    public function __construct(FarahUrl $url, ?string $name = null) {
         $this->url = $url;
+        $this->name = $name ?? basename($url->getPath());
     }
     
     public function toElement(DOMDocument $targetDoc): DOMElement {
         $childNode = Module::resolveToDOMWriter($this->url->withStreamIdentifier(Executable::resultIsXml()))->toElement($targetDoc);
         
         $ns = (string) $childNode->namespaceURI;
-        $name = basename((string) $this->url->getAssetPath());
         $id = htmlentities((string) $this->url, ENT_XML1);
         $href = str_replace('farah://', '/', $id);
         
-        $xml = sprintf('<sfm:document-info xmlns:sfm="%s" xmlns="%s" version="1.1" name="%s" url="%s" href="%s" />', DOMHelper::NS_FARAH_MODULE, $ns, $name, $id, $href);
+        $xml = sprintf('<sfm:document-info xmlns:sfm="%s" xmlns="%s" version="1.1" name="%s" url="%s" href="%s" />', DOMHelper::NS_FARAH_MODULE, $ns, $this->name, $id, $href);
         
         $fragment = $targetDoc->createDocumentFragment();
         $fragment->appendXML($xml);

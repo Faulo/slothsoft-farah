@@ -8,9 +8,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\LinkDecorator\DecoratedDOMWriter;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
-use Slothsoft\Farah\Module\DOMWriter\AssetDocumentDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\AssetFragmentDOMWriter;
-use Slothsoft\Farah\Module\DOMWriter\AssetManifestDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TransformationDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TranslationDOMWriter;
 use Slothsoft\Farah\Module\Executable\Executable;
@@ -57,12 +55,8 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
         } else {
             $writer = new AssetFragmentDOMWriter($instructions->rootUrl);
             
-            foreach ($instructions->manifestUrls as $url) {
-                $writer->appendChild(new AssetManifestDOMWriter($url));
-            }
-            
-            foreach ($instructions->documentUrls as $url) {
-                $writer->appendChild(new AssetDocumentDOMWriter($url));
+            foreach ($instructions->dataWriters as $data) {
+                $writer->appendChild($data);
             }
             
             if ($instructions->templateUrl and $type !== static::resultIsXslSource()) {

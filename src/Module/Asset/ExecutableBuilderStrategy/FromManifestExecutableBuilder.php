@@ -19,23 +19,24 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
             $instructions = new UseInstructionCollection($rootAsset->createUrl($args));
             /** @var AssetInterface $asset */
             foreach ($rootAsset->getAssetChildren() as $asset) {
+                $name = $asset->getManifestElement()->getAttribute(Manifest::ATTR_NAME);
                 switch ($args->get(Manifest::PARAM_LOAD, '')) {
                     case Manifest::PARAM_LOAD_TREE:
                         if ($asset->isUseManifestInstruction() or $asset->isUseDocumentInstruction() or $asset->isUseTemplateInstruction()) {
-                            $instructions->documentUrls[] = $asset->createRealUrl($args);
+                            $instructions->addDocumentData($asset->createRealUrl($args), $name);
                         }
                         break;
                     case Manifest::PARAM_LOAD_CHILDREN:
                         if ($asset->isUseManifestInstruction() or $asset->isUseDocumentInstruction() or $asset->isUseTemplateInstruction()) {
-                            $instructions->documentUrls[] = $asset->createRealUrl($args->withoutArgument('load'));
+                            $instructions->addDocumentData($asset->createRealUrl($args->withoutArgument(Manifest::PARAM_LOAD)), $name);
                         }
                         break;
                     default:
                         if ($asset->isUseManifestInstruction()) {
-                            $instructions->manifestUrls[] = $asset->createRealUrl($args);
+                            $instructions->addManifestData($asset->createRealUrl($args), $name);
                         }
                         if ($asset->isUseDocumentInstruction()) {
-                            $instructions->documentUrls[] = $asset->createRealUrl($args);
+                            $instructions->addDocumentData($asset->createRealUrl($args), $name);
                         }
                         if ($asset->isUseTemplateInstruction()) {
                             $instructions->templateUrl = $asset->createRealUrl($args);

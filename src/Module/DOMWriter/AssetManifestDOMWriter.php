@@ -14,18 +14,20 @@ class AssetManifestDOMWriter implements DOMWriterInterface {
     
     private FarahUrl $url;
     
-    public function __construct(FarahUrl $url) {
+    private string $name;
+    
+    public function __construct(FarahUrl $url, ?string $name = null) {
         $this->url = $url;
+        $this->name = $name ?? basename($url->getPath());
     }
     
     public function toElement(DOMDocument $targetDoc): DOMElement {
         $id = (string) $this->url;
-        $name = basename((string) $this->url->getAssetPath());
         $href = str_replace('farah://', '/', $id);
         
         $node = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, 'sfm:manifest-info');
         $node->setAttribute('version', '1.1');
-        $node->setAttribute('name', $name);
+        $node->setAttribute('name', $this->name);
         $node->setAttribute('url', $id);
         $node->setAttribute('href', $href);
         
