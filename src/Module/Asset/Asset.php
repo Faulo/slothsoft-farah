@@ -126,7 +126,7 @@ class Asset implements AssetInterface {
             $url = $url->withStreamIdentifier($fragment instanceof FarahUrlStreamIdentifier ? $fragment : FarahUrlStreamIdentifier::createFromString((string) $fragment));
         }
         
-        return $url;
+        return Module::resolveToResult($url)->createRealUrl();
     }
     
     public function getUrlPath(): FarahUrlPath {

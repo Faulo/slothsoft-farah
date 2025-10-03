@@ -56,6 +56,10 @@ class Result implements ResultInterface {
         return $this->ownerExecutable->createUrl($this->type);
     }
     
+    public function createRealUrl(): FarahUrl {
+        return $this->ownerExecutable->createRealUrl($this->type);
+    }
+    
     public function lookupStringWriter(): StringWriterInterface {
         if ($this->stringWriter === null) {
             $this->stringWriter = new StringWriterMemoryCache($this->strategies->streamBuilder->buildStringWriter($this));

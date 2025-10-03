@@ -17,11 +17,19 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 interface ResultInterface {
     
     /**
-     * Create a FarahUrl for this result
+     * Create a FarahUrl for this result.
      *
      * @return FarahUrl
      */
     public function createUrl(): FarahUrl;
+    
+    /**
+     * Create a FarahUrl for this result.
+     * Follows any ref attributes, if present.
+     *
+     * @return FarahUrl
+     */
+    public function createRealUrl(): FarahUrl;
     
     public function lookupStringWriter(): StringWriterInterface;
     
