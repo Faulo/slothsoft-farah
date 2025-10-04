@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<test-set-id xmlns:sfx="http://schema.slothsoft.net/farah/xslt" xmlns:exsl="http://exslt.org/common" xmlns:str="http://exslt.org/strings">
+	<set-id id="id-0" />
+	<set-id-with-target id="id-1" />
+	<set-id-wiht-name custom-id="id-2" />
+	<set-id-with-namespace xml:id="id-3" />
+	<set-id-with-suffix id="id-4-suffix" />
+</test-set-id>

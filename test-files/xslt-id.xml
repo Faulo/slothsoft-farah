@@ -11,4 +11,6 @@
 		<id id="id-7" />
 	</id>
 	<id id="id-8" />
+	<id-content>id-9</id-content>
+	<id-content suffix="test">id-10-test</id-content>
 </test>

@@ -24,6 +24,16 @@ class XSLTest extends TestCase {
                 'test-files/xslt.xsl',
                 'test-files/xslt-id.xml',
                 'test-files/xslt-id.xml'
+            ],
+            'farah://slothsoft@farah/xsl/xslt sfx:set-id' => [
+                'test-files/xslt.xsl',
+                'test-files/xslt-set-id.xml',
+                'test-files/xslt-set-id.xml'
+            ],
+            'farah://slothsoft@farah/xsl/xslt sfx:set-href' => [
+                'test-files/xslt.xsl',
+                'test-files/xslt-set-href.xml',
+                'test-files/xslt-set-href.xml'
             ]
         ];
     }

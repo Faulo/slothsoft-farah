@@ -33,4 +33,73 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</func:function>
+
+	<xsl:template name="sfx:id">
+		<xsl:param name="context" select="." />
+		<xsl:param name="suffix" select="''" />
+
+		<xsl:choose>
+			<xsl:when test="string($suffix) = ''">
+				<xsl:value-of select="concat('id-', count($context/preceding::* | $context/ancestor::*))" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat('id-', count($context/preceding::* | $context/ancestor::*), '-', $suffix)" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="sfx:set-id">
+		<xsl:param name="context" select="." />
+		<xsl:param name="suffix" select="''" />
+		<xsl:param name="name" select="'id'" />
+		<xsl:param name="namespace" select="''" />
+
+		<xsl:choose>
+			<xsl:when test="string($namespace) = ''">
+				<xsl:attribute name="{$name}">
+                    <xsl:call-template name="sfx:id">
+                        <xsl:with-param name="context" select="$context" />
+                        <xsl:with-param name="suffix" select="$suffix" />
+                    </xsl:call-template>
+                </xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:attribute name="{$name}" namespace="{$namespace}">
+                    <xsl:call-template name="sfx:id">
+				        <xsl:with-param name="context" select="$context" />
+				        <xsl:with-param name="suffix" select="$suffix" />
+                    </xsl:call-template>
+                </xsl:attribute>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="sfx:set-href">
+		<xsl:param name="context" select="." />
+		<xsl:param name="suffix" select="''" />
+		<xsl:param name="name" select="'href'" />
+		<xsl:param name="namespace" select="''" />
+
+		<xsl:choose>
+			<xsl:when test="string($namespace) = ''">
+				<xsl:attribute name="{$name}">
+				    <xsl:text>#</xsl:text>
+                    <xsl:call-template name="sfx:id">
+                        <xsl:with-param name="context" select="$context" />
+                        <xsl:with-param name="suffix" select="$suffix" />
+                    </xsl:call-template>
+                </xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:attribute name="{$name}" namespace="{$namespace}">
+                    <xsl:text>#</xsl:text>
+                    <xsl:call-template name="sfx:id">
+                        <xsl:with-param name="context" select="$context" />
+                        <xsl:with-param name="suffix" select="$suffix" />
+                    </xsl:call-template>
+                </xsl:attribute>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 </xsl:stylesheet>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<test-set-href xmlns:sfx="http://schema.slothsoft.net/farah/xslt" xmlns:exsl="http://exslt.org/common" xmlns:str="http://exslt.org/strings">
+	<set-href href="#id-0" />
+	<set-href-with-target href="#id-1" />
+	<set-href-wiht-name custom-href="#id-2" />
+	<set-href-with-namespace xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#id-3" />
+	<set-href-with-suffix href="#id-4-suffix" />
+</test-set-href>
