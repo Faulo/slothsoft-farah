@@ -14,6 +14,8 @@ use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 
 class FromSubManifestPathResolver implements PathResolverStrategyInterface {
     
+    private const VERSION = 1;
+    
     private Map $assets;
     
     public function __construct() {
@@ -40,7 +42,7 @@ class FromSubManifestPathResolver implements PathResolverStrategyInterface {
         ]));
         
         if ($tmpFile->isFile()) {
-            if ($tmpFile->getMTime() > $xmlFile->getMTime()) {
+            if ($tmpFile->getMTime() > max($xmlFile->getMTime(), filemtime(__FILE__))) {
                 $children = [];
                 try {
                     $subManifest = unserialize(file_get_contents((string) $tmpFile), [

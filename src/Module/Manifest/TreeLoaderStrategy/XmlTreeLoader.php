@@ -11,6 +11,8 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 
 class XmlTreeLoader implements TreeLoaderStrategyInterface {
     
+    private const VERSION = 1;
+    
     public function loadTree(ManifestInterface $context): LeanElement {
         $xmlFile = $context->createManifestFile('manifest.xml');
         
@@ -23,7 +25,7 @@ class XmlTreeLoader implements TreeLoaderStrategyInterface {
         ]));
         
         if ($tmpFile->isFile()) {
-            if ($tmpFile->getMTime() > $xmlFile->getMTime()) {
+            if ($tmpFile->getMTime() > max($xmlFile->getMTime(), filemtime(__FILE__))) {
                 try {
                     $element = unserialize(file_get_contents((string) $tmpFile), [
                         'allowed_classes' => [
