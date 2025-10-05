@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\UriResolver;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
+use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
@@ -372,21 +373,23 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             foreach ($localUrls as $asset => $args) {
                 $url = $args[0];
                 
-                if (file_exists($asset) and $result = Module::resolveToResult($url)) {
-                    $mime = $result->lookupMimeType();
-                    
-                    if (MimeTypeDictionary::isXml($mime)) {
-                        $document = $result->lookupDOMWriter()
-                            ->toDocument();
+                try {
+                    if (file_exists($asset) and $result = Module::resolveToResult($url)) {
+                        $mime = $result->lookupMimeType();
                         
-                        foreach ($crawler->crawlDocument($document) as $reference => $link) {
-                            $provider["$asset $reference"] ??= [
-                                $asset,
-                                $link
-                            ];
+                        if (MimeTypeDictionary::isXml($mime)) {
+                            $document = $result->lookupDOMWriter()
+                                ->toDocument();
+                            
+                            foreach ($crawler->crawlDocument($document) as $reference => $link) {
+                                $provider["$asset $reference"] ??= [
+                                    $asset,
+                                    $link
+                                ];
+                            }
                         }
                     }
-                }
+                } catch (EmptyTransformationException $e) {}
             }
             
             Module::clearAllCachedAssets();
