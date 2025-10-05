@@ -21,6 +21,10 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWrite
     
     private ?string $fileName;
     
+    private function exists(): bool {
+        return file_exists((string) $this->file);
+    }
+    
     public function __construct(SplFileInfo $file, ?string $fileName = null) {
         $this->file = $file;
         $this->fileName = $fileName;
@@ -39,16 +43,22 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWrite
     }
     
     public function buildStreamFileStatistics(ResultInterface $context): array {
-        $stat = stat((string) $this->file);
-        return $stat === false ? [] : $stat;
+        if ($this->exists()) {
+            $stat = stat((string) $this->file);
+            if ($stat !== false) {
+                return $stat;
+            }
+        }
+        
+        return [];
     }
     
     public function buildStreamHash(ResultInterface $context): string {
-        return md5_file((string) $this->file);
+        return $this->exists() ? md5_file((string) $this->file) : '';
     }
     
     public function buildStreamIsBufferable(ResultInterface $context): bool {
-        return true;
+        return $this->exists();
     }
     
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface {
