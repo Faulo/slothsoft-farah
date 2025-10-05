@@ -340,11 +340,13 @@ abstract class AbstractModuleTest extends AbstractTestCase {
             if ($uri->getAuthority() === $contextUri->getAuthority() and $uri->getHost() === $contextUri->getHost() and $uri->getPath() === $contextUri->getPath()) {
                 // we point to self
                 if ($id = $linkUri->getFragment()) {
-                    $uri = $uri->withFragment('');
-                    $document = DOMHelper::loadDocument((string) $uri);
+                    $document = DOMHelper::loadDocument($context);
                     $xpath = DOMHelper::loadXPath($document);
-                    $count = (int) $xpath->evaluate(sprintf('count(//*[@id = "%1$s"])', $id));
-                    $this->assertEquals(1, $count, sprintf('Expected page "%s" to have 1 element with ID "%s"', (string) $uri, $id));
+                    $ids = [];
+                    foreach ($xpath->evaluate('//*[@id]') as $node) {
+                        $ids[] = $node->getAttribute('id');
+                    }
+                    $this->assertContains($id, $ids, sprintf('Expected asset "%s" to have 1 element with ID "%s".%s  IDs found: [%s]', $context, $id, PHP_EOL, implode(', ', $ids)));
                 }
             }
         } catch (HttpDownloadException $e) {

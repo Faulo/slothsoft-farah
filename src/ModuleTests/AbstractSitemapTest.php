@@ -286,8 +286,11 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             $result = Module::resolveToResult($url);
             if ($id = $uri->getFragment()) {
                 $xpath = DOMHelper::loadXPath($result->lookupDOMWriter()->toDocument());
-                $count = (int) $xpath->evaluate(sprintf('count(//*[@id = "%1$s"])', $id));
-                $this->assertEquals(1, $count, sprintf('Expected page "%s" to have 1 element with ID "%s"', (string) $uri, $id));
+                $ids = [];
+                foreach ($xpath->evaluate('//*[@id]') as $node) {
+                    $ids[] = $node->getAttribute('id');
+                }
+                $this->assertContains($id, $ids, sprintf('Expected page "%s" to have 1 element with ID "%s".%s  IDs found: [%s]', $context, $id, PHP_EOL, implode(', ', $ids)));
             }
         } catch (HttpDownloadException $e) {
             $stream = $e->getResult()
