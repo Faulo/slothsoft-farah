@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\UriResolver;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Kernel;
+use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
@@ -345,21 +346,23 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                     $url = $this->getDomain()
                         ->lookupAssetUrl($node);
                     
-                    if (file_exists((string) $url) and $result = $this->loadAsset($url)) {
-                        $mime = $result->lookupMimeType();
-                        
-                        if (MimeTypeDictionary::isXml($mime)) {
-                            $document = $result->lookupDOMWriter()
-                                ->toDocument();
+                    try {
+                        if (file_exists((string) $url) and $result = $this->loadAsset($url)) {
+                            $mime = $result->lookupMimeType();
                             
-                            foreach ($crawler->crawlDocument($document) as $reference => $link) {
-                                $provider["$page $reference"] ??= [
-                                    $page,
-                                    $link
-                                ];
+                            if (MimeTypeDictionary::isXml($mime)) {
+                                $document = $result->lookupDOMWriter()
+                                    ->toDocument();
+                                
+                                foreach ($crawler->crawlDocument($document) as $reference => $link) {
+                                    $provider["$page $reference"] ??= [
+                                        $page,
+                                        $link
+                                    ];
+                                }
                             }
                         }
-                    }
+                    } catch (EmptyTransformationException $e) {}
                     
                     $this->getDomain()
                         ->clearCurrentPageNode();
