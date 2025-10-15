@@ -3,4 +3,6 @@
 	<fragment name="test" />
 
 	<manifest-directory name="submodule" />
+
+	<resource-directory name="dictionary" type="application/xml" />
 </assets>

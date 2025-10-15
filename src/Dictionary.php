@@ -14,6 +14,11 @@ use DOMXPath;
 
 class Dictionary {
     
+    public static function xsltLookupText(string $word, string $module = '', string $language = ''): string {
+        $dict = self::getInstance();
+        return $dict->lookupText($word, $module === '' ? null : $module, $language === '' ? null : $language);
+    }
+    
     private static function supportedLanguages() {
         static $field;
         if ($field === null) {
@@ -24,6 +29,7 @@ class Dictionary {
     
     public static function setSupportedLanguages(string ...$languageList) {
         self::supportedLanguages()->setValue($languageList);
+        self::getInstance()->calcAcceptLanguage();
     }
     
     public static function getSupportedLanguages(): array {
@@ -81,11 +87,9 @@ class Dictionary {
     
     protected $langDocPath = 'vendor/slothsoft/%s/lang.%s.xml';
     
-    protected $langDocs = [];
+    protected array $langDocs = [];
     
-    protected $langPaths = [];
-    
-    protected static $instance;
+    protected array $langPaths = [];
     
     /* static functions */
     public static function getInstance(): Dictionary {

@@ -4,6 +4,9 @@ namespace Slothsoft\Farah;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\DOMTests\DOMNodeEqualTo;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Module\Module;
 use DOMDocument;
 
 class XSLTest extends TestCase {
@@ -48,16 +51,17 @@ class XSLTest extends TestCase {
      * @dataProvider exampleProvider
      */
     public function test_xslTemplate(string $templateFile, string $inputFile, string $expectedFile): void {
+        Dictionary::setSupportedLanguages('en-us', 'de-de');
+        
+        $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module');
+        Module::registerWithXmlManifestAndDefaultAssets($authority, 'test-files/test-module');
+        
         $dom = new DOMHelper();
         $actualDocument = $dom->transformToDocument($inputFile, $templateFile);
-        $actualDocument->formatOutput = true;
-        $actual = $actualDocument->saveXML();
         
         $expectedDocument = new DOMDocument();
         $expectedDocument->load($expectedFile, LIBXML_NOBLANKS);
-        $expectedDocument->formatOutput = true;
-        $expected = $expectedDocument->saveXML();
         
-        $this->assertEquals($expected, $actual);
+        $this->assertThat($actualDocument, new DOMNodeEqualTo($expectedDocument));
     }
 }
