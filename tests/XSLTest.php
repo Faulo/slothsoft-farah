@@ -34,6 +34,11 @@ class XSLTest extends TestCase {
                 'test-files/xslt.xsl',
                 'test-files/xslt-set-href.xml',
                 'test-files/xslt-set-href.xml'
+            ],
+            'farah://slothsoft@farah/xsl/dictionary' => [
+                'test-files/dictionary.xsl',
+                'test-files/dictionary.xml',
+                'test-files/dictionary.xml'
             ]
         ];
     }
