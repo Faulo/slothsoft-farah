@@ -27,7 +27,7 @@ abstract class AbstractFileResultBuilder implements ResultBuilderStrategyInterfa
     }
     
     public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
-        return false;
+        return $type === Executable::resultIsXml();
     }
     
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {

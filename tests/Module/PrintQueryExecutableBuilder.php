@@ -19,6 +19,10 @@ class PrintQueryExecutableBuilder implements ExecutableBuilderStrategyInterface,
         return new ExecutableStrategies($this);
     }
     
+    public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
+        return false;
+    }
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         $delegate = function () use ($context): string {
             $args = htmlentities((string) $context->getUrlArguments());

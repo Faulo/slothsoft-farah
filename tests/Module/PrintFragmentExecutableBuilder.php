@@ -19,6 +19,10 @@ class PrintFragmentExecutableBuilder implements ExecutableBuilderStrategyInterfa
         return new ExecutableStrategies($this);
     }
     
+    public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
+        return true;
+    }
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         $delegate = function () use ($type): string {
             return "<print-fragment xmlns='http://schema.slothsoft.net/farah/module' type='$type'/>";
