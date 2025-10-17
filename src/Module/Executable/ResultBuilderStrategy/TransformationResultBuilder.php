@@ -31,6 +31,15 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
         return FarahUrlStreamIdentifier::createFromString('xsl-template');
     }
     
+    public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
+        static $different;
+        $different ??= [
+            self::resultIsXslSource(),
+            self::resultIsXslTemplate()
+        ];
+        return in_array($type, $different, true);
+    }
+    
     private Closure $getUseInstructions;
     
     private Closure $getLinkInstructions;

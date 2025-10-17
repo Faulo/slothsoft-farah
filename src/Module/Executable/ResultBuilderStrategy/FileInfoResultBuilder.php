@@ -16,6 +16,10 @@ class FileInfoResultBuilder implements ResultBuilderStrategyInterface {
         $this->file = $file;
     }
     
+    public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
+        return false;
+    }
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         $streamBuilder = new FileInfoStreamBuilder($this->file);
         return new ResultStrategies($streamBuilder);

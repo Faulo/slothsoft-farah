@@ -19,6 +19,10 @@ class ProxyResultBuilder implements ResultBuilderStrategyInterface {
         $this->defaultType = $defaultType ?? Executable::resultIsDefault();
     }
     
+    public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
+        return true;
+    }
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         $streamBuilder = new ProxyStreamBuilder($this->proxy->lookupResult($type === Executable::resultIsDefault() ? $this->defaultType : $type));
         return new ResultStrategies($streamBuilder);

@@ -26,6 +26,10 @@ abstract class AbstractFileResultBuilder implements ResultBuilderStrategyInterfa
         $this->file = $file;
     }
     
+    public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
+        return false;
+    }
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         if ($type === Executable::resultIsXml()) {
             $streamBuilder = new DOMWriterStreamBuilder(new DOMWriterMemoryCache($this), $this->file->getFilename());

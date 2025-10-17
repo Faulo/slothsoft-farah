@@ -19,6 +19,10 @@ class FileWriterResultBuilder implements ResultBuilderStrategyInterface {
         $this->fileName = $fileName;
     }
     
+    public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
+        return false;
+    }
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         $streamBuilder = new FileWriterStreamBuilder($this->writer, $this->fileName);
         return new ResultStrategies($streamBuilder);

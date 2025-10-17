@@ -14,6 +14,10 @@ use DOMElement;
 
 class NullResultBuilder implements ResultBuilderStrategyInterface {
     
+    public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
+        return $type === Executable::resultIsXml();
+    }
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         if ($type === Executable::resultIsXml()) {
             $writer = new DOMWriterFromElementDelegate(function (DOMDocument $targetDoc): DOMElement {

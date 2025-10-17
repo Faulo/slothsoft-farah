@@ -23,6 +23,10 @@ class MapResultBuilder implements ResultBuilderStrategyInterface {
         $this->streams[$type] = $proxy;
     }
     
+    public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
+        return $this->streams->hasKey($type);
+    }
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         return new ResultStrategies($this->streams[$type] ?? $this->defaultStream);
     }

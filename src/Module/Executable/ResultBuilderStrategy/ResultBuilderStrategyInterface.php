@@ -8,6 +8,8 @@ use Slothsoft\Farah\Module\Result\ResultStrategies;
 
 interface ResultBuilderStrategyInterface {
     
+    public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool;
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies;
 }
 

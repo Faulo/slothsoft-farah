@@ -22,6 +22,10 @@ class SwitchToCliResultBuilder implements ResultBuilderStrategyInterface {
         $this->fileName = $fileName;
     }
     
+    public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
+        return false;
+    }
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         if (PHP_SAPI === 'cli') {
             return $this->resultBuilder->buildResultStrategies($context, $type);

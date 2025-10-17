@@ -22,6 +22,10 @@ class ChunkWriterResultBuilder implements ResultBuilderStrategyInterface {
         $this->isBufferable = $isBufferable;
     }
     
+    public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
+        return false;
+    }
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         $streamBuilder = new ChunkWriterStreamBuilder($this->writer, $this->fileName, $this->isBufferable);
         return new ResultStrategies($streamBuilder);
