@@ -4,6 +4,7 @@ namespace Slothsoft\Farah\Module\Executable;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsIdentical;
+use PHPUnit\Framework\Constraint\LogicalNot;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 
@@ -22,13 +23,13 @@ class ExecutableTest extends TestCase {
      *
      * @dataProvider sameResultProvider
      */
-    public function test_fragment_doesNotChangeResult(string $url, string $fragment): void {
+    public function test_fragment_doesNotChangeResult(string $url, string $fragment, bool $isIdentical = true): void {
         $url = FarahUrl::createFromReference($url, Module::getBaseUrl());
         
         $left = Module::resolveToResult($url);
         $right = Module::resolveToResult($url->withFragment($fragment));
         
-        $this->assertThat($left, new IsIdentical($right));
+        $this->assertThat($left, $isIdentical ? new IsIdentical($right) : new LogicalNot(new IsIdentical($right)));
     }
     
     public function sameResultProvider(): iterable {
@@ -39,6 +40,23 @@ class ExecutableTest extends TestCase {
         yield 'phpinfo #xml' => [
             '/phpinfo',
             'xml'
+        ];
+        yield 'manifest #xml' => [
+            '/',
+            'xml'
+        ];
+        yield 'current-sitemap #xml' => [
+            '/',
+            'xml'
+        ];
+        yield 'api #xml' => [
+            '/api',
+            'xml'
+        ];
+        yield 'current-sitemap #json' => [
+            '/current-sitemap',
+            'json',
+            false
         ];
     }
 }
