@@ -62,6 +62,20 @@ class ExecutableTest extends TestCase {
             '/example-domain',
             'xml'
         ];
+        yield 'xsl #xml' => [
+            '/sitemap-generator',
+            'xml'
+        ];
+        yield 'xsl #xsl-source' => [
+            '/sitemap-generator',
+            'xsl-source',
+            false
+        ];
+        yield 'xsl #xsl-template' => [
+            '/sitemap-generator',
+            'xsl-template',
+            false
+        ];
     }
     
     /**
@@ -73,8 +87,6 @@ class ExecutableTest extends TestCase {
         
         $left = Module::resolveToResult($url)->lookupDOMWriter()->toDocument();
         $right = Module::resolveToResult($url->withFragment('xml'))->lookupDOMWriter()->toDocument();
-        
-        var_dump(get_class(Module::resolveToResult($url)->lookupDOMWriter()));
         
         $this->assertThat($left, new IsIdentical($right));
     }
@@ -94,6 +106,9 @@ class ExecutableTest extends TestCase {
         ];
         yield '/example-domain' => [
             '/example-domain'
+        ];
+        yield '/sitemap-generator' => [
+            '/sitemap-generator'
         ];
     }
 }

@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy;
 
+use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
@@ -70,7 +71,7 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
             }
             return $instructions;
         };
-        $resultBuilder = new TransformationResultBuilder($getUseInstructions, $getLinkInstructions);
+        $resultBuilder = new TransformationResultBuilder($getUseInstructions, $getLinkInstructions, count(Dictionary::getSupportedLanguages()) !== 0);
         return new ExecutableStrategies($resultBuilder);
     }
 }
