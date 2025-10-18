@@ -33,6 +33,10 @@ class ExecutableTest extends TestCase {
     }
     
     public function sameResultProvider(): iterable {
+        yield 'manifest #xml' => [
+            '/',
+            'xml'
+        ];
         yield 'phpinfo default' => [
             '/phpinfo',
             ''
@@ -41,22 +45,55 @@ class ExecutableTest extends TestCase {
             '/phpinfo',
             'xml'
         ];
-        yield 'manifest #xml' => [
-            '/',
+        yield 'api #xml' => [
+            '/api',
             'xml'
         ];
         yield 'current-sitemap #xml' => [
-            '/',
-            'xml'
-        ];
-        yield 'api #xml' => [
-            '/api',
+            '/current-sitemap',
             'xml'
         ];
         yield 'current-sitemap #json' => [
             '/current-sitemap',
             'json',
             false
+        ];
+        yield 'example-domain #xml' => [
+            '/example-domain',
+            'xml'
+        ];
+    }
+    
+    /**
+     *
+     * @dataProvider xmlProvider
+     */
+    public function test_fragment_doesNotChangeDocument(string $url): void {
+        $url = FarahUrl::createFromReference($url, Module::getBaseUrl());
+        
+        $left = Module::resolveToResult($url)->lookupDOMWriter()->toDocument();
+        $right = Module::resolveToResult($url->withFragment('xml'))->lookupDOMWriter()->toDocument();
+        
+        var_dump(get_class(Module::resolveToResult($url)->lookupDOMWriter()));
+        
+        $this->assertThat($left, new IsIdentical($right));
+    }
+    
+    public function xmlProvider(): iterable {
+        yield '/' => [
+            '/'
+        ];
+        yield '/phpinfo' => [
+            '/phpinfo'
+        ];
+        yield '/api' => [
+            '/api'
+        ];
+        yield '/current-sitemap' => [
+            '/current-sitemap'
+        ];
+        yield '/example-domain' => [
+            '/example-domain'
         ];
     }
 }
