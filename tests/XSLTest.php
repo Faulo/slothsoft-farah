@@ -4,7 +4,7 @@ namespace Slothsoft\Farah;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\Core\DOMTests\DOMNodeEqualTo;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
 use DOMDocument;

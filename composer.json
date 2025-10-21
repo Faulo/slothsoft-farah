@@ -23,7 +23,7 @@
 		"psr/http-message" : "^1.0",
 		"psr/log" : "^1.0",
 		"slothsoft/blob" : "^1.0",
-		"slothsoft/core" : "^1.13.19",
+		"slothsoft/core" : "^1.14.0",
 		"laminas/laminas-router" : "^3.5"
 	},
 	"require-dev" : {
@@ -56,7 +56,7 @@
 	},
 	"extra" : {
 		"branch-alias" : {
-			"dev-main" : "1.22.x-dev"
+			"dev-main" : "1.23.x-dev"
 		}
 	},
 	"homepage" : "http://farah.slothsoft.net/modules/farah"
