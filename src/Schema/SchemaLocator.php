@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Schema;
 
+use Slothsoft\Core\DOMHelper;
 use DOMDocument;
 use Exception;
 
@@ -16,9 +17,10 @@ class SchemaLocator {
     
     public function findSchemaLocation(DOMDocument $document): ?string {
         if ($node = $document->documentElement) {
-            if ($node->hasAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'noNamespaceSchemaLocation')) { //DOMHelper::NS_XSI
-                return $node->getAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'noNamespaceSchemaLocation');
+            if ($node->hasAttributeNS(DOMHelper::NS_XSI, 'noNamespaceSchemaLocation')) {
+                return $node->getAttributeNS(DOMHelper::NS_XSI, 'noNamespaceSchemaLocation');
             }
+            
             if ($ns = $node->namespaceURI) {
                 if (strpos($ns, self::NAMESPACE_BASE) === 0) {
                     $version = $node->hasAttribute(self::ATTR_VERSION) ? $node->getAttribute(self::ATTR_VERSION) : self::DEFAULT_VERSION;
