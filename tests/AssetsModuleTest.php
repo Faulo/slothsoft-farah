@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
+use Slothsoft\FarahTesting\Module\AbstractModuleTest;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
-use Slothsoft\Farah\ModuleTests\AbstractModuleTest;
 
 class AssetsModuleTest extends AbstractModuleTest {
     

@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Http;
 
-use Slothsoft\Farah\ModuleTests\AbstractTestCase;
+use Slothsoft\FarahTesting\Module\AbstractTestCase;
 
 class MessageFactoryTest extends AbstractTestCase {
     
