@@ -8,8 +8,9 @@ use Slothsoft\FarahTesting\FarahServer;
 use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Symfony\Component\Panther\Client;
+use PHPUnit\Framework\Constraint\IsEqual;
 
-class XSLTTest extends TestCase {
+class DOMTest extends TestCase {
     
     private FarahServer $server;
     
@@ -36,13 +37,23 @@ class XSLTTest extends TestCase {
         unset($this->server);
     }
     
-    public function test_transformToFragment_exists(): void {
-        $this->client->request('GET', '/slothsoft@test-module/tests/xslt');
+    public function test_loadDocument(): void {
+        $this->client->request('GET', '/slothsoft@test-module/tests/dom');
         
         $actual = $this->client->executeScript(<<<EOT
-return XSLT.transformToFragment.toString();
+return DOM.loadDocument("/slothsoft@farah/phpinfo").querySelector("h1").textContent;
 EOT);
         
-        $this->assertThat($actual, new StringStartsWith('function'));
+        $this->assertThat($actual, new StringStartsWith('PHP Version'));
+    }
+    
+    public function test_loadXML(): void {
+        $this->client->request('GET', '/slothsoft@test-module/tests/dom');
+        
+        $actual = $this->client->executeScript(<<<EOT
+return DOM.loadXML("<xml><h1>Success</h1></xml>").querySelector("h1").textContent;
+EOT);
+        
+        $this->assertThat($actual, new IsEqual('Success'));
     }
 }

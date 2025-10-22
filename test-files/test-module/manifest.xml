@@ -10,9 +10,13 @@
 		<fragment name="html">
 			<use-template ref="//slothsoft@farah/xsl/html" />
 		</fragment>
-		<fragment name="xslt">
-			<use-template ref="//slothsoft@farah/xsl/html" />
-			<import ref="//slothsoft@farah/api/XSLT" />
-		</fragment>
+        <fragment name="dom">
+            <use-template ref="//slothsoft@farah/xsl/html" />
+            <import ref="//slothsoft@farah/api/DOM" />
+        </fragment>
+        <fragment name="xslt">
+            <use-template ref="//slothsoft@farah/xsl/html" />
+            <import ref="//slothsoft@farah/api/XSLT" />
+        </fragment>
 	</fragment>
 </assets>
