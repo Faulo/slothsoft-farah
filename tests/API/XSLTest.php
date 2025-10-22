@@ -1,9 +1,10 @@
 <?php
 declare(strict_types = 1);
-namespace Slothsoft\Farah;
+namespace Slothsoft\Farah\API;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\Dictionary;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
@@ -48,6 +49,7 @@ class XSLTest extends TestCase {
     
     /**
      *
+     * @runInSeparateProcess
      * @dataProvider exampleProvider
      */
     public function test_xslTemplate(string $templateFile, string $inputFile, string $expectedFile): void {
