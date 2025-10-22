@@ -5,4 +5,10 @@
 	<manifest-directory name="submodule" />
 
 	<resource-directory name="dictionary" type="application/xml" />
+
+	<fragment name="test">
+		<fragment name="xslt">
+			<import ref="//slothsoft@farah/api/XSLT" />
+		</fragment>
+	</fragment>
 </assets>
