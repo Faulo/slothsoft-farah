@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Slothsoft\Farah\API\JavaScript;
+namespace Slothsoft\Farah\API\XSL;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsEqual;
@@ -8,9 +8,8 @@ use Slothsoft\FarahTesting\FarahServer;
 use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Symfony\Component\Panther\Client;
-use PHPUnit\Framework\Constraint\StringStartsWith;
 
-class XSLTTest extends TestCase {
+class HtmlTest extends TestCase {
     
     private FarahServer $server;
     
@@ -37,13 +36,13 @@ class XSLTTest extends TestCase {
         unset($this->server);
     }
     
-    public function test_transformToFragment_exists(): void {
-        $this->client->request('GET', '/slothsoft@test-module/tests/xslt');
+    public function test_titleIsUrl(): void {
+        $this->client->request('GET', '/slothsoft@test-module/tests/html');
         
         $actual = $this->client->executeScript(<<<EOT
-return XSLT.transformToFragment.toString();
+return document.querySelector("title").textContent;
 EOT);
         
-        $this->assertThat($actual, new StringStartsWith('function'));
+        $this->assertThat($actual, new IsEqual('farah://slothsoft@test-module/tests/html'));
     }
 }
