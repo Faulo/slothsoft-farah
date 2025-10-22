@@ -56,4 +56,16 @@ EOT);
         
         $this->assertThat($actual, new IsEqual('Success'));
     }
+    
+    public function test_saveXML(): void {
+        $this->client->request('GET', '/slothsoft@test-module/tests/dom');
+        
+        $actual = $this->client->executeScript(<<<EOT
+const doc = document.implementation.createDocument(null, "xml");
+doc.documentElement.textContent = "Success";
+return DOM.saveXML(doc);
+EOT);
+        
+        $this->assertThat($actual, new IsEqual('<xml>Success</xml>'));
+    }
 }
