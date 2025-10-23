@@ -10,27 +10,20 @@
 
 var DOM = {
     loadDocument: function(uri) {
-        var retDoc, req;
-        try {
-            req = new XMLHttpRequest();
-            req.open("GET", uri, false);
-            if (req.overrideMimeType) {
-                //req.overrideMimeType("application/xml; charset=UTF-8");
-            }
-            req.send();
-            if (req.responseXML) {
-                retDoc = req.responseXML;
-            } else {
-                //retDoc = this.loadXML(req.responseText);
-                throw req.responseText;
-            }
-            retDoc.fileURI = uri;
-        } catch (e) {
-            console.log("Could not load XML ressource: %o", uri);
-            console.log("Exception:%o", e);
-            retDoc = false;
+        const request = new XMLHttpRequest();
+        request.open("GET", uri, false);
+        request.send();
+
+        if (request.responseXML) {
+            return request.responseXML;
         }
-        return retDoc;
+
+        const content = request.responseText;
+        const mimeType = this.parseContentType(request.getResponseHeader("content-type"));
+
+        return mimeType
+            ? this.loadXML(content, mimeType)
+            : this.loadXML(content);
     },
     loadDocumentAsync: async function(uri) {
         const response = await fetch(uri);
