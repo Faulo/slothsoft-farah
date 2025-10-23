@@ -3,26 +3,31 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\API\JavaScript;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Constraint\StringStartsWith;
+use PHPUnit\Framework\Constraint\IsEqual;
 use Slothsoft\FarahTesting\FarahServer;
 use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Symfony\Component\Panther\Client;
-use PHPUnit\Framework\Constraint\IsEqual;
 
 class DOMTest extends TestCase {
     
-    private FarahServer $server;
+    private static ?FarahServer $server;
     
     private ?Client $client = null;
     
+    public static function setUpBeforeClass(): void {
+        self::$server = new FarahServer();
+        self::$server->setModule(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), realpath('test-files/test-module'));
+        self::$server->start();
+    }
+    
+    public static function tearDownAfterClass(): void {
+        self::$server = null;
+    }
+    
     protected function setUp(): void {
-        $this->server = new FarahServer();
-        $this->server->setModule(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), realpath('test-files/test-module'));
-        $this->server->start();
-        
         try {
-            $this->client = $this->server->createClient();
+            $this->client = self::$server->createClient();
         } catch (BrowserDriverNotFoundException $e) {
             $this->markTestSkipped();
         }
@@ -33,39 +38,111 @@ class DOMTest extends TestCase {
             $this->client->quit();
             unset($this->client);
         }
-        
-        unset($this->server);
     }
     
-    public function test_loadDocument(): void {
+    /**
+     *
+     * @dataProvider provideDocuments
+     */
+    public function test_loadDocument(string $uri, string $expected): void {
         $this->client->request('GET', '/slothsoft@test-module/tests/dom');
         
-        $actual = $this->client->executeScript(<<<EOT
-return DOM.loadDocument("/slothsoft@farah/phpinfo").querySelector("h1").textContent;
-EOT);
+        $arguments = [
+            $uri
+        ];
         
-        $this->assertThat($actual, new StringStartsWith('PHP Version'));
+        $actual = $this->client->executeScript(<<<EOT
+return Test.run((uri) => {
+    const doc = DOM.loadDocument(uri);
+    return doc.querySelector("h1").textContent;
+}, arguments);
+EOT, $arguments);
+        
+        $this->assertThat($actual, new IsEqual($expected));
     }
     
-    public function test_loadXML(): void {
+    /**
+     *
+     * @dataProvider provideDocuments
+     */
+    public function test_loadDocumentAsync(string $uri, string $expected): void {
         $this->client->request('GET', '/slothsoft@test-module/tests/dom');
         
-        $actual = $this->client->executeScript(<<<EOT
-return DOM.loadXML("<xml><h1>Success</h1></xml>").querySelector("h1").textContent;
-EOT);
+        $arguments = [
+            $uri
+        ];
         
-        $this->assertThat($actual, new IsEqual('Success'));
+        $actual = $this->client->executeAsyncScript(<<<EOT
+Test.runAsync(async (uri) => {
+    const doc = await DOM.loadDocumentAsync(uri);
+    return doc.querySelector("h1").textContent;
+}, arguments);
+EOT, $arguments);
+        
+        $this->assertThat($actual, new IsEqual($expected));
     }
     
-    public function test_saveXML(): void {
+    public function provideDocuments(): iterable {
+        yield 'phpinfo' => [
+            '/slothsoft@farah/phpinfo',
+            'PHP Version ' . PHP_VERSION
+        ];
+        
+        yield 'HTML' => [
+            '/slothsoft@test-module/document',
+            'HTML'
+        ];
+    }
+    
+    /**
+     *
+     * @dataProvider provideTextContent
+     */
+    public function test_loadXML(string $content): void {
         $this->client->request('GET', '/slothsoft@test-module/tests/dom');
         
-        $actual = $this->client->executeScript(<<<EOT
-const doc = document.implementation.createDocument(null, "xml");
-doc.documentElement.textContent = "Success";
-return DOM.saveXML(doc);
-EOT);
+        $arguments = [
+            $content
+        ];
         
-        $this->assertThat($actual, new IsEqual('<xml>Success</xml>'));
+        $actual = $this->client->executeScript(<<<EOT
+return Test.run((content) => {
+    const doc = DOM.loadXML("<xml><h1>" + content + "</h1></xml>");
+    return doc.querySelector("h1").textContent;
+}, arguments);
+EOT, $arguments);
+        
+        $this->assertThat($actual, new IsEqual($content));
+    }
+    
+    /**
+     *
+     * @dataProvider provideTextContent
+     */
+    public function test_saveXML(string $content): void {
+        $this->client->request('GET', '/slothsoft@test-module/tests/dom');
+        
+        $arguments = [
+            $content
+        ];
+        
+        $actual = $this->client->executeScript(<<<EOT
+return Test.run((content) => {
+    const doc = document.implementation.createDocument(null, "xml");
+    doc.documentElement.textContent = content;
+    return DOM.saveXML(doc);
+}, arguments);
+EOT, $arguments);
+        
+        $this->assertThat($actual, new IsEqual("<xml>$content</xml>"));
+    }
+    
+    public function provideTextContent(): iterable {
+        yield [
+            'hello world'
+        ];
+        yield [
+            'success'
+        ];
     }
 }

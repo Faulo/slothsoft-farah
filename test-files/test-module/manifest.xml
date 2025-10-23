@@ -2,6 +2,8 @@
 <assets xmlns="http://schema.slothsoft.net/farah/module" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
 	<fragment name="test" />
 
+	<resource name="document" type="text/html" />
+
 	<manifest-directory name="submodule" />
 
 	<resource-directory name="dictionary" type="application/xml" />
@@ -10,13 +12,15 @@
 		<fragment name="html">
 			<use-template ref="//slothsoft@farah/xsl/html" />
 		</fragment>
-        <fragment name="dom">
-            <use-template ref="//slothsoft@farah/xsl/html" />
-            <import ref="//slothsoft@farah/api/DOM" />
-        </fragment>
-        <fragment name="xslt">
-            <use-template ref="//slothsoft@farah/xsl/html" />
-            <import ref="//slothsoft@farah/api/XSLT" />
-        </fragment>
+		<fragment name="dom">
+			<use-template ref="//slothsoft@farah/xsl/html" />
+			<import ref="//slothsoft@farah/api/DOM" />
+			<import ref="//slothsoft@farah/api/Test" />
+		</fragment>
+		<fragment name="xslt">
+			<use-template ref="//slothsoft@farah/xsl/html" />
+			<import ref="//slothsoft@farah/api/XSLT" />
+			<import ref="//slothsoft@farah/api/Test" />
+		</fragment>
 	</fragment>
 </assets>
