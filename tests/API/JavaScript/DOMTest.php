@@ -92,6 +92,11 @@ EOT, $arguments);
             '/slothsoft@test-module/document',
             'HTML'
         ];
+        
+        yield 'farah' => [
+            'farah://slothsoft@test-module/document',
+            'HTML'
+        ];
     }
     
     /**

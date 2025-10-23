@@ -13,15 +13,15 @@
 var DOM = {
     loadDocument: function(uri) {
         const request = new XMLHttpRequest();
-        request.open("GET", uri, false);
+        request.open("GET", this.parseUrl(uri), false);
         request.send();
+
+        if (request.status >= 400) {
+            throw new Error(`Failed to load: ${uri}\n  ${request.status} ${request.statusText}`);
+        }
 
         if (request.responseXML) {
             return request.responseXML;
-        }
-
-        if (request.status >= 400) {
-            throw new Error(`Failed to query: ${uri}\n  ${request.status} ${request.statusText}`);
         }
 
         const content = request.responseText;
@@ -32,10 +32,10 @@ var DOM = {
             : this.loadXML(content);
     },
     loadDocumentAsync: async function(uri) {
-        const response = await fetch(uri);
+        const response = await fetch(this.parseUrl(uri));
 
         if (!response.ok) {
-            throw new Error(`Failed to query: ${uri}\n  ${response.status} ${response.statusText}`);
+            throw new Error(`Failed to load: ${uri}\n  ${response.status} ${response.statusText}`);
         }
 
         const content = await response.text();
@@ -45,6 +45,11 @@ var DOM = {
             ? this.loadXML(content, mimeType)
             : this.loadXML(content);
     },
+    parseUrl: function(uri) {
+        return uri.startsWith("farah://")
+            ? uri.substring("farah:/".length)
+            : uri;
+    },
     parseContentType: function(contentType) {
         return String(contentType)
             .split(';', 1)[0]
@@ -53,8 +58,13 @@ var DOM = {
     },
     saveDocument: function(uri, doc) {
         const request = new XMLHttpRequest();
-        request.open("POST", uri, false);
+        request.open("POST", this.parseUrl(uri), false);
         request.send(doc);
+
+        if (request.status >= 400) {
+            throw new Error(`Failed to save: ${uri}\n  ${request.status} ${request.statusText}`);
+        }
+
         return request.responseXML;
     },
     loadXML: function(xml, mimeType = "application/xml") {
