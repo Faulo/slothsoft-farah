@@ -1,10 +1,12 @@
 /*******************************************************************************
- * DOM v1.01 08.04.2014 © Daniel Schulz
+ *  DOM © Daniel Schulz
  * 
  * 	Changelog:
- *		v1.01 08.04.2014
+ *      v1.1.0 23.10.2025
+ *          loadDocumentAsync
+ *		v1.0.1 08.04.2014
  *			console.log
- * 		v1.00 12.09.2012
+ * 		v1.0.0 12.09.2012
  * 			initial release
  ******************************************************************************/
 
@@ -40,36 +42,30 @@ var DOM = {
             : this.loadXML(content);
     },
     parseContentType: function(contentType) {
-        return String(contentType).split(';', 1)[0].trim().toLowerCase();
+        return String(contentType)
+            .split(';', 1)[0]
+            .trim()
+            .toLowerCase();
     },
     saveDocument: function(uri, doc) {
-        var ret, req;
-        try {
-            req = new XMLHttpRequest();
-            req.open("POST", uri, false);
-            //req.setRequestHeader("Content-Type", "application/xml");
-            req.send(doc);
-            ret = req.responseXML;
-        } catch (e) {
-            console.log("Could not save XML ressource: %o", uri);
-            console.log("Exception:%o", e);
-            ret = false;
-        }
-        return ret;
+        const request = new XMLHttpRequest();
+        request.open("POST", uri, false);
+        request.send(doc);
+        return req.responseXML;
     },
     loadXML: function(xml, mimeType = "application/xml") {
-        var doc, parser;
-        parser = new DOMParser();
-        doc = parser.parseFromString(xml, mimeType);
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(xml, mimeType);
+
         if (doc.documentElement.namespaceURI === NS.MOZ_ERR_PARSE) {
             throw new Error(doc.documentElement.textContent);
         }
+
         return doc;
     },
     saveXML: function(doc) {
-        var xml, serializer;
-        serializer = new XMLSerializer();
-        xml = serializer.serializeToString(doc);
+        const serializer = new XMLSerializer();
+        const xml = serializer.serializeToString(doc);
         return xml;
     }
 };
