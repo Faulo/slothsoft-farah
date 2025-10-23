@@ -12,7 +12,7 @@ final class HtmlTest extends FarahServerTestCase {
         self::$server->setModule(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), 'test-files/test-module');
     }
     
-    protected function setUpClient() {
+    protected function setUpClient(): void {
         $this->client->request('GET', '/slothsoft@test-module/tests/html');
     }
     
