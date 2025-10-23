@@ -20,6 +20,10 @@ var DOM = {
             return request.responseXML;
         }
 
+        if (request.status >= 400) {
+            throw new Error(`Failed to query: ${uri}\n  ${request.status} ${request.statusText}`);
+        }
+
         const content = request.responseText;
         const mimeType = this.parseContentType(request.getResponseHeader("content-type"));
 
@@ -51,7 +55,7 @@ var DOM = {
         const request = new XMLHttpRequest();
         request.open("POST", uri, false);
         request.send(doc);
-        return req.responseXML;
+        return request.responseXML;
     },
     loadXML: function(xml, mimeType = "application/xml") {
         const parser = new DOMParser();
