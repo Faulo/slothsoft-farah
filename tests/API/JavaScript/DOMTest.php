@@ -2,42 +2,18 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\API\JavaScript;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsEqual;
-use Slothsoft\FarahTesting\FarahServer;
-use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
+use Slothsoft\FarahTesting\FarahServerTestCase;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
-use Symfony\Component\Panther\Client;
 
-class DOMTest extends TestCase {
+final class DOMTest extends FarahServerTestCase {
     
-    private static ?FarahServer $server;
-    
-    private ?Client $client = null;
-    
-    public static function setUpBeforeClass(): void {
-        self::$server = new FarahServer();
-        self::$server->setModule(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), realpath('test-files/test-module'));
-        self::$server->start();
+    public static function setUpServer(): void {
+        self::$server->setModule(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), 'test-files/test-module');
     }
     
-    public static function tearDownAfterClass(): void {
-        self::$server = null;
-    }
-    
-    protected function setUp(): void {
-        try {
-            $this->client = self::$server->createClient();
-        } catch (BrowserDriverNotFoundException $e) {
-            $this->markTestSkipped();
-        }
-    }
-    
-    protected function tearDown(): void {
-        if ($this->client) {
-            $this->client->quit();
-            unset($this->client);
-        }
+    protected function setUpClient(): void {
+        $this->client->request('GET', '/slothsoft@test-module/tests/dom');
     }
     
     /**
@@ -45,8 +21,6 @@ class DOMTest extends TestCase {
      * @dataProvider provideDocuments
      */
     public function test_loadDocument(string $uri, string $expected): void {
-        $this->client->request('GET', '/slothsoft@test-module/tests/dom');
-        
         $arguments = [
             $uri
         ];
@@ -66,8 +40,6 @@ EOT, $arguments);
      * @dataProvider provideDocuments
      */
     public function test_loadDocumentAsync(string $uri, string $expected): void {
-        $this->client->request('GET', '/slothsoft@test-module/tests/dom');
-        
         $arguments = [
             $uri
         ];
@@ -104,8 +76,6 @@ EOT, $arguments);
      * @dataProvider provideTextContent
      */
     public function test_loadXML(string $content): void {
-        $this->client->request('GET', '/slothsoft@test-module/tests/dom');
-        
         $arguments = [
             $content
         ];
@@ -125,8 +95,6 @@ EOT, $arguments);
      * @dataProvider provideTextContent
      */
     public function test_saveXML(string $content): void {
-        $this->client->request('GET', '/slothsoft@test-module/tests/dom');
-        
         $arguments = [
             $content
         ];
