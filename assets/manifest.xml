@@ -28,6 +28,10 @@
 	</directory>
 
 	<resource name="example-domain" type="application/xml" />
+	<fragment name="example-page">
+		<use-template ref="/xsl/html" />
+	</fragment>
+
 	<daemon name="cli-daemon" server="Slothsoft\Farah\Internal\CLIDaemon" port="5050" />
 
 	<fragment name="api">

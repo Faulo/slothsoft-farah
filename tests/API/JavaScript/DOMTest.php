@@ -5,6 +5,8 @@ namespace Slothsoft\Farah\API\JavaScript;
 use PHPUnit\Framework\Constraint\IsEqual;
 use Slothsoft\FarahTesting\FarahServerTestCase;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Core\DOMHelper;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 
 final class DOMTest extends FarahServerTestCase {
     
@@ -13,7 +15,7 @@ final class DOMTest extends FarahServerTestCase {
     }
     
     protected function setUpClient(): void {
-        $this->client->request('GET', '/');
+        $this->client->request('GET', '/slothsoft@farah/example-page');
     }
     
     /**
@@ -136,6 +138,104 @@ EOT, $arguments);
         ];
         yield [
             'success'
+        ];
+    }
+    
+    /**
+     *
+     * @dataProvider provideXPathLiterals
+     */
+    public function test_evaluate_literal(string $query, $expected): void {
+        $arguments = [
+            $query
+        ];
+        
+        $actual = $this->client->executeAsyncScript(<<<EOT
+async function test(query) {
+    const { default: sut } = await import("/slothsoft@farah/js/DOM");
+            
+    return sut.evaluate(query);
+}
+            
+import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
+EOT, $arguments);
+        
+        $this->assertThat($actual, new IsEqual($expected));
+    }
+    
+    public function provideXPathLiterals(): iterable {
+        yield 'xmlns' => [
+            'count(//html:head)',
+            1
+        ];
+        
+        yield 'number' => [
+            'count(/*)',
+            1
+        ];
+        
+        yield 'addition' => [
+            'count(/*) + count(/*)',
+            2
+        ];
+        
+        yield 'string' => [
+            'local-name(/*)',
+            'html'
+        ];
+        
+        yield 'boolean' => [
+            'boolean(/*)',
+            true
+        ];
+    }
+    
+    /**
+     *
+     * @dataProvider provideXPathNodes
+     */
+    public function test_evaluate_nodes(string $query): void {
+        $arguments = [
+            $query
+        ];
+        
+        $actual = $this->client->executeAsyncScript(<<<EOT
+async function test(query) {
+    const { default: sut } = await import("/slothsoft@farah/js/DOM");
+    
+    let result = "";
+    for (const node of sut.evaluate(query)) {
+        result += sut.saveXML(node);
+    }
+    return result;
+}
+
+import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
+EOT, $arguments);
+        
+        $dom = new DOMHelper();
+        $actual = $dom->parse($actual);
+        
+        $document = DOMHelper::loadDocument('farah://slothsoft@farah/example-page');
+        $xpath = DOMHelper::loadXPath($document);
+        $expected = $document->createDocumentFragment();
+        foreach ($xpath->evaluate($query) as $node) {
+            $expected->appendChild($node->cloneNode(true));
+        }
+        
+        $this->assertThat($actual, new DOMNodeEqualTo($expected));
+    }
+    
+    public function provideXPathNodes(): iterable {
+        yield 'xmlns' => [
+            '//html:head'
+        ];
+        
+        yield 'root' => [
+            '/*'
+        ];
+        yield 'body' => [
+            '//html:body/*'
         ];
     }
 }

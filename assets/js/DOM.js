@@ -10,7 +10,7 @@
  * 			initial release
  ******************************************************************************/
 
-import { NS } from "./XMLNamespaces";
+import { NS, resolve } from "./XMLNamespaces";
 
 function parseUrl(uri) {
     return uri.startsWith("farah://")
@@ -90,5 +90,34 @@ export default {
         const serializer = new XMLSerializer();
         const xml = serializer.serializeToString(doc);
         return xml;
+    },
+    evaluate: function(query, contextNode = document) {
+        try {
+            const ownerDocument = contextNode.nodeType === Node.DOCUMENT_NODE
+                ? contextNode
+                : contextNode.ownerDocument;
+            const result = ownerDocument.evaluate(query, contextNode, resolve, XPathResult.ANY_TYPE, null);
+
+            switch (result.resultType) {
+                case XPathResult.NUMBER_TYPE:
+                    return result.numberValue;
+                case XPathResult.STRING_TYPE:
+                    return result.stringValue;
+                case XPathResult.BOOLEAN_TYPE:
+                    return result.booleanValue;
+                default:
+                    const nodes = [];
+                    for (let tmp; tmp = result.iterateNext();) {
+                        nodes.push(tmp);
+                    }
+                    return nodes;
+            }
+        } catch (e) {
+            window.console.error("XPath error!");
+            window.console.log("query:%o", query);
+            window.console.log("context node:%o", contextNode);
+            window.console.log("exception:%o", e);
+            throw e;
+        }
     }
 };

@@ -12,15 +12,18 @@ use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 
 final class XSLTTest extends FarahServerTestCase {
     
+    private static FarahUrlAuthority $authority;
+    
     protected static function setUpServer(): void {
-        $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module');
+        self::$authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module');
         
-        self::$server->setModule($authority, 'test-files/test-module');
-        Module::registerWithXmlManifestAndDefaultAssets($authority, 'test-files/test-module');
+        self::$server->setModule(self::$authority, 'test-files/test-module');
     }
     
     protected function setUpClient(): void {
-        $this->client->request('GET', '/');
+        $this->client->request('GET', '/slothsoft@farah/example-page');
+        
+        Module::registerWithXmlManifestAndDefaultAssets(self::$authority, 'test-files/test-module');
     }
     
     public function test_transformToFragment_exists(): void {

@@ -38,7 +38,7 @@ class FromFilesystemPathResolverTest extends TestCase {
         ];
         
         yield 'valid asset' => [
-            'farah://slothsoft@farah/js/DOMHelper'
+            'farah://slothsoft@farah/js/DOM'
         ];
         
         yield 'missing asset' => [
