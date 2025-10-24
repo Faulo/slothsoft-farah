@@ -13,7 +13,7 @@ final class DOMTest extends FarahServerTestCase {
     }
     
     protected function setUpClient(): void {
-        $this->client->request('GET', '/slothsoft@test-module/tests/dom');
+        $this->client->request('GET', '/');
     }
     
     /**
@@ -25,11 +25,16 @@ final class DOMTest extends FarahServerTestCase {
             $uri
         ];
         
-        $actual = $this->client->executeScript(<<<EOT
-return Test.run((uri) => {
-    const doc = DOM.loadDocument(uri);
+        $actual = $this->client->executeAsyncScript(<<<EOT
+async function test(uri) {
+    const { default: sut } = await import("/slothsoft@farah/js/DOM");
+
+    const doc = sut.loadDocument(uri);
+
     return doc.querySelector("h1").textContent;
-}, arguments);
+}
+            
+import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
 EOT, $arguments);
         
         $this->assertThat($actual, new IsEqual($expected));
@@ -45,10 +50,15 @@ EOT, $arguments);
         ];
         
         $actual = $this->client->executeAsyncScript(<<<EOT
-Test.runAsync(async (uri) => {
-    const doc = await DOM.loadDocumentAsync(uri);
+async function test(uri) {
+    const { default: sut } = await import("/slothsoft@farah/js/DOM");
+
+    const doc = await sut.loadDocumentAsync(uri);
+
     return doc.querySelector("h1").textContent;
-}, arguments);
+}
+
+import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
 EOT, $arguments);
         
         $this->assertThat($actual, new IsEqual($expected));
@@ -80,11 +90,16 @@ EOT, $arguments);
             $content
         ];
         
-        $actual = $this->client->executeScript(<<<EOT
-return Test.run((content) => {
-    const doc = DOM.loadXML("<xml><h1>" + content + "</h1></xml>");
+        $actual = $this->client->executeAsyncScript(<<<EOT
+async function test(content) {
+    const { default: sut } = await import("/slothsoft@farah/js/DOM");
+
+    const doc = sut.loadXML("<xml><h1>" + content + "</h1></xml>");
+
     return doc.querySelector("h1").textContent;
-}, arguments);
+}
+            
+import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
 EOT, $arguments);
         
         $this->assertThat($actual, new IsEqual($content));
@@ -99,12 +114,17 @@ EOT, $arguments);
             $content
         ];
         
-        $actual = $this->client->executeScript(<<<EOT
-return Test.run((content) => {
+        $actual = $this->client->executeAsyncScript(<<<EOT
+async function test(content) {
+    const { default: sut } = await import("/slothsoft@farah/js/DOM");
+
     const doc = document.implementation.createDocument(null, "xml");
     doc.documentElement.textContent = content;
-    return DOM.saveXML(doc);
-}, arguments);
+
+    return sut.saveXML(doc);
+}
+            
+import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
 EOT, $arguments);
         
         $this->assertThat($actual, new IsEqual("<xml>$content</xml>"));

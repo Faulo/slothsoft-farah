@@ -53,8 +53,5 @@
 			<link-script ref="/js-core/XSLT" />
 			<import ref="/api/XPath" />
 		</fragment>
-		<fragment name="Test">
-			<link-script ref="/js/Test" />
-		</fragment>
 	</fragment>
 </assets>

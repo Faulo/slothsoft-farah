@@ -13,13 +13,21 @@ final class XSLTTest extends FarahServerTestCase {
     }
     
     protected function setUpClient(): void {
-        $this->client->request('GET', '/slothsoft@test-module/tests/xslt');
+        $this->client->request('GET', '/');
     }
     
     public function test_transformToFragment_exists(): void {
-        $actual = $this->client->executeScript(<<<EOT
-return XSLT.transformToFragment.toString();
-EOT);
+        $arguments = [];
+        
+        $actual = $this->client->executeAsyncScript(<<<EOT
+async function test(uri) {
+    const { default: sut } = await import("/slothsoft@farah/js/XSLT");
+            
+    return "" + sut.transformToFragment;
+}
+            
+import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
+EOT, $arguments);
         
         $this->assertThat($actual, new StringStartsWith('function'));
     }

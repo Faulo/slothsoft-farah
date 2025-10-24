@@ -1,37 +1,40 @@
 const list = [];
 
+export const NS = {};
+
 export function define(name, prefix, uri) {
-	list.push({name, prefix, uri});
+    list.push({ name, prefix, uri });
+    NS[name] = uri;
 }
 export function byName(name) {
-	for (let i = 0; i < list.length; i++) {
-		if (list[i].name == name) {
-			return list[i];
-		}
-	}
-	throw new Error(`Namespace name "${name}" is not known to this implementation.`);
+    for (let i = 0; i < list.length; i++) {
+        if (list[i].name == name) {
+            return list[i];
+        }
+    }
+    throw new Error(`Namespace name "${name}" is not known to this implementation.`);
 }
 export function byPrefix(prefix) {
-	for (let i = 0; i < list.length; i++) {
-		if (list[i].prefix == prefix) {
-			return list[i];
-		}
-	}
-	throw new Error(`Namespace prefix "${prefix}" is not known to this implementation.`);
+    for (let i = 0; i < list.length; i++) {
+        if (list[i].prefix == prefix) {
+            return list[i];
+        }
+    }
+    throw new Error(`Namespace prefix "${prefix}" is not known to this implementation.`);
 }
 export function byUri(uri) {
-	for (let i = 0; i < list.length; i++) {
-		if (list[i].uri == uri) {
-			return list[i];
-		}
-	}
-	throw new Error(`Namespace URI "${uri}" is not known to this implementation.`);
+    for (let i = 0; i < list.length; i++) {
+        if (list[i].uri == uri) {
+            return list[i];
+        }
+    }
+    throw new Error(`Namespace URI "${uri}" is not known to this implementation.`);
 }
 export function resolve(prefix) {
-	return byPrefix(prefix).uri;
+    return byPrefix(prefix).uri;
 }
 export function prefix(uri) {
-	return byUri(uri).prefix;
+    return byUri(uri).prefix;
 }
 
 //W3C
