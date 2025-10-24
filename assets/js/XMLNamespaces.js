@@ -41,11 +41,13 @@ export function prefix(uri) {
 define("XML", "xml", "http://www.w3.org/XML/1998/namespace");
 define("XMLNS", "xmlns", "http://www.w3.org/2000/xmlns/");
 define("HTML", "html", "http://www.w3.org/1999/xhtml");
-define("XSLT", "xsl", "http://www.w3.org/1999/XSL/Transform");
+define("XSL", "xsl", "http://www.w3.org/1999/XSL/Transform");
 define("XSD", "xsd", "http://www.w3.org/2001/XMLSchema");
+define("XSI", "xsi", "http://www.w3.org/2001/XMLSchema-instance");
 define("SVG", "svg", "http://www.w3.org/2000/svg");
 define("XLINK", "xlink", "http://www.w3.org/1999/xlink");
 define("ATOM", "atom", "http://www.w3.org/2005/Atom");
+define("XINCLUDE", "xi", "http://www.w3.org/2001/XInclude");
 
 //Slothsoft
 define("AMBER_AMBERDATA", "saa", "http://schema.slothsoft.net/amber/amberdata");
@@ -58,6 +60,9 @@ define("SCHEMA_VERSIONING", "ssv", "http://schema.slothsoft.net/schema/versionin
 
 //Misc
 define("PHP", "php", "http://php.net/xpath");
+define("EM", "em", "http://www.mozilla.org/2004/em-rdf#");
+define("GD", "gd", "http://schemas.google.com/g/2005");
+define("MEDIA", "media", "http://search.yahoo.com/mrss/");
 define("SITEMAP", "sitemap", "http://www.sitemaps.org/schemas/sitemap/0.9");
 define("MOZILLA_ERROR", "me", "http://www.mozilla.org/newlayout/xml/parsererror.xml");
 define("MOZILLA_XUL", "mx", "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
