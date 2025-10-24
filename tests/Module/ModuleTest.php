@@ -25,6 +25,10 @@ class ModuleTest extends TestCase {
         $this->assertTrue(class_exists(Module::class), "Failed to load class 'Slothsoft\Farah\Module\Module'!");
     }
     
+    /**
+     *
+     * @runInSeparateProcess
+     */
     public function testGetBaseUrl(): void {
         $expected = FarahUrl::createFromReference('farah://slothsoft@farah');
         
