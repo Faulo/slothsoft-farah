@@ -12,10 +12,28 @@
 
 import { NS } from "./XMLNamespaces";
 
+function parseUrl(uri) {
+    return uri.startsWith("farah://")
+        ? uri.substring("farah:/".length)
+        : uri;
+}
+
+function parseContentType(contentType) {
+    const mimeType = String(contentType)
+        .split(';', 1)[0]
+        .trim()
+        .toLowerCase();
+
+    switch (mimeType) {
+        case "application/xslt+xml": return "application/xml";
+        default: return mimeType;
+    }
+}
+
 export default {
     loadDocument: function(uri) {
         const request = new XMLHttpRequest();
-        request.open("GET", this.parseUrl(uri), false);
+        request.open("GET", parseUrl(uri), false);
         request.send();
 
         if (request.status >= 400) {
@@ -27,45 +45,29 @@ export default {
         }
 
         const content = request.responseText;
-        const mimeType = this.parseContentType(request.getResponseHeader("content-type"));
+        const mimeType = parseContentType(request.getResponseHeader("content-type"));
 
         return mimeType
             ? this.loadXML(content, mimeType)
             : this.loadXML(content);
     },
     loadDocumentAsync: async function(uri) {
-        const response = await fetch(this.parseUrl(uri));
+        const response = await fetch(parseUrl(uri));
 
         if (!response.ok) {
             throw new Error(`Failed to load: ${uri}\n  ${response.status} ${response.statusText}`);
         }
 
         const content = await response.text();
-        const mimeType = this.parseContentType(response.headers.get("content-type"));
+        const mimeType = parseContentType(response.headers.get("content-type"));
 
         return mimeType
             ? this.loadXML(content, mimeType)
             : this.loadXML(content);
     },
-    parseUrl: function(uri) {
-        return uri.startsWith("farah://")
-            ? uri.substring("farah:/".length)
-            : uri;
-    },
-    parseContentType: function(contentType) {
-        const mimeType = String(contentType)
-            .split(';', 1)[0]
-            .trim()
-            .toLowerCase();
-
-        switch (mimeType) {
-            case "application/xslt+xml": return "application/xml";
-            default: return mimeType;
-        }
-    },
     saveDocument: function(uri, doc) {
         const request = new XMLHttpRequest();
-        request.open("POST", this.parseUrl(uri), false);
+        request.open("POST", parseUrl(uri), false);
         request.send(doc);
 
         if (request.status >= 400) {
