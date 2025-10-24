@@ -99,6 +99,37 @@ EOT, $arguments);
         $this->assertThat($actual, new DOMNodeEqualTo($expected));
     }
     
+    /**
+     *
+     * @dataProvider provideTransformations
+     */
+    public function test_transformToFragmentAsync_matchesXML(string $data, string $template): void {
+        $arguments = [
+            $data,
+            $template
+        ];
+        
+        $actual = $this->client->executeAsyncScript(<<<EOT
+async function test(data, template) {
+    const { default: sut } = await import("/slothsoft@farah/js/XSLT");
+            
+    var result = await sut.transformToFragmentAsync(data, template, document);
+            
+    const { default: DOM } = await import("/slothsoft@farah/js/DOM");
+            
+    return DOM.saveXML(result);
+}
+            
+import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
+EOT, $arguments);
+        
+        $dom = new DOMHelper();
+        $actual = $dom->parse($actual);
+        $expected = $dom->transformToFragment($data, $template);
+        
+        $this->assertThat($actual, new DOMNodeEqualTo($expected));
+    }
+    
     public function provideTransformations(): iterable {
         yield 'html' => [
             'farah://slothsoft@farah/',

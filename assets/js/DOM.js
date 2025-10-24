@@ -53,10 +53,15 @@ export default {
             : uri;
     },
     parseContentType: function(contentType) {
-        return String(contentType)
+        const mimeType = String(contentType)
             .split(';', 1)[0]
             .trim()
             .toLowerCase();
+
+        switch (mimeType) {
+            case "application/xslt+xml": return "application/xml";
+            default: return mimeType;
+        }
     },
     saveDocument: function(uri, doc) {
         const request = new XMLHttpRequest();
