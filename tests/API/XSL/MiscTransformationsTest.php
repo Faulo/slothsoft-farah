@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Slothsoft\Farah\API;
+namespace Slothsoft\Farah\API\XSL;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
@@ -10,7 +10,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
 use DOMDocument;
 
-class XSLTest extends TestCase {
+class MiscTransformationsTest extends TestCase {
     
     public function exampleProvider(): array {
         return [
