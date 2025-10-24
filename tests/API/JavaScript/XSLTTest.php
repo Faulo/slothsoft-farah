@@ -7,6 +7,7 @@ use PHPUnit\Framework\Constraint\StringStartsWith;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\FarahTesting\FarahServerTestCase;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 
 final class XSLTTest extends FarahServerTestCase {
     
@@ -39,7 +40,10 @@ EOT, $arguments);
      * @dataProvider provideTransformations
      */
     public function test_transformToFragment_matchesChildCount(string $data, string $template): void {
-        $arguments = [];
+        $arguments = [
+            $data,
+            $template
+        ];
         
         $actual = $this->client->executeAsyncScript(<<<EOT
 async function test(data, template) {
@@ -65,7 +69,10 @@ EOT, $arguments);
      * @dataProvider provideTransformations
      */
     public function test_transformToFragment_matchesXML(string $data, string $template): void {
-        $arguments = [];
+        $arguments = [
+            $data,
+            $template
+        ];
         
         $actual = $this->client->executeAsyncScript(<<<EOT
 async function test(data, template) {
@@ -82,10 +89,10 @@ import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
 EOT, $arguments);
         
         $dom = new DOMHelper();
+        $actual = $dom->parse($actual);
         $expected = $dom->transformToFragment($data, $template);
-        $expected = $expected->ownerDocument->saveXML($expected);
         
-        $this->assertThat($actual, new IsEqual($expected));
+        $this->assertThat($actual, new DOMNodeEqualTo($expected));
     }
     
     public function provideTransformations(): iterable {

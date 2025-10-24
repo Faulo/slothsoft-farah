@@ -8,8 +8,46 @@
  * 			initial release
  ******************************************************************************/
 
+import DOM from "./DOM";
+
 export default {
     transformToFragment: function(dataNode, templateDoc, ownerDoc) {
+        if (typeof dataNode === 'string' || dataNode instanceof String) {
+            dataNode = DOM.loadDocument(dataNode);
+        }
+
+        if (typeof templateDoc === 'string' || templateDoc instanceof String) {
+            templateDoc = DOM.loadDocument(templateDoc);
+        }
+
+        try {
+            const xslt = new XSLTProcessor();
+            xslt.importStylesheet(templateDoc);
+            const retFragment = xslt.transformToFragment(dataNode, ownerDoc);
+
+            if (!retFragment) {
+                throw new Error("XSLTProcessor.transformToFragment returned null!");
+            }
+
+            // Firefox adds a useless <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> (even if one is already present), remove it
+            var metaElements = retFragment.querySelectorAll('html > head > meta[http-equiv="Content-Type"][content="text/html; charset=UTF-8"]');
+            if (metaElements.length > 0) {
+                metaElements[metaElements.length - 1].parentNode.removeChild(metaElements[metaElements.length - 1]);
+            }
+
+            return retFragment;
+        } catch (e) {
+            console.warn("An error occured while attempting to XSL transform. :|");
+            console.log("Data node:%o", dataNode);
+            console.log("Template document:%o", templateDoc);
+            console.log("Owner document:%o", ownerDoc);
+            throw e;
+        }
+        /*
+        
+        
+        
+        
         var xslt,
             uri, tmpDoc, nodeList, node, i,
             retFragment = false;
@@ -64,6 +102,7 @@ export default {
             retFragment = ownerDoc.createDocumentFragment();
         }
         return retFragment;
+        //*/
     },
     transformToNode: function(dataNode, templateDoc, ownerDoc) {
         return this.transformToFragment(dataNode, templateDoc, ownerDoc).firstChild;
