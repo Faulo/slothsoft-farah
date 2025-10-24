@@ -8,7 +8,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 
 final class DOMTest extends FarahServerTestCase {
     
-    public static function setUpServer(): void {
+    protected static function setUpServer(): void {
         self::$server->setModule(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), 'test-files/test-module');
     }
     
