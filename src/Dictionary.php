@@ -16,7 +16,14 @@ class Dictionary {
     
     public static function xsltLookupText(string $word, string $module = '', string $language = ''): string {
         $dict = self::getInstance();
-        return $dict->lookupText($word, $module === '' ? null : $module, $language === '' ? null : $language);
+        
+        $previousModule = $dict->currentModule;
+        try {
+            $dict->currentModule = Module::getBaseUrl();
+            return $dict->lookupText($word, $module === '' ? null : $module, $language === '' ? null : $language);
+        } finally {
+            $dict->currentModule = $previousModule;
+        }
     }
     
     private static function supportedLanguages() {
@@ -75,11 +82,7 @@ class Dictionary {
     
     const XPATH_DICT_REPLACE = '.';
     
-    /**
-     *
-     * @var FarahUrl
-     */
-    protected $currentModule;
+    protected ?FarahUrl $currentModule = null;
     
     protected $currentLang;
     
