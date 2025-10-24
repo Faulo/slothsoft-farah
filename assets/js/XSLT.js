@@ -42,7 +42,7 @@ async function coerceToDocumentAsync(data) {
         return data;
     }
 
-    return DOM.loadDocumentAsync(data);
+    return await DOM.loadDocumentAsync(data);
 }
 
 function getNamespaces(element) {
