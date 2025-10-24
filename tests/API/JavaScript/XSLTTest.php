@@ -7,12 +7,16 @@ use PHPUnit\Framework\Constraint\StringStartsWith;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\FarahTesting\FarahServerTestCase;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Module\Module;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 
 final class XSLTTest extends FarahServerTestCase {
     
     protected static function setUpServer(): void {
-        self::$server->setModule(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), 'test-files/test-module');
+        $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module');
+        
+        self::$server->setModule($authority, 'test-files/test-module');
+        Module::registerWithXmlManifestAndDefaultAssets($authority, 'test-files/test-module');
     }
     
     protected function setUpClient(): void {
@@ -99,6 +103,11 @@ EOT, $arguments);
         yield 'html' => [
             'farah://slothsoft@farah/',
             'farah://slothsoft@farah/xsl/html'
+        ];
+        
+        yield 'import' => [
+            'farah://slothsoft@farah/',
+            'farah://slothsoft@test-module/xsl/import'
         ];
     }
 }

@@ -39,6 +39,7 @@ export function prefix(uri) {
 
 //W3C
 define("XML", "xml", "http://www.w3.org/XML/1998/namespace");
+define("XMLNS", "xmlns", "http://www.w3.org/2000/xmlns/");
 define("HTML", "html", "http://www.w3.org/1999/xhtml");
 define("XSLT", "xsl", "http://www.w3.org/1999/XSL/Transform");
 define("XSD", "xsd", "http://www.w3.org/2001/XMLSchema");

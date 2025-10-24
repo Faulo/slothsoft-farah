@@ -8,6 +8,8 @@
 
 	<resource-directory name="dictionary" type="application/xml" />
 
+	<resource-directory name="xsl" type="application/xslt+xml" />
+
 	<fragment name="tests">
 		<fragment name="html">
 			<use-template ref="//slothsoft@farah/xsl/html" />

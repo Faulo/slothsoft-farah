@@ -9,15 +9,63 @@
  ******************************************************************************/
 
 import DOM from "./DOM";
+import { NS } from "./XMLNamespaces";
+
+function coerceToNode(data) {
+    if (data instanceof Node) {
+        return data;
+    }
+
+    return DOM.loadDocument(data);
+}
+
+function coerceToDocument(data) {
+    if (data instanceof Document) {
+        return data;
+    }
+
+    return DOM.loadDocument(data);
+}
+
+function getNamespaces(element) {
+    const namespaces = {};
+    for (const attr of element.attributes) {
+        if (attr.prefix == "xmlns") {
+            namespaces[attr.name] = attr.value;
+        }
+    }
+    return namespaces;
+}
 
 export default {
-    transformToFragment: function(dataNode, templateDoc, ownerDoc) {
-        if (typeof dataNode === 'string' || dataNode instanceof String) {
-            dataNode = DOM.loadDocument(dataNode);
-        }
+    transformToFragment: function(data, template, ownerDoc) {
+        const dataNode = coerceToNode(data);
+        const templateDoc = coerceToDocument(template);
 
-        if (typeof templateDoc === 'string' || templateDoc instanceof String) {
-            templateDoc = DOM.loadDocument(templateDoc);
+        try {
+            const imported = new Set();
+            for (let importNode; importNode = templateDoc.querySelector(":root > import[href]");) {
+                const uri = importNode.getAttribute("href");
+                if (!imported.has(uri)) {
+                    imported.add(uri);
+                    const tmpDoc = DOM.loadDocument(uri);
+                    const namespaces = getNamespaces(tmpDoc.documentElement);
+                    const nodeList = tmpDoc.querySelectorAll(":root > *");
+                    for (let i = 0; i < nodeList.length; i++) {
+                        const templateNode = templateDoc.importNode(nodeList[i], true);
+                        for (const prefix in namespaces) {
+                            if (!templateNode.hasAttributeNS(NS.XMLNS, prefix)) {
+                                templateNode.setAttributeNS(NS.XMLNS, prefix, namespaces[prefix]);
+                            }
+                        }
+                        importNode.parentNode.insertBefore(templateNode, importNode);
+                    }
+                }
+                importNode.parentNode.removeChild(importNode);
+            }
+        } catch (e) {
+            console.log("XSLT Error: could not process xsl:import elements");
+            throw e;
         }
 
         try {
