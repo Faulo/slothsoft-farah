@@ -23,16 +23,21 @@ class FromFilesystemPathResolver implements PathResolverStrategyInterface {
         $desiredExtension = MimeTypeDictionary::guessExtension($desiredMime);
         $path = $element->getAttribute(Manifest::ATTR_REALPATH);
         
-        $filePathList = FileSystem::scanDir($path, FileSystem::SCANDIR_EXCLUDE_DIRS);
-        foreach ($filePathList as $filePath) {
-            $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
-            if ($desiredExtension === '') {
-                if (MimeTypeDictionary::matchesMime($fileExtension, $desiredMime)) {
-                    yield pathinfo($filePath, PATHINFO_BASENAME);
-                }
+        $files = FileSystem::scanDir($path, FileSystem::SCANDIR_FILEINFO);
+        /** @var $file \SplFileInfo */
+        foreach ($files as $file) {
+            if ($file->isDir()) {
+                yield $file->getFilename();
             } else {
-                if ($fileExtension === $desiredExtension) {
-                    yield pathinfo($filePath, PATHINFO_FILENAME);
+                $fileExtension = $file->getExtension();
+                if ($desiredExtension === '') {
+                    if (MimeTypeDictionary::matchesMime($fileExtension, $desiredMime)) {
+                        yield $file->getFilename();
+                    }
+                } else {
+                    if ($fileExtension === $desiredExtension) {
+                        yield $file->getBasename('.' . $fileExtension);
+                    }
                 }
             }
         }
@@ -50,7 +55,7 @@ class FromFilesystemPathResolver implements PathResolverStrategyInterface {
             $child = ManifestElementBuilder::createResourceDirectory($name, $path, $type);
         } else {
             if ($extension !== '') {
-                $path .= ".$extension";
+                $path .= '.' . $extension;
             }
             if (is_file($directory . DIRECTORY_SEPARATOR . $path)) {
                 $child = ManifestElementBuilder::createResource($name, $path, $type);

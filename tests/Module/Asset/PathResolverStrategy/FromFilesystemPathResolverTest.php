@@ -3,9 +3,13 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Asset\PathResolverStrategy;
 
 use PHPUnit\Framework\TestCase;
-use Slothsoft\Farah\Module\Module;
+use PHPUnit\Framework\Constraint\IsEqual;
+use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 
 /**
  * FromFilesystemPathResolverTest
@@ -16,6 +20,58 @@ class FromFilesystemPathResolverTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FromFilesystemPathResolver::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\PathResolverStrategy\FromFilesystemPathResolver'!");
+    }
+    
+    private const DIRECTORY = 'test-files/test-paths';
+    
+    /**
+     *
+     * @dataProvider loadChildrenProvider
+     */
+    public function test_loadChildren(?string $mimeType, array $expected): void {
+        $root = LeanElement::createOneFromArray(Manifest::TAG_RESOURCE_DIRECTORY, [
+            Manifest::ATTR_TYPE => $mimeType,
+            Manifest::ATTR_REALPATH => realpath(self::DIRECTORY)
+        ]);
+        $context = $this->createStub(AssetInterface::class);
+        $context->method('getManifestElement')->willReturn($root);
+        
+        $sut = new FromFilesystemPathResolver();
+        $actual = $sut->loadChildren($context);
+        $actual = [
+            ...$actual
+        ];
+        
+        $this->assertThat($actual, new IsEqual($expected));
+    }
+    
+    public function loadChildrenProvider(): iterable {
+        yield 'no type loads all files' => [
+            null,
+            [
+                'asset.txt',
+                'asset.xml',
+                'asset.xsl',
+                'directory'
+            ]
+        ];
+        
+        yield 'mime type with 1 possible extension skips extension' => [
+            'application/xml',
+            [
+                'asset',
+                'directory'
+            ]
+        ];
+        
+        yield 'mime type with multiple extensions' => [
+            'application/*',
+            [
+                'asset.xml',
+                'asset.xsl',
+                'directory'
+            ]
+        ];
     }
     
     /**
