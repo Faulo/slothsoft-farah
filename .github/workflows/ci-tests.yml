@@ -30,7 +30,7 @@ jobs:
           command: update
           args: --prefer-${{ matrix.composer }}
         env:
-          COMPOSER_ROOT_VERSION: "9999.0.0"
+          COMPOSER_ROOT_VERSION: "1.9999.0"
 
       - name: Run PHPUnit
         uses: php-actions/phpunit@v4
