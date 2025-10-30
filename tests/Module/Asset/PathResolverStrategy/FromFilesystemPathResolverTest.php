@@ -52,7 +52,8 @@ class FromFilesystemPathResolverTest extends TestCase {
                 'asset.txt',
                 'asset.xml',
                 'asset.xsl',
-                'directory'
+                'directory',
+                '日本語.xml'
             ]
         ];
         
@@ -60,7 +61,8 @@ class FromFilesystemPathResolverTest extends TestCase {
             'application/xml',
             [
                 'asset',
-                'directory'
+                'directory',
+                '日本語'
             ]
         ];
         
@@ -69,7 +71,8 @@ class FromFilesystemPathResolverTest extends TestCase {
             [
                 'asset.xml',
                 'asset.xsl',
-                'directory'
+                'directory',
+                '日本語.xml'
             ]
         ];
     }

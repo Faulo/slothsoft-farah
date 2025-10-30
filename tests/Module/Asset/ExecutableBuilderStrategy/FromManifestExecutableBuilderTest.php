@@ -3,9 +3,11 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Constraint\IsTrue;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\ServerEnvironment;
+use DOMDocument;
 use DOMNodeList;
 
 /**
@@ -17,6 +19,20 @@ class FromManifestExecutableBuilderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FromManifestExecutableBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromManifestExecutableBuilder'!");
+    }
+    
+    /**
+     *
+     * @dataProvider provideURLsAndQuery
+     */
+    public function testManifestIsValidXml(string $url): void {
+        FileSystem::removeDir(ServerEnvironment::getCacheDirectory(), true);
+        
+        $xml = file_get_contents($url);
+        
+        $doc = new DOMDocument();
+        
+        $this->assertThat($doc->loadXML($xml), new IsTrue());
     }
     
     /**
