@@ -26,17 +26,18 @@ class FromFilesystemPathResolver implements PathResolverStrategyInterface {
         $files = FileSystem::scanDir($path, FileSystem::SCANDIR_FILEINFO);
         /** @var $file \SplFileInfo */
         foreach ($files as $file) {
+            $name = $file->getFilename();
             if ($file->isDir()) {
-                yield $file->getFilename();
+                yield $name;
             } else {
                 $fileExtension = $file->getExtension();
                 if ($desiredExtension === '') {
                     if (MimeTypeDictionary::matchesMime($fileExtension, $desiredMime)) {
-                        yield $file->getFilename();
+                        yield $name;
                     }
                 } else {
                     if ($fileExtension === $desiredExtension) {
-                        yield pathinfo($file->getFilename(), PATHINFO_FILENAME);
+                        yield substr($name, 0, strrpos($name, '.'));
                     }
                 }
             }
