@@ -26,6 +26,7 @@ class FromFilesystemPathResolver implements PathResolverStrategyInterface {
         $files = FileSystem::scanDir($path, FileSystem::SCANDIR_FILEINFO);
         /** @var $file \SplFileInfo */
         foreach ($files as $file) {
+            var_dump($file);
             if ($file->isDir()) {
                 yield $file->getFilename();
             } else {
