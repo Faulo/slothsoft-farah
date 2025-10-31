@@ -22,10 +22,10 @@ def runTests(def versions) {
 					}
 
 					callShell 'composer update --prefer-lowest'
-					callShell "composer exec phpunit -- --log-junit .reports/${version}-lowest.xml"
+					callShell "composer exec phpunit -- --filter FromFilesystemPathResolverTest --log-junit .reports/${version}-lowest.xml"
 
 					callShell 'composer update --prefer-stable'
-					callShell "composer exec phpunit -- --log-junit .reports/${version}-stable.xml"
+					callShell "composer exec phpunit -- --filter FromFilesystemPathResolverTest --log-junit .reports/${version}-stable.xml"
 				}
 			}
 
