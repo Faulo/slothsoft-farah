@@ -32,17 +32,11 @@ class FromFilesystemPathResolver implements PathResolverStrategyInterface {
                 $fileExtension = $file->getExtension();
                 if ($desiredExtension === '') {
                     if (MimeTypeDictionary::matchesMime($fileExtension, $desiredMime)) {
-                        var_dump([
-                            "$fileExtension = $desiredMime" => $file->getFilename()
-                        ]);
                         yield $file->getFilename();
                     }
                 } else {
                     if ($fileExtension === $desiredExtension) {
-                        var_dump([
-                            "$fileExtension = $desiredExtension" => $file->getBasename('.' . $fileExtension)
-                        ]);
-                        yield $file->getBasename('.' . $fileExtension);
+                        yield pathinfo($file->getFilename(), PATHINFO_FILENAME);
                     }
                 }
             }
