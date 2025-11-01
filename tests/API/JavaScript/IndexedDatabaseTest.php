@@ -83,4 +83,131 @@ EOT, $arguments);
         
         $this->assertThat($actual, new IsEqual($dbVersion));
     }
+    
+    public function test_getObjectByIdAsync(): void {
+        $arguments = [];
+        
+        $actual = $this->client->executeAsyncScript(<<<EOT
+async function test() {
+    const { default: IndexedDatabase } = await import("/slothsoft@farah/js/IndexedDatabase");
+
+    const sut = new IndexedDatabase("test", 1, indexed => {
+        const imageStore = indexed.db.createObjectStore(
+            "test",
+            { keyPath: "id" }
+        );
+        imageStore.createIndex(
+            "id-index",
+            "id",
+            { unique: true }
+        );
+    });
+
+    await sut.initializeAsync();
+
+    const actual = await sut.getObjectByIdAsync("test", "id-index", 1);
+
+    return actual;
+}
+            
+import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
+EOT, $arguments);
+        
+        $this->assertThat($actual, new IsEqual(null));
+    }
+    
+    /**
+     *
+     * @dataProvider provideTestObjects
+     */
+    public function test_putObjectAsync(array $obj): void {
+        $arguments = [
+            $obj
+        ];
+        
+        $actual = $this->client->executeAsyncScript(<<<EOT
+async function test(obj) {
+    const { default: IndexedDatabase } = await import("/slothsoft@farah/js/IndexedDatabase");
+            
+    const sut = new IndexedDatabase("test", 1, indexed => {
+        const imageStore = indexed.db.createObjectStore(
+            "test",
+            { keyPath: "id" }
+        );
+        imageStore.createIndex(
+            "id-index",
+            "id",
+            { unique: true }
+        );
+    });
+            
+    await sut.initializeAsync();
+
+    await sut.putObjectAsync("test", obj);
+            
+    const actual = await sut.getObjectByIdAsync("test", "id-index", obj.id);
+            
+    return actual;
+}
+            
+import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
+EOT, $arguments);
+        
+        $this->assertThat($actual, new IsEqual($obj));
+    }
+    
+    /**
+     *
+     * @dataProvider provideTestObjects
+     */
+    public function test_getObjectCursorAsync(array $obj): void {
+        $arguments = [
+            $obj
+        ];
+        
+        $actual = $this->client->executeAsyncScript(<<<EOT
+async function test(obj) {
+    const { default: IndexedDatabase } = await import("/slothsoft@farah/js/IndexedDatabase");
+
+    const sut = new IndexedDatabase("test", 1, indexed => {
+        const imageStore = indexed.db.createObjectStore(
+            "test",
+            { keyPath: "id" }
+        );
+        imageStore.createIndex(
+            "id-index",
+            "id",
+            { unique: true }
+        );
+    });
+
+    await sut.initializeAsync();
+
+    await sut.putObjectAsync("test", obj);
+
+    const actual = await sut.getObjectCursorAsync("test");
+
+    return actual.value;
+}
+            
+import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
+EOT, $arguments);
+        
+        $this->assertThat($actual, new IsEqual($obj));
+    }
+    
+    public function provideTestObjects(): iterable {
+        yield 'object' => [
+            [
+                'id' => 2
+            ]
+        ];
+        
+        yield 'object with name' => [
+            [
+                'id' => 3,
+                'name' => 'object-with-name'
+            ]
+        ];
+    }
 }

@@ -21,12 +21,6 @@ export default class IndexedDatabase {
         try {
             this.dbRequest = indexedDB.open(
                 this.dbName,
-                /* //not yet implemented https://developer.mozilla.org/en-US/docs/Web/API/IDBFactory/open
-                {
-                    version : version,
-                    storage : "persistent",
-                }
-                //*/
                 this.dbVersion
             );
 
@@ -115,6 +109,42 @@ export default class IndexedDatabase {
         console.error(error.name + ":\n" + error.message);
     }
 
+    async getObjectByIdAsync(storeName, storeIndex, id) {
+        const index = this.getObjectReaderIndex(storeName, storeIndex);
+        const request = index.get(id);
+
+        return new Promise((resolve, reject) => {
+            request.addEventListener(
+                "success",
+                eve => resolve(eve.target.result),
+                false
+            );
+            request.addEventListener(
+                "error",
+                reject,
+                false
+            );
+        });
+    }
+
+    async getObjectCursorAsync(storeName) {
+        const store = this.getObjectReader(storeName);
+        const request = store.openCursor();
+
+        return new Promise((resolve, reject) => {
+            request.addEventListener(
+                "success",
+                eve => resolve(eve.target.result),
+                false
+            );
+            request.addEventListener(
+                "error",
+                reject,
+                false
+            );
+        });
+    }
+
     getObjectReaderIndex(storeName, storeIndex) {
         return this.getObjectReader(storeName).index(storeIndex);
     }
@@ -123,8 +153,22 @@ export default class IndexedDatabase {
         return this.db.transaction(storeName, "readonly").objectStore(storeName);
     }
 
-    getObjectWriterIndex(storeName, storeIndex) {
-        return this.getObjectWriter(storeName).index(storeIndex);
+    async putObjectAsync(storeName, obj) {
+        const index = this.getObjectWriter(storeName);
+        const request = index.put(obj);
+
+        return new Promise((resolve, reject) => {
+            request.addEventListener(
+                "success",
+                resolve,
+                false
+            );
+            request.addEventListener(
+                "error",
+                reject,
+                false
+            );
+        });
     }
 
     getObjectWriter(storeName) {
