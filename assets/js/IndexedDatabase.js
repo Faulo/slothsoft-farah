@@ -1,9 +1,11 @@
 export default class IndexedDatabase {
-    db;
-    dbInitialized;
+    dbInitialized = false;
+
     dbName;
     dbVersion;
     dbCreation;
+
+    db;
     dbRequest;
 
     constructor(name, version = 1, creation = undefined) {
@@ -11,7 +13,6 @@ export default class IndexedDatabase {
             throw new Error("no support for indexedDB");
         }
 
-        this.dbInitialized = false;
         this.dbName = name;
         this.dbVersion = version;
         this.dbCreation = creation ? creation : (_) => { };
@@ -154,15 +155,16 @@ export default class IndexedDatabase {
     }
 
     async putObjectAsync(storeName, obj) {
-        const store = this.getObjectWriter(storeName);
-        const request = store.put(obj);
-
         return new Promise((resolve, reject) => {
+            const store = this.getObjectWriter(storeName);
+            const request = store.put(obj);
+
             request.addEventListener(
                 "success",
                 resolve,
                 false
             );
+
             request.addEventListener(
                 "error",
                 reject,

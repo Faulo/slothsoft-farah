@@ -20,7 +20,7 @@ final class IndexedDatabaseTest extends FarahServerTestCase {
         $arguments = [];
         
         $actual = $this->client->executeAsyncScript(<<<EOT
-async function test(uri) {
+async function test() {
     const { default: IndexedDatabase } = await import("/slothsoft@farah/js/IndexedDatabase");
 
     const sut = new IndexedDatabase("db");
