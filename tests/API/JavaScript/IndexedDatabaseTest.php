@@ -196,6 +196,48 @@ EOT, $arguments);
         $this->assertThat($actual, new IsEqual($obj));
     }
     
+    /**
+     *
+     * @dataProvider provideTestObjects
+     */
+    public function test_deleteObjectAsync(array $obj): void {
+        $arguments = [
+            $obj
+        ];
+        
+        $actual = $this->client->executeAsyncScript(<<<EOT
+async function test(obj) {
+    const { default: IndexedDatabase } = await import("/slothsoft@farah/js/IndexedDatabase");
+            
+    const sut = new IndexedDatabase("test", 1, indexed => {
+        const imageStore = indexed.db.createObjectStore(
+            "test",
+            { keyPath: "id" }
+        );
+        imageStore.createIndex(
+            "id-index",
+            "id",
+            { unique: true }
+        );
+    });
+            
+    await sut.initializeAsync();
+            
+    await sut.putObjectAsync("test", obj);
+
+    await sut.deleteObjectAsync("test", obj.id);
+            
+    const actual = await sut.getObjectCursorAsync("test");
+            
+    return actual;
+}
+            
+import("/slothsoft@farah/js/Test").then(Test => Test.run(test, arguments));
+EOT, $arguments);
+        
+        $this->assertThat($actual, new IsEqual(null));
+    }
+    
     public function provideTestObjects(): iterable {
         yield 'object' => [
             [

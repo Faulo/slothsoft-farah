@@ -154,8 +154,26 @@ export default class IndexedDatabase {
     }
 
     async putObjectAsync(storeName, obj) {
-        const index = this.getObjectWriter(storeName);
-        const request = index.put(obj);
+        const store = this.getObjectWriter(storeName);
+        const request = store.put(obj);
+
+        return new Promise((resolve, reject) => {
+            request.addEventListener(
+                "success",
+                resolve,
+                false
+            );
+            request.addEventListener(
+                "error",
+                reject,
+                false
+            );
+        });
+    }
+
+    async deleteObjectAsync(storeName, key) {
+        const store = this.getObjectWriter(storeName);
+        const request = store.delete(key);
 
         return new Promise((resolve, reject) => {
             request.addEventListener(
