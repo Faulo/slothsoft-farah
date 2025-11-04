@@ -107,4 +107,14 @@
 			</set-href-with-suffix>
 		</test-set-href>
 	</xsl:template>
+
+	<xsl:template match="test-base64">
+		<test-base64>
+			<xsl:for-each select="string">
+				<string base64="{sfx:base64-encode(.)}">
+					<xsl:value-of select="sfx:base64-decode(@base64)" />
+				</string>
+			</xsl:for-each>
+		</test-base64>
+	</xsl:template>
 </xsl:stylesheet>

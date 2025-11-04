@@ -1,0 +1,5 @@
+<test-base64>
+	<string base64="VGhpcyBpcyBhbiBlbmNvZGVkIHN0cmluZw==">This is an encoded string</string>
+	<string base64="ZW1wdHk=">empty</string>
+	<string base64=""></string>
+</test-base64>

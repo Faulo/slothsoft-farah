@@ -102,4 +102,16 @@
 		</xsl:choose>
 	</xsl:template>
 
+
+	<func:function name="sfx:base64-encode">
+		<xsl:param name="text" select="." />
+
+		<func:result select="php:functionString('base64_encode', string($text))" />
+	</func:function>
+
+	<func:function name="sfx:base64-decode">
+		<xsl:param name="code" select="." />
+
+		<func:result select="php:functionString('base64_decode', string($code))" />
+	</func:function>
 </xsl:stylesheet>

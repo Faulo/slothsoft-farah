@@ -39,6 +39,11 @@ class MiscTransformationsTest extends TestCase {
                 'test-files/xslt-set-href.xml',
                 'test-files/xslt-set-href.xml'
             ],
+            'farah://slothsoft@farah/xsl/base64' => [
+                'test-files/xslt.xsl',
+                'test-files/xslt-base64.xml',
+                'test-files/xslt-base64.xml'
+            ],
             'farah://slothsoft@farah/xsl/dictionary' => [
                 'test-files/dictionary.xsl',
                 'test-files/dictionary.xml',
