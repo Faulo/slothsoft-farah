@@ -29,8 +29,8 @@ export default class BlobDatabase {
         this.lookupCacheDuration = cacheDuration * 24 * 60 * 60 * 1000;
         this.lookupCacheTime = this.lookupTime - this.lookupCacheDuration;
 
-        this.indexed = new IndexedDatabase(name, 20, () => {
-            let blobStore = this.db.createObjectStore(
+        this.indexed = new IndexedDatabase(name, 20, indexed => {
+            const blobStore = indexed.db.createObjectStore(
                 this.storeName,
                 { keyPath: "url" }
             );
@@ -71,16 +71,17 @@ export default class BlobDatabase {
         this.indexed
             .getObjectByIdAsync(this.storeName, this.storeIndexURL, url)
             .then(result => {
-                callback(result);
-
-                if (!result.lookupTime || result.lookupTime < result.lookupBlobCacheTime) {
-                    this.downloadBlob(result.url, callback, result);
+                if (result == undefined) {
+                    this.downloadBlob(url, callback);
                 } else {
-                    this.info.cachedBlobs++;
+                    callback(result);
+
+                    if (!result.lookupTime || result.lookupTime < result.lookupBlobCacheTime) {
+                        this.downloadBlob(result.url, callback, result);
+                    } else {
+                        this.info.cachedBlobs++;
+                    }
                 }
-            })
-            .catch(_ => {
-                this.downloadBlob(url, callback);
             });
     }
 
@@ -153,10 +154,17 @@ export default class BlobDatabase {
         request.responseType = "blob";
         request.send();
     }
+    async insertBlobAsync(result) {
+        try {
+            await this.indexed.putObjectAsync(this.storeName, result);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
     insertBlob(result, callback) {
         this.indexed
             .putObjectAsync(this.storeName, result)
-            .then(_ => callback(true))
             .catch(eve => {
                 const error = eve.target.error;
                 switch (error.name) {
@@ -168,10 +176,12 @@ export default class BlobDatabase {
                         break;
                     default:
                         this.logError("BlobDatabase.insertBlob error:\n" + error.name + ":\n" + error.message + "\nhttps://www.w3.org/TR/WebIDL-1/#h-idl-domexception-error-names");
+                        callback(false);
                         break;
                 }
-                callback(false);
-            });
+            })
+            .catch(_ => callback(false))
+            .then(_ => callback(true));
     }
     deleteOldestBlob(callback) {
         this.indexed
