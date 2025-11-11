@@ -459,7 +459,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-link-stylesheet'
                     ],
                     'link-stylesheet' => [
-                        'ref' => '/slothsoft@test/import/fragment'
+                        'ref' => 'farah://slothsoft@test/import/fragment'
                     ]
                 ]
             ],
@@ -470,7 +470,7 @@ class ModuleTest extends TestCase {
                         'url' => 'farah://slothsoft@test/result-link-script'
                     ],
                     'link-script' => [
-                        'ref' => '/slothsoft@test/import/fragment'
+                        'ref' => 'farah://slothsoft@test/import/fragment'
                     ]
                 ]
             ],

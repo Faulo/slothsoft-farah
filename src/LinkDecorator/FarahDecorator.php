@@ -6,6 +6,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use DOMDocument;
 use DOMElement;
+use Slothsoft\Core\DOMHelper;
 
 /**
  *
@@ -14,25 +15,21 @@ use DOMElement;
  */
 class FarahDecorator implements LinkDecoratorInterface {
     
-    private string $namespace;
+    private string $namespace = DOMHelper::NS_FARAH_MODULE;
     
     private DOMDocument $targetDocument;
     
     private DOMElement $rootNode;
     
-    public function setNamespace(string $namespace) {
-        $this->namespace = $namespace;
-    }
-    
-    public function setTarget(DOMDocument $document) {
+    public function setTarget(DOMDocument $document): void {
         $this->targetDocument = $document;
         
         $this->rootNode = $document->documentElement;
     }
     
-    public function linkStylesheets(FarahUrl ...$stylesheets) {
+    public function linkStylesheets(FarahUrl ...$stylesheets): void {
         foreach ($stylesheets as $url) {
-            $href = str_replace('farah://', '/', (string) $url);
+            $href = (string) $url;
             
             $node = $this->targetDocument->createElementNS($this->namespace, Manifest::TAG_LINK_STYLESHEET);
             $node->setAttribute(Manifest::ATTR_REFERENCE, $href);
@@ -40,9 +37,9 @@ class FarahDecorator implements LinkDecoratorInterface {
         }
     }
     
-    public function linkScripts(FarahUrl ...$scripts) {
+    public function linkScripts(FarahUrl ...$scripts): void {
         foreach ($scripts as $url) {
-            $href = str_replace('farah://', '/', (string) $url);
+            $href = (string) $url;
             
             $node = $this->targetDocument->createElementNS($this->namespace, Manifest::TAG_LINK_SCRIPT);
             $node->setAttribute(Manifest::ATTR_REFERENCE, $href);
@@ -50,11 +47,21 @@ class FarahDecorator implements LinkDecoratorInterface {
         }
     }
     
-    public function linkModules(FarahUrl ...$modules) {
+    public function linkModules(FarahUrl ...$modules): void {
         foreach ($modules as $url) {
-            $href = str_replace('farah://', '/', (string) $url);
+            $href = (string) $url;
             
             $node = $this->targetDocument->createElementNS($this->namespace, Manifest::TAG_LINK_MODULE);
+            $node->setAttribute(Manifest::ATTR_REFERENCE, $href);
+            $this->rootNode->appendChild($node);
+        }
+    }
+    
+    public function linkContents(FarahUrl ...$modules): void {
+        foreach ($modules as $url) {
+            $href = (string) $url;
+            
+            $node = $this->targetDocument->createElementNS($this->namespace, Manifest::TAG_LINK_CONTENT);
             $node->setAttribute(Manifest::ATTR_REFERENCE, $href);
             $this->rootNode->appendChild($node);
         }

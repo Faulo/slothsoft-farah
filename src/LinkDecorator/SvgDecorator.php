@@ -4,7 +4,9 @@ namespace Slothsoft\Farah\LinkDecorator;
 
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\Module;
 use DOMDocument;
+use DOMElement;
 
 /**
  *
@@ -13,49 +15,66 @@ use DOMDocument;
  */
 class SvgDecorator implements LinkDecoratorInterface {
     
-    private $namespace;
+    private string $namespace = DOMHelper::NS_SVG;
     
-    private $targetDocument;
+    private DOMDocument $targetDocument;
     
-    private $rootNode;
+    private DOMElement $rootNode;
     
-    public function setNamespace(string $namespace) {
-        $this->namespace = $namespace;
-    }
+    private bool $useProcessingInstruction = false;
     
-    public function setTarget(DOMDocument $document) {
+    public function setTarget(DOMDocument $document): void {
         $this->targetDocument = $document;
         
         $this->rootNode = $document->getElementsByTagNameNS($this->namespace, 'defs')->item(0) ?? $document->documentElement;
     }
     
-    public function linkStylesheets(FarahUrl ...$stylesheets) {
+    public function linkStylesheets(FarahUrl ...$stylesheets): void {
         foreach ($stylesheets as $url) {
             $href = str_replace('farah://', '/', (string) $url);
             
-            $node = $this->targetDocument->createProcessingInstruction('xml-stylesheet', sprintf('type="text/css" href="%s"', $href));
-            $this->targetDocument->insertBefore($node, $this->targetDocument->firstChild);
+            if ($this->useProcessingInstruction) {
+                $node = $this->targetDocument->createProcessingInstruction('xml-stylesheet', sprintf('type="text/css" href="%s"', $href));
+                $this->targetDocument->insertBefore($node, $this->targetDocument->firstChild);
+            } else {
+                $node = $this->targetDocument->createElementNS(DOMHelper::NS_HTML, 'link');
+                $node->setAttribute('href', $href);
+                $node->setAttribute('rel', 'stylesheet');
+                $node->setAttribute('type', 'text/css');
+                $this->rootNode->appendChild($node);
+            }
         }
     }
     
-    public function linkScripts(FarahUrl ...$scripts) {
+    public function linkScripts(FarahUrl ...$scripts): void {
         foreach ($scripts as $url) {
             $href = str_replace('farah://', '/', (string) $url);
             
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
-            $node->setAttributeNS(DOMHelper::NS_XLINK, 'xlink:href', $href);
-            $node->setAttribute('defer', 'defer');
+            $node->setAttribute('href', $href);
+            $node->setAttribute('type', 'application/javascript');
             $this->rootNode->appendChild($node);
         }
     }
     
-    public function linkModules(FarahUrl ...$modules) {
+    public function linkModules(FarahUrl ...$modules): void {
         foreach ($modules as $url) {
             $href = str_replace('farah://', '/', (string) $url);
             
             $node = $this->targetDocument->createElementNS($this->namespace, 'script');
-            $node->setAttributeNS(DOMHelper::NS_XLINK, 'xlink:href', $href);
+            $node->setAttribute('href', $href);
             $node->setAttribute('type', 'module');
+            $this->rootNode->appendChild($node);
+        }
+    }
+    
+    public function linkContents(FarahUrl ...$modules): void {
+        foreach ($modules as $url) {
+            $href = (string) $url;
+            
+            $node = $this->targetDocument->createElementNS(DOMHelper::NS_HTML, 'template');
+            $node->setAttribute('data-url', $href);
+            $node->appendChild(Module::resolveToDOMWriter($url)->toElement($this->targetDocument));
             $this->rootNode->appendChild($node);
         }
     }
