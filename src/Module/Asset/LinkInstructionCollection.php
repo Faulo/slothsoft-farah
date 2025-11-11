@@ -12,20 +12,24 @@ class LinkInstructionCollection {
     
     public Set $moduleUrls;
     
+    public Set $contentUrls;
+    
     public function __construct() {
         $this->stylesheetUrls = new Set();
         $this->scriptUrls = new Set();
         $this->moduleUrls = new Set();
+        $this->contentUrls = new Set();
     }
     
     public function mergeWith(LinkInstructionCollection $other): void {
         $this->stylesheetUrls = $this->stylesheetUrls->union($other->stylesheetUrls);
         $this->scriptUrls = $this->scriptUrls->union($other->scriptUrls);
         $this->moduleUrls = $this->moduleUrls->union($other->moduleUrls);
+        $this->contentUrls = $this->contentUrls->union($other->contentUrls);
     }
     
     public function isEmpty(): bool {
-        return $this->stylesheetUrls->isEmpty() and $this->scriptUrls->isEmpty() and $this->moduleUrls->isEmpty();
+        return $this->stylesheetUrls->isEmpty() and $this->scriptUrls->isEmpty() and $this->moduleUrls->isEmpty() and $this->contentUrls->isEmpty();
     }
 }
 

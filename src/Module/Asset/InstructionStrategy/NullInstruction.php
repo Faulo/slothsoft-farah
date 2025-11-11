@@ -38,6 +38,10 @@ class NullInstruction implements InstructionStrategyInterface {
         return false;
     }
     
+    public function isLinkContent(AssetInterface $context): bool {
+        return false;
+    }
+    
     public function isParameterSupplier(AssetInterface $context): bool {
         return false;
     }

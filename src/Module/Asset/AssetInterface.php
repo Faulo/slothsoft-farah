@@ -105,6 +105,8 @@ interface AssetInterface {
     
     public function isLinkModuleInstruction(): bool;
     
+    public function isLinkContentInstruction(): bool;
+    
     public function isParameterSupplierInstruction(): bool;
     
     /**

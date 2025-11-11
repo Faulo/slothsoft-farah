@@ -233,6 +233,10 @@ class Asset implements AssetInterface {
         return $this->strategies->instruction->isLinkModule($this);
     }
     
+    public function isLinkContentInstruction(): bool {
+        return $this->strategies->instruction->isLinkContent($this);
+    }
+    
     public function isLinkStylesheetInstruction(): bool {
         return $this->strategies->instruction->isLinkStylesheet($this);
     }

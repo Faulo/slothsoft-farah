@@ -22,6 +22,8 @@ interface InstructionStrategyInterface {
     
     public function isLinkModule(AssetInterface $context): bool;
     
+    public function isLinkContent(AssetInterface $context): bool;
+    
     public function isParameterSupplier(AssetInterface $context): bool;
 }
 

@@ -68,6 +68,9 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
                 if ($asset->isLinkModuleInstruction()) {
                     $instructions->moduleUrls[] = $asset->lookupExecutable($args)->createRealUrl();
                 }
+                if ($asset->isLinkContentInstruction()) {
+                    $instructions->contentUrls[] = $asset->lookupExecutable($args)->createRealUrl();
+                }
             }
             return $instructions;
         };

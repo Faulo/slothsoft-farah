@@ -155,6 +155,13 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
                 $parameterSupplier = NullParameterSupplier::class;
                 $instruction = LinkModuleInstruction::class;
                 break;
+            case Manifest::TAG_LINK_CONTENT:
+                $executableBuilder = FromReferenceExecutableBuilder::class;
+                $pathResolver = NullPathResolver::class;
+                $parameterFilter = AllowAllParameterFilter::class;
+                $parameterSupplier = NullParameterSupplier::class;
+                $instruction = LinkModuleInstruction::class;
+                break;
             // "physical" assets
             case Manifest::TAG_RESOURCE:
                 $executableBuilder = FromFilesystemExecutableBuilder::class;

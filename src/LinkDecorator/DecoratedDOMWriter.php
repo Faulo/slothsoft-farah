@@ -2,37 +2,29 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\LinkDecorator;
 
+use Ds\Set;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use DOMDocument;
 use DOMElement;
 
 class DecoratedDOMWriter implements DOMWriterInterface {
     
-    private $source;
+    private DOMWriterInterface $source;
     
-    /**
-     *
-     * @var iterable
-     */
-    private $stylesheets;
+    private Set $stylesheets;
     
-    /**
-     *
-     * @var iterable
-     */
-    private $scripts;
+    private Set $scripts;
     
-    /**
-     *
-     * @var iterable
-     */
-    private $modules;
+    private Set $modules;
     
-    public function __construct(DOMWriterInterface $source, iterable $stylesheets, iterable $scripts, iterable $modules) {
+    private Set $contents;
+    
+    public function __construct(DOMWriterInterface $source, Set $stylesheets, Set $scripts, Set $modules, Set $contents) {
         $this->source = $source;
         $this->stylesheets = $stylesheets;
         $this->scripts = $scripts;
         $this->modules = $modules;
+        $this->contents = $contents;
     }
     
     public function toElement(DOMDocument $targetDoc): DOMElement {

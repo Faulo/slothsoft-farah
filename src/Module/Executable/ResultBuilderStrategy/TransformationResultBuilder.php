@@ -7,6 +7,7 @@ use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\LinkDecorator\DecoratedDOMWriter;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
 use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\DOMWriter\AssetFragmentDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TransformationDOMWriter;
@@ -51,6 +52,10 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
         return ($this->getUseInstructions)();
     }
     
+    private function getLinkInstructionsTyped(): LinkInstructionCollection {
+        return ($this->getLinkInstructions)();
+    }
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         $instructions = $this->getUseInstructionsTyped();
         
@@ -73,9 +78,9 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
             
             if ($type === static::resultIsDefault()) {
                 // default result is the root transformation, so we gotta add all <link> and <script> elements
-                $instructions = ($this->getLinkInstructions)();
+                $instructions = $this->getLinkInstructionsTyped();
                 if (! $instructions->isEmpty()) {
-                    $writer = new DecoratedDOMWriter($writer, $instructions->stylesheetUrls, $instructions->scriptUrls, $instructions->moduleUrls);
+                    $writer = new DecoratedDOMWriter($writer, $instructions->stylesheetUrls, $instructions->scriptUrls, $instructions->moduleUrls, $instructions->contentUrls);
                 }
             }
         }
