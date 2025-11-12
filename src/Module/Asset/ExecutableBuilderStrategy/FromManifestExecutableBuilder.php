@@ -14,6 +14,8 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
 
 class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
+    private const PARAM = 'decorate';
+    
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $rootAsset = $context;
         $getUseInstructions = function () use ($rootAsset, $args): UseInstructionCollection {
@@ -37,7 +39,7 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
                             $instructions->addManifestData($asset->createRealUrl($args), $name);
                         }
                         if ($asset->isUseDocumentInstruction()) {
-                            $instructions->addDocumentData($asset->createRealUrl($args), $name);
+                            $instructions->addDocumentData($asset->createRealUrl($args->withArgument(self::PARAM, false)), $name);
                         }
                         if ($asset->isUseTemplateInstruction()) {
                             $instructions->templateUrl = $asset->createRealUrl($args);
@@ -57,7 +59,8 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
             foreach ($currentAsset->getAssetChildren() as $asset) {
                 if ($asset->isUseDocumentInstruction()) {
                     $url = $asset->lookupExecutable($args)->createRealUrl();
-                    $instructions->mergeWith($getLinkInstructions(Module::resolveToAsset($url)));
+                    $asset = Module::resolveToAsset($url);
+                    $instructions->mergeWith($getLinkInstructions($asset));
                 }
                 if ($asset->isLinkStylesheetInstruction()) {
                     $instructions->stylesheetUrls[] = $asset->lookupExecutable($args)->createRealUrl();
@@ -74,7 +77,7 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
             }
             return $instructions;
         };
-        $resultBuilder = new TransformationResultBuilder($getUseInstructions, $getLinkInstructions, count(Dictionary::getSupportedLanguages()) !== 0);
+        $resultBuilder = new TransformationResultBuilder($getUseInstructions, $getLinkInstructions, count(Dictionary::getSupportedLanguages()) !== 0, $args->get(self::PARAM, true));
         return new ExecutableStrategies($resultBuilder);
     }
 }

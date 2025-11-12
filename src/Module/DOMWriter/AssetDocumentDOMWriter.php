@@ -7,9 +7,9 @@ use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Executable\Executable;
 use DOMDocument;
 use DOMElement;
-use Slothsoft\Farah\Module\Executable\Executable;
 
 class AssetDocumentDOMWriter implements DOMWriterInterface {
     use DOMWriterDocumentFromElementTrait;
