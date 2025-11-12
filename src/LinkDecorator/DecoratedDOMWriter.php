@@ -33,6 +33,7 @@ class DecoratedDOMWriter implements DOMWriterInterface {
         $decorator->linkStylesheets(...$this->stylesheets);
         $decorator->linkScripts(...$this->scripts);
         $decorator->linkModules(...$this->modules);
+        $decorator->linkContents(...$this->contents);
         return $element;
     }
     
@@ -42,6 +43,7 @@ class DecoratedDOMWriter implements DOMWriterInterface {
         $decorator->linkStylesheets(...$this->stylesheets);
         $decorator->linkScripts(...$this->scripts);
         $decorator->linkModules(...$this->modules);
+        $decorator->linkContents(...$this->contents);
         return $document;
     }
 }

@@ -16,6 +16,7 @@ use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\NullExecutableBuilder
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\FromManifestInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\ImportChildrenInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\InstructionStrategyInterface;
+use Slothsoft\Farah\Module\Asset\InstructionStrategy\LinkContentInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\LinkModuleInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\LinkScriptInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\LinkStylesheetInstruction;
@@ -160,7 +161,7 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
                 $pathResolver = NullPathResolver::class;
                 $parameterFilter = AllowAllParameterFilter::class;
                 $parameterSupplier = NullParameterSupplier::class;
-                $instruction = LinkModuleInstruction::class;
+                $instruction = LinkContentInstruction::class;
                 break;
             // "physical" assets
             case Manifest::TAG_RESOURCE:
