@@ -42,10 +42,16 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
     
     private bool $translateResult;
     
-    public function __construct(callable $getUseInstructions, callable $getLinkInstructions, bool $translateResult = true) {
+    private bool $decorateResult;
+    
+    private bool $cacheResult;
+    
+    public function __construct(callable $getUseInstructions, callable $getLinkInstructions, bool $translateResult = true, bool $decorateResult = true, bool $cacheResult = false) {
         $this->getUseInstructions = Closure::fromCallable($getUseInstructions);
         $this->getLinkInstructions = Closure::fromCallable($getLinkInstructions);
         $this->translateResult = $translateResult;
+        $this->decorateResult = $decorateResult;
+        $this->cacheResult = $cacheResult;
     }
     
     private function getUseInstructionsTyped(): UseInstructionCollection {
@@ -76,8 +82,8 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
                 }
             }
             
-            if ($type === static::resultIsDefault()) {
-                // default result is the root transformation, so we gotta add all <link> and <script> elements
+            if ($this->decorateResult) {
+                // add all <link> and <script> elements
                 $instructions = $this->getLinkInstructionsTyped();
                 if (! $instructions->isEmpty()) {
                     $writer = new DecoratedDOMWriter($writer, $instructions->stylesheetUrls, $instructions->scriptUrls, $instructions->moduleUrls, $instructions->contentUrls);
@@ -85,7 +91,9 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
             }
         }
         
-        $writer = new DOMWriterMemoryCache($writer);
+        if ($this->cacheResult) {
+            $writer = new DOMWriterMemoryCache($writer);
+        }
         
         $streamBuilder = new DOMWriterStreamBuilder($writer, 'transformation');
         return new ResultStrategies($streamBuilder);
