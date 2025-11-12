@@ -29,22 +29,6 @@ async function coerceToNodeAsync(data) {
     return await DOM.loadDocumentAsync(data);
 }
 
-function coerceToDocument(data) {
-    if (data instanceof Document) {
-        return data;
-    }
-
-    return DOM.loadDocument(data);
-}
-
-async function coerceToDocumentAsync(data) {
-    if (data instanceof Document) {
-        return data;
-    }
-
-    return await DOM.loadDocumentAsync(data);
-}
-
 function getNamespaces(element) {
     const namespaces = {};
     for (const attr of element.attributes) {
@@ -84,63 +68,67 @@ function transform(dataNode, templateDoc, ownerDoc) {
 export default {
     transformToFragment: function(data, template, ownerDoc) {
         const dataNode = coerceToNode(data);
-        const templateDoc = coerceToDocument(template);
+        const templateDoc = coerceToNode(template);
 
-        try {
-            const imported = new Set();
-            for (let importNode; importNode = templateDoc.querySelector(":root > import[href]");) {
-                const uri = importNode.getAttribute("href");
-                if (!imported.has(uri)) {
-                    imported.add(uri);
-                    const tmpDoc = DOM.loadDocument(uri);
-                    const namespaces = getNamespaces(tmpDoc.documentElement);
-                    const nodeList = tmpDoc.querySelectorAll(":root > *");
-                    for (let i = 0; i < nodeList.length; i++) {
-                        const templateNode = templateDoc.importNode(nodeList[i], true);
-                        for (const prefix in namespaces) {
-                            if (!templateNode.hasAttributeNS(NS.XMLNS, prefix)) {
-                                templateNode.setAttributeNS(NS.XMLNS, prefix, namespaces[prefix]);
+        if (templateDoc instanceof Document) {
+            try {
+                const imported = new Set();
+                for (let importNode; importNode = templateDoc.querySelector(":root > import[href]");) {
+                    const uri = importNode.getAttribute("href");
+                    if (!imported.has(uri)) {
+                        imported.add(uri);
+                        const tmpDoc = DOM.loadDocument(uri);
+                        const namespaces = getNamespaces(tmpDoc.documentElement);
+                        const nodeList = tmpDoc.querySelectorAll(":root > *");
+                        for (let i = 0; i < nodeList.length; i++) {
+                            const templateNode = templateDoc.importNode(nodeList[i], true);
+                            for (const prefix in namespaces) {
+                                if (!templateNode.hasAttributeNS(NS.XMLNS, prefix)) {
+                                    templateNode.setAttributeNS(NS.XMLNS, prefix, namespaces[prefix]);
+                                }
                             }
+                            importNode.parentNode.insertBefore(templateNode, importNode);
                         }
-                        importNode.parentNode.insertBefore(templateNode, importNode);
                     }
+                    importNode.parentNode.removeChild(importNode);
                 }
-                importNode.parentNode.removeChild(importNode);
+            } catch (e) {
+                console.warn("XSLT Error: Could not process all xsl:import elements.");
+                throw e;
             }
-        } catch (e) {
-            console.warn("XSLT Error: Could not process all xsl:import elements.");
-            throw e;
         }
 
         return transform(dataNode, templateDoc, ownerDoc);
     },
     transformToFragmentAsync: async function(data, template, ownerDoc) {
-        const [dataNode, templateDoc] = await Promise.all([coerceToNodeAsync(data), coerceToDocumentAsync(template)]);
+        const [dataNode, templateDoc] = await Promise.all([coerceToNodeAsync(data), coerceToNodeAsync(template)]);
 
-        try {
-            const imported = new Set();
-            for (let importNode; importNode = templateDoc.querySelector(":root > import[href]");) {
-                const uri = importNode.getAttribute("href");
-                if (!imported.has(uri)) {
-                    imported.add(uri);
-                    const tmpDoc = await DOM.loadDocumentAsync(uri);
-                    const namespaces = getNamespaces(tmpDoc.documentElement);
-                    const nodeList = tmpDoc.querySelectorAll(":root > *");
-                    for (let i = 0; i < nodeList.length; i++) {
-                        const templateNode = templateDoc.importNode(nodeList[i], true);
-                        for (const prefix in namespaces) {
-                            if (!templateNode.hasAttributeNS(NS.XMLNS, prefix)) {
-                                templateNode.setAttributeNS(NS.XMLNS, prefix, namespaces[prefix]);
+        if (templateDoc instanceof Document) {
+            try {
+                const imported = new Set();
+                for (let importNode; importNode = templateDoc.querySelector(":root > import[href]");) {
+                    const uri = importNode.getAttribute("href");
+                    if (!imported.has(uri)) {
+                        imported.add(uri);
+                        const tmpDoc = await DOM.loadDocumentAsync(uri);
+                        const namespaces = getNamespaces(tmpDoc.documentElement);
+                        const nodeList = tmpDoc.querySelectorAll(":root > *");
+                        for (let i = 0; i < nodeList.length; i++) {
+                            const templateNode = templateDoc.importNode(nodeList[i], true);
+                            for (const prefix in namespaces) {
+                                if (!templateNode.hasAttributeNS(NS.XMLNS, prefix)) {
+                                    templateNode.setAttributeNS(NS.XMLNS, prefix, namespaces[prefix]);
+                                }
                             }
+                            importNode.parentNode.insertBefore(templateNode, importNode);
                         }
-                        importNode.parentNode.insertBefore(templateNode, importNode);
                     }
+                    importNode.parentNode.removeChild(importNode);
                 }
-                importNode.parentNode.removeChild(importNode);
+            } catch (e) {
+                console.warn("XSLT Error: Could not process all xsl:import elements.");
+                throw e;
             }
-        } catch (e) {
-            console.warn("XSLT Error: Could not process all xsl:import elements.");
-            throw e;
         }
 
         return transform(dataNode, templateDoc, ownerDoc);
