@@ -14,5 +14,26 @@
 		<fragment name="html">
 			<use-template ref="//slothsoft@farah/xsl/html" />
 		</fragment>
+		<fragment name="linking">
+			<use-template ref="//slothsoft@farah/xsl/html" />
+			<fragment name="a" use="document">
+				<use-template ref="//slothsoft@farah/xsl/html" />
+				<link-stylesheet ref="/test" />
+				<link-script ref="/test" />
+				<link-module ref="/test" />
+				<link-content ref="/test" />
+			</fragment>
+			<fragment name="b" use="document">
+				<use-template ref="//slothsoft@farah/xsl/html" />
+				<link-stylesheet ref="/test" />
+				<link-script ref="/test" />
+				<link-module ref="/test" />
+				<link-content ref="/test" />
+			</fragment>
+			<link-stylesheet ref="/test" />
+			<link-script ref="/test" />
+			<link-module ref="/test" />
+			<link-content ref="/test" />
+		</fragment>
 	</fragment>
 </assets>

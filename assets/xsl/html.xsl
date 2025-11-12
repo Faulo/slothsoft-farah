@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns="http://www.w3.org/1999/xhtml" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:sfm="http://schema.slothsoft.net/farah/module">
+
+	<xsl:import href="farah://slothsoft@farah/xsl/error" />
+
 	<xsl:template match="/*">
 		<html>
 			<head>
@@ -8,6 +11,7 @@
 				</title>
 			</head>
 			<body>
+				<xsl:apply-templates select="sfm:error" />
 				<xsl:copy-of select="sfm:document-info/* | sfm:manifest-info" />
 			</body>
 		</html>
