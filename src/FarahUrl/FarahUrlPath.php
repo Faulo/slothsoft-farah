@@ -92,6 +92,13 @@ class FarahUrlPath implements Hashable {
         return self::createFromSegments(array_slice($this->segments, 0, count($this->segments) - 1));
     }
     
+    public function withLastSegment(string $name): FarahUrlPath {
+        return self::createFromSegments([
+            ...$this->segments,
+            $name
+        ]);
+    }
+    
     public function isEmpty(): bool {
         return $this->id === self::SEPARATOR;
     }

@@ -100,7 +100,7 @@ class Asset implements AssetInterface {
             $descendantPath = substr($path, $position + 1);
         }
         
-        $asset = $this->ownerManifest->lookupAsset($this->urlPath . FarahUrlPath::SEPARATOR . $name);
+        $asset = $this->ownerManifest->lookupAsset($this->urlPath->withLastSegment($name));
         
         if ($descendantPath === '') {
             return $asset;
@@ -148,7 +148,6 @@ class Asset implements AssetInterface {
         }
         $args = $this->applyParameterFilter($args);
         if (! $this->executables->has($args)) {
-            $this->executables->put($args, null);
             $this->executables->put($args, $this->createExecutable($args));
         }
         return $this->executables->get($args);
