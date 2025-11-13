@@ -16,7 +16,6 @@ use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
-use Closure;
 
 class TransformationResultBuilder implements ResultBuilderStrategyInterface {
     
@@ -36,9 +35,9 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
         return $type === self::resultIsXslSource() or $type === self::resultIsXslTemplate();
     }
     
-    private Closure $getUseInstructions;
+    public UseInstructionCollection $useInstructions;
     
-    private Closure $getLinkInstructions;
+    public LinkInstructionCollection $linkInstructions;
     
     private bool $translateResult;
     
@@ -46,53 +45,36 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
     
     private bool $cacheResult;
     
-    public function __construct(callable $getUseInstructions, callable $getLinkInstructions, bool $translateResult = true, bool $decorateResult = true, bool $cacheResult = true) {
-        $this->getUseInstructions = Closure::fromCallable($getUseInstructions);
-        $this->getLinkInstructions = Closure::fromCallable($getLinkInstructions);
+    public function __construct(UseInstructionCollection $useInstructions, LinkInstructionCollection $linkInstructions, bool $translateResult = true, bool $decorateResult = true, bool $cacheResult = true) {
+        $this->useInstructions = $useInstructions;
+        $this->linkInstructions = $linkInstructions;
         $this->translateResult = $translateResult;
         $this->decorateResult = $decorateResult;
         $this->cacheResult = $cacheResult;
     }
     
-    private ?UseInstructionCollection $useInstructions = null;
-    
-    public function getUseInstructionsTyped(): UseInstructionCollection {
-        $this->useInstructions ??= ($this->getUseInstructions)();
-        return $this->useInstructions;
-    }
-    
-    private ?LinkInstructionCollection $linkInstructions = null;
-    
-    public function getLinkInstructionsTyped(): LinkInstructionCollection {
-        $this->linkInstructions ??= ($this->getLinkInstructions)();
-        return $this->linkInstructions;
-    }
-    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
-        $useInstructions = $this->getUseInstructionsTyped();
-        
-        if ($useInstructions->templateUrl and $type === static::resultIsXslTemplate()) {
-            $writer = Module::resolveToDOMWriter($useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
+        if ($this->useInstructions->templateUrl and $type === static::resultIsXslTemplate()) {
+            $writer = Module::resolveToDOMWriter($this->useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
         } else {
-            $writer = new AssetFragmentDOMWriter($useInstructions->rootUrl);
+            $writer = new AssetFragmentDOMWriter($this->useInstructions->rootUrl);
             
-            foreach ($useInstructions->dataWriters as $data) {
+            foreach ($this->useInstructions->dataWriters as $data) {
                 $writer->appendChild($data);
             }
             
-            if ($useInstructions->templateUrl and $type !== static::resultIsXslSource()) {
-                $template = Module::resolveToDOMWriter($useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
+            if ($this->useInstructions->templateUrl and $type !== static::resultIsXslSource()) {
+                $template = Module::resolveToDOMWriter($this->useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
                 $writer = new TransformationDOMWriter($writer, $template);
                 if ($this->translateResult) {
-                    $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $useInstructions->rootUrl);
+                    $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $this->useInstructions->rootUrl);
                 }
             }
             
             if ($this->decorateResult) {
-                $linkInstructions = $this->getLinkInstructionsTyped();
                 // add all <link> and <script> elements
-                if (! $linkInstructions->isEmpty()) {
-                    $writer = new DecoratedDOMWriter($writer, $linkInstructions->stylesheetUrls, $linkInstructions->scriptUrls, $linkInstructions->moduleUrls, $linkInstructions->contentUrls);
+                if (! $this->linkInstructions->isEmpty()) {
+                    $writer = new DecoratedDOMWriter($writer, $this->linkInstructions->stylesheetUrls, $this->linkInstructions->scriptUrls, $this->linkInstructions->moduleUrls, $this->linkInstructions->contentUrls);
                 }
             }
         }
