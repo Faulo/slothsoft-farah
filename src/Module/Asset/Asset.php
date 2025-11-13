@@ -53,6 +53,10 @@ class Asset implements AssetInterface {
         return $this->manifestElement;
     }
     
+    public function getChildManifestElement(string $name): LeanElement {
+        return $this->strategies->pathResolver->resolvePath($this, $name);
+    }
+    
     public function getAssetChildren(): iterable {
         if ($this->assetChildren === null) {
             $this->assetChildren = new Vector();
@@ -96,8 +100,7 @@ class Asset implements AssetInterface {
             $descendantPath = substr($path, $position + 1);
         }
         
-        $element = $this->strategies->pathResolver->resolvePath($this, $name);
-        $asset = $this->ownerManifest->createAsset($element);
+        $asset = $this->ownerManifest->lookupAsset($this->urlPath . FarahUrlPath::SEPARATOR . $name);
         
         if ($descendantPath === '') {
             return $asset;
@@ -145,6 +148,7 @@ class Asset implements AssetInterface {
         }
         $args = $this->applyParameterFilter($args);
         if (! $this->executables->has($args)) {
+            $this->executables->put($args, null);
             $this->executables->put($args, $this->createExecutable($args));
         }
         return $this->executables->get($args);

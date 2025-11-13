@@ -33,6 +33,14 @@ interface AssetInterface {
     public function getManifestElement(): LeanElement;
     
     /**
+     * Used by Manifest to create the asset tree.
+     *
+     * @param string $name
+     * @return LeanElement
+     */
+    public function getChildManifestElement(string $name): LeanElement;
+    
+    /**
      * Get all child assets.
      *
      * @return AssetInterface[]

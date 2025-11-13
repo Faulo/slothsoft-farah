@@ -7,8 +7,6 @@ use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\LinkDecorator\DecoratedDOMWriter;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
-use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\DOMWriter\AssetFragmentDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TransformationDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TranslationDOMWriter;
@@ -35,46 +33,43 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
         return $type === self::resultIsXslSource() or $type === self::resultIsXslTemplate();
     }
     
-    public UseInstructionCollection $useInstructions;
-    
-    public LinkInstructionCollection $linkInstructions;
-    
     private bool $translateResult;
     
     private bool $decorateResult;
     
     private bool $cacheResult;
     
-    public function __construct(UseInstructionCollection $useInstructions, LinkInstructionCollection $linkInstructions, bool $translateResult = true, bool $decorateResult = true, bool $cacheResult = true) {
-        $this->useInstructions = $useInstructions;
-        $this->linkInstructions = $linkInstructions;
+    public function __construct(bool $translateResult = true, bool $decorateResult = true, bool $cacheResult = true) {
         $this->translateResult = $translateResult;
         $this->decorateResult = $decorateResult;
         $this->cacheResult = $cacheResult;
     }
     
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
-        if ($this->useInstructions->templateUrl and $type === static::resultIsXslTemplate()) {
-            $writer = Module::resolveToDOMWriter($this->useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
+        $useInstructions = $context->lookupUseInstructions();
+        
+        if ($useInstructions->templateUrl and $type === static::resultIsXslTemplate()) {
+            $writer = Module::resolveToDOMWriter($useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
         } else {
-            $writer = new AssetFragmentDOMWriter($this->useInstructions->rootUrl);
+            $writer = new AssetFragmentDOMWriter($useInstructions->rootUrl);
             
-            foreach ($this->useInstructions->dataWriters as $data) {
+            foreach ($useInstructions->dataWriters as $data) {
                 $writer->appendChild($data);
             }
             
-            if ($this->useInstructions->templateUrl and $type !== static::resultIsXslSource()) {
-                $template = Module::resolveToDOMWriter($this->useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
+            if ($useInstructions->templateUrl and $type !== static::resultIsXslSource()) {
+                $template = Module::resolveToDOMWriter($useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
                 $writer = new TransformationDOMWriter($writer, $template);
                 if ($this->translateResult) {
-                    $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $this->useInstructions->rootUrl);
+                    $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $useInstructions->rootUrl);
                 }
             }
             
             if ($this->decorateResult) {
+                $linkInstructions = $context->lookupLinkInstructions();
                 // add all <link> and <script> elements
-                if (! $this->linkInstructions->isEmpty()) {
-                    $writer = new DecoratedDOMWriter($writer, $this->linkInstructions->stylesheetUrls, $this->linkInstructions->scriptUrls, $this->linkInstructions->moduleUrls, $this->linkInstructions->contentUrls);
+                if (! $linkInstructions->isEmpty()) {
+                    $writer = new DecoratedDOMWriter($writer, $linkInstructions->stylesheetUrls, $linkInstructions->scriptUrls, $linkInstructions->moduleUrls, $linkInstructions->contentUrls);
                 }
             }
         }

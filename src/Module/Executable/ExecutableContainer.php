@@ -18,7 +18,7 @@ class ExecutableContainer {
         $this->map = new Map();
     }
     
-    public function put(FarahUrlArguments $id, ExecutableInterface $item) {
+    public function put(FarahUrlArguments $id, ?ExecutableInterface $item) {
         $this->map->put($id, $item);
     }
     

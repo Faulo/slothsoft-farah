@@ -152,8 +152,6 @@ class Manifest implements ManifestInterface {
     
     private ?LeanElement $rootElement = null;
     
-    private ?AssetInterface $rootAsset = null;
-    
     public function __construct(Module $ownerKernel, FarahUrlAuthority $authority, string $manifestDirectory, ManifestStrategies $strategies) {
         $this->ownerKernel = $ownerKernel;
         $this->authority = $authority;
@@ -175,20 +173,34 @@ class Manifest implements ManifestInterface {
         if (is_string($path)) {
             $path = FarahUrlPath::createFromString($path);
         }
-        if (! $this->assets->has($path)) {
-            $this->assets->put($path, $this->getRootAsset()
-                ->traverseTo((string) $path));
+        return $this->lookupAssetTyped($path);
+    }
+    
+    private function lookupAssetTyped(FarahUrlPath $path): AssetInterface {
+        if ($this->assets->has($path)) {
+            return $this->assets->get($path);
         }
-        return $this->assets->get($path);
+        
+        if ($path->isEmpty()) {
+            $asset = $this->createAsset($this->getRootElement(), FarahUrlPath::createEmpty());
+        } else {
+            $parent = $this->lookupAssetTyped($path->withoutLastSegment());
+            $element = $parent->getChildManifestElement($path->getName());
+            $asset = $this->createAsset($element);
+        }
+        
+        $this->assets->put($path, $asset);
+        return $asset;
     }
     
     public function clearCachedAssets(): void {
         $this->assets->clear();
     }
     
-    public function createAsset(LeanElement $element): AssetInterface {
+    private function createAsset(LeanElement $element): AssetInterface {
         $strategies = $this->strategies->assetBuilder->buildAssetStrategies($this, $element);
-        return new Asset($this, $element, FarahUrlPath::createFromString($element->getAttribute(self::ATTR_ASSETPATH)), $strategies);
+        $asset = new Asset($this, $element, FarahUrlPath::createFromString($element->getAttribute(self::ATTR_ASSETPATH)), $strategies);
+        return $asset;
     }
     
     public function createManifestFile(string $fileName): SplFileInfo {
@@ -201,13 +213,6 @@ class Manifest implements ManifestInterface {
     
     public function createDataFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo {
         return $this->ownerKernel->createDataFile($fileName, $this->createUrl($path, $args, $fragment));
-    }
-    
-    private function getRootAsset(): AssetInterface {
-        if ($this->rootAsset === null) {
-            $this->rootAsset = $this->createAsset($this->getRootElement(), FarahUrlPath::createEmpty());
-        }
-        return $this->rootAsset;
     }
     
     private function getRootElement(): LeanElement {

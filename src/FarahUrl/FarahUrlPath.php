@@ -76,8 +76,24 @@ class FarahUrlPath implements Hashable {
         return $this->id;
     }
     
+    public function getName(): string {
+        assert(! $this->isEmpty(), 'Path is empty');
+        
+        return $this->segments[count($this->segments) - 1];
+    }
+    
     public function getSegments(): array {
         return $this->segments;
+    }
+    
+    public function withoutLastSegment(): FarahUrlPath {
+        assert(! $this->isEmpty(), 'Path is empty');
+        
+        return self::createFromSegments(array_slice($this->segments, 0, count($this->segments) - 1));
+    }
+    
+    public function isEmpty(): bool {
+        return $this->id === self::SEPARATOR;
     }
     
     public function equals($obj): bool {

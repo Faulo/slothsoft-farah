@@ -8,7 +8,8 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
-use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrategyInterface;
+use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
+use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\Result\Result;
 use Slothsoft\Farah\Module\Result\ResultContainer;
 use Slothsoft\Farah\Module\Result\ResultInterface;
@@ -46,8 +47,18 @@ class Executable implements ExecutableInterface {
         return $this->args;
     }
     
-    public function lookupBuilder(): ResultBuilderStrategyInterface {
-        return $this->strategies->resultBuilder;
+    private ?UseInstructionCollection $useInstructions = null;
+    
+    public function lookupUseInstructions(): UseInstructionCollection {
+        $this->useInstructions ??= $this->strategies->instructionBuilder->buildUseInstructions($this->ownerAsset, $this->args);
+        return $this->useInstructions;
+    }
+    
+    private ?LinkInstructionCollection $linkInstructions = null;
+    
+    public function lookupLinkInstructions(): LinkInstructionCollection {
+        $this->linkInstructions ??= $this->strategies->instructionBuilder->buildLinkInstructions($this->ownerAsset, $this->args);
+        return $this->linkInstructions;
     }
     
     public function lookupResult($type): ResultInterface {

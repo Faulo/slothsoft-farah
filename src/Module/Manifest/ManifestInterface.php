@@ -42,13 +42,6 @@ interface ManifestInterface {
     public function clearCachedAssets(): void;
     
     /**
-     *
-     * @param LeanElement $element
-     * @return AssetInterface
-     */
-    public function createAsset(LeanElement $element): AssetInterface;
-    
-    /**
      * Returns a handle for a file inside the asset directory of this manifest.
      *
      * @param string $fileName
