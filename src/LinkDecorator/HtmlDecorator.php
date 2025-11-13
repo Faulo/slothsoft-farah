@@ -70,16 +70,15 @@ class HtmlDecorator implements LinkDecoratorInterface {
             $contentNode = Module::resolveToDOMWriter($url)->toElement($this->targetDocument);
             
             if ($contentNode->namespaceURI === null) {
-                $fragment = $this->targetDocument->createDocumentFragment();
-                $fragment->appendXML('<html:template xmlns:html="http://www.w3.org/1999/xhtml" xmlns="">' . $this->targetDocument->saveXML($contentNode) . '</html:template>');
-                $node = $fragment->firstChild;
+                $node = $this->targetDocument->createElementNS(DOMHelper::NS_HTML, 'html:template');
+                $node->setAttribute('xmlns', '');
             } else {
                 $node = $this->targetDocument->createElementNS(DOMHelper::NS_HTML, 'template');
-                $node->appendChild($contentNode);
             }
             
             $node->setAttributeNS(DOMHelper::NS_XML, 'base', $base);
             $node->setAttribute('data-url', $href);
+            $node->appendChild($contentNode);
             
             $this->rootNode->appendChild($node);
         }

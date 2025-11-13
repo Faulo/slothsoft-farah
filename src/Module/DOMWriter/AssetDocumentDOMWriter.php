@@ -20,23 +20,27 @@ class AssetDocumentDOMWriter implements DOMWriterInterface {
     
     public function __construct(FarahUrl $url, ?string $name = null) {
         $this->url = $url;
-        $this->name = $name ?? basename($url->getPath());
+        $this->name = $name ?? $url->getAssetPath()->getName();
     }
     
     public function toElement(DOMDocument $targetDoc): DOMElement {
+        $url = (string) $this->url;
         $childNode = Module::resolveToDOMWriter($this->url->withStreamIdentifier(Executable::resultIsXml()))->toElement($targetDoc);
         
-        $ns = (string) $childNode->namespaceURI;
-        $id = htmlentities((string) $this->url, ENT_XML1);
-        $href = str_replace('farah://', '/', $id);
+        $node = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, 'sfm:document-info');
         
-        $xml = sprintf('<sfm:document-info xmlns:sfm="%s" xmlns="%s" version="1.1" name="%s" url="%s" href="%s" />', DOMHelper::NS_FARAH_MODULE, $ns, $this->name, $id, $href);
+        if ($childNode->namespaceURI === null) {
+            $node->setAttribute('xmlns', '');
+        }
         
-        $fragment = $targetDoc->createDocumentFragment();
-        $fragment->appendXML($xml);
-        $fragment->lastChild->appendChild($childNode);
+        $node->setAttribute('version', '1.1');
+        $node->setAttribute('name', $this->name);
+        $node->setAttribute('url', $url);
+        $node->setAttribute('href', substr($url, strlen('farah:/')));
         
-        return $fragment->removeChild($fragment->lastChild);
+        $node->appendChild($childNode);
+        
+        return $node;
     }
 }
 
