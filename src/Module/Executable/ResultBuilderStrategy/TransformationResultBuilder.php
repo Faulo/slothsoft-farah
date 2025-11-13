@@ -46,7 +46,7 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
     
     private bool $cacheResult;
     
-    public function __construct(callable $getUseInstructions, callable $getLinkInstructions, bool $translateResult = true, bool $decorateResult = true, bool $cacheResult = false) {
+    public function __construct(callable $getUseInstructions, callable $getLinkInstructions, bool $translateResult = true, bool $decorateResult = true, bool $cacheResult = true) {
         $this->getUseInstructions = Closure::fromCallable($getUseInstructions);
         $this->getLinkInstructions = Closure::fromCallable($getLinkInstructions);
         $this->translateResult = $translateResult;
