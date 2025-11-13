@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\Module\Asset\AssetStrategies;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\DaemonExecutableBuilder;
@@ -27,6 +28,7 @@ use Slothsoft\Farah\Module\Asset\InstructionStrategy\UseManifestInstruction;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\UseTemplateInstruction;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\AllowAllParameterFilter;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\DenyAllParameterFilter;
+use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\FromFilesystemParameterFilter;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\FromManifestParameterFilter;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\ParameterFilterStrategyInterface;
 use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\FromManifestParameterSupplier;
@@ -39,7 +41,6 @@ use Slothsoft\Farah\Module\Asset\PathResolverStrategy\NullPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
-use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use InvalidArgumentException;
 
 class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
@@ -167,7 +168,7 @@ class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
             case Manifest::TAG_RESOURCE:
                 $executableBuilder = FromFilesystemExecutableBuilder::class;
                 $pathResolver = FromManifestPathResolver::class;
-                $parameterFilter = DenyAllParameterFilter::class;
+                $parameterFilter = FromFilesystemParameterFilter::class;
                 $parameterSupplier = NullParameterSupplier::class;
                 $instruction = FromManifestInstruction::class;
                 break;

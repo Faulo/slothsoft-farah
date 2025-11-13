@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy;
 
+use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\IO\FileInfoFactory;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
@@ -14,7 +15,6 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\TextFileResult
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\XmlFileResultBuilder;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use SplFileInfo;
-use Slothsoft\Core\MimeTypeDictionary;
 
 class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
@@ -23,6 +23,7 @@ class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterf
         $type = $context->getManifestElement()->getAttribute(Manifest::ATTR_TYPE, '*/*');
         
         $resultBuilder = $this->createResultBuilderForType($context->createUrl($args), FileInfoFactory::createFromPath($path), $type);
+        
         return new ExecutableStrategies($resultBuilder);
     }
     

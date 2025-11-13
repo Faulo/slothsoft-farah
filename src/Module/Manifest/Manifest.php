@@ -135,6 +135,10 @@ class Manifest implements ManifestInterface {
     
     public const PARAM_LOAD_CHILDREN = 'children';
     
+    public const PARAM_INCLUDES = 'includes';
+    
+    public const PARAM_INCLUDES_EMBED = 'embed';
+    
     // misc
     private const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
     

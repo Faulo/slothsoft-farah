@@ -39,7 +39,7 @@ final class IncludeTest extends TestCase {
         ];
         
         yield 'include' => [
-            '/xsl/import?resolve-includes',
+            '/xsl/import?includes=embed',
             __DIR__ . '/../../../assets/xsl/html.xsl'
         ];
     }

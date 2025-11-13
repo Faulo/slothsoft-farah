@@ -5,8 +5,11 @@ namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
+use Slothsoft\Farah\Module\DOMWriter\EmbedIncludesDOMWriter;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
+use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileInfoStreamBuilder;
 use DOMDocument;
 
@@ -20,11 +23,19 @@ class XmlFileResultBuilder extends AbstractFileResultBuilder {
     }
     
     public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
-        return false;
+        return $this->url->getArguments()->get(Manifest::PARAM_INCLUDES) === Manifest::PARAM_INCLUDES_EMBED;
     }
     
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
-        $streamBuilder = new FileInfoStreamBuilder($this->file, $this->file->getFilename());
+        switch ($this->url->getArguments()->get(Manifest::PARAM_INCLUDES)) {
+            case Manifest::PARAM_INCLUDES_EMBED:
+                $streamBuilder = new DOMWriterStreamBuilder(new EmbedIncludesDOMWriter($this, $this->url), $this->file->getFilename());
+                break;
+            default:
+                $streamBuilder = new FileInfoStreamBuilder($this->file, $this->file->getFilename());
+                break;
+        }
+        
         return new ResultStrategies($streamBuilder);
     }
 }
