@@ -54,6 +54,11 @@ class Executable implements ExecutableInterface {
         if (is_string($type)) {
             $type = FarahUrlStreamIdentifier::createFromString($type);
         }
+        
+        return $this->lookupResultTyped($type);
+    }
+    
+    private function lookupResultTyped(FarahUrlStreamIdentifier $type): ResultInterface {
         if ($type !== self::resultIsDefault() and ! $this->strategies->resultBuilder->isDifferentFromDefault($type)) {
             $type = self::resultIsDefault();
         }
