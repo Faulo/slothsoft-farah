@@ -4,6 +4,8 @@ namespace Slothsoft\Farah\LinkDecorator;
 
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Module;
 use DOMDocument;
 use DOMElement;
@@ -15,8 +17,6 @@ use DOMElement;
  */
 class SvgDecorator implements LinkDecoratorInterface {
     
-    private string $namespace = DOMHelper::NS_SVG;
-    
     private DOMDocument $targetDocument;
     
     private DOMElement $rootNode;
@@ -26,7 +26,7 @@ class SvgDecorator implements LinkDecoratorInterface {
     public function setTarget(DOMDocument $document): void {
         $this->targetDocument = $document;
         
-        $this->rootNode = $document->getElementsByTagNameNS($this->namespace, 'defs')->item(0) ?? $document->documentElement;
+        $this->rootNode = $document->getElementsByTagNameNS(DOMHelper::NS_SVG, 'defs')->item(0) ?? $document->documentElement;
     }
     
     public function linkStylesheets(FarahUrl ...$stylesheets): void {
@@ -50,7 +50,7 @@ class SvgDecorator implements LinkDecoratorInterface {
         foreach ($scripts as $url) {
             $href = str_replace('farah://', '/', (string) $url);
             
-            $node = $this->targetDocument->createElementNS($this->namespace, 'script');
+            $node = $this->targetDocument->createElementNS(DOMHelper::NS_SVG, 'script');
             $node->setAttribute('href', $href);
             $node->setAttribute('type', 'application/javascript');
             $this->rootNode->appendChild($node);
@@ -61,7 +61,7 @@ class SvgDecorator implements LinkDecoratorInterface {
         foreach ($modules as $url) {
             $href = str_replace('farah://', '/', (string) $url);
             
-            $node = $this->targetDocument->createElementNS($this->namespace, 'script');
+            $node = $this->targetDocument->createElementNS(DOMHelper::NS_SVG, 'script');
             $node->setAttribute('href', $href);
             $node->setAttribute('type', 'module');
             $this->rootNode->appendChild($node);
@@ -70,11 +70,23 @@ class SvgDecorator implements LinkDecoratorInterface {
     
     public function linkContents(FarahUrl ...$modules): void {
         foreach ($modules as $url) {
+            $base = (string) $url->withStreamIdentifier(FarahUrlStreamIdentifier::createEmpty())->withQueryArguments(FarahUrlArguments::createEmpty());
             $href = (string) $url;
             
-            $node = $this->targetDocument->createElementNS(DOMHelper::NS_HTML, 'template');
+            $contentNode = Module::resolveToDOMWriter($url)->toElement($this->targetDocument);
+            
+            if ($contentNode->namespaceURI === null) {
+                $fragment = $this->targetDocument->createDocumentFragment();
+                $fragment->appendXML('<html:template xmlns:html="http://www.w3.org/1999/xhtml" xmlns="">' . $this->targetDocument->saveXML($contentNode) . '</html:template>');
+                $node = $fragment->firstChild;
+            } else {
+                $node = $this->targetDocument->createElementNS(DOMHelper::NS_HTML, 'template');
+                $node->appendChild($contentNode);
+            }
+            
+            $node->setAttributeNS(DOMHelper::NS_XML, 'base', $base);
             $node->setAttribute('data-url', $href);
-            $node->appendChild(Module::resolveToDOMWriter($url)->toElement($this->targetDocument));
+            
             $this->rootNode->appendChild($node);
         }
     }
