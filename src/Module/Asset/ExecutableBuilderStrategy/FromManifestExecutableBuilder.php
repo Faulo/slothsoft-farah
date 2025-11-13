@@ -14,8 +14,6 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
 
 class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
-    private const PARAM = 'decorate';
-    
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $rootAsset = $context;
         $getUseInstructions = function () use ($rootAsset, $args): UseInstructionCollection {
@@ -39,7 +37,7 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
                             $instructions->addManifestData($asset->createRealUrl($args), $name);
                         }
                         if ($asset->isUseDocumentInstruction()) {
-                            $instructions->addDocumentData($asset->createRealUrl($args->withArgument(self::PARAM, false)), $name);
+                            $instructions->addDocumentData($asset->createRealUrl($args), $name);
                         }
                         if ($asset->isUseTemplateInstruction()) {
                             $instructions->templateUrl = $asset->createRealUrl($args);
@@ -49,18 +47,17 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
             }
             return $instructions;
         };
-        $getLinkInstructions = null;
-        $getLinkInstructions = function (?AssetInterface $currentAsset = null) use ($rootAsset, $args, &$getLinkInstructions): LinkInstructionCollection {
-            if ($currentAsset === null) {
-                $currentAsset = $rootAsset;
-            }
+        $getLinkInstructions = function () use ($rootAsset, $args): LinkInstructionCollection {
             $instructions = new LinkInstructionCollection();
             /** @var AssetInterface $asset */
-            foreach ($currentAsset->getAssetChildren() as $asset) {
+            foreach ($rootAsset->getAssetChildren() as $asset) {
                 if ($asset->isUseDocumentInstruction()) {
-                    $url = $asset->lookupExecutable($args)->createRealUrl();
-                    $asset = Module::resolveToAsset($url);
-                    $instructions->mergeWith($getLinkInstructions($asset));
+                    $url = $asset->createRealUrl($args);
+                    $executable = Module::resolveToExecutable($url);
+                    $resultBuilder = $executable->lookupBuilder();
+                    if ($resultBuilder instanceof TransformationResultBuilder) {
+                        $instructions->mergeWith($resultBuilder->getLinkInstructionsTyped(), true);
+                    }
                 }
                 if ($asset->isLinkStylesheetInstruction()) {
                     $instructions->stylesheetUrls[] = $asset->lookupExecutable($args)->createRealUrl();
@@ -77,7 +74,7 @@ class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterfac
             }
             return $instructions;
         };
-        $resultBuilder = new TransformationResultBuilder($getUseInstructions, $getLinkInstructions, count(Dictionary::getSupportedLanguages()) !== 0, $args->get(self::PARAM, true));
+        $resultBuilder = new TransformationResultBuilder($getUseInstructions, $getLinkInstructions, count(Dictionary::getSupportedLanguages()) !== 0);
         return new ExecutableStrategies($resultBuilder);
     }
 }

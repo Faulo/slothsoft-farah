@@ -8,6 +8,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Result\Result;
 use Slothsoft\Farah\Module\Result\ResultContainer;
 use Slothsoft\Farah\Module\Result\ResultInterface;
@@ -43,6 +44,10 @@ class Executable implements ExecutableInterface {
     
     public function getUrlArguments(): FarahUrlArguments {
         return $this->args;
+    }
+    
+    public function lookupBuilder(): ResultBuilderStrategyInterface {
+        return $this->strategies->resultBuilder;
     }
     
     public function lookupResult($type): ResultInterface {

@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Module\Executable;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
+use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
 interface ExecutableInterface {
@@ -39,5 +40,7 @@ interface ExecutableInterface {
     public function lookupDefaultResult(): ResultInterface;
     
     public function lookupXmlResult(): ResultInterface;
+    
+    public function lookupBuilder(): ResultBuilderStrategyInterface;
 }
 

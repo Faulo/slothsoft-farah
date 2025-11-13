@@ -54,39 +54,45 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
         $this->cacheResult = $cacheResult;
     }
     
-    private function getUseInstructionsTyped(): UseInstructionCollection {
-        return ($this->getUseInstructions)();
+    private ?UseInstructionCollection $useInstructions = null;
+    
+    public function getUseInstructionsTyped(): UseInstructionCollection {
+        $this->useInstructions ??= ($this->getUseInstructions)();
+        return $this->useInstructions;
     }
     
-    private function getLinkInstructionsTyped(): LinkInstructionCollection {
-        return ($this->getLinkInstructions)();
+    private ?LinkInstructionCollection $linkInstructions = null;
+    
+    public function getLinkInstructionsTyped(): LinkInstructionCollection {
+        $this->linkInstructions ??= ($this->getLinkInstructions)();
+        return $this->linkInstructions;
     }
     
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
-        $instructions = $this->getUseInstructionsTyped();
+        $useInstructions = $this->getUseInstructionsTyped();
         
-        if ($instructions->templateUrl and $type === static::resultIsXslTemplate()) {
-            $writer = Module::resolveToDOMWriter($instructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
+        if ($useInstructions->templateUrl and $type === static::resultIsXslTemplate()) {
+            $writer = Module::resolveToDOMWriter($useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
         } else {
-            $writer = new AssetFragmentDOMWriter($instructions->rootUrl);
+            $writer = new AssetFragmentDOMWriter($useInstructions->rootUrl);
             
-            foreach ($instructions->dataWriters as $data) {
+            foreach ($useInstructions->dataWriters as $data) {
                 $writer->appendChild($data);
             }
             
-            if ($instructions->templateUrl and $type !== static::resultIsXslSource()) {
-                $template = Module::resolveToDOMWriter($instructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
+            if ($useInstructions->templateUrl and $type !== static::resultIsXslSource()) {
+                $template = Module::resolveToDOMWriter($useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
                 $writer = new TransformationDOMWriter($writer, $template);
                 if ($this->translateResult) {
-                    $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $instructions->rootUrl);
+                    $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $useInstructions->rootUrl);
                 }
             }
             
             if ($this->decorateResult) {
+                $linkInstructions = $this->getLinkInstructionsTyped();
                 // add all <link> and <script> elements
-                $instructions = $this->getLinkInstructionsTyped();
-                if (! $instructions->isEmpty()) {
-                    $writer = new DecoratedDOMWriter($writer, $instructions->stylesheetUrls, $instructions->scriptUrls, $instructions->moduleUrls, $instructions->contentUrls);
+                if (! $linkInstructions->isEmpty()) {
+                    $writer = new DecoratedDOMWriter($writer, $linkInstructions->stylesheetUrls, $linkInstructions->scriptUrls, $linkInstructions->moduleUrls, $linkInstructions->contentUrls);
                 }
             }
         }
