@@ -4,6 +4,8 @@
 
 	<resource name="document" type="text/html" />
 
+	<resource name="data" type="application/xml" />
+
 	<manifest-directory name="submodule" />
 
 	<resource-directory name="dictionary" type="application/xml" />
@@ -34,6 +36,10 @@
 			<link-script ref="/test" />
 			<link-module ref="/test" />
 			<link-content ref="/test" />
+		</fragment>
+		<fragment name="linking-data">
+			<use-template ref="//slothsoft@farah/xsl/html" />
+			<link-content ref="/data?includes=embed" />
 		</fragment>
 	</fragment>
 </assets>
