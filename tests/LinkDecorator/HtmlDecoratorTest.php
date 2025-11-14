@@ -208,7 +208,7 @@ EOT,
             <<<EOT
 <data>
     <element />
-    <template xmlns="http://www.w3.org/1999/xhtml" data-url="farah://slothsoft@farah/example-domain">
+    <template xmlns="http://www.w3.org/1999/xhtml" data-url="farah://slothsoft@farah/example-domain" xml:base="farah://slothsoft@farah/example-domain">
         <domain xmlns="http://schema.slothsoft.net/farah/sitemap" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary" xmlns:sfm="http://schema.slothsoft.net/farah/module" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.slothsoft.net/farah/sitemap http://schema.slothsoft.net/farah/sitemap/1.1.xsd" name="example-domain.net" vendor="slothsoft" module="farah" ref="/" status-active="" status-public="" sfd:languages="en-us" version="1.1">
             <file name="sitemap" ref="/sitemap-generator" status-active="" />
         </domain>
@@ -227,7 +227,7 @@ EOT,
             <<<EOT
 <data>
     <head xmlns="http://www.w3.org/1999/xhtml">
-        <template xmlns="http://www.w3.org/1999/xhtml" data-url="farah://slothsoft@farah/example-domain">
+        <template xmlns="http://www.w3.org/1999/xhtml" data-url="farah://slothsoft@farah/example-domain" xml:base="farah://slothsoft@farah/example-domain">
             <domain xmlns="http://schema.slothsoft.net/farah/sitemap" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary" xmlns:sfm="http://schema.slothsoft.net/farah/module" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.slothsoft.net/farah/sitemap http://schema.slothsoft.net/farah/sitemap/1.1.xsd" name="example-domain.net" vendor="slothsoft" module="farah" ref="/" status-active="" status-public="" sfd:languages="en-us" version="1.1">
                 <file name="sitemap" ref="/sitemap-generator" status-active="" />
             </domain>
