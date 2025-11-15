@@ -6,9 +6,9 @@ use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\StringStartsWith;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\FarahTesting\FarahServerTestCase;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 
 final class XSLTTest extends FarahServerTestCase {
     
@@ -136,12 +136,12 @@ EOT, $arguments);
     public function provideTransformations(): iterable {
         yield 'html' => [
             'farah://slothsoft@farah/',
-            'farah://slothsoft@farah/xsl/html'
+            'farah://slothsoft@farah/xsl/html?includes=embed'
         ];
         
         yield 'import' => [
             'farah://slothsoft@farah/',
-            'farah://slothsoft@test-module/xsl/import'
+            'farah://slothsoft@test-module/xsl/import?includes=embed'
         ];
     }
 }
