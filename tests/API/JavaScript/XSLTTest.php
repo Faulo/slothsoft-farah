@@ -135,12 +135,12 @@ EOT, $arguments);
     
     public function provideTransformations(): iterable {
         yield 'html' => [
-            'farah://slothsoft@farah/',
+            'farah://slothsoft@farah/schema',
             'farah://slothsoft@farah/xsl/html?includes=embed'
         ];
         
         yield 'import' => [
-            'farah://slothsoft@farah/',
+            'farah://slothsoft@farah/schema',
             'farah://slothsoft@test-module/xsl/import?includes=embed'
         ];
     }
