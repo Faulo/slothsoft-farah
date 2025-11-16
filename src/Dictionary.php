@@ -72,7 +72,7 @@ class Dictionary {
     
     const XPATH_DICT_ATTR_SELECT = 'data-dict';
     
-    const XPATH_DICT_ATTR_NS = 'data-dict-ns';
+    const XPATH_DICT_ATTR_NS = 'data-dict-ns-disabled';
     
     const XPATH_DICT_ATTR_LANG = 'data-dict-lang';
     
