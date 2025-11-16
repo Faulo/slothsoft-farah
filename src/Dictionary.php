@@ -240,7 +240,7 @@ class Dictionary {
                     $ret ++;
                     break;
                 case XML_ATTRIBUTE_NODE:
-                    $node->value = $this->lookupText($node->value);
+                    $node->value = $this->lookupText($node->value, $namespace, $language);
                     $ret ++;
                     break;
                 case XML_TEXT_NODE:
