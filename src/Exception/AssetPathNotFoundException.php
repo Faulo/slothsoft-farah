@@ -8,7 +8,7 @@ use RuntimeException;
 class AssetPathNotFoundException extends RuntimeException {
     
     public function __construct(AssetInterface $asset, string $missingPath, ?array $validPaths = null) {
-        $message = "Asset '{$asset->getUrlPath()}' does not contain an asset '$missingPath'!";
+        $message = "Asset '{$asset->createUrl()}' does not contain an asset '$missingPath'!";
         
         if ($validPaths !== null) {
             $message .= PHP_EOL;
