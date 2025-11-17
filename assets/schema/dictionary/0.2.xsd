@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xsd:schema targetNamespace="http://schema.slothsoft.net/farah/dictionary" xmlns="http://schema.slothsoft.net/farah/dictionary" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
-	xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified">
 
 	<xsd:annotation>
 		<xsd:appinfo>
@@ -15,16 +15,28 @@
 This namespace defines elements to describe a dictionary, that is, a language-dependend list of key/value pairs to be used for automatic translating of XML documents.
 				]]></ssv:description>
 				<ssv:changelog><![CDATA[
+*** Version 0.2 ***
+    R20251117
+        - added dict attribute
+
 *** Version 0.1 ***
-	R20180402
-		- initial release
+    R20180402
+        - initial release
 				]]></ssv:changelog>
 			</ssv:info>
 		</xsd:appinfo>
 	</xsd:annotation>
 
+	<xsd:attribute name="dict" type="xpathExpression">
+		<xsd:annotation>
+			<xsd:documentation>Marks elements for translation. The value of this attribute is evaluated using the owning element as context, and all nodes identified by it get replaced by a dictionary lookup
+				of the string value of the identified nodes.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+
 	<xsd:attributeGroup name="schemaVersion">
-		<xsd:attribute name="version" type="xsd:token" use="required" fixed="0.1">
+		<xsd:attribute name="version" type="xsd:token" use="required" fixed="0.2">
 			<xsd:annotation>
 				<xsd:documentation>The schema version used by the instance document.</xsd:documentation>
 			</xsd:annotation>
@@ -39,4 +51,25 @@ This namespace defines elements to describe a dictionary, that is, a language-de
 			<xsd:attributeGroup ref="schemaVersion" />
 		</xsd:complexType>
 	</xsd:element>
+
+	<xsd:element name="entry">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:any minOccurs="0" />
+			</xsd:sequence>
+			<xsd:attribute name="key" type="dictionaryKey">
+				<xsd:annotation>
+					<xsd:documentation>The schema version used by the instance document.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:simpleType name="dictionaryKey">
+		<xsd:restriction base="xsd:token" />
+	</xsd:simpleType>
+
+	<xsd:simpleType name="xpathExpression">
+		<xsd:restriction base="xsd:string" />
+	</xsd:simpleType>
 </xsd:schema>
