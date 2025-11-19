@@ -221,44 +221,58 @@ class Dictionary {
         
         $this->dictionaryUrls = $dictionaryUrls;
         
+        $translationsCount = 0;
+        
         $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_NS_ALL);
-        $contextNodes = [
-            ...$xpath->evaluate('//*[@sfd:dict]')
-        ];
-        /** @var $contextNode DOMElement */
-        foreach ($contextNodes as $contextNode) {
-            $query = trim($contextNode->getAttributeNS(DOMHelper::NS_FARAH_DICTIONARY, 'dict'));
-            $targetNodes = $query === '' ? [
-                ...$contextNode->childNodes
-            ] : [
-                ...$xpath->evaluate($query, $contextNode)
-            ];
+        
+        do {
+            $count = 0;
             
-            /** @var $targetNode DOMNode */
-            foreach ($targetNodes as $targetNode) {
-                if ($translatedNode = $this->lookupKeyInDictionaryDocuments($targetNode->textContent)) {
-                    switch ($targetNode->nodeType) {
-                        case XML_ATTRIBUTE_NODE:
-                            $targetNode->value = $translatedNode->textContent;
-                            break;
-                        default:
-                            $fragment = $document->createDocumentFragment();
-                            foreach ($translatedNode->childNodes as $node) {
-                                $fragment->appendChild($document->importNode($node, true));
-                            }
-                            
-                            if ($translatedNode->hasAttributeNS(DOMHelper::NS_XML, 'space') and $targetNode->parentNode->nodeType === XML_ELEMENT_NODE) {
-                                $targetNode->parentNode->setAttributeNS(DOMHelper::NS_XML, 'space', $translatedNode->getAttributeNS(DOMHelper::NS_XML, 'space'));
-                            }
-                            
-                            $targetNode->parentNode->replaceChild($fragment, $targetNode);
+            $contextNodes = [
+                ...$xpath->evaluate('//*[@sfd:dict]')
+            ];
+            /** @var $contextNode DOMElement */
+            foreach ($contextNodes as $contextNode) {
+                $query = trim($contextNode->getAttributeNS(DOMHelper::NS_FARAH_DICTIONARY, 'dict'));
+                $targetNodes = $query === '' ? [
+                    ...$contextNode->childNodes
+                ] : [
+                    ...$xpath->evaluate($query, $contextNode)
+                ];
+                
+                /** @var $targetNode DOMNode */
+                foreach ($targetNodes as $targetNode) {
+                    if ($translatedNode = $this->lookupKeyInDictionaryDocuments($targetNode->textContent)) {
+                        $count ++;
+                        
+                        switch ($targetNode->nodeType) {
+                            case XML_ATTRIBUTE_NODE:
+                                $targetNode->value = $translatedNode->textContent;
+                                break;
+                            default:
+                                $fragment = $document->createDocumentFragment();
+                                foreach ($translatedNode->childNodes as $node) {
+                                    $fragment->appendChild($document->importNode($node, true));
+                                }
+                                
+                                if ($translatedNode->hasAttributeNS(DOMHelper::NS_XML, 'space') and $targetNode->parentNode->nodeType === XML_ELEMENT_NODE) {
+                                    $targetNode->parentNode->setAttributeNS(DOMHelper::NS_XML, 'space', $translatedNode->getAttributeNS(DOMHelper::NS_XML, 'space'));
+                                }
+                                
+                                $targetNode->parentNode->replaceChild($fragment, $targetNode);
+                        }
                     }
                 }
+                
+                $contextNode->removeAttributeNS(DOMHelper::NS_FARAH_DICTIONARY, 'dict');
             }
             
-            $contextNode->removeAttributeNS(DOMHelper::NS_FARAH_DICTIONARY, 'dict');
-        }
-        return 0;
+            $translationsCount += $count;
+        } while ($count > 0);
+        
+        $document->documentElement->setAttributeNS(DOMHelper::NS_XML, 'lang', $this->currentLang);
+        
+        return $translationsCount;
     }
     
     /* public functions */

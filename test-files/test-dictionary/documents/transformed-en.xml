@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:sfm="http://schema.slothsoft.net/farah/module" xml:lang="en">
+    <head>
+        <title>farah://slothsoft@test-dictionary/translations/document</title>
+    </head>
+    <body>
+        <html xmlns:sfd="http://schema.slothsoft.net/farah/dictionary">
+
+            <head />
+
+            <body>
+                <h1 xml:space="preserve">hello <a href="/">world</a>!</h1>
+                <p>
+                    <span>hello</span>
+                    <a href="/">world</a>
+                    <span>!</span>
+                </p>
+                <input type="button" value="hello world!" />
+            </body>
+        </html>
+    </body>
+</html>

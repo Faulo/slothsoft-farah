@@ -62,6 +62,9 @@ class FromManifestInstructionBuilder implements InstructionBuilderStrategyInterf
             if ($asset->isLinkContentInstruction()) {
                 $instructions->contentUrls[] = $asset->lookupExecutable($args)->createRealUrl();
             }
+            if ($asset->isLinkDictionaryInstruction()) {
+                $instructions->dictionaryUrls[] = $asset->lookupExecutable($args)->createRealUrl();
+            }
         }
         return $instructions;
     }

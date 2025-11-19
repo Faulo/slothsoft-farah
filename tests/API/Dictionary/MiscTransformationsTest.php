@@ -4,13 +4,13 @@ namespace Slothsoft\Farah\API\Dictionary;
 
 use Ds\Set;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Constraint\IsEqual;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Dictionary;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\FarahUrl\FarahUrl;
-use PHPUnit\Framework\Constraint\IsEqual;
 
 final class MiscTransformationsTest extends TestCase {
     
@@ -33,9 +33,9 @@ final class MiscTransformationsTest extends TestCase {
     /**
      *
      * @runInSeparateProcess
-     * @dataProvider exampleProvider
+     * @dataProvider translateDocumentViaDictionaryProvider
      */
-    public function test_linkingResult(string $inputUrl, string $dictionaryUrl, string $language, string $expectedUrl): void {
+    public function test_translateDocumentViaDictionary(string $inputUrl, string $dictionaryUrl, string $language, string $expectedUrl): void {
         Dictionary::setSupportedLanguages($language);
         
         $input = DOMHelper::loadDocument($inputUrl);
@@ -51,12 +51,35 @@ final class MiscTransformationsTest extends TestCase {
         $this->assertThat($input, new DOMNodeEqualTo($expected));
     }
     
-    public function exampleProvider(): iterable {
+    public function translateDocumentViaDictionaryProvider(): iterable {
         yield 'translate document' => [
             'farah://slothsoft@test-dictionary/documents/untranslated',
             'farah://slothsoft@test-dictionary/dictionary',
             'en',
             'farah://slothsoft@test-dictionary/documents/translated-en'
+        ];
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     * @dataProvider autoTranslateProvider
+     */
+    public function test_autoTranslate(string $actualUrl, string $language, string $expectedUrl): void {
+        Dictionary::setSupportedLanguages($language);
+        
+        $actual = DOMHelper::loadDocument($actualUrl);
+        
+        $expected = DOMHelper::loadDocument($expectedUrl);
+        
+        $this->assertThat($actual, new DOMNodeEqualTo($expected));
+    }
+    
+    public function autoTranslateProvider(): iterable {
+        yield 'translate document' => [
+            'farah://slothsoft@test-dictionary/translations/document',
+            'en',
+            'farah://slothsoft@test-dictionary/documents/transformed-en'
         ];
     }
 }

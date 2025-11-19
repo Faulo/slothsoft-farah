@@ -69,6 +69,8 @@ class Manifest implements ManifestInterface {
     
     public const TAG_LINK_CONTENT = 'link-content';
     
+    public const TAG_LINK_DICTIONARY = 'link-dictionary';
+    
     // attributes
     public const ATTR_NAME = 'name';
     
@@ -113,6 +115,8 @@ class Manifest implements ManifestInterface {
     public const ATTR_USE_MODULE = 'module';
     
     public const ATTR_USE_CONTENT = 'content';
+    
+    public const ATTR_USE_DICTIONARY = 'dictionary';
     
     public const ATTR_EXECUTABLE_BUILDER = 'executable-builder';
     

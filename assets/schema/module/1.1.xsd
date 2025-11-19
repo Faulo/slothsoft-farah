@@ -7,7 +7,7 @@
 			<ssv:info version="1.0">
 				<ssv:name>Farah Module Manifest</ssv:name>
 				<ssv:version>1.1</ssv:version>
-				<ssv:revision>R20251111</ssv:revision>
+				<ssv:revision>R20251119</ssv:revision>
 				<ssv:prefix>sfm</ssv:prefix>
 				<ssv:namespace>http://schema.slothsoft.net/farah/module</ssv:namespace>
 				<ssv:author email="daniel.lio.schulz@gmail.com">Daniel Schulz</ssv:author>
@@ -16,6 +16,9 @@ This namespace defines elements to identify assets in a Farah module.
 				]]></ssv:description>
 				<ssv:changelog><![CDATA[
 *** Version 1.1 ***
+    R20251119
+        - added element <link-dictionary>
+        
     R20251111
         - added element <link-content>
 
@@ -95,7 +98,8 @@ This namespace defines elements to identify assets in a Farah module.
 			<xsd:element ref="link-stylesheet" />
 			<xsd:element ref="link-script" />
 			<xsd:element ref="link-module" />
-			<xsd:element ref="link-content" />
+            <xsd:element ref="link-content" />
+            <xsd:element ref="link-dictionary" />
 			<xsd:element ref="param-filter" />
 			<xsd:element ref="param" />
 		</xsd:choice>
@@ -319,6 +323,14 @@ This namespace defines elements to identify assets in a Farah module.
 			</xsd:complexContent>
 		</xsd:complexType>
 	</xsd:element>
+
+    <xsd:element name="link-dictionary">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="asset-reference" />
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
 
 	<xsd:element name="param">
 		<xsd:complexType>

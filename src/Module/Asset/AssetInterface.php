@@ -115,6 +115,8 @@ interface AssetInterface {
     
     public function isLinkContentInstruction(): bool;
     
+    public function isLinkDictionaryInstruction(): bool;
+    
     public function isParameterSupplierInstruction(): bool;
     
     /**

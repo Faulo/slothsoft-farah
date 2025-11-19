@@ -43,6 +43,10 @@ class FromManifestInstruction implements InstructionStrategyInterface {
         return $context->getManifestElement()->getAttribute(Manifest::ATTR_USE, '') === Manifest::ATTR_USE_CONTENT;
     }
     
+    public function isLinkDictionary(AssetInterface $context): bool {
+        return $context->getManifestElement()->getAttribute(Manifest::ATTR_USE, '') === Manifest::ATTR_USE_DICTIONARY;
+    }
+    
     public function isParameterSupplier(AssetInterface $context): bool {
         return false;
     }
