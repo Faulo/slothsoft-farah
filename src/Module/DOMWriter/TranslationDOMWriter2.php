@@ -8,7 +8,7 @@ use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Dictionary;
 use DOMDocument;
 
-class TranslationDOMWriter2 implements DOMWriterInterface {
+final class TranslationDOMWriter2 implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
     private DOMWriterInterface $source;

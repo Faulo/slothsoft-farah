@@ -1,4 +1,4 @@
-<sfd:dictionary xmlns="http://www.w3.org/1999/xhtml" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary" version="0.2">
+<sfd:dictionary xmlns="http://www.w3.org/1999/xhtml" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary" version="1.0">
     <sfd:entry xml:id="h1" xml:space="preserve">hello <a href="/">world</a>!</sfd:entry>
     <sfd:fragment xml:id="p">
         <span>hello</span>

@@ -6,7 +6,7 @@
         <xsd:appinfo>
             <ssv:info version="1.0">
                 <ssv:name>Farah Dictionary</ssv:name>
-                <ssv:version>0.2</ssv:version>
+                <ssv:version>1.0</ssv:version>
                 <ssv:revision>R20251117</ssv:revision>
                 <ssv:prefix>sfd</ssv:prefix>
                 <ssv:namespace>http://schema.slothsoft.net/farah/dictionary</ssv:namespace>
@@ -15,7 +15,7 @@
 This namespace defines elements to describe a dictionary, that is, a language-dependend list of key/value pairs to be used for automatic translating of XML documents.
 				]]></ssv:description>
                 <ssv:changelog><![CDATA[
-*** Version 0.2 ***
+*** Version 1.0 ***
     R20251117
         - added dict attribute
         - added <dictionary> element
@@ -53,7 +53,7 @@ This namespace defines elements to describe a dictionary, that is, a language-de
     </xsd:attribute>
 
     <xsd:attributeGroup name="schemaVersion">
-        <xsd:attribute name="version" type="xsd:token" use="required" fixed="0.2">
+        <xsd:attribute name="version" type="xsd:token" use="required" fixed="1.0">
             <xsd:annotation>
                 <xsd:documentation>The schema version used by the instance document.</xsd:documentation>
             </xsd:annotation>

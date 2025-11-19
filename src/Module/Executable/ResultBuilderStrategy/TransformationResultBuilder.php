@@ -46,6 +46,10 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
         $this->cacheResult = $cacheResult;
     }
     
+    public static bool $translateDictionaryAlpha = true;
+    
+    public static bool $translateDictionary = true;
+    
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         $useInstructions = $context->lookupUseInstructions();
         
@@ -62,11 +66,14 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
                 $template = Module::resolveToDOMWriter($useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
                 $writer = new TransformationDOMWriter($writer, $template);
                 if ($this->translateResult) {
-                    $linkInstructions = $context->lookupLinkInstructions();
-                    // translate sfd:dict attributes
-                    if ($linkInstructions->dictionaryUrls->isEmpty()) {
+                    if (self::$translateDictionaryAlpha) {
+                        // translate data-dict attributes
                         $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $useInstructions->rootUrl);
-                    } else {
+                    }
+                    
+                    if (self::$translateDictionary) {
+                        // translate sfd:dict attributes
+                        $linkInstructions = $context->lookupLinkInstructions();
                         $writer = new TranslationDOMWriter2($writer, Dictionary::getInstance(), $linkInstructions->dictionaryUrls);
                     }
                 }

@@ -8,7 +8,7 @@ use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use DOMDocument;
 
-class TranslationDOMWriter implements DOMWriterInterface {
+final class TranslationDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
     private DOMWriterInterface $source;
