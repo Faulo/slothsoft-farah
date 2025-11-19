@@ -11,6 +11,7 @@ use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\TransformationResultBuilder;
 
 final class MiscTransformationsTest extends TestCase {
     
@@ -73,6 +74,8 @@ final class MiscTransformationsTest extends TestCase {
      * @dataProvider autoTranslateProvider
      */
     public function test_autoTranslate(string $actualUrl, string $language, string $expectedUrl): void {
+        TransformationResultBuilder::$translateDictionaryAlpha = false;
+        
         Dictionary::setSupportedLanguages($language);
         
         $actual = DOMHelper::loadDocument($actualUrl);
@@ -93,6 +96,12 @@ final class MiscTransformationsTest extends TestCase {
             'farah://slothsoft@test-dictionary/translations/utf8',
             'en',
             'farah://slothsoft@test-dictionary/documents/utf8-transformed-en'
+        ];
+        
+        yield 'lookup via xsl' => [
+            'farah://slothsoft@test-dictionary/translations/dictionary',
+            'en',
+            'farah://slothsoft@test-dictionary/dictionary/en'
         ];
     }
 }

@@ -27,6 +27,7 @@ final class TranslationDOMWriter2 implements DOMWriterInterface {
         $document = $this->source->toDocument();
         
         if (! $this->dictionaries->isEmpty()) {
+            my_dump($document->documentElement->tagName);
             $this->dict->translateDocumentViaDictionary($document, $this->dictionaries);
         }
         

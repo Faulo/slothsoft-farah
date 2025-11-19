@@ -2,6 +2,7 @@
 <assets xmlns="http://schema.slothsoft.net/farah/module" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
     <resource-directory name="dictionary" type="application/xml" />
     <resource-directory name="documents" type="application/xml" />
+    <resource-directory name="xsl" type="application/xslt+xml" />
 
     <fragment name="translations">
         <fragment name="test">
@@ -13,6 +14,12 @@
         <fragment name="utf8">
             <use-template ref="//slothsoft@farah/xsl/html" />
             <use-document ref="/documents/utf8" />
+            <link-dictionary ref="/dictionary" />
+        </fragment>
+
+        <fragment name="dictionary">
+            <use-template ref="/xsl/lookup-dictionary" />
+            <use-document ref="/dictionary/en" />
             <link-dictionary ref="/dictionary" />
         </fragment>
     </fragment>

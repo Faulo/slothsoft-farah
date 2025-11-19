@@ -7,6 +7,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
 use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\Manifest\Manifest;
+use Slothsoft\Farah\Dictionary;
 
 class FromManifestInstructionBuilder implements InstructionBuilderStrategyInterface {
     
@@ -63,7 +64,9 @@ class FromManifestInstructionBuilder implements InstructionBuilderStrategyInterf
                 $instructions->contentUrls[] = $asset->lookupExecutable($args)->createRealUrl();
             }
             if ($asset->isLinkDictionaryInstruction()) {
-                $instructions->dictionaryUrls[] = $asset->lookupExecutable($args)->createRealUrl();
+                $url = $asset->lookupExecutable($args)->createRealUrl();
+                $instructions->dictionaryUrls[] = $url;
+                Dictionary::getInstance()->registerDictionary($url);
             }
         }
         return $instructions;
