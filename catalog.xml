@@ -10,11 +10,12 @@
   <uri name="farah://slothsoft@farah/xsl/module" uri="assets/xsl/module.xsl"/>
   <uri name="farah://slothsoft@farah/xsl/request" uri="assets/xsl/request.xsl"/>
   <uri name="farah://slothsoft@farah/xsl/xslt" uri="assets/xsl/xslt.xsl"/>
-  <uri name="http://schema.slothsoft.net/farah/dictionary" uri="assets/schema/dictionary/0.1.xsd"/>
+  <uri name="http://schema.slothsoft.net/farah/dictionary" uri="assets/schema/dictionary/0.2.xsd"/>
   <uri name="http://schema.slothsoft.net/farah/module" uri="assets/schema/module/1.1.xsd"/>
   <uri name="http://schema.slothsoft.net/farah/sitemap" uri="assets/schema/sitemap/1.1.xsd"/>
   <uri name="http://www.w3.org/XML/1998/namespace" uri="assets/schema/xml/1.0.xsd"/>
   <system systemId="farah://slothsoft@farah/schema/dictionary/0.1" uri="assets/schema/dictionary/0.1.xsd"/>
+  <system systemId="farah://slothsoft@farah/schema/dictionary/0.2" uri="assets/schema/dictionary/0.2.xsd"/>
   <system systemId="farah://slothsoft@farah/schema/module/1.0" uri="assets/schema/module/1.0.xsd"/>
   <system systemId="farah://slothsoft@farah/schema/module/1.1" uri="assets/schema/module/1.1.xsd"/>
   <system systemId="farah://slothsoft@farah/schema/sitemap/1.0" uri="assets/schema/sitemap/1.0.xsd"/>

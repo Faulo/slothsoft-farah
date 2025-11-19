@@ -27,23 +27,35 @@ class DecoratedDOMWriter implements DOMWriterInterface {
         $this->contents = $contents;
     }
     
+    private function hasLinks(): bool {
+        return ! $this->stylesheets->isEmpty() or ! $this->scripts->isEmpty() or ! $this->modules->isEmpty() or ! $this->contents->isEmpty();
+    }
+    
     public function toElement(DOMDocument $targetDoc): DOMElement {
         $element = $this->source->toElement($targetDoc);
-        $decorator = DecoratorFactory::createForElement($element);
-        $decorator->linkStylesheets(...$this->stylesheets);
-        $decorator->linkScripts(...$this->scripts);
-        $decorator->linkModules(...$this->modules);
-        $decorator->linkContents(...$this->contents);
+        
+        if ($this->hasLinks()) {
+            $decorator = DecoratorFactory::createForElement($element);
+            $decorator->linkStylesheets(...$this->stylesheets);
+            $decorator->linkScripts(...$this->scripts);
+            $decorator->linkModules(...$this->modules);
+            $decorator->linkContents(...$this->contents);
+        }
+        
         return $element;
     }
     
     public function toDocument(): DOMDocument {
         $document = $this->source->toDocument();
-        $decorator = DecoratorFactory::createForDocument($document);
-        $decorator->linkStylesheets(...$this->stylesheets);
-        $decorator->linkScripts(...$this->scripts);
-        $decorator->linkModules(...$this->modules);
-        $decorator->linkContents(...$this->contents);
+        
+        if ($this->hasLinks()) {
+            $decorator = DecoratorFactory::createForDocument($document);
+            $decorator->linkStylesheets(...$this->stylesheets);
+            $decorator->linkScripts(...$this->scripts);
+            $decorator->linkModules(...$this->modules);
+            $decorator->linkContents(...$this->contents);
+        }
+        
         return $document;
     }
 }

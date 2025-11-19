@@ -1,75 +1,124 @@
 <?xml version="1.0"?>
 <xsd:schema targetNamespace="http://schema.slothsoft.net/farah/dictionary" xmlns="http://schema.slothsoft.net/farah/dictionary" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
-	xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified">
+    xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
-	<xsd:annotation>
-		<xsd:appinfo>
-			<ssv:info version="1.0">
-				<ssv:name>Farah Dictionary</ssv:name>
-				<ssv:version>0.1</ssv:version>
-				<ssv:revision>R20180402</ssv:revision>
-				<ssv:prefix>sfd</ssv:prefix>
-				<ssv:namespace>http://schema.slothsoft.net/farah/dictionary</ssv:namespace>
-				<ssv:author email="daniel.lio.schulz@gmail.com">Daniel Schulz</ssv:author>
-				<ssv:description><![CDATA[
+    <xsd:annotation>
+        <xsd:appinfo>
+            <ssv:info version="1.0">
+                <ssv:name>Farah Dictionary</ssv:name>
+                <ssv:version>0.2</ssv:version>
+                <ssv:revision>R20251117</ssv:revision>
+                <ssv:prefix>sfd</ssv:prefix>
+                <ssv:namespace>http://schema.slothsoft.net/farah/dictionary</ssv:namespace>
+                <ssv:author email="daniel.lio.schulz@gmail.com">Daniel Schulz</ssv:author>
+                <ssv:description><![CDATA[
 This namespace defines elements to describe a dictionary, that is, a language-dependend list of key/value pairs to be used for automatic translating of XML documents.
 				]]></ssv:description>
-				<ssv:changelog><![CDATA[
+                <ssv:changelog><![CDATA[
 *** Version 0.2 ***
     R20251117
         - added dict attribute
+        - added <dictionary> element
+        - added <entry key=""> element
 
 *** Version 0.1 ***
     R20180402
         - initial release
 				]]></ssv:changelog>
-			</ssv:info>
-		</xsd:appinfo>
-	</xsd:annotation>
+            </ssv:info>
+        </xsd:appinfo>
+    </xsd:annotation>
 
-	<xsd:attribute name="dict" type="xpathExpression">
-		<xsd:annotation>
-			<xsd:documentation>Marks elements for translation. The value of this attribute is evaluated using the owning element as context, and all nodes identified by it get replaced by a dictionary lookup
-				of the string value of the identified nodes.
-			</xsd:documentation>
-		</xsd:annotation>
-	</xsd:attribute>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
 
-	<xsd:attributeGroup name="schemaVersion">
-		<xsd:attribute name="version" type="xsd:token" use="required" fixed="0.2">
-			<xsd:annotation>
-				<xsd:documentation>The schema version used by the instance document.</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-	</xsd:attributeGroup>
+    <xsd:attribute name="dict" type="xpathExpression">
+        <xsd:annotation>
+            <xsd:documentation>Marks elements for translation. The value of this attribute is evaluated using the owning element as context, and all nodes identified by it get replaced by a dictionary
+                lookup
+                of their string value.
+            </xsd:documentation>
+            <xsd:documentation>
+                Example usage:
+                <pre><![CDATA[
+<body sfd:dict="p">
+    <p>first-paragraph</p>
+    <p>second-paragraph</p>
+</body>
+]]></pre>
+                This will identify the 2 "p" elements and replace their text content by a lookup of the translation keys "first-paragraph" and "second-paragraph".
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
 
-	<xsd:element name="dictionary">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:any minOccurs="0" />
-			</xsd:sequence>
-			<xsd:attributeGroup ref="schemaVersion" />
-		</xsd:complexType>
-	</xsd:element>
+    <xsd:attributeGroup name="schemaVersion">
+        <xsd:attribute name="version" type="xsd:token" use="required" fixed="0.2">
+            <xsd:annotation>
+                <xsd:documentation>The schema version used by the instance document.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:attributeGroup>
 
-	<xsd:element name="entry">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:any minOccurs="0" />
-			</xsd:sequence>
-			<xsd:attribute name="key" type="dictionaryKey">
-				<xsd:annotation>
-					<xsd:documentation>The schema version used by the instance document.</xsd:documentation>
-				</xsd:annotation>
-			</xsd:attribute>
-		</xsd:complexType>
-	</xsd:element>
+    <xsd:attributeGroup name="dictionaryEntry">
+        <xsd:attribute ref="xml:id" use="required">
+            <xsd:annotation>
+                <xsd:documentation>The translation key to identify this entry by.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute ref="xml:space" use="optional" />
+    </xsd:attributeGroup>
 
-	<xsd:simpleType name="dictionaryKey">
-		<xsd:restriction base="xsd:token" />
-	</xsd:simpleType>
+    <xsd:element name="dictionary">
+        <xsd:complexType>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element ref="entry" />
+                <xsd:element ref="fragment" />
+                <xsd:element ref="text" />
+            </xsd:choice>
+            <xsd:attributeGroup ref="schemaVersion" />
+        </xsd:complexType>
+    </xsd:element>
 
-	<xsd:simpleType name="xpathExpression">
-		<xsd:restriction base="xsd:string" />
-	</xsd:simpleType>
+    <xsd:element name="entry">
+        <xsd:complexType mixed="true">
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:any namespace="##other" processContents="lax" />
+            </xsd:choice>
+            <xsd:attributeGroup ref="dictionaryEntry" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="fragment">
+        <xsd:complexType mixed="false">
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:any namespace="##other" processContents="lax" />
+            </xsd:choice>
+            <xsd:attributeGroup ref="dictionaryEntry" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="text">
+        <xsd:complexType>
+            <xsd:simpleContent>
+                <xsd:extension base="dictionaryText">
+                    <xsd:attributeGroup ref="dictionaryEntry" />
+                </xsd:extension>
+            </xsd:simpleContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:simpleType name="dictionaryKey">
+        <xsd:restriction base="xsd:token">
+            <xsd:minLength value="1" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="dictionaryText">
+        <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve" fixed="true" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="xpathExpression">
+        <xsd:restriction base="xsd:string" />
+    </xsd:simpleType>
 </xsd:schema>

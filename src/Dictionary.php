@@ -3,6 +3,8 @@ declare(strict_types = 1);
 // © 2012 Daniel Schulz
 namespace Slothsoft\Farah;
 
+use Ds\Map;
+use Ds\Set;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
@@ -84,11 +86,11 @@ class Dictionary {
     
     protected ?FarahUrl $currentModule = null;
     
-    protected $currentLang;
+    protected ?string $currentLang = null;
     
-    protected $currentNS = 'core';
+    protected string $currentNS = 'core';
     
-    protected $langDocPath = 'vendor/slothsoft/%s/lang.%s.xml';
+    protected string $langDocPath = 'vendor/slothsoft/%s/lang.%s.xml';
     
     protected array $langDocs = [];
     
@@ -143,6 +145,8 @@ class Dictionary {
     }
     
     private function __construct() {
+        $this->dictionaryDocuments = new Map();
+        
         if (isset($_REQUEST[self::KEY_SET_LANG])) {
             setcookie(self::KEY_REQUEST_LANG, $_REQUEST[self::KEY_SET_LANG], time() + 60 * 60 * 24 * 30, '/');
             $_REQUEST[self::KEY_REQUEST_LANG] = $_REQUEST[self::KEY_SET_LANG];
@@ -171,6 +175,91 @@ class Dictionary {
     }
     
     private $isSettingUp = false;
+    
+    private Set $dictionaryUrls;
+    
+    private Map $dictionaryDocuments;
+    
+    private function getDictionaryDocuments(): iterable {
+        /** @var $url FarahUrl */
+        foreach ($this->dictionaryUrls as $url) {
+            $url = FarahUrl::createFromReference($this->currentLang, $url);
+            
+            if ($this->dictionaryDocuments->hasKey($url)) {
+                yield $this->dictionaryDocuments->get($url);
+            } else {
+                $path = (string) $url;
+                if (file_exists($path)) {
+                    $document = DOMHelper::loadDocument($path);
+                    $this->dictionaryDocuments->put($url, $document);
+                    yield $document;
+                }
+            }
+        }
+    }
+    
+    private function lookupKeyInDictionaryDocuments(string $key): ?DOMElement {
+        if ($key === '') {
+            return null;
+        }
+        
+        /** @var $dictionaryDocument DOMDocument */
+        foreach ($this->getDictionaryDocuments() as $dictionaryDocument) {
+            $value = $dictionaryDocument->getElementById($key);
+            if ($value !== null) {
+                return $value;
+            }
+        }
+        
+        return null;
+    }
+    
+    public function translateDocumentViaDictionary(DOMDocument $document, Set $dictionaryUrls): int {
+        if (! $this->currentLang) {
+            return 0;
+        }
+        
+        $this->dictionaryUrls = $dictionaryUrls;
+        
+        $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_NS_ALL);
+        $contextNodes = [
+            ...$xpath->evaluate('//*[@sfd:dict]')
+        ];
+        /** @var $contextNode DOMElement */
+        foreach ($contextNodes as $contextNode) {
+            $query = trim($contextNode->getAttributeNS(DOMHelper::NS_FARAH_DICTIONARY, 'dict'));
+            $targetNodes = $query === '' ? [
+                ...$contextNode->childNodes
+            ] : [
+                ...$xpath->evaluate($query, $contextNode)
+            ];
+            
+            /** @var $targetNode DOMNode */
+            foreach ($targetNodes as $targetNode) {
+                if ($translatedNode = $this->lookupKeyInDictionaryDocuments($targetNode->textContent)) {
+                    switch ($targetNode->nodeType) {
+                        case XML_ATTRIBUTE_NODE:
+                            $targetNode->value = $translatedNode->textContent;
+                            break;
+                        default:
+                            $fragment = $document->createDocumentFragment();
+                            foreach ($translatedNode->childNodes as $node) {
+                                $fragment->appendChild($document->importNode($node, true));
+                            }
+                            
+                            if ($translatedNode->hasAttributeNS(DOMHelper::NS_XML, 'space') and $targetNode->parentNode->nodeType === XML_ELEMENT_NODE) {
+                                $targetNode->parentNode->setAttributeNS(DOMHelper::NS_XML, 'space', $translatedNode->getAttributeNS(DOMHelper::NS_XML, 'space'));
+                            }
+                            
+                            $targetNode->parentNode->replaceChild($fragment, $targetNode);
+                    }
+                }
+            }
+            
+            $contextNode->removeAttributeNS(DOMHelper::NS_FARAH_DICTIONARY, 'dict');
+        }
+        return 0;
+    }
     
     /* public functions */
     public function translateDoc(DOMDocument $doc, FarahUrl $context) {

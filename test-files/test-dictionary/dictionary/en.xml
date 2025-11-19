@@ -1,0 +1,9 @@
+<sfd:dictionary xmlns="http://www.w3.org/1999/xhtml" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary" version="0.2">
+    <sfd:entry xml:id="h1" xml:space="preserve">hello <a href="/">world</a>!</sfd:entry>
+    <sfd:fragment xml:id="p">
+        <span>hello</span>
+        <a href="/">world</a>
+        <span>!</span>
+    </sfd:fragment>
+    <sfd:text xml:id="input">hello world!</sfd:text>
+</sfd:dictionary>

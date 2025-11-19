@@ -10,6 +10,7 @@ use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\DOMWriter\AssetFragmentDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TransformationDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TranslationDOMWriter;
+use Slothsoft\Farah\Module\DOMWriter\TranslationDOMWriter2;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
@@ -61,16 +62,20 @@ class TransformationResultBuilder implements ResultBuilderStrategyInterface {
                 $template = Module::resolveToDOMWriter($useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
                 $writer = new TransformationDOMWriter($writer, $template);
                 if ($this->translateResult) {
-                    $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $useInstructions->rootUrl);
+                    $linkInstructions = $context->lookupLinkInstructions();
+                    // translate sfd:dict attributes
+                    if ($linkInstructions->dictionaryUrls->isEmpty()) {
+                        $writer = new TranslationDOMWriter($writer, Dictionary::getInstance(), $useInstructions->rootUrl);
+                    } else {
+                        $writer = new TranslationDOMWriter2($writer, Dictionary::getInstance(), $linkInstructions->dictionaryUrls);
+                    }
                 }
             }
             
             if ($this->decorateResult) {
                 $linkInstructions = $context->lookupLinkInstructions();
                 // add all <link> and <script> elements
-                if (! $linkInstructions->isEmpty()) {
-                    $writer = new DecoratedDOMWriter($writer, $linkInstructions->stylesheetUrls, $linkInstructions->scriptUrls, $linkInstructions->moduleUrls, $linkInstructions->contentUrls);
-                }
+                $writer = new DecoratedDOMWriter($writer, $linkInstructions->stylesheetUrls, $linkInstructions->scriptUrls, $linkInstructions->moduleUrls, $linkInstructions->contentUrls);
             }
         }
         
