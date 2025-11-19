@@ -4,9 +4,15 @@
     <resource-directory name="documents" type="application/xml" />
 
     <fragment name="translations">
-        <fragment name="document">
+        <fragment name="test">
             <use-template ref="//slothsoft@farah/xsl/html" />
-            <use-document ref="/documents/untranslated" />
+            <use-document ref="/documents/test" />
+            <link-dictionary ref="/dictionary" />
+        </fragment>
+
+        <fragment name="utf8">
+            <use-template ref="//slothsoft@farah/xsl/html" />
+            <use-document ref="/documents/utf8" />
             <link-dictionary ref="/dictionary" />
         </fragment>
     </fragment>

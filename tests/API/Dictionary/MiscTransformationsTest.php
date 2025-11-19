@@ -53,10 +53,17 @@ final class MiscTransformationsTest extends TestCase {
     
     public function translateDocumentViaDictionaryProvider(): iterable {
         yield 'translate document' => [
-            'farah://slothsoft@test-dictionary/documents/untranslated',
+            'farah://slothsoft@test-dictionary/documents/test',
             'farah://slothsoft@test-dictionary/dictionary',
             'en',
-            'farah://slothsoft@test-dictionary/documents/translated-en'
+            'farah://slothsoft@test-dictionary/documents/test-translated-en'
+        ];
+        
+        yield 'translate utf8' => [
+            'farah://slothsoft@test-dictionary/documents/utf8',
+            'farah://slothsoft@test-dictionary/dictionary',
+            'en',
+            'farah://slothsoft@test-dictionary/documents/utf8-translated-en'
         ];
     }
     
@@ -77,9 +84,15 @@ final class MiscTransformationsTest extends TestCase {
     
     public function autoTranslateProvider(): iterable {
         yield 'translate document' => [
-            'farah://slothsoft@test-dictionary/translations/document',
+            'farah://slothsoft@test-dictionary/translations/test',
             'en',
-            'farah://slothsoft@test-dictionary/documents/transformed-en'
+            'farah://slothsoft@test-dictionary/documents/test-transformed-en'
+        ];
+        
+        yield 'translate utf8' => [
+            'farah://slothsoft@test-dictionary/translations/utf8',
+            'en',
+            'farah://slothsoft@test-dictionary/documents/utf8-transformed-en'
         ];
     }
 }

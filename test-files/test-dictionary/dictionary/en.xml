@@ -6,4 +6,5 @@
         <span>!</span>
     </sfd:fragment>
     <sfd:text xml:id="input">hello world!</sfd:text>
+    <sfd:text xml:id="utf8">hello ♥ 😎 🐻 &#160; &lt;--&gt;</sfd:text>
 </sfd:dictionary>

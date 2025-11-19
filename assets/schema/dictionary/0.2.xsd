@@ -19,7 +19,9 @@ This namespace defines elements to describe a dictionary, that is, a language-de
     R20251117
         - added dict attribute
         - added <dictionary> element
-        - added <entry key=""> element
+        - added <entry xml:id=""> element
+        - added <fragment xml:id=""> element
+        - added <text xml:id=""> element
 
 *** Version 0.1 ***
     R20180402

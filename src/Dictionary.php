@@ -250,10 +250,7 @@ class Dictionary {
                                 $targetNode->value = $translatedNode->textContent;
                                 break;
                             default:
-                                $fragment = $document->createDocumentFragment();
-                                foreach ($translatedNode->childNodes as $node) {
-                                    $fragment->appendChild($document->importNode($node, true));
-                                }
+                                $fragment = $this->createTranslationReplacement($document, $translatedNode);
                                 
                                 if ($translatedNode->hasAttributeNS(DOMHelper::NS_XML, 'space') and $targetNode->parentNode->nodeType === XML_ELEMENT_NODE) {
                                     $targetNode->parentNode->setAttributeNS(DOMHelper::NS_XML, 'space', $translatedNode->getAttributeNS(DOMHelper::NS_XML, 'space'));
@@ -273,6 +270,29 @@ class Dictionary {
         $document->documentElement->setAttributeNS(DOMHelper::NS_XML, 'lang', $this->currentLang);
         
         return $translationsCount;
+    }
+    
+    private function createTranslationReplacement(DOMDocument $document, DOMElement $translatedNode): DOMNode {
+        switch ($translatedNode->localName) {
+            case 'text':
+                return $document->createTextNode($translatedNode->textContent);
+            case 'fragment':
+                $fragment = $document->createDocumentFragment();
+                /** @var $node DOMNode */
+                foreach ($translatedNode->childNodes as $node) {
+                    if ($node->nodeType === XML_ELEMENT_NODE) {
+                        $fragment->appendChild($document->importNode($node, true));
+                    }
+                }
+                return $fragment;
+            default:
+                $fragment = $document->createDocumentFragment();
+                /** @var $node DOMNode */
+                foreach ($translatedNode->childNodes as $node) {
+                    $fragment->appendChild($document->importNode($node, true));
+                }
+                return $fragment;
+        }
     }
     
     /* public functions */

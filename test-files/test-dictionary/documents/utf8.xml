@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary">
+
+    <head />
+
+    <body>
+        <h1 sfd:dict="">utf8</h1>
+        <input type="button" value="utf8" sfd:dict="@value" />
+    </body>
+</html>
