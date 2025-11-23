@@ -22,5 +22,11 @@
             <use-document ref="/dictionary/en" />
             <link-dictionary ref="/dictionary" />
         </fragment>
+
+        <fragment name="lookup">
+            <use-template ref="/xsl/lookup" />
+            <use-document ref="/dictionary/en" />
+            <link-dictionary ref="/dictionary" />
+        </fragment>
     </fragment>
 </assets>

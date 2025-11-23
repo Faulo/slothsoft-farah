@@ -15,4 +15,8 @@
 
         <func:result select="php:functionString('Slothsoft\Farah\Dictionary::xsltSanitizeKey', string($key))" />
     </func:function>
+
+    <func:function name="sfd:current-language">
+        <func:result select="php:functionString('Slothsoft\Farah\Dictionary::xsltCurrentLanguage')" />
+    </func:function>
 </xsl:stylesheet>

@@ -77,6 +77,7 @@ This namespace defines elements to describe a dictionary, that is, a language-de
                 <xsd:element ref="text" />
             </xsd:choice>
             <xsd:attributeGroup ref="schemaVersion" />
+            <xsd:attribute ref="xml:lang" use="optional" />
         </xsd:complexType>
     </xsd:element>
 
@@ -108,11 +109,15 @@ This namespace defines elements to describe a dictionary, that is, a language-de
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:simpleType name="dictionaryKey">
-        <xsd:restriction base="xsd:token">
-            <xsd:minLength value="1" />
-        </xsd:restriction>
-    </xsd:simpleType>
+    <xsd:element name="lookup">
+        <xsd:complexType>
+            <xsd:attribute name="key" type="xsd:IDREF" use="required">
+                <xsd:annotation>
+                    <xsd:documentation>The ID of the translation entry to replace this element with.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
 
     <xsd:simpleType name="dictionaryText">
         <xsd:restriction base="xsd:string">

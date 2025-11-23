@@ -103,5 +103,11 @@ final class MiscTransformationsTest extends TestCase {
             'en',
             'farah://slothsoft@test-dictionary/dictionary/en'
         ];
+        
+        yield 'lookup via element' => [
+            'farah://slothsoft@test-dictionary/translations/lookup',
+            'en',
+            'farah://slothsoft@test-dictionary/dictionary/en'
+        ];
     }
 }

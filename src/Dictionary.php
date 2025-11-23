@@ -16,6 +16,11 @@ use DOMXPath;
 
 class Dictionary {
     
+    public static function xsltCurrentLanguage(): string {
+        $dict = self::getInstance();
+        return $dict->getLang();
+    }
+    
     public static function xsltLookupText(string $word, string $module = '', string $language = ''): string {
         $dict = self::getInstance();
         
@@ -92,11 +97,8 @@ class Dictionary {
         do {
             $count = 0;
             
-            $contextNodes = [
-                ...$xpath->evaluate('//*[@sfd:dict]')
-            ];
             /** @var $contextNode DOMElement */
-            foreach ($contextNodes as $contextNode) {
+            foreach (iterator_to_array($xpath->evaluate('//*[@sfd:dict]')) as $contextNode) {
                 $query = trim($contextNode->getAttributeNS(DOMHelper::NS_FARAH_DICTIONARY, 'dict'));
                 $targetNodes = $query === '' ? [
                     ...$contextNode->childNodes
@@ -126,6 +128,19 @@ class Dictionary {
                 }
                 
                 $contextNode->removeAttributeNS(DOMHelper::NS_FARAH_DICTIONARY, 'dict');
+            }
+            
+            /** @var $targetNode DOMElement */
+            foreach (iterator_to_array($document->getElementsByTagNameNS(DOMHelper::NS_FARAH_DICTIONARY, 'lookup')) as $targetNode) {
+                $key = (string) $targetNode->getAttribute('key');
+                
+                if ($translatedNode = $this->lookupKeyInDictionaryDocuments($dictionaryUrls, $key)) {
+                    $count ++;
+                    $fragment = $this->createTranslationReplacement($document, $translatedNode);
+                    $targetNode->parentNode->replaceChild($fragment, $targetNode);
+                } else {
+                    $targetNode->parentNode->removeChild($targetNode);
+                }
             }
             
             $translationsCount += $count;
