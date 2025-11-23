@@ -9,6 +9,7 @@ use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
 use DOMDocument;
+use Slothsoft\FarahTesting\TestUtils;
 
 class MiscTransformationsTest extends TestCase {
     
@@ -44,12 +45,21 @@ class MiscTransformationsTest extends TestCase {
                 'test-files/xslt-base64.xml',
                 'test-files/xslt-base64.xml'
             ],
-            'farah://slothsoft@farah/xsl/dictionary' => [
+            'farah://slothsoft@farah/xsl/dictionary lookup-text' => [
                 'test-files/dictionary.xsl',
-                'test-files/dictionary.xml',
-                'test-files/dictionary.xml'
+                'test-files/dictionary-lookup-text.xml',
+                'test-files/dictionary-lookup-text.xml'
+            ],
+            'farah://slothsoft@farah/xsl/dictionary sanitize-key' => [
+                'test-files/dictionary.xsl',
+                'test-files/dictionary-sanitize-key.xml',
+                'test-files/dictionary-sanitize-key.xml'
             ]
         ];
+    }
+    
+    protected function setUp(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
     }
     
     /**

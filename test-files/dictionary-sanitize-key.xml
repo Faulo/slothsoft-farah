@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<test>
+    <key input="" sanitized="" />
+    <key input="abcöäüß" sanitized="abcöäüß" />
+    <key input="id023" sanitized="id023" />
+    <key input="  a b c ö   ä
+    ü
+    ß   
+    " sanitized="abcöäüß" />
+    <key input="id.-_:@$%&amp;/\\+,;()[]{}?" sanitized="id.-_" />
+    <key input="和　製　漢　字" sanitized="和製漢字" />
+    <key input="0.-A" sanitized="A" />
+    <key input="0.-_" sanitized="_" />
+    <key input="A·B" sanitized="A·B" />
+</test>

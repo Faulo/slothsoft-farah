@@ -9,4 +9,10 @@
 
         <func:result select="php:functionString('Slothsoft\Farah\Dictionary::xsltLookupText', string($key), string($dictionary), string($language))" />
     </func:function>
+
+    <func:function name="sfd:sanitize-key">
+        <xsl:param name="key" select="." />
+
+        <func:result select="php:functionString('Slothsoft\Farah\Dictionary::xsltSanitizeKey', string($key))" />
+    </func:function>
 </xsl:stylesheet>
