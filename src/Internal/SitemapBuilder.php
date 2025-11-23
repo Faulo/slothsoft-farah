@@ -101,7 +101,7 @@ class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInt
     private function initDocument(): void {
         $this->domainNode = $this->document->documentElement;
         $this->domainName = $this->domainNode->getAttribute('name');
-        $this->xpath = DOMHelper::loadXPath($this->document);
+        $this->xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT);
         
         // preload all include-pages elements
         $domain = null;
