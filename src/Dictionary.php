@@ -32,6 +32,10 @@ class Dictionary {
         }
     }
     
+    public static function xsltSanitizeKey(string $key): string {
+        return preg_replace('~[^\p{L}\p{Pc}\p{Mn}\p{Mc}_0-9.\-\x{00B7}]+~u', '', preg_replace('~^[^\p{L}_]*~u', '', $key));
+    }
+    
     private Set $dictionaryUrls;
     
     public function registerDictionary(FarahUrl $url) {
