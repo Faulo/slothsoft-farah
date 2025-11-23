@@ -41,9 +41,7 @@ class EmbedIncludesDOMWriter implements DOMWriterInterface {
         $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_W3C);
         
         do {
-            $includeNodes = [
-                ...$xpath->evaluate('/*/xsl:include[@href]')
-            ];
+            $includeNodes = iterator_to_array($xpath->evaluate('/*/xsl:include[@href]'));
             
             /** @var $includeNode DOMElement */
             foreach ($includeNodes as $includeNode) {

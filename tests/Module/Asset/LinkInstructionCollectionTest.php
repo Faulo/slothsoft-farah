@@ -2,18 +2,72 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Asset;
 
+use Ds\Set;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Constraint\LessThan;
 
 /**
  * LinkInstructionCollectionTest
  *
  * @see LinkInstructionCollection
- *
- * @todo auto-generated
  */
-class LinkInstructionCollectionTest extends TestCase {
+final class LinkInstructionCollectionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(LinkInstructionCollection::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\LinkInstructionCollection'!");
+    }
+    
+    private const SET_SIZE = 10_000;
+    
+    private const ITERATIONS = 1_000;
+    
+    public function testForeachMergeIsNotSlowerThanSpreadMerge(): void {
+        $target = range(1, self::SET_SIZE);
+        $source = new Set(range(1, self::SET_SIZE, 2));
+        
+        $spreadTotalNs = 0;
+        $foreachTotalNs = 0;
+        $unionTotalNs = 0;
+        
+        for ($i = 0; $i < self::ITERATIONS; $i ++) {
+            $spreadTotalNs += $this->testWithSpread($target, $source);
+            $foreachTotalNs += $this->testWithForeach($target, $source);
+            $unionTotalNs += $this->testWithUnion($target, $source);
+        }
+        
+        $spreadMs = $spreadTotalNs / 1_000_000;
+        $foreachMs = $foreachTotalNs / 1_000_000;
+        $unionMs = $unionTotalNs / 1_000_000;
+        
+        printf("\nDs\\Set merge benchmark:\n  spread:   %.2f ms\n  foreach:  %.2f ms\n  union:  %.2f ms\n", $spreadMs, $foreachMs, $unionMs);
+        
+        $this->assertThat($spreadMs, new LessThan($foreachMs), sprintf('Expected spread-merge (%.2f ms) to be faster than foreach-merge (%.2f ms).', $spreadMs, $foreachMs));
+        $this->assertThat($unionMs, new LessThan($spreadMs), sprintf('Expected union-merge (%.2f ms) to be faster than spread-merge (%.2f ms).', $unionMs, $spreadMs));
+    }
+    
+    private function testWithSpread(array $target, Set $source): float {
+        $target = new Set($target);
+        
+        $start = hrtime(true);
+        $target->add(...$source);
+        return hrtime(true) - $start;
+    }
+    
+    private function testWithForeach(array $target, Set $source): float {
+        $target = new Set($target);
+        
+        $start = hrtime(true);
+        foreach ($source as $value) {
+            $target->add($value);
+        }
+        return hrtime(true) - $start;
+    }
+    
+    private function testWithUnion(array $target, Set $source): float {
+        $target = new Set($target);
+        
+        $start = hrtime(true);
+        $target = $target->union($source);
+        return hrtime(true) - $start;
     }
 }

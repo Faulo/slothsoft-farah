@@ -100,11 +100,8 @@ class Dictionary {
             /** @var $contextNode DOMElement */
             foreach (iterator_to_array($xpath->evaluate('//*[@sfd:dict]')) as $contextNode) {
                 $query = trim($contextNode->getAttributeNS(DOMHelper::NS_FARAH_DICTIONARY, 'dict'));
-                $targetNodes = $query === '' ? [
-                    ...$contextNode->childNodes
-                ] : [
-                    ...$xpath->evaluate($query, $contextNode)
-                ];
+                $targetNodes = $query === '' ? $contextNode->childNodes : $xpath->evaluate($query, $contextNode);
+                $targetNodes = iterator_to_array($targetNodes);
                 
                 /** @var $targetNode DOMNode */
                 foreach ($targetNodes as $targetNode) {

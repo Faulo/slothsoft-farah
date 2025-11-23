@@ -10,6 +10,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
+use Slothsoft\FarahTesting\TestUtils;
 
 /**
  * FromFilesystemPathResolverTest
@@ -23,6 +24,10 @@ class FromFilesystemPathResolverTest extends TestCase {
     }
     
     private const DIRECTORY = 'test-files/test-paths';
+    
+    protected function setUp(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
+    }
     
     /**
      *
@@ -38,9 +43,7 @@ class FromFilesystemPathResolverTest extends TestCase {
         
         $sut = new FromFilesystemPathResolver();
         $actual = $sut->loadChildren($context);
-        $actual = [
-            ...$actual
-        ];
+        $actual = iterator_to_array($actual);
         
         $this->assertThat($actual, new IsEqual($expected));
     }

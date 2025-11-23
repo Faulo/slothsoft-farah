@@ -93,10 +93,9 @@ class FarahUrlPath implements Hashable {
     }
     
     public function withLastSegment(string $name): FarahUrlPath {
-        return self::createFromSegments([
-            ...$this->segments,
-            $name
-        ]);
+        $segments = $this->segments;
+        $segments[] = $name;
+        return self::createFromSegments($segments);
     }
     
     public function isEmpty(): bool {
