@@ -97,11 +97,17 @@ class Dictionary {
         do {
             $count = 0;
             
+            $contextNodes = [
+                ...$xpath->evaluate('//*[@sfd:dict]')
+            ];
+            
             /** @var $contextNode DOMElement */
-            foreach (iterator_to_array($xpath->evaluate('//*[@sfd:dict]')) as $contextNode) {
+            foreach ($contextNodes as $contextNode) {
                 $query = trim($contextNode->getAttributeNS(DOMHelper::NS_FARAH_DICTIONARY, 'dict'));
                 $targetNodes = $query === '' ? $contextNode->childNodes : $xpath->evaluate($query, $contextNode);
-                $targetNodes = iterator_to_array($targetNodes);
+                $targetNodes = [
+                    ...$targetNodes
+                ];
                 
                 /** @var $targetNode DOMNode */
                 foreach ($targetNodes as $targetNode) {
@@ -127,8 +133,12 @@ class Dictionary {
                 $contextNode->removeAttributeNS(DOMHelper::NS_FARAH_DICTIONARY, 'dict');
             }
             
+            $targetNodes = [
+                ...$xpath->evaluate('//sfd:lookup')
+            ];
+            
             /** @var $targetNode DOMElement */
-            foreach (iterator_to_array($document->getElementsByTagNameNS(DOMHelper::NS_FARAH_DICTIONARY, 'lookup')) as $targetNode) {
+            foreach ($targetNodes as $targetNode) {
                 $key = (string) $targetNode->getAttribute('key');
                 
                 if ($translatedNode = $this->lookupKeyInDictionaryDocuments($dictionaryUrls, $key)) {
