@@ -21,6 +21,7 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StringWriterStreamBuilde
 use Slothsoft\Farah\Sites\Domain;
 use DOMDocument;
 use DOMElement;
+use DOMXPath;
 
 /**
  *
@@ -33,6 +34,8 @@ class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInt
     private ?AssetInterface $asset = null;
     
     private ?DOMDocument $document = null;
+    
+    private DOMXPath $xpath;
     
     private DOMElement $domainNode;
     
@@ -60,10 +63,8 @@ class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInt
         $this->loadDocument();
         
         $data = [];
-        foreach ($this->document->getElementsByTagName('*') as $node) {
-            if ($node->hasAttribute('uri')) {
-                $data[] = $node->getAttribute('uri');
-            }
+        foreach ($this->xpath->query('//*[@uri]') as $node) {
+            $data[] = $node->getAttribute('uri');
         }
         
         return json_encode($data);
@@ -100,35 +101,29 @@ class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInt
     private function initDocument(): void {
         $this->domainNode = $this->document->documentElement;
         $this->domainName = $this->domainNode->getAttribute('name');
+        $this->xpath = DOMHelper::loadXPath($this->document);
         
         // preload all include-pages elements
         $domain = null;
-        while ($nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_INCLUDE_PAGES) and $nodeList->length) {
-            $dataNodeList = [];
-            foreach ($nodeList as $node) {
-                $dataNodeList[] = $node;
-            }
+        while ($dataNodeList = $this->xpath->query('//sfs:include-pages') and $dataNodeList->length) {
             $domain ??= new Domain($this->document);
             foreach ($dataNodeList as $dataNode) {
                 $url = $domain->lookupAssetUrl($dataNode);
                 $result = Module::resolveToResult($url);
                 $node = $result->toElement($this->document);
-                while ($node->hasChildNodes()) {
-                    $dataNode->parentNode->insertBefore($node->firstChild, $dataNode);
+                $fragment = $this->document->createDocumentFragment();
+                foreach ([
+                    ...$node->childNodes
+                ] as $node) {
+                    $fragment->appendChild($node);
                 }
-                $dataNode->parentNode->removeChild($dataNode);
+                $dataNode->parentNode->replaceChild($fragment, $dataNode);
             }
         }
         
         $this->initDomainElement($this->domainNode);
         
-        $nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_PAGE);
-        foreach ($nodeList as $node) {
-            $this->initPageElement($node);
-        }
-        
-        $nodeList = $this->document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_FILE);
-        foreach ($nodeList as $node) {
+        foreach ($this->xpath->query('//sfs:page | //sfs:file') as $node) {
             $this->initPageElement($node);
         }
     }

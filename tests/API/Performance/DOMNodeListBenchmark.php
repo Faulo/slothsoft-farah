@@ -3,8 +3,10 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\API\Performance;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Constraint\IsEqual;
 use Slothsoft\Core\DOMHelper;
 use Closure;
+use DOMDocument;
 use DOMNodeList;
 
 /**
@@ -14,9 +16,9 @@ use DOMNodeList;
  */
 final class DOMNodeListBenchmark extends TestCase {
     
-    private const SET_SIZE = 10_000;
+    private const WARMUP = 100;
     
-    private const ITERATIONS = 1_000;
+    private const ITERATIONS = 500;
     
     private static function foreach_DOMNodeList(DOMNodeList $source): array {
         $result = [];
@@ -35,7 +37,7 @@ final class DOMNodeListBenchmark extends TestCase {
     }
     
     private static function yield_items(DOMNodeList $source): iterable {
-        for ($i = 0; $i < $source->length; $i ++) {
+        for ($i = 0, $j = $source->length; $i < $j; $i ++) {
             yield $source->item($i);
         }
     }
@@ -44,6 +46,10 @@ final class DOMNodeListBenchmark extends TestCase {
         return [
             ...$source
         ];
+    }
+    
+    private static function stub_DOMNodeList(DOMNodeList $source): array {
+        return range(1, $source->length);
     }
     
     public function searchProvider(): iterable {
@@ -68,6 +74,10 @@ final class DOMNodeListBenchmark extends TestCase {
      */
     public function test_getElementsByTagName(string $tag, ?string $ns = null): void {
         $methods = [];
+        $methods['stub'] = Closure::fromCallable([
+            __CLASS__,
+            'stub_DOMNodeList'
+        ]);
         $methods['foreach'] = Closure::fromCallable([
             __CLASS__,
             'foreach_DOMNodeList'
@@ -88,7 +98,7 @@ final class DOMNodeListBenchmark extends TestCase {
         
         $results = [];
         foreach ($methods as $id => $method) {
-            for ($i = 0; $i < self::ITERATIONS; $i ++) {
+            for ($i = 0; $i < self::WARMUP; $i ++) {
                 $method($source);
             }
             
@@ -113,6 +123,10 @@ final class DOMNodeListBenchmark extends TestCase {
      */
     public function test_evaluate(string $tag, ?string $ns = null): void {
         $methods = [];
+        $methods['stub'] = Closure::fromCallable([
+            __CLASS__,
+            'stub_DOMNodeList'
+        ]);
         $methods['spread'] = Closure::fromCallable([
             __CLASS__,
             'spread_DOMNodeList'
@@ -144,7 +158,7 @@ final class DOMNodeListBenchmark extends TestCase {
         
         $results = [];
         foreach ($methods as $id => $method) {
-            for ($i = 0; $i < self::ITERATIONS; $i ++) {
+            for ($i = 0; $i < self::WARMUP; $i ++) {
                 $method($source);
             }
             
@@ -169,6 +183,10 @@ final class DOMNodeListBenchmark extends TestCase {
      */
     public function test_query(string $tag, ?string $ns = null): void {
         $methods = [];
+        $methods['stub'] = Closure::fromCallable([
+            __CLASS__,
+            'stub_DOMNodeList'
+        ]);
         $methods['spread'] = Closure::fromCallable([
             __CLASS__,
             'spread_DOMNodeList'
@@ -200,7 +218,7 @@ final class DOMNodeListBenchmark extends TestCase {
         
         $results = [];
         foreach ($methods as $id => $method) {
-            for ($i = 0; $i < self::ITERATIONS; $i ++) {
+            for ($i = 0; $i < self::WARMUP; $i ++) {
                 $method($source);
             }
             
@@ -217,5 +235,71 @@ final class DOMNodeListBenchmark extends TestCase {
         foreach ($results as $id => $result) {
             printf(' %s: %.2f ms%s', $id, $result / 1_000_000, PHP_EOL);
         }
+    }
+    
+    /**
+     *
+     * @dataProvider isLiveProvider
+     */
+    public function test_DOMNodeList_isLive(string $mode, bool $remove, int $expected): void {
+        $document = new DOMDocument();
+        $node = $document->createElement('root');
+        $document->appendChild($node);
+        
+        switch ($mode) {
+            case 'getElementsByTagName':
+                $result = $document->getElementsByTagName('root');
+                break;
+            case 'evaluate':
+                $result = DOMHelper::loadXPath($document)->evaluate('.//root', $document);
+                break;
+            case 'query':
+                $result = DOMHelper::loadXPath($document)->query('.//root', $document);
+                break;
+        }
+        
+        if ($remove) {
+            $document->removeChild($node);
+        }
+        
+        $this->assertThat($result->length, new IsEqual($expected));
+    }
+    
+    public function isLiveProvider(): iterable {
+        yield 'getElementsByTagName, as-is' => [
+            'getElementsByTagName',
+            false,
+            1
+        ];
+        
+        yield 'getElementsByTagName, remove' => [
+            'getElementsByTagName',
+            true,
+            0
+        ];
+        
+        yield 'evaluate, as-is' => [
+            'evaluate',
+            false,
+            1
+        ];
+        
+        yield 'evaluate, remove' => [
+            'evaluate',
+            true,
+            1
+        ];
+        
+        yield 'query, as-is' => [
+            'query',
+            false,
+            1
+        ];
+        
+        yield 'query, remove' => [
+            'query',
+            true,
+            1
+        ];
     }
 }
