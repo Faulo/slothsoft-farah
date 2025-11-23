@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Module\Asset;
 use Ds\Set;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\LessThan;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 /**
  * LinkInstructionCollectionTest
@@ -68,6 +69,44 @@ final class LinkInstructionCollectionTest extends TestCase {
         
         $start = hrtime(true);
         $target = $target->union($source);
+        return hrtime(true) - $start;
+    }
+    
+    public function test_performance_addUrls(): void {
+        $urls = new Set();
+        foreach (range(1, self::SET_SIZE) as $i) {
+            $urls->add(FarahUrl::createFromReference('farah://test@test/' . $i));
+        }
+        
+        $spreadTotalNs = 0;
+        $iterableTotalNs = 0;
+        
+        for ($i = 0; $i < self::ITERATIONS; $i ++) {
+            $spreadTotalNs += $this->testForeachWithSpread(...$urls);
+            $iterableTotalNs += $this->testForeachWithIterable($urls);
+        }
+        
+        $spreadMs = $spreadTotalNs / 1_000_000;
+        $iterableMs = $iterableTotalNs / 1_000_000;
+        
+        printf("\nDs\\Set foreach benchmark:\n  spread:   %.2f ms\n  iterable:  %.2f ms\n", $spreadMs, $iterableMs);
+        
+        $this->assertThat($spreadMs, new LessThan($iterableMs), sprintf('Expected foreach-spread (%.2f ms) to be faster than foreach-iterable (%.2f ms).', $spreadMs, $iterableMs));
+    }
+    
+    private function testForeachWithSpread(FarahUrl ...$urls): float {
+        $start = hrtime(true);
+        foreach ($urls as $url) {
+            $url->hash();
+        }
+        return hrtime(true) - $start;
+    }
+    
+    private function testForeachWithIterable(iterable $urls): float {
+        $start = hrtime(true);
+        foreach ($urls as $url) {
+            $url->hash();
+        }
         return hrtime(true) - $start;
     }
 }

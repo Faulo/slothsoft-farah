@@ -258,7 +258,7 @@ class FarahUrl implements UriInterface, Hashable {
     }
     
     public function hash() {
-        return (string) $this;
+        return $this->id;
     }
 }
 
