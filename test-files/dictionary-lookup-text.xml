@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <test>
-	<word input="test" translation="translation-of-test" />
-	<word input="test" translation="übersetzung von test" xml:lang="de-de" />
+    <word input="test" translation="translation-of-test" />
+    <word input="test" translation="übersetzung von test" xml:lang="de-de" />
+    <word input="  test  " translation="translation-of-test" />
 </test>

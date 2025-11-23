@@ -6,7 +6,7 @@
 	<body>
 		<h1 sfd:dict="">h1</h1>
 		<p>
-			<replace-me sfd:dict=".">p</replace-me>
+			<replace-me sfd:dict="."> 0 p </replace-me>
 		</p>
 		<input type="button" value="input" sfd:dict="@value" />
 	</body>

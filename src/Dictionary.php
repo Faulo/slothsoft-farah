@@ -63,6 +63,8 @@ class Dictionary {
     }
     
     private function lookupKeyInDictionaryDocuments(Set $dictionaryUrls, string $key, string $language = ''): ?DOMElement {
+        $key = self::xsltSanitizeKey($key);
+        
         if ($key === '') {
             return null;
         }
