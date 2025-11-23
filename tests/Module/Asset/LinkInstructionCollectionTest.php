@@ -21,7 +21,7 @@ final class LinkInstructionCollectionTest extends TestCase {
     
     private const ITERATIONS = 1_000;
     
-    public function testForeachMergeIsNotSlowerThanSpreadMerge(): void {
+    public function test_performance_mergeSet(): void {
         $target = range(1, self::SET_SIZE);
         $source = new Set(range(1, self::SET_SIZE, 2));
         
