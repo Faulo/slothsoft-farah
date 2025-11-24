@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/dictionary" xmlns="http://schema.slothsoft.net/farah/dictionary" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
-    xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xsd:schema targetNamespace="http://schema.slothsoft.net/farah/dictionary" xmlns="http://schema.slothsoft.net/farah/dictionary" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary" xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
 
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="farah://slothsoft@farah/schema/xml/1.0" />
 
@@ -111,7 +111,7 @@ This namespace defines elements to describe a dictionary, that is, a language-de
 
     <xsd:element name="lookup">
         <xsd:complexType>
-            <xsd:attribute name="key" type="xsd:IDREF" use="required">
+            <xsd:attribute name="key" type="xsd:NCName" use="required">
                 <xsd:annotation>
                     <xsd:documentation>The ID of the translation entry to replace this element with.</xsd:documentation>
                 </xsd:annotation>
