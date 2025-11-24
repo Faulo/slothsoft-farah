@@ -2,6 +2,8 @@
 <xsd:schema targetNamespace="http://schema.slothsoft.net/farah/dictionary" xmlns="http://schema.slothsoft.net/farah/dictionary" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary"
     xmlns:ssv="http://schema.slothsoft.net/schema/versioning" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="farah://slothsoft@farah/schema/xml/1.0" />
+
     <xsd:annotation>
         <xsd:appinfo>
             <ssv:info version="1.0">
@@ -30,8 +32,6 @@ This namespace defines elements to describe a dictionary, that is, a language-de
             </ssv:info>
         </xsd:appinfo>
     </xsd:annotation>
-
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
 
     <xsd:attribute name="dict" type="xpathExpression">
         <xsd:annotation>
