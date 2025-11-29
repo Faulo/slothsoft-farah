@@ -103,7 +103,7 @@ EOT,
             
 <data>
     <element />
-    <script type="application/javascript" xmlns="http://www.w3.org/2000/svg" href="/slothsoft@test/path" async="async" />
+    <script type="application/javascript" xmlns="http://www.w3.org/2000/svg" href="/slothsoft@test/path" defer="defer" />
 </data>
 EOT
         ];
@@ -119,7 +119,7 @@ EOT,
             
 <data>
     <defs xmlns="http://www.w3.org/2000/svg">
-        <script type="application/javascript" xmlns="http://www.w3.org/2000/svg" href="/slothsoft@test/path" async="async" />
+        <script type="application/javascript" xmlns="http://www.w3.org/2000/svg" href="/slothsoft@test/path" defer="defer" />
     </defs>
 </data>
 EOT
