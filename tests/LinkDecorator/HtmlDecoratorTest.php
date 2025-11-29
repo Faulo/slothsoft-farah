@@ -156,7 +156,7 @@ EOT,
             <<<EOT
 <data>
     <element />
-    <script type="module" xmlns="http://www.w3.org/1999/xhtml" src="/slothsoft@test/path" />
+    <script type="module" xmlns="http://www.w3.org/1999/xhtml" src="/slothsoft@test/path" async="async" />
 </data>
 EOT
         ];
@@ -171,7 +171,7 @@ EOT,
             <<<EOT
 <data>
     <head xmlns="http://www.w3.org/1999/xhtml">
-        <script type="module" xmlns="http://www.w3.org/1999/xhtml" src="/slothsoft@test/path" />
+        <script type="module" xmlns="http://www.w3.org/1999/xhtml" src="/slothsoft@test/path" async="async" />
     </head>
 </data>
 EOT

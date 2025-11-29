@@ -47,7 +47,7 @@ EOT
             'script',
             <<<EOT
 <script xmlns="http://www.w3.org/1999/xhtml" type="application/javascript" src="/slothsoft@test-module/test" defer="defer" />
-<script xmlns="http://www.w3.org/1999/xhtml" type="module" src="/slothsoft@test-module/test" />
+<script xmlns="http://www.w3.org/1999/xhtml" type="module" src="/slothsoft@test-module/test" async="async" />
 EOT
         ];
         

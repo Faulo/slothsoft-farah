@@ -103,7 +103,7 @@ EOT,
             
 <data>
     <element />
-    <script type="application/javascript" xmlns="http://www.w3.org/2000/svg" href="/slothsoft@test/path" />
+    <script type="application/javascript" xmlns="http://www.w3.org/2000/svg" href="/slothsoft@test/path" async="async" />
 </data>
 EOT
         ];
@@ -119,7 +119,7 @@ EOT,
             
 <data>
     <defs xmlns="http://www.w3.org/2000/svg">
-        <script type="application/javascript" xmlns="http://www.w3.org/2000/svg" href="/slothsoft@test/path" />
+        <script type="application/javascript" xmlns="http://www.w3.org/2000/svg" href="/slothsoft@test/path" async="async" />
     </defs>
 </data>
 EOT
@@ -156,7 +156,7 @@ EOT,
             <<<EOT
 <data>
     <element />
-    <script type="module" xmlns="http://www.w3.org/2000/svg" href="/slothsoft@test/path" />
+    <script type="module" xmlns="http://www.w3.org/2000/svg" href="/slothsoft@test/path" async="async" />
 </data>
 EOT
         ];
@@ -171,7 +171,7 @@ EOT,
             <<<EOT
 <data>
     <defs xmlns="http://www.w3.org/2000/svg">
-        <script type="module" xmlns="http://www.w3.org/2000/svg" href="/slothsoft@test/path" />
+        <script type="module" xmlns="http://www.w3.org/2000/svg" href="/slothsoft@test/path" async="async" />
     </defs>
 </data>
 EOT
