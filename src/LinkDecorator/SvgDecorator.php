@@ -53,6 +53,7 @@ class SvgDecorator implements LinkDecoratorInterface {
             $node = $this->targetDocument->createElementNS(DOMHelper::NS_SVG, 'script');
             $node->setAttribute('href', $href);
             $node->setAttribute('type', 'application/javascript');
+            $node->setAttribute('defer', 'defer');
             $this->rootNode->appendChild($node);
         }
     }
@@ -64,6 +65,7 @@ class SvgDecorator implements LinkDecoratorInterface {
             $node = $this->targetDocument->createElementNS(DOMHelper::NS_SVG, 'script');
             $node->setAttribute('href', $href);
             $node->setAttribute('type', 'module');
+            $node->setAttribute('async', 'async'); // Chromium only supports async modules https://issues.chromium.org/issues/40518469#comment28
             $this->rootNode->appendChild($node);
         }
     }

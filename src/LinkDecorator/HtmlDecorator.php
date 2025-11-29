@@ -58,6 +58,7 @@ class HtmlDecorator implements LinkDecoratorInterface {
             $node = $this->targetDocument->createElementNS(DOMHelper::NS_HTML, 'script');
             $node->setAttribute('src', $href);
             $node->setAttribute('type', 'module');
+            $node->setAttribute('async', 'async'); // Chromium only supports async modules https://issues.chromium.org/issues/40518469#comment28
             $this->rootNode->appendChild($node);
         }
     }
