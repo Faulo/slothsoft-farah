@@ -18,6 +18,7 @@ This namespace defines elements to identify assets in a Farah module.
 *** Version 1.1 ***
     R20251130
         - added asset uses "content" and "dictionary
+        - added fragment-info children "link-content" and "link-dictionary"
         - added uniqueness constraints for all named assets
     
     R20251119
@@ -413,6 +414,8 @@ This namespace defines elements to identify assets in a Farah module.
                         <xsd:element ref="link-stylesheet" />
                         <xsd:element ref="link-script" />
                         <xsd:element ref="link-module" />
+                        <xsd:element ref="link-content" />
+                        <xsd:element ref="link-dictionary" />
                         <xsd:element ref="param" />
                     </xsd:choice>
                 </xsd:extension>
