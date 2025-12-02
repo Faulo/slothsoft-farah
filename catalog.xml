@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <uri name="farah://slothsoft@farah/example-domain" uri="assets/example-domain.xml"/>
   <uri name="farah://slothsoft@farah/sitemap-generator/prettify" uri="assets/sitemap-generator/prettify.xsl"/>
   <uri name="farah://slothsoft@farah/sitemap-generator/template" uri="assets/sitemap-generator/template.xsl"/>
   <uri name="farah://slothsoft@farah/xsl/date.functions" uri="assets/xsl/date.functions.xsl"/>
