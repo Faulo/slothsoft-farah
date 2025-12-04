@@ -9,7 +9,7 @@
             <ssv:info version="1.0">
                 <ssv:name>Farah Dictionary</ssv:name>
                 <ssv:version>1.0</ssv:version>
-                <ssv:revision>R20251117</ssv:revision>
+                <ssv:revision>R20251204</ssv:revision>
                 <ssv:prefix>sfd</ssv:prefix>
                 <ssv:namespace>http://schema.slothsoft.net/farah/dictionary</ssv:namespace>
                 <ssv:author email="daniel.lio.schulz@gmail.com">Daniel Schulz</ssv:author>
@@ -18,6 +18,9 @@ This namespace defines elements to describe a dictionary, that is, a language-de
 				]]></ssv:description>
                 <ssv:changelog><![CDATA[
 *** Version 1.0 ***
+    R20251204
+        - changed dictionary entries to allow for recursive lookups
+
     R20251117
         - added dict attribute
         - added <dictionary> element
@@ -85,6 +88,7 @@ This namespace defines elements to describe a dictionary, that is, a language-de
         <xsd:complexType mixed="true">
             <xsd:choice minOccurs="0" maxOccurs="unbounded">
                 <xsd:any namespace="##other" processContents="lax" />
+                <xsd:element ref="lookup" />
             </xsd:choice>
             <xsd:attributeGroup ref="dictionaryEntry" />
         </xsd:complexType>
@@ -94,6 +98,7 @@ This namespace defines elements to describe a dictionary, that is, a language-de
         <xsd:complexType mixed="false">
             <xsd:choice minOccurs="0" maxOccurs="unbounded">
                 <xsd:any namespace="##other" processContents="lax" />
+                <xsd:element ref="lookup" />
             </xsd:choice>
             <xsd:attributeGroup ref="dictionaryEntry" />
         </xsd:complexType>
