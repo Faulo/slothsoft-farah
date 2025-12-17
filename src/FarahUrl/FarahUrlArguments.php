@@ -35,25 +35,28 @@ class FarahUrlArguments implements IteratorAggregate, Hashable {
         return self::createFromValueList($valueList);
     }
     
-    public static function createFromValueList(array $valueList): FarahUrlArguments {
+    private static function createFromValueListInternal(array $valueList, string $rootKey = ''): iterable {
         ksort($valueList);
-        $query = [];
         foreach ($valueList as $key => $value) {
-            $key = rawurlencode((string) $key);
+            $key = is_string($key) ? rawurlencode($key) : '';
+            $key = $rootKey === '' ? $key : sprintf('%s[%s]', $rootKey, $key);
             if (is_array($value)) {
                 if (empty($value)) {
-                    $query[] = $key . '[]';
+                    yield $key . '[]';
                 } else {
-                    foreach ($value as $subValue) {
-                        $subValue = rawurlencode((string) $subValue);
-                        $query[] = $key . '[]' . ($subValue === '' ? '' : '=' . $subValue);
-                    }
+                    yield from self::createFromValueListInternal($value, $key);
                 }
             } else {
                 $value = rawurlencode((string) $value);
-                $query[] = $key . ($value === '' ? '' : '=' . $value);
+                yield $key . ($value === '' ? '' : '=' . $value);
             }
         }
+    }
+    
+    public static function createFromValueList(array $valueList): FarahUrlArguments {
+        $query = [
+            ...self::createFromValueListInternal($valueList)
+        ];
         $id = implode('&', $query);
         return self::create($id, $id, $valueList);
     }

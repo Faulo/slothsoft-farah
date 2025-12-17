@@ -46,6 +46,18 @@ class FarahUrlArgumentsTest extends TestCase {
             ],
             'a=2&b=1'
         ];
+        yield 'multi-dimensional args' => [
+            [
+                'search-query' => [
+                    'cost' => [
+                        'W',
+                        'U',
+                        'B'
+                    ]
+                ]
+            ],
+            'search-query[cost][]=W&search-query[cost][]=U&search-query[cost][]=B'
+        ];
     }
     
     /**
