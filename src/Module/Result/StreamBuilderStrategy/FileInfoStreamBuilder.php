@@ -11,9 +11,9 @@ use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Core\IO\Writable\Adapter\ChunkWriterFromFileWriter;
 use Slothsoft\Core\IO\Writable\Adapter\DOMWriterFromFileWriter;
 use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromFileWriter;
+use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromFileWriter;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use SplFileInfo;
-use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromFileWriter;
 
 class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWriterInterface {
     
@@ -31,7 +31,7 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWrite
     }
     
     public function buildStreamMimeType(ResultInterface $context): string {
-        return MimeTypeDictionary::guessMime($this->file->getExtension());
+        return MimeTypeDictionary::guessMime(pathinfo($this->buildStreamFileName($context), PATHINFO_EXTENSION));
     }
     
     public function buildStreamCharset(ResultInterface $context): string {
@@ -62,7 +62,7 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWrite
     }
     
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface {
-        return new StreamWriterFromFileWriter($context->lookupFileWriter());
+        return new StreamWriterFromFileWriter($this);
     }
     
     public function buildFileWriter(ResultInterface $context): FileWriterInterface {
@@ -70,15 +70,15 @@ class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWrite
     }
     
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface {
-        return new DOMWriterFromFileWriter($context->lookupFileWriter(), (string) $context->createUrl());
+        return new DOMWriterFromFileWriter($this, (string) $context->createUrl());
     }
     
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface {
-        return new ChunkWriterFromFileWriter($context->lookupFileWriter());
+        return new ChunkWriterFromFileWriter($this);
     }
     
     public function buildStringWriter(ResultInterface $context): StringWriterInterface {
-        return new StringWriterFromFileWriter($context->lookupFileWriter());
+        return new StringWriterFromFileWriter($this);
     }
     
     public function toFile(): SplFileInfo {
