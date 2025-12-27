@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
 use Slothsoft\Core\MimeTypeDictionary;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
@@ -13,12 +14,19 @@ use Slothsoft\Core\IO\Writable\Adapter\DOMWriterFromFileWriter;
 use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromFileWriter;
 use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromFileWriter;
 use Slothsoft\Farah\Module\Result\ResultInterface;
+use SplFileInfo;
 
-class FileWriterStreamBuilder implements StreamBuilderStrategyInterface {
+class FileWriterStreamBuilder implements FileWriterInterface, StreamBuilderStrategyInterface {
     
     private FileWriterInterface $writer;
     
     private string $fileName;
+    
+    private ?FileInfo $file;
+    
+    public function toFile(): SplFileInfo {
+        return $this->file ??= $this->writer->toFile();
+    }
     
     public function __construct(FileWriterInterface $writer, string $fileName) {
         $this->writer = $writer;
@@ -38,11 +46,11 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface {
     }
     
     public function buildStreamFileStatistics(ResultInterface $context): array {
-        return [];
+        return stat($this->toFile()->getRealPath());
     }
     
     public function buildStreamHash(ResultInterface $context): string {
-        return '';
+        return md5_file($this->toFile()->getRealPath());
     }
     
     public function buildStreamIsBufferable(ResultInterface $context): bool {
@@ -50,7 +58,7 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface {
     }
     
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface {
-        return new StreamWriterFromFileWriter($context->lookupFileWriter());
+        return new StreamWriterFromFileWriter($this->writer);
     }
     
     public function buildFileWriter(ResultInterface $context): FileWriterInterface {
@@ -58,14 +66,14 @@ class FileWriterStreamBuilder implements StreamBuilderStrategyInterface {
     }
     
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface {
-        return new DOMWriterFromFileWriter($context->lookupFileWriter(), (string) $context->createUrl());
+        return new DOMWriterFromFileWriter($this->writer, (string) $context->createUrl());
     }
     
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface {
-        return new ChunkWriterFromFileWriter($context->lookupFileWriter());
+        return new ChunkWriterFromFileWriter($this->writer);
     }
     
     public function buildStringWriter(ResultInterface $context): StringWriterInterface {
-        return new StringWriterFromFileWriter($context->lookupFileWriter());
+        return new StringWriterFromFileWriter($this->writer);
     }
 }
