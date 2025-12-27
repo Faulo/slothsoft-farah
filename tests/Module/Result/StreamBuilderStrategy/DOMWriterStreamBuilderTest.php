@@ -112,7 +112,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         yield 'xsd' => [
             '<xml xmlns="http://www.w3.org/2001/XMLSchema">test content</xml>',
             'xsd',
-            'application/xsd+xml'
+            'application/x-xsd+xml'
         ];
     }
     
