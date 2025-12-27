@@ -13,8 +13,9 @@ use Slothsoft\Core\IO\Writable\Adapter\FileWriterFromStringWriter;
 use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromChunkWriter;
 use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromChunkWriter;
 use Slothsoft\Farah\Module\Result\ResultInterface;
+use Generator;
 
-class ChunkWriterStreamBuilder implements StreamBuilderStrategyInterface {
+class ChunkWriterStreamBuilder implements StreamBuilderStrategyInterface, ChunkWriterInterface {
     
     private ChunkWriterInterface $writer;
     
@@ -26,6 +27,10 @@ class ChunkWriterStreamBuilder implements StreamBuilderStrategyInterface {
         $this->writer = $writer;
         $this->fileName = $fileName;
         $this->isBufferable = $isBufferable;
+    }
+    
+    public function toChunks(): Generator {
+        return $this->writer->toChunks();
     }
     
     public function buildStreamMimeType(ResultInterface $context): string {
@@ -53,15 +58,15 @@ class ChunkWriterStreamBuilder implements StreamBuilderStrategyInterface {
     }
     
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface {
-        return new StreamWriterFromChunkWriter($context->lookupChunkWriter());
+        return new StreamWriterFromChunkWriter($this->writer);
     }
     
     public function buildFileWriter(ResultInterface $context): FileWriterInterface {
-        return new FileWriterFromStringWriter($context->lookupStringWriter());
+        return new FileWriterFromStringWriter($this->buildStringWriter($context));
     }
     
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface {
-        return new DOMWriterFromStringWriter($context->lookupStringWriter());
+        return new DOMWriterFromStringWriter($this->buildStringWriter($context));
     }
     
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface {
@@ -69,6 +74,6 @@ class ChunkWriterStreamBuilder implements StreamBuilderStrategyInterface {
     }
     
     public function buildStringWriter(ResultInterface $context): StringWriterInterface {
-        return new StringWriterFromChunkWriter($context->lookupChunkWriter());
+        return new StringWriterFromChunkWriter($this->writer);
     }
 }

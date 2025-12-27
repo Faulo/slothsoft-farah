@@ -22,15 +22,15 @@ class FileWriterStreamBuilder implements FileWriterInterface, StreamBuilderStrat
     
     private string $fileName;
     
+    public function __construct(FileWriterInterface $writer, string $fileName) {
+        $this->writer = $writer;
+        $this->fileName = $fileName;
+    }
+    
     private ?FileInfo $file;
     
     public function toFile(): SplFileInfo {
         return $this->file ??= $this->writer->toFile();
-    }
-    
-    public function __construct(FileWriterInterface $writer, string $fileName) {
-        $this->writer = $writer;
-        $this->fileName = $fileName;
     }
     
     public function buildStreamMimeType(ResultInterface $context): string {
