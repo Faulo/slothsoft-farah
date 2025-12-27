@@ -15,13 +15,15 @@ use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromStringWriter;
 use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromDOMWriter;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use DOMDocument;
+use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 
 /**
  *
  * @author Daniel Schulz
  *        
  */
-class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface {
+class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface, DOMWriterInterface {
+    use DOMWriterElementFromDocumentTrait;
     
     private DOMWriterInterface $writer;
     
@@ -32,15 +34,17 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface {
         $this->documentName = $documentName;
     }
     
-    private function getDocument(): DOMDocument {
-        return $this->writer->toDocument();
+    private ?DOMDocument $document;
+    
+    public function toDocument(): DOMDocument {
+        return $this->document ??= $this->writer->toDocument();
     }
     
     private ?string $namespace = null;
     
     private function getNamespace(): string {
         if ($this->namespace === null) {
-            if ($root = $this->getDocument()->documentElement) {
+            if ($root = $this->toDocument()->documentElement) {
                 $this->namespace = $root->namespaceURI ?? '';
             } else {
                 $this->namespace = '';
@@ -61,7 +65,7 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface {
     }
     
     public function buildStreamCharset(ResultInterface $context): string {
-        return $this->getDocument()->encoding ?? 'UTF-8';
+        return $this->toDocument()->encoding ?? 'UTF-8';
     }
     
     public function buildStreamFileName(ResultInterface $context): string {
