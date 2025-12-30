@@ -10,6 +10,7 @@ use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Core\IO\Writable\Delegates\ChunkWriterFromChunksDelegate;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\Module\Result\ResultInterface;
+use PHPUnit\Framework\Constraint\IsEqual;
 
 /**
  * ChunkWriterStreamBuilderTest
@@ -20,6 +21,30 @@ class ChunkWriterStreamBuilderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(ChunkWriterStreamBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Result\StreamBuilderStrategy\ChunkWriterStreamBuilder'!");
+    }
+    
+    public function test_read_once(): void {
+        $ref = 'farah://slothsoft@farah/phpinfo';
+        
+        ob_start();
+        phpinfo();
+        $expected = ob_get_contents();
+        ob_end_clean();
+        
+        $expected = '<pre>' . htmlentities($expected, ENT_XML1 | ENT_DISALLOWED, 'UTF-8') . '</pre>';
+        
+        $actual = file_get_contents($ref);
+        
+        $this->assertThat($actual, new IsEqual($expected));
+    }
+    
+    public function test_read_twice(): void {
+        $ref = 'farah://slothsoft@farah/phpinfo';
+        
+        $expected = file_get_contents($ref);
+        $actual = file_get_contents($ref);
+        
+        $this->assertThat($actual, new IsEqual($expected));
     }
     
     private function createSuT(string $content, string $name, bool $isBufferable = true): ChunkWriterStreamBuilder {

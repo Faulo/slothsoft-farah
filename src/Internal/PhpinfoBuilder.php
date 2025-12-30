@@ -2,13 +2,13 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Internal;
 
-use Slothsoft\Core\IO\Writable\Adapter\FileWriterFromStringWriter;
-use Slothsoft\Core\IO\Writable\Delegates\StringWriterFromStringDelegate;
+use Slothsoft\Core\IO\Writable\Delegates\ChunkWriterFromChunksDelegate;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
-use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\FileWriterResultBuilder;
+use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ChunkWriterResultBuilder;
+use Generator;
 
 /**
  *
@@ -18,19 +18,24 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\FileWriterResultBuil
 class PhpinfoBuilder implements ExecutableBuilderStrategyInterface {
     
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
-        $delegate = function (): string {
+        $writer = new ChunkWriterFromChunksDelegate(function (): Generator {
             ob_start();
             phpinfo();
             $data = ob_get_contents();
             ob_end_clean();
-            if (PHP_SAPI === 'cli') {
-                $data = '<pre>' . htmlentities($data, ENT_XML1 | ENT_DISALLOWED, 'UTF-8') . '</pre>';
+            
+            switch (PHP_SAPI) {
+                case 'cli':
+                    yield '<pre>';
+                    yield htmlentities($data, ENT_XML1 | ENT_DISALLOWED, 'UTF-8');
+                    yield '</pre>';
+                    break;
+                default:
+                    yield $data;
+                    break;
             }
-            return $data;
-        };
-        $writer = new StringWriterFromStringDelegate($delegate);
-        $writer = new FileWriterFromStringWriter($writer);
-        $resultBuilder = new FileWriterResultBuilder($writer, 'phpinfo.xhtml');
+        });
+        $resultBuilder = new ChunkWriterResultBuilder($writer, "phpinfo.xhtml");
         return new ExecutableStrategies($resultBuilder);
     }
 }
