@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<domain xmlns="http://schema.slothsoft.net/farah/sitemap" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary" xmlns:sfm="http://schema.slothsoft.net/farah/module" name="schema.slothsoft.net" vendor="slothsoft" module="schema.slothsoft.net" ref="pages/index" status-active=""
+    status-public="" sfd:languages="de-de en-us" version="1.1" title="schema.slothsoft.net" uri="/" url="http://schema.slothsoft.net/">
+    <page name="amber" redirect=".." status-active="" status-public="" title="amber" uri="/amber/" url="http://schema.slothsoft.net/amber/">
+        <page name="amberdata" title="http://schema.slothsoft.net/amber/amberdata" ref="pages/schema/home" status-active="" status-public="" uri="/amber/amberdata/" url="http://schema.slothsoft.net/amber/amberdata/">
+            <sfm:param name="schema" value="farah://slothsoft@amber/schema/amberdata" />
+            <page name="0.1" title="http://schema.slothsoft.net/amber/amberdata/0.1" ref="pages/schema/documentation" status-active="" status-public="" uri="/amber/amberdata/0.1/" url="http://schema.slothsoft.net/amber/amberdata/0.1/">
+                <sfm:param name="version" value="0.1" />
+            </page>
+            <file name="0.1.xsd" title="http://schema.slothsoft.net/amber/amberdata/0.1" ref="farah://slothsoft@amber/schema/amberdata/0.1" status-active="" uri="/amber/amberdata/0.1.xsd" url="http://schema.slothsoft.net/amber/amberdata/0.1.xsd" />
+        </page>
+    </page>
+    <page name="cron" redirect=".." status-active="" status-public="" title="cron" uri="/cron/" url="http://schema.slothsoft.net/cron/">
+        <page name="instructions" title="http://schema.slothsoft.net/cron/instructions" ref="pages/schema/home" status-active="" status-public="" uri="/cron/instructions/" url="http://schema.slothsoft.net/cron/instructions/">
+            <sfm:param name="schema" value="farah://slothsoft@cron/schema/instructions" />
+            <page name="0.1" title="http://schema.slothsoft.net/cron/instructions/0.1" ref="pages/schema/documentation" status-active="" status-public="" uri="/cron/instructions/0.1/" url="http://schema.slothsoft.net/cron/instructions/0.1/">
+                <sfm:param name="version" value="0.1" />
+            </page>
+            <file name="0.1.xsd" title="http://schema.slothsoft.net/cron/instructions/0.1" ref="farah://slothsoft@cron/schema/instructions/0.1" status-active="" uri="/cron/instructions/0.1.xsd" url="http://schema.slothsoft.net/cron/instructions/0.1.xsd" />
+        </page>
+    </page>
+    <page name="farah" redirect=".." status-active="" status-public="" title="farah" uri="/farah/" url="http://schema.slothsoft.net/farah/">
+        <page name="module" title="http://schema.slothsoft.net/farah/module" ref="pages/schema/home" status-active="" status-public="" uri="/farah/module/" url="http://schema.slothsoft.net/farah/module/">
+            <sfm:param name="schema" value="farah://slothsoft@farah/schema/module" />
+            <page name="1.0" title="http://schema.slothsoft.net/farah/module/1.0" ref="pages/schema/documentation" status-active="" status-public="" uri="/farah/module/1.0/" url="http://schema.slothsoft.net/farah/module/1.0/">
+                <sfm:param name="version" value="1.0" />
+            </page>
+            <file name="1.0.xsd" title="http://schema.slothsoft.net/farah/module/1.0" ref="farah://slothsoft@farah/schema/module/1.0" status-active="" uri="/farah/module/1.0.xsd" url="http://schema.slothsoft.net/farah/module/1.0.xsd" />
+            <page name="1.1" title="http://schema.slothsoft.net/farah/module/1.1" ref="pages/schema/documentation" status-active="" status-public="" uri="/farah/module/1.1/" url="http://schema.slothsoft.net/farah/module/1.1/">
+                <sfm:param name="version" value="1.1" />
+            </page>
+            <file name="1.1.xsd" title="http://schema.slothsoft.net/farah/module/1.1" ref="farah://slothsoft@farah/schema/module/1.1" status-active="" uri="/farah/module/1.1.xsd" url="http://schema.slothsoft.net/farah/module/1.1.xsd" />
+        </page>
+        <page name="sitemap" title="http://schema.slothsoft.net/farah/sitemap" ref="pages/schema/home" status-active="" status-public="" uri="/farah/sitemap/" url="http://schema.slothsoft.net/farah/sitemap/">
+            <sfm:param name="schema" value="farah://slothsoft@farah/schema/sitemap" />
+            <page name="1.0" title="http://schema.slothsoft.net/farah/sitemap/1.0" ref="pages/schema/documentation" status-active="" status-public="" uri="/farah/sitemap/1.0/" url="http://schema.slothsoft.net/farah/sitemap/1.0/">
+                <sfm:param name="version" value="1.0" />
+            </page>
+            <file name="1.0.xsd" title="http://schema.slothsoft.net/farah/sitemap/1.0" ref="farah://slothsoft@farah/schema/sitemap/1.0" status-active="" uri="/farah/sitemap/1.0.xsd" url="http://schema.slothsoft.net/farah/sitemap/1.0.xsd" />
+            <page name="1.1" title="http://schema.slothsoft.net/farah/sitemap/1.1" ref="pages/schema/documentation" status-active="" status-public="" uri="/farah/sitemap/1.1/" url="http://schema.slothsoft.net/farah/sitemap/1.1/">
+                <sfm:param name="version" value="1.1" />
+            </page>
+            <file name="1.1.xsd" title="http://schema.slothsoft.net/farah/sitemap/1.1" ref="farah://slothsoft@farah/schema/sitemap/1.1" status-active="" uri="/farah/sitemap/1.1.xsd" url="http://schema.slothsoft.net/farah/sitemap/1.1.xsd" />
+        </page>
+        <page name="dictionary" title="http://schema.slothsoft.net/farah/dictionary" ref="pages/schema/home" status-active="" status-public="" uri="/farah/dictionary/" url="http://schema.slothsoft.net/farah/dictionary/">
+            <sfm:param name="schema" value="farah://slothsoft@farah/schema/dictionary" />
+            <page name="0.1" title="http://schema.slothsoft.net/farah/dictionary/0.1" ref="pages/schema/documentation" status-active="" status-public="" uri="/farah/dictionary/0.1/" url="http://schema.slothsoft.net/farah/dictionary/0.1/">
+                <sfm:param name="version" value="0.1" />
+            </page>
+            <file name="0.1.xsd" title="http://schema.slothsoft.net/farah/dictionary/0.1" ref="farah://slothsoft@farah/schema/dictionary/0.1" status-active="" uri="/farah/dictionary/0.1.xsd" url="http://schema.slothsoft.net/farah/dictionary/0.1.xsd" />
+            <page name="1.0" title="http://schema.slothsoft.net/farah/dictionary/1.0" ref="pages/schema/documentation" status-active="" status-public="" uri="/farah/dictionary/1.0/" url="http://schema.slothsoft.net/farah/dictionary/1.0/">
+                <sfm:param name="version" value="1.0" />
+            </page>
+            <file name="1.0.xsd" title="http://schema.slothsoft.net/farah/dictionary/1.0" ref="farah://slothsoft@farah/schema/dictionary/1.0" status-active="" uri="/farah/dictionary/1.0.xsd" url="http://schema.slothsoft.net/farah/dictionary/1.0.xsd" />
+        </page>
+    </page>
+    <page name="savegame" redirect=".." status-active="" status-public="" title="savegame" uri="/savegame/" url="http://schema.slothsoft.net/savegame/">
+        <page name="editor" title="http://schema.slothsoft.net/savegame/editor" ref="pages/schema/home" status-active="" status-public="" uri="/savegame/editor/" url="http://schema.slothsoft.net/savegame/editor/">
+            <sfm:param name="schema" value="farah://slothsoft@savegame/schema/editor" />
+            <page name="0.2" title="http://schema.slothsoft.net/savegame/editor/0.2" ref="pages/schema/documentation" status-active="" status-public="" uri="/savegame/editor/0.2/" url="http://schema.slothsoft.net/savegame/editor/0.2/">
+                <sfm:param name="version" value="0.2" />
+            </page>
+            <file name="0.2.xsd" title="http://schema.slothsoft.net/savegame/editor/0.2" ref="farah://slothsoft@savegame/schema/editor/0.2" status-active="" uri="/savegame/editor/0.2.xsd" url="http://schema.slothsoft.net/savegame/editor/0.2.xsd" />
+            <page name="0.3" title="http://schema.slothsoft.net/savegame/editor/0.3" ref="pages/schema/documentation" status-active="" status-public="" uri="/savegame/editor/0.3/" url="http://schema.slothsoft.net/savegame/editor/0.3/">
+                <sfm:param name="version" value="0.3" />
+            </page>
+            <file name="0.3.xsd" title="http://schema.slothsoft.net/savegame/editor/0.3" ref="farah://slothsoft@savegame/schema/editor/0.3" status-active="" uri="/savegame/editor/0.3.xsd" url="http://schema.slothsoft.net/savegame/editor/0.3.xsd" />
+            <page name="0.4" title="http://schema.slothsoft.net/savegame/editor/0.4" ref="pages/schema/documentation" status-active="" status-public="" uri="/savegame/editor/0.4/" url="http://schema.slothsoft.net/savegame/editor/0.4/">
+                <sfm:param name="version" value="0.4" />
+            </page>
+            <file name="0.4.xsd" title="http://schema.slothsoft.net/savegame/editor/0.4" ref="farah://slothsoft@savegame/schema/editor/0.4" status-active="" uri="/savegame/editor/0.4.xsd" url="http://schema.slothsoft.net/savegame/editor/0.4.xsd" />
+        </page>
+    </page>
+    <page name="schema" redirect=".." status-active="" status-public="" title="schema" uri="/schema/" url="http://schema.slothsoft.net/schema/">
+        <page name="versioning" title="http://schema.slothsoft.net/schema/versioning" ref="pages/schema/home" status-active="" status-public="" uri="/schema/versioning/" url="http://schema.slothsoft.net/schema/versioning/">
+            <sfm:param name="schema" value="farah://slothsoft@schema/schema/versioning" />
+            <page name="1.0" title="http://schema.slothsoft.net/schema/versioning/1.0" ref="pages/schema/documentation" status-active="" status-public="" uri="/schema/versioning/1.0/" url="http://schema.slothsoft.net/schema/versioning/1.0/">
+                <sfm:param name="version" value="1.0" />
+            </page>
+            <file name="1.0.xsd" title="http://schema.slothsoft.net/schema/versioning/1.0" ref="farah://slothsoft@schema/schema/versioning/1.0" status-active="" uri="/schema/versioning/1.0.xsd" url="http://schema.slothsoft.net/schema/versioning/1.0.xsd" />
+        </page>
+        <page name="presskit" title="http://schema.slothsoft.net/schema/presskit" ref="pages/schema/home" status-active="" status-public="" uri="/schema/presskit/" url="http://schema.slothsoft.net/schema/presskit/">
+            <sfm:param name="schema" value="farah://slothsoft@schema/schema/presskit" />
+            <page name="1.0" title="http://schema.slothsoft.net/schema/presskit/1.0" ref="pages/schema/documentation" status-active="" status-public="" uri="/schema/presskit/1.0/" url="http://schema.slothsoft.net/schema/presskit/1.0/">
+                <sfm:param name="version" value="1.0" />
+            </page>
+            <file name="1.0.xsd" title="http://schema.slothsoft.net/schema/presskit/1.0" ref="farah://slothsoft@schema/schema/presskit/1.0" status-active="" uri="/schema/presskit/1.0.xsd" url="http://schema.slothsoft.net/schema/presskit/1.0.xsd" />
+            <page name="1.1" title="http://schema.slothsoft.net/schema/presskit/1.1" ref="pages/schema/documentation" status-active="" status-public="" uri="/schema/presskit/1.1/" url="http://schema.slothsoft.net/schema/presskit/1.1/">
+                <sfm:param name="version" value="1.1" />
+            </page>
+            <file name="1.1.xsd" title="http://schema.slothsoft.net/schema/presskit/1.1" ref="farah://slothsoft@schema/schema/presskit/1.1" status-active="" uri="/schema/presskit/1.1.xsd" url="http://schema.slothsoft.net/schema/presskit/1.1.xsd" />
+        </page>
+        <page name="historical-games-night" title="http://schema.slothsoft.net/schema/historical-games-night" ref="pages/schema/home" status-active="" status-public="" uri="/schema/historical-games-night/" url="http://schema.slothsoft.net/schema/historical-games-night/">
+            <sfm:param name="schema" value="farah://slothsoft@schema/schema/historical-games-night" />
+            <page name="1.0" title="http://schema.slothsoft.net/schema/historical-games-night/1.0" ref="pages/schema/documentation" status-active="" status-public="" uri="/schema/historical-games-night/1.0/" url="http://schema.slothsoft.net/schema/historical-games-night/1.0/">
+                <sfm:param name="version" value="1.0" />
+            </page>
+            <file name="1.0.xsd" title="http://schema.slothsoft.net/schema/historical-games-night/1.0" ref="farah://slothsoft@schema/schema/historical-games-night/1.0" status-active="" uri="/schema/historical-games-night/1.0.xsd"
+                url="http://schema.slothsoft.net/schema/historical-games-night/1.0.xsd" />
+            <page name="2.0" title="http://schema.slothsoft.net/schema/historical-games-night/2.0" ref="pages/schema/documentation" status-active="" status-public="" uri="/schema/historical-games-night/2.0/" url="http://schema.slothsoft.net/schema/historical-games-night/2.0/">
+                <sfm:param name="version" value="2.0" />
+            </page>
+            <file name="2.0.xsd" title="http://schema.slothsoft.net/schema/historical-games-night/2.0" ref="farah://slothsoft@schema/schema/historical-games-night/2.0" status-active="" uri="/schema/historical-games-night/2.0.xsd"
+                url="http://schema.slothsoft.net/schema/historical-games-night/2.0.xsd" />
+        </page>
+    </page>
+    <page name="trialoftwo" redirect=".." status-active="" status-public="" title="trialoftwo" uri="/trialoftwo/" url="http://schema.slothsoft.net/trialoftwo/">
+        <page name="database" title="http://schema.slothsoft.net/trialoftwo/database" ref="pages/schema/home" status-active="" status-public="" uri="/trialoftwo/database/" url="http://schema.slothsoft.net/trialoftwo/database/">
+            <sfm:param name="schema" value="farah://slothsoft@schema.slothsoft.net/schemata/trialoftwo/database" />
+            <page name="0.1" title="http://schema.slothsoft.net/trialoftwo/database/0.1" ref="pages/schema/documentation" status-active="" status-public="" uri="/trialoftwo/database/0.1/" url="http://schema.slothsoft.net/trialoftwo/database/0.1/">
+                <sfm:param name="version" value="0.1" />
+            </page>
+            <file name="0.1.xsd" title="http://schema.slothsoft.net/trialoftwo/database/0.1" ref="farah://slothsoft@schema.slothsoft.net/schemata/trialoftwo/database/0.1" status-active="" uri="/trialoftwo/database/0.1.xsd" url="http://schema.slothsoft.net/trialoftwo/database/0.1.xsd" />
+            <page name="0.2" title="http://schema.slothsoft.net/trialoftwo/database/0.2" ref="pages/schema/documentation" status-active="" status-public="" uri="/trialoftwo/database/0.2/" url="http://schema.slothsoft.net/trialoftwo/database/0.2/">
+                <sfm:param name="version" value="0.2" />
+            </page>
+            <file name="0.2.xsd" title="http://schema.slothsoft.net/trialoftwo/database/0.2" ref="farah://slothsoft@schema.slothsoft.net/schemata/trialoftwo/database/0.2" status-active="" uri="/trialoftwo/database/0.2.xsd" url="http://schema.slothsoft.net/trialoftwo/database/0.2.xsd" />
+        </page>
+    </page>
+    <page name="sitemap" ref="//slothsoft@farah/sitemap-generator" status-active="" title="sitemap" uri="/sitemap/" url="http://schema.slothsoft.net/sitemap/" />
+</domain>

@@ -97,7 +97,7 @@ final class LookupPageStrategy extends RequestStrategyBase {
     }
     
     private function path2expr(string $path, string $filter = ''): string {
-        $path = array_filter(explode(self::ATTR_REFERENCE, $path), 'strlen');
+        $path = array_filter(explode('/', $path), 'strlen');
         $qry = [
             '.'
         ];

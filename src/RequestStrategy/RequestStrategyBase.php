@@ -22,7 +22,7 @@ use Slothsoft\Farah\Security\BannedManager;
 
 abstract class RequestStrategyBase implements RequestStrategyInterface {
     
-    private $request;
+    private ServerRequestInterface $request;
     
     public function process(ServerRequestInterface $request): ResponseInterface {
         try {
@@ -166,7 +166,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
         return MessageFactory::createServerResponse($statusCode, $headers, $body);
     }
     
-    private function validateRequest() {
+    private function validateRequest(): void {
         $clientIp = $this->request->getServerParams()['REMOTE_ADDR'] ?? '';
         if (strlen($clientIp) and BannedManager::getInstance()->isBanned($clientIp)) {
             // BANHAMMER
