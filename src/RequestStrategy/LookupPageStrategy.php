@@ -9,8 +9,9 @@ use Slothsoft\Farah\Exception\PageRedirectionException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Sites\Domain;
+use DOMElement;
 
-class LookupPageStrategy extends RequestStrategyBase {
+final class LookupPageStrategy extends RequestStrategyBase {
     
     private ?Domain $domain = null;
     
@@ -28,7 +29,7 @@ class LookupPageStrategy extends RequestStrategyBase {
         }
         
         try {
-            $pageNode = $this->domain->lookupPageNode(urldecode($uri->getPath()));
+            $pageNode = $this->lookupPageNode(urldecode($uri->getPath()));
         } catch (PageRedirectionException $e) {
             $url = $e->getTargetPath();
             if (count($args)) {
@@ -50,6 +51,56 @@ class LookupPageStrategy extends RequestStrategyBase {
         $url = $this->domain->lookupAssetUrl($pageNode, $args);
         
         return $url;
+    }
+    
+    private function lookupPageNode(string $path, DOMElement $contextNode = null): DOMElement {
+        $path = str_pad($path, 1, '/');
+        if ($contextNode === null or $path[0] === '/') {
+            $contextNode = $this->domain->getDomainNode();
+        }
+        $query = $this->path2expr($path, '[self::sfs:page | self::sfs:file]');
+        $pageNode = $this->domain->getXPath()
+            ->evaluate($query, $contextNode)
+            ->item(0);
+        
+        if (! $pageNode) {
+            throw new PageNotFoundException($path);
+        }
+        
+        if ($pageNode->hasAttribute('redirect')) {
+            $redirectPath = $pageNode->getAttribute('redirect');
+            
+            $host = parse_url($redirectPath, PHP_URL_HOST);
+            if ($host) {
+                throw new PageRedirectionException($redirectPath);
+            }
+            
+            switch ($redirectPath) {
+                case '..':
+                    $redirectPath = $pageNode->parentNode->getAttribute('uri');
+                    break;
+            }
+            
+            $redirectNode = $this->lookupPageNode($redirectPath, $pageNode);
+            throw new PageRedirectionException($redirectNode->getAttribute('uri'));
+        }
+        
+        if ($pageNode->getAttribute('uri') !== $path) {
+            throw new PageRedirectionException($pageNode->getAttribute('uri'));
+        }
+        
+        return $pageNode;
+    }
+    
+    private function path2expr(string $path, string $filter = ''): string {
+        $path = array_filter(explode(self::ATTR_REFERENCE, $path), 'strlen');
+        $qry = [
+            '.'
+        ];
+        foreach ($path as $folder) {
+            $qry[] = '*[php:functionString("strtolower", @name) = "' . strtolower($folder) . '" or ancestor-or-self::*/@name = "*"]';
+        }
+        return implode('/', $qry);
     }
 }
 
