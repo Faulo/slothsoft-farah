@@ -4,7 +4,12 @@ namespace Slothsoft\Farah\Internal;
 
 use PHPUnit\Framework\TestCase;
 
-class CLIDaemonServerTest extends TestCase {
+/**
+ * CLIDaemonServerTest
+ *
+ * @see CLIDaemonServer
+ */
+final class CLIDaemonServerTest extends TestCase {
     
     public function testServer(): void {
         $server = new CLIDaemonServer(0);
