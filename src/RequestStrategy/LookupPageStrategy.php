@@ -48,7 +48,7 @@ final class LookupPageStrategy extends RequestStrategyBase {
         
         $this->domain->setCurrentPageNode($pageNode);
         
-        if (! $pageNode->hasAttribute('ref')) {
+        if (! $pageNode->hasAttribute(Domain::ATTR_REFERENCE)) {
             throw new HttpStatusException("The URL $uri does not contain an asset.\n{$pageNode->ownerDocument->saveXML($pageNode)}", StatusCode::STATUS_NOT_IMPLEMENTED);
         }
         
@@ -71,8 +71,8 @@ final class LookupPageStrategy extends RequestStrategyBase {
             throw new PageNotFoundException($path);
         }
         
-        if ($pageNode->hasAttribute('redirect')) {
-            $redirectPath = $pageNode->getAttribute('redirect');
+        if ($pageNode->hasAttribute(Domain::ATTR_REDIRECT)) {
+            $redirectPath = $pageNode->getAttribute(Domain::ATTR_REDIRECT);
             
             $host = parse_url($redirectPath, PHP_URL_HOST);
             if ($host) {
@@ -81,16 +81,16 @@ final class LookupPageStrategy extends RequestStrategyBase {
             
             switch ($redirectPath) {
                 case '..':
-                    $redirectPath = $pageNode->parentNode->getAttribute('uri');
+                    $redirectPath = $pageNode->parentNode->getAttribute(Domain::ATTR_URI);
                     break;
             }
             
             $redirectNode = $this->lookupPageNode($redirectPath, $pageNode);
-            throw new PageRedirectionException($redirectNode->getAttribute('uri'));
+            throw new PageRedirectionException($redirectNode->getAttribute(Domain::ATTR_URI));
         }
         
-        if ($pageNode->getAttribute('uri') !== $path) {
-            throw new PageRedirectionException($pageNode->getAttribute('uri'));
+        if ($pageNode->getAttribute(Domain::ATTR_URI) !== $path) {
+            throw new PageRedirectionException($pageNode->getAttribute(Domain::ATTR_URI));
         }
         
         return $pageNode;

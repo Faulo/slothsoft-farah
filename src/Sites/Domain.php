@@ -41,6 +41,10 @@ final class Domain {
     
     public const ATTR_CURRENT_PAGE = 'current';
     
+    public const ATTR_REDIRECT = 'redirect';
+    
+    public const ATTR_URI = 'uri';
+    
     private DOMDocument $document;
     
     private DOMXPath $xpath;
