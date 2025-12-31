@@ -117,5 +117,9 @@
             <file name="0.2.xsd" title="http://schema.slothsoft.net/trialoftwo/database/0.2" ref="farah://slothsoft@schema.slothsoft.net/schemata/trialoftwo/database/0.2" status-active="" uri="/trialoftwo/database/0.2.xsd" url="http://schema.slothsoft.net/trialoftwo/database/0.2.xsd" />
         </page>
     </page>
-    <page name="sitemap" ref="//slothsoft@farah/sitemap-generator" status-active="" title="sitemap" uri="/sitemap/" url="http://schema.slothsoft.net/sitemap/" />
+    <page name="sitemap" ref="//slothsoft@farah/sitemap-generator" status-active="" title="sitemap" uri="/sitemap/" url="http://schema.slothsoft.net/sitemap/">
+        <page name="redirect-root" redirect="../.." status-active="" />
+        <page name="redirect-up" redirect=".." status-active="" />
+        <page name="redirect-versioning" redirect="/schema/versioning" status-active="" />
+    </page>
 </domain>

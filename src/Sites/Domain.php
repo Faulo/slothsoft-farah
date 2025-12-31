@@ -37,6 +37,8 @@ final class Domain {
     public const TAG_INCLUDE_PAGES = 'include-pages';
     
     // attributes
+    public const ATTR_NAME = 'name';
+    
     public const ATTR_REFERENCE = 'ref';
     
     public const ATTR_CURRENT_PAGE = 'current';

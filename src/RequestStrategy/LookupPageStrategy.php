@@ -33,7 +33,8 @@ final class LookupPageStrategy extends RequestStrategyBase {
         }
         
         try {
-            $pageNode = $this->lookupPageNode(urldecode($uri->getPath()));
+            $path = urldecode($uri->getPath());
+            $pageNode = $this->lookupPageNode($path);
         } catch (PageRedirectionException $e) {
             $url = $e->getTargetPath();
             if (count($args)) {
@@ -58,53 +59,67 @@ final class LookupPageStrategy extends RequestStrategyBase {
     }
     
     private function lookupPageNode(string $path, DOMElement $contextNode = null): DOMElement {
-        $path = str_pad($path, 1, '/');
+        if ($path === '') {
+            $path = '/';
+        }
+        
         if ($contextNode === null or $path[0] === '/') {
             $contextNode = $this->domain->getDomainNode();
         }
-        $query = $this->path2expr($path, '[self::sfs:page | self::sfs:file]');
-        $pageNode = $this->domain->getXPath()
-            ->evaluate($query, $contextNode)
-            ->item(0);
         
-        if (! $pageNode) {
-            throw new PageNotFoundException($path);
+        foreach (explode('/', $path) as $segment) {
+            switch ($segment) {
+                case '':
+                case '.':
+                    break;
+                case '..':
+                    $contextNode = $contextNode->parentNode;
+                    break;
+                default:
+                    $segment = strtolower($segment);
+                    $found = false;
+                    
+                    /** @var $node DOMElement */
+                    foreach ($contextNode->childNodes as $node) {
+                        if ($node->nodeType !== XML_ELEMENT_NODE) {
+                            continue;
+                        }
+                        
+                        switch ($node->localName) {
+                            case Domain::TAG_PAGE:
+                            case Domain::TAG_FILE:
+                                $pageName = strtolower((string) $node->getAttribute(Domain::ATTR_NAME));
+                                if ($pageName === $segment) {
+                                    $contextNode = $node;
+                                    $found = true;
+                                    break 2;
+                                }
+                                break;
+                        }
+                    }
+                    
+                    if (! $found) {
+                        throw new PageNotFoundException($path);
+                    }
+                    break;
+            }
         }
         
-        if ($pageNode->hasAttribute(Domain::ATTR_REDIRECT)) {
-            $redirectPath = $pageNode->getAttribute(Domain::ATTR_REDIRECT);
-            
+        if ($contextNode->hasAttribute(Domain::ATTR_REDIRECT)) {
+            $redirectPath = $contextNode->getAttribute(Domain::ATTR_REDIRECT);
             $host = parse_url($redirectPath, PHP_URL_HOST);
             if ($host) {
                 throw new PageRedirectionException($redirectPath);
             }
-            
-            switch ($redirectPath) {
-                case '..':
-                    $redirectPath = $pageNode->parentNode->getAttribute(Domain::ATTR_URI);
-                    break;
-            }
-            
-            $redirectNode = $this->lookupPageNode($redirectPath, $pageNode);
+            $redirectNode = $this->lookupPageNode($redirectPath, $contextNode);
             throw new PageRedirectionException($redirectNode->getAttribute(Domain::ATTR_URI));
         }
         
-        if ($pageNode->getAttribute(Domain::ATTR_URI) !== $path) {
-            throw new PageRedirectionException($pageNode->getAttribute(Domain::ATTR_URI));
+        if ($contextNode->getAttribute(Domain::ATTR_URI) !== $path) {
+            throw new PageRedirectionException($contextNode->getAttribute(Domain::ATTR_URI));
         }
         
-        return $pageNode;
-    }
-    
-    private function path2expr(string $path, string $filter = ''): string {
-        $path = array_filter(explode('/', $path), 'strlen');
-        $qry = [
-            '.'
-        ];
-        foreach ($path as $folder) {
-            $qry[] = '*[php:functionString("strtolower", @name) = "' . strtolower($folder) . '" or ancestor-or-self::*/@name = "*"]';
-        }
-        return implode('/', $qry);
+        return $contextNode;
     }
 }
 
