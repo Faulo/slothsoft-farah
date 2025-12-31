@@ -58,7 +58,7 @@ final class LookupPageStrategy extends RequestStrategyBase {
         return $url;
     }
     
-    private function lookupPageNode(string $path, DOMElement $contextNode = null): DOMElement {
+    public function lookupPageNode(string $path, DOMElement $contextNode = null): DOMElement {
         if ($path === '') {
             $path = '/';
         }

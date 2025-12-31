@@ -7,6 +7,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\RequestStrategy\LookupPageStrategy;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
@@ -88,6 +89,14 @@ final class Domain {
         if ($oldNode = $this->getCurrentPageNode()) {
             $oldNode->removeAttribute(self::ATTR_CURRENT_PAGE);
         }
+    }
+    
+    /**
+     *
+     * @deprecated
+     */
+    public function lookupPageNode(string $path, DOMElement $contextNode = null): DOMElement {
+        return (new LookupPageStrategy($this))->lookupPageNode($path, $contextNode);
     }
     
     public function lookupAssetUrl(DOMElement $dataNode, array $args = []): FarahUrl {
