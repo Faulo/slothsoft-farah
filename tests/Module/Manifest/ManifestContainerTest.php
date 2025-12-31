@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class ManifestContainerTest extends TestCase {
+final class ManifestContainerTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(ManifestContainer::class), "Failed to load class 'Slothsoft\Farah\Module\Manifest\ManifestContainer'!");

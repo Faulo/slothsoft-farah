@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class ManagerTest extends TestCase {
+final class ManagerTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(Manager::class), "Failed to load class 'Slothsoft\Farah\Tracking\Manager'!");

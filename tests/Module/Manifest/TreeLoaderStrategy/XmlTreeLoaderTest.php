@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class XmlTreeLoaderTest extends TestCase {
+final class XmlTreeLoaderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(XmlTreeLoader::class), "Failed to load class 'Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\XmlTreeLoader'!");

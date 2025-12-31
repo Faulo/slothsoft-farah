@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class SitemapBuilderTest extends TestCase {
+final class SitemapBuilderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(SitemapBuilder::class), "Failed to load class 'Slothsoft\Farah\Internal\SitemapBuilder'!");

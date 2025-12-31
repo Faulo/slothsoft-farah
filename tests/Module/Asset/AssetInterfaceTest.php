@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class AssetInterfaceTest extends TestCase {
+final class AssetInterfaceTest extends TestCase {
     
     public function testInterfaceExists(): void {
         $this->assertTrue(interface_exists(AssetInterface::class), "Failed to load interface 'Slothsoft\Farah\Module\Asset\AssetInterface'!");

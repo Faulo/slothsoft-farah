@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class HTTPClosureTest extends TestCase {
+final class HTTPClosureTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(HTTPClosure::class), "Failed to load class 'Slothsoft\Farah\HTTPClosure'!");

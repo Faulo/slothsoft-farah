@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class AssetPathNotFoundExceptionTest extends TestCase {
+final class AssetPathNotFoundExceptionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(AssetPathNotFoundException::class), "Failed to load class 'Slothsoft\Farah\Exception\AssetPathNotFoundException'!");
