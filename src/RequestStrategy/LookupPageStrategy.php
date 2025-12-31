@@ -13,7 +13,11 @@ use DOMElement;
 
 final class LookupPageStrategy extends RequestStrategyBase {
     
-    private ?Domain $domain = null;
+    private ?Domain $domain;
+    
+    public function __construct(?Domain $domain = null) {
+        $this->domain = $domain;
+    }
     
     public function createUrl(ServerRequestInterface $request): FarahUrl {
         $this->domain ??= Domain::createWithDefaultSitemap();
