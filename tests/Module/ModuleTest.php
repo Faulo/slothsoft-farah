@@ -13,16 +13,21 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
 use Slothsoft\Core\ServerEnvironment;
+use Slothsoft\FarahTesting\TestUtils;
 
 /**
  * ModuleTest
  *
  * @see Module
  */
-class ModuleTest extends TestCase {
+final class ModuleTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(Module::class), "Failed to load class 'Slothsoft\Farah\Module\Module'!");
+    }
+    
+    public function setUp(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
     }
     
     /**

@@ -17,7 +17,7 @@ use PHPUnit\Framework\Constraint\IsEqual;
  *
  * @see ChunkWriterStreamBuilder
  */
-class ChunkWriterStreamBuilderTest extends TestCase {
+final class ChunkWriterStreamBuilderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(ChunkWriterStreamBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Result\StreamBuilderStrategy\ChunkWriterStreamBuilder'!");

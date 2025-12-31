@@ -2,18 +2,18 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\RequestStrategy;
 
+use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\UriInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\MessageFactory;
-use GuzzleHttp\Psr7\Uri;
-use Psr\Http\Message\UriInterface;
 
 /**
  * LookupAssetStrategyTest
  *
  * @see LookupAssetStrategy
  */
-class LookupAssetStrategyTest extends TestCase {
+final class LookupAssetStrategyTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(LookupAssetStrategy::class), "Failed to load class 'Slothsoft\Farah\RequestStrategy\LookupAssetStrategy'!");
