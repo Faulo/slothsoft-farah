@@ -56,6 +56,10 @@ final class Domain {
         $this->xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT | DOMHelper::XPATH_PHP);
     }
     
+    public function getDocument(): DOMDocument {
+        return $this->document;
+    }
+    
     public function getXPath(): DOMXPath {
         return $this->xpath;
     }

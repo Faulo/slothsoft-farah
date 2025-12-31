@@ -67,7 +67,7 @@ final class LookupPageStrategy extends RequestStrategyBase {
             $contextNode = $this->domain->getDomainNode();
         }
         
-        foreach (explode('/', $path) as $segment) {
+        foreach (explode('/', strtolower($path)) as $segment) {
             switch ($segment) {
                 case '':
                 case '.':
@@ -76,9 +76,6 @@ final class LookupPageStrategy extends RequestStrategyBase {
                     $contextNode = $contextNode->parentNode;
                     break;
                 default:
-                    $segment = strtolower($segment);
-                    $found = false;
-                    
                     /** @var $node DOMElement */
                     foreach ($contextNode->childNodes as $node) {
                         if ($node->nodeType !== XML_ELEMENT_NODE) {
@@ -91,17 +88,14 @@ final class LookupPageStrategy extends RequestStrategyBase {
                                 $pageName = strtolower((string) $node->getAttribute(Domain::ATTR_NAME));
                                 if ($pageName === $segment) {
                                     $contextNode = $node;
-                                    $found = true;
-                                    break 2;
+                                    break 3;
                                 }
+                                
                                 break;
                         }
                     }
                     
-                    if (! $found) {
-                        throw new PageNotFoundException($path);
-                    }
-                    break;
+                    throw new PageNotFoundException($path);
             }
         }
         
