@@ -62,35 +62,50 @@ class Result implements ResultInterface {
     
     public function lookupStringWriter(): StringWriterInterface {
         if ($this->stringWriter === null) {
-            $this->stringWriter = new StringWriterMemoryCache($this->strategies->streamBuilder->buildStringWriter($this));
+            $this->stringWriter = $this->strategies->streamBuilder->buildStringWriter($this);
+            if ($this->lookupIsBufferable()) {
+                $this->stringWriter = new StringWriterMemoryCache($this->stringWriter);
+            }
         }
         return $this->stringWriter;
     }
     
     public function lookupStreamWriter(): StreamWriterInterface {
         if ($this->streamWriter === null) {
-            $this->streamWriter = new StreamWriterMemoryCache($this->strategies->streamBuilder->buildStreamWriter($this));
+            $this->streamWriter = $this->strategies->streamBuilder->buildStreamWriter($this);
+            if ($this->lookupIsBufferable()) {
+                $this->streamWriter = new StreamWriterMemoryCache($this->streamWriter);
+            }
         }
         return $this->streamWriter;
     }
     
     public function lookupFileWriter(): FileWriterInterface {
         if ($this->fileWriter === null) {
-            $this->fileWriter = new FileWriterMemoryCache($this->strategies->streamBuilder->buildFileWriter($this));
+            $this->fileWriter = $this->strategies->streamBuilder->buildFileWriter($this);
+            if ($this->lookupIsBufferable()) {
+                $this->fileWriter = new FileWriterMemoryCache($this->fileWriter);
+            }
         }
         return $this->fileWriter;
     }
     
     public function lookupDOMWriter(): DOMWriterInterface {
         if ($this->domWriter === null) {
-            $this->domWriter = new DOMWriterMemoryCache($this->strategies->streamBuilder->buildDOMWriter($this));
+            $this->domWriter = $this->strategies->streamBuilder->buildDOMWriter($this);
+            if ($this->lookupIsBufferable()) {
+                $this->domWriter = new DOMWriterMemoryCache($this->domWriter);
+            }
         }
         return $this->domWriter;
     }
     
     public function lookupChunkWriter(): ChunkWriterInterface {
         if ($this->chunkWriter === null) {
-            $this->chunkWriter = new ChunkWriterMemoryCache($this->strategies->streamBuilder->buildChunkWriter($this));
+            $this->chunkWriter = $this->strategies->streamBuilder->buildChunkWriter($this);
+            if ($this->lookupIsBufferable()) {
+                $this->chunkWriter = new ChunkWriterMemoryCache($this->chunkWriter);
+            }
         }
         return $this->chunkWriter;
     }
