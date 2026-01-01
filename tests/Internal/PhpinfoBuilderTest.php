@@ -30,6 +30,7 @@ final class PhpinfoBuilderTest extends TestCase {
     /**
      *
      * @dataProvider countProvider
+     * @runInSeparateProcess
      */
     public function test_read(int $count): void {
         for ($i = 0; $i < $count; $i ++) {
