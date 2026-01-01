@@ -5,4 +5,7 @@
     <file name="request-with-param" ref="/current-request" status-active="" status-public="">
         <sfm:param name="param" value="value" />
     </file>
+    <file name="request-with-query" ref="/current-request?param=value" status-active="" status-public="">
+        <sfm:param name="param" value="should not see this" />
+    </file>
 </domain>
