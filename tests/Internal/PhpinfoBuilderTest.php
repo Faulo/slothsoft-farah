@@ -18,15 +18,13 @@ final class PhpinfoBuilderTest extends TestCase {
     
     private const REFERENCE = 'farah://slothsoft@farah/phpinfo';
     
-    private string $phpinfo;
-    
-    public function setUp(): void {
+    private static function getPhpInfo(): string {
         ob_start();
         phpinfo();
         $data = ob_get_contents();
         ob_end_clean();
         
-        $this->phpinfo = '<pre>' . htmlentities($data, ENT_XML1 | ENT_DISALLOWED, 'UTF-8') . '</pre>';
+        return '<pre>' . htmlentities($data, ENT_XML1 | ENT_DISALLOWED, 'UTF-8') . '</pre>';
     }
     
     /**
@@ -36,7 +34,7 @@ final class PhpinfoBuilderTest extends TestCase {
     public function test_read(int $count): void {
         for ($i = 0; $i < $count; $i ++) {
             $actual = file_get_contents(self::REFERENCE);
-            $this->assertThat($actual, new IsEqual($this->phpinfo));
+            $this->assertThat($actual, new IsEqual(self::getPhpInfo()));
         }
     }
     
