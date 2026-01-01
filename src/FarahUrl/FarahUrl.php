@@ -177,8 +177,9 @@ class FarahUrl implements UriInterface, Hashable {
         return self::createFromComponents($this->authority, $this->path, $args, $this->fragment);
     }
     
-    public function withAdditionalQueryArguments(FarahUrlArguments $args): FarahUrl {
-        return $this->withQueryArguments(FarahUrlArguments::createFromMany($args, $this->args));
+    public function withAdditionalQueryArguments(FarahUrlArguments $args, bool $overwriteExisting = true): FarahUrl {
+        $args = $overwriteExisting ? FarahUrlArguments::createFromMany($args, $this->args) : FarahUrlArguments::createFromMany($this->args, $args);
+        return $this->withQueryArguments($args);
     }
     
     public function withStreamIdentifier(FarahUrlStreamIdentifier $fragment) {

@@ -7,6 +7,7 @@ use Slothsoft\Core\FileSystem;
 use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
+use Slothsoft\FarahTesting\TestUtils;
 
 class FarahUrlTest extends TestCase {
     
@@ -159,6 +160,7 @@ class FarahUrlTest extends TestCase {
     /**
      */
     public function testFileModifiedTime(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
         $assetsPath = realpath('assets/xsl/module.xsl');
         $this->assertIsString($assetsPath);
         
@@ -306,6 +308,59 @@ class FarahUrlTest extends TestCase {
             'farah://slothsoft@farah/?a[]=b',
             'a[]=1',
             'farah://slothsoft@farah/?a[]=1'
+        ];
+    }
+    
+    /**
+     *
+     * @dataProvider withAdditionalQueryArguments_overwriteExistingProvider
+     */
+    public function test_withAdditionalQueryArguments_overwriteExisting(string $url, string $query, string $expected, bool $overwriteExisting): void {
+        $url = FarahUrl::createFromReference($url);
+        $args = FarahUrlArguments::createFromQuery($query);
+        $expected = FarahUrl::createFromReference($expected);
+        
+        $this->assertSame($expected, $url->withAdditionalQueryArguments($args, $overwriteExisting));
+    }
+    
+    public function withAdditionalQueryArguments_overwriteExistingProvider(): iterable {
+        yield 'add query overwrites' => [
+            'farah://slothsoft@farah/?a=b',
+            'a=1',
+            'farah://slothsoft@farah/?a=1',
+            true
+        ];
+        yield 'add query overwrites null' => [
+            'farah://slothsoft@farah/?a=b',
+            'a=',
+            'farah://slothsoft@farah/?a',
+            true
+        ];
+        yield 'add query overwrites array' => [
+            'farah://slothsoft@farah/?a[]=b',
+            'a[]=1',
+            'farah://slothsoft@farah/?a[]=1',
+            true
+        ];
+        
+        
+        yield 'add query does not overwrite' => [
+            'farah://slothsoft@farah/?a=b',
+            'a=1',
+            'farah://slothsoft@farah/?a=b',
+            false
+        ];
+        yield 'add query does not overwrite null' => [
+            'farah://slothsoft@farah/?a=b',
+            'a=',
+            'farah://slothsoft@farah/?a=b',
+            false
+        ];
+        yield 'add query does not overwrite array' => [
+            'farah://slothsoft@farah/?a[]=b',
+            'a[]=1',
+            'farah://slothsoft@farah/?a[]=b',
+            false
         ];
     }
 }

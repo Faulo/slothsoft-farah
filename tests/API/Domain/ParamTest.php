@@ -150,7 +150,25 @@ EOT
             '/page-with-param',
             <<<EOT
 <request-info xmlns="http://schema.slothsoft.net/farah/module" href="http://localhost/page-with-param" url="farah://slothsoft@test.slothsoft.net/page-with-query?param=override" version="1.1">
-    <param name="param" value="override"/>
+    <param name="param" value="value"/>
+</request-info>
+EOT
+        ];
+        
+        yield '/page-with-query' => [
+            '/page-with-query',
+            <<<EOT
+<request-info xmlns="http://schema.slothsoft.net/farah/module" href="http://localhost/page-with-query" url="farah://slothsoft@test.slothsoft.net/page-with-query" version="1.1">
+    <param name="param" value="value"/>
+</request-info>
+EOT
+        ];
+        
+        yield '/page-with-query?param=override' => [
+            '/page-with-query?param=override',
+            <<<EOT
+<request-info xmlns="http://schema.slothsoft.net/farah/module" href="http://localhost/page-with-query?param=override" url="farah://slothsoft@test.slothsoft.net/page-with-query?param=override" version="1.1">
+    <param name="param" value="value"/>
 </request-info>
 EOT
         ];

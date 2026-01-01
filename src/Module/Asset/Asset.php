@@ -113,6 +113,8 @@ class Asset implements AssetInterface {
         return $this->ownerManifest->createUrl($this->getUrlPath(), $args, $fragment);
     }
     
+    private const URL_PREFERS_GLOBAL_PARAMS = false;
+    
     public function createRealUrl($args = null, $fragment = null): FarahUrl {
         if (! $this->manifestElement->hasAttribute(Manifest::ATTR_REFERENCE)) {
             return $this->createUrl($args, $fragment);
@@ -122,7 +124,7 @@ class Asset implements AssetInterface {
         $url = FarahUrl::createFromReference($ref);
         
         if ($args !== null) {
-            $url = $url->withAdditionalQueryArguments($args instanceof FarahUrlArguments ? $args : FarahUrlArguments::createFromQuery((string) $args));
+            $url = $url->withAdditionalQueryArguments($args instanceof FarahUrlArguments ? $args : FarahUrlArguments::createFromQuery((string) $args), self::URL_PREFERS_GLOBAL_PARAMS);
         }
         
         if ($fragment !== null) {
