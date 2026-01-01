@@ -450,10 +450,10 @@ final class ModuleTest extends TestCase {
                         'value' => '2'
                     ],
                     'document-info' => [
-                        'url' => 'farah://slothsoft@test/import/query?a=2&c&d'
+                        'url' => 'farah://slothsoft@test/import/query?a=1&c&d'
                     ],
                     'print-query' => [
-                        'args' => 'a=2&c&d'
+                        'args' => 'a=1&c&d'
                     ]
                 ]
             ],
