@@ -8,6 +8,7 @@ use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\IO\Psr7\StreamHelper;
 use Slothsoft\Farah\HTTPRequest;
 use Slothsoft\Farah\HTTPResponse;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\Exception\HttpStatusException;
@@ -30,6 +31,8 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
             
             $this->validateRequest();
             $url = $this->createUrl($request);
+            
+            Kernel::setCurrentPage($url);
             
             try {
                 try {

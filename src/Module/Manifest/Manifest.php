@@ -32,6 +32,8 @@ class Manifest implements ManifestInterface {
     
     public const TAG_CLOSURE = 'closure';
     
+    public const TAG_REQUEST_INFO = 'request-info';
+    
     // physical asset tags
     public const TAG_ASSET_ROOT = 'assets';
     

@@ -6,6 +6,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Farah\Configuration\AssetConfigurationField;
+use Slothsoft\Farah\Configuration\FarahUrlConfigurationField;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\RequestStrategy\RequestStrategyInterface;
 use Slothsoft\Farah\ResponseStrategy\ResponseStrategyInterface;
@@ -43,6 +45,30 @@ class Kernel {
     
     public static function clearCurrentSitemap(): void {
         self::currentSitemap()->setValue(null);
+    }
+    
+    private static function currentPage(): FarahUrlConfigurationField {
+        static $field;
+        if ($field === null) {
+            $field = new FarahUrlConfigurationField();
+        }
+        return $field;
+    }
+    
+    public static function setCurrentPage($url): void {
+        self::currentPage()->setValue($url);
+    }
+    
+    public static function getCurrentPage(): FarahUrl {
+        return self::currentPage()->getValue();
+    }
+    
+    public static function hasCurrentPage(): bool {
+        return self::currentPage()->hasValue();
+    }
+    
+    public static function clearCurrentPage(): void {
+        self::currentPage()->setValue(null);
     }
     
     private static function currentRequest(): ConfigurationField {
