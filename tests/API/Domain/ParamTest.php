@@ -9,6 +9,7 @@ use Slothsoft\FarahTesting\TestUtils;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\Http\MessageFactory;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\RequestStrategy\LookupPageStrategy;
 use DOMDocument;
 
@@ -50,6 +51,10 @@ final class ParamTest extends TestCase {
         
         $actual = new DOMDocument();
         $actual->loadXML(self::requestPage($path));
+        foreach ($actual->getElementsByTagNameNS(DOMHelper::NS_FARAH_MODULE, Manifest::TAG_REQUEST_INFO) as $node) {
+            $actual = $node;
+            break;
+        }
         
         $this->assertThat($actual, new DOMNodeEqualTo($expected));
     }
@@ -67,6 +72,15 @@ final class ParamTest extends TestCase {
     <file name="request-with-query" ref="/current-request?param=value" status-active="" status-public="" title="request-with-query" uri="/request-with-query" url="http://test.slothsoft.net/request-with-query">
         <sfm:param name="param" value="should not see this"/>
     </file>
+    
+    <file name="page" ref="//slothsoft@test.slothsoft.net/page" status-active="" status-public="" title="page" uri="/page" url="http://test.slothsoft.net/page">
+        <sfm:param name="param" value="value"/>
+    </file>
+    <file name="page-with-param" ref="//slothsoft@test.slothsoft.net/page-with-query" status-active="" status-public="" title="page-with-param" uri="/page-with-param" url="http://test.slothsoft.net/page-with-param">
+        <sfm:param name="param" value="override"/>
+    </file>
+    <file name="page-with-query" ref="//slothsoft@test.slothsoft.net/page-with-query" status-active="" status-public="" title="page-with-query" uri="/page-with-query" url="http://test.slothsoft.net/page-with-query">
+    </file>
 </domain>
 EOT
         ];
@@ -74,14 +88,14 @@ EOT
         yield '/request' => [
             '/request',
             <<<EOT
-<request-info xmlns="http://schema.slothsoft.net/farah/module" url="http://localhost/request" ref="farah://slothsoft@farah/current-request"/>
+<request-info xmlns="http://schema.slothsoft.net/farah/module" href="http://localhost/request" url="farah://slothsoft@farah/current-request" version="1.1"/>
 EOT
         ];
         
         yield '/request?param=value' => [
             '/request?param=value',
             <<<EOT
-<request-info xmlns="http://schema.slothsoft.net/farah/module" url="http://localhost/request?param=value" ref="farah://slothsoft@farah/current-request?param=value">
+<request-info xmlns="http://schema.slothsoft.net/farah/module" href="http://localhost/request?param=value" url="farah://slothsoft@farah/current-request?param=value" version="1.1">
     <param name="param" value="value"/>
 </request-info>
 EOT
@@ -90,7 +104,7 @@ EOT
         yield '/request-with-param' => [
             '/request-with-param',
             <<<EOT
-<request-info xmlns="http://schema.slothsoft.net/farah/module" url="http://localhost/request-with-param" ref="farah://slothsoft@farah/current-request?param=value">
+<request-info xmlns="http://schema.slothsoft.net/farah/module" href="http://localhost/request-with-param" url="farah://slothsoft@farah/current-request?param=value" version="1.1">
     <param name="param" value="value"/>
 </request-info>
 EOT
@@ -99,7 +113,7 @@ EOT
         yield '/request-with-param?param=override' => [
             '/request-with-param?param=override',
             <<<EOT
-<request-info xmlns="http://schema.slothsoft.net/farah/module" url="http://localhost/request-with-param?param=override" ref="farah://slothsoft@farah/current-request?param=override">
+<request-info xmlns="http://schema.slothsoft.net/farah/module" href="http://localhost/request-with-param?param=override" url="farah://slothsoft@farah/current-request?param=override" version="1.1">
     <param name="param" value="override"/>
 </request-info>
 EOT
@@ -108,8 +122,35 @@ EOT
         yield '/request-with-query' => [
             '/request-with-query',
             <<<EOT
-<request-info xmlns="http://schema.slothsoft.net/farah/module" url="http://localhost/request-with-query" ref="farah://slothsoft@farah/current-request?param=value">
+<request-info xmlns="http://schema.slothsoft.net/farah/module" href="http://localhost/request-with-query" url="farah://slothsoft@farah/current-request?param=value" version="1.1">
     <param name="param" value="value"/>
+</request-info>
+EOT
+        ];
+        
+        yield '/request-with-query?param=override' => [
+            '/request-with-query?param=override',
+            <<<EOT
+<request-info xmlns="http://schema.slothsoft.net/farah/module" href="http://localhost/request-with-query?param=override" url="farah://slothsoft@farah/current-request?param=value" version="1.1">
+    <param name="param" value="value"/>
+</request-info>
+EOT
+        ];
+        
+        yield '/page' => [
+            '/page',
+            <<<EOT
+<request-info xmlns="http://schema.slothsoft.net/farah/module" href="http://localhost/page" url="farah://slothsoft@test.slothsoft.net/page?param=value" version="1.1">
+    <param name="param" value="value"/>
+</request-info>
+EOT
+        ];
+        
+        yield '/page-with-param' => [
+            '/page-with-param',
+            <<<EOT
+<request-info xmlns="http://schema.slothsoft.net/farah/module" href="http://localhost/page-with-param" url="farah://slothsoft@test.slothsoft.net/page-with-query?param=override" version="1.1">
+    <param name="param" value="override"/>
 </request-info>
 EOT
         ];

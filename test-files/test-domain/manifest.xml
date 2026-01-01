@@ -1,4 +1,12 @@
 <?xml version="1.0"?>
 <assets xmlns="http://schema.slothsoft.net/farah/module" version="1.1">
     <resource name="sitemap" type="application/xml" />
+
+    <fragment name="page">
+        <use-document ref="//slothsoft@farah/current-request" />
+    </fragment>
+
+    <fragment name="page-with-query">
+        <use-document ref="//slothsoft@farah/current-request?param=value" />
+    </fragment>
 </assets>

@@ -8,4 +8,14 @@
     <file name="request-with-query" ref="/current-request?param=value" status-active="" status-public="">
         <sfm:param name="param" value="should not see this" />
     </file>
+
+
+    <file name="page" ref="//slothsoft@test.slothsoft.net/page" status-active="" status-public="">
+        <sfm:param name="param" value="value" />
+    </file>
+    <file name="page-with-param" ref="//slothsoft@test.slothsoft.net/page-with-query" status-active="" status-public="">
+        <sfm:param name="param" value="override" />
+    </file>
+    <file name="page-with-query" ref="//slothsoft@test.slothsoft.net/page-with-query" status-active="" status-public="">
+    </file>
 </domain>

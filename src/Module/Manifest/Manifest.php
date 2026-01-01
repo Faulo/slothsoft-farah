@@ -74,6 +74,8 @@ class Manifest implements ManifestInterface {
     public const TAG_LINK_DICTIONARY = 'link-dictionary';
     
     // attributes
+    public const ATTR_SCHEMAVERSION = 'version';
+    
     public const ATTR_NAME = 'name';
     
     public const ATTR_ID = 'url';

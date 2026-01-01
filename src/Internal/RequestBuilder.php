@@ -25,14 +25,15 @@ class RequestBuilder implements ExecutableBuilderStrategyInterface {
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $closure = function (DOMDocument $targetDoc) use ($args): DOMElement {
             $rootNode = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, Manifest::TAG_REQUEST_INFO);
+            $rootNode->setAttribute(Manifest::ATTR_SCHEMAVERSION, '1.1');
             try {
                 $request = Kernel::getCurrentRequest();
-                $rootNode->setAttribute(Manifest::ATTR_URL, (string) $request->getUri());
+                $rootNode->setAttribute(Manifest::ATTR_HREF, (string) $request->getUri());
             } catch (ConfigurationRequiredException $e) {}
             
             try {
                 $pageUrl = Kernel::getCurrentPage();
-                $rootNode->setAttribute(Manifest::ATTR_REFERENCE, (string) $pageUrl);
+                $rootNode->setAttribute(Manifest::ATTR_URL, (string) $pageUrl);
             } catch (ConfigurationRequiredException $e) {}
             
             foreach ($args as $name => $value) {
