@@ -7,7 +7,7 @@ use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use DOMDocument;
 use DOMElement;
 
-class DecoratedDOMWriter implements DOMWriterInterface {
+final class DecoratedDOMWriter implements DOMWriterInterface {
     
     private DOMWriterInterface $source;
     

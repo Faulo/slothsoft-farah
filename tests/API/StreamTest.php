@@ -9,20 +9,18 @@ use Slothsoft\Farah\Module\Module;
 
 class StreamTest extends TestCase {
     
-    public function someFarahAssets(): array {
-        return [
-            'farah://slothsoft@farah/' => [
-                'farah://slothsoft@farah/',
-                'dynamic'
-            ],
-            'farah://slothsoft@farah/js/DOMHelper' => [
-                'farah://slothsoft@farah/js/DOM',
-                'file'
-            ],
-            'farah://slothsoft@farah/example-page' => [
-                'farah://slothsoft@farah/example-page',
-                'xslt'
-            ]
+    public function someFarahAssets(): iterable {
+        yield 'farah://slothsoft@farah/' => [
+            'farah://slothsoft@farah/',
+            'dynamic'
+        ];
+        yield 'farah://slothsoft@farah/js/DOMHelper' => [
+            'farah://slothsoft@farah/js/DOM',
+            'file'
+        ];
+        yield 'farah://slothsoft@farah/example-page' => [
+            'farah://slothsoft@farah/example-page',
+            'xslt'
         ];
     }
     
@@ -36,7 +34,8 @@ class StreamTest extends TestCase {
         
         $stream = Module::resolveToStreamWriter($url)->toStream();
         
-        $this->assertThat($stream->getContents(), new IsEqual($this->getExpectedContent($ref, $type)));
+        $this->assertThat((string) $stream, new IsEqual($this->getExpectedContent($ref, $type)));
+        $this->assertThat((string) $stream, new IsEqual($this->getExpectedContent($ref, $type)));
     }
     
     private function getExpectedContent(string $ref, string $type): string {
@@ -54,6 +53,7 @@ class StreamTest extends TestCase {
         $stream = Module::resolveToStreamWriter($url)->toStream();
         
         $this->assertThat($stream->getSize(), new IsEqual($this->getExpectedSize($ref, $type)));
+        $this->assertThat($stream->getSize(), new IsEqual($this->getExpectedSize($ref, $type)));
     }
     
     private function getExpectedSize(string $ref, string $type): int {
@@ -70,6 +70,7 @@ class StreamTest extends TestCase {
         
         $stream = Module::resolveToStreamWriter($url)->toStream();
         
+        $this->assertThat($stream->isSeekable(), new IsEqual($this->getExpectedSeekable($ref, $type)));
         $this->assertThat($stream->isSeekable(), new IsEqual($this->getExpectedSeekable($ref, $type)));
     }
     
