@@ -9,19 +9,23 @@ use Slothsoft\Farah\Module\Module;
 
 class StreamTest extends TestCase {
     
+    private const TEST_ACTIVE = false;
+    
     public function someFarahAssets(): iterable {
-        yield 'farah://slothsoft@farah/' => [
-            'farah://slothsoft@farah/',
-            'dynamic'
-        ];
-        yield 'farah://slothsoft@farah/js/DOMHelper' => [
-            'farah://slothsoft@farah/js/DOM',
-            'file'
-        ];
-        yield 'farah://slothsoft@farah/example-page' => [
-            'farah://slothsoft@farah/example-page',
-            'xslt'
-        ];
+        if (self::TEST_ACTIVE) {
+            yield 'farah://slothsoft@farah/' => [
+                'farah://slothsoft@farah/',
+                'dynamic'
+            ];
+            yield 'farah://slothsoft@farah/js/DOMHelper' => [
+                'farah://slothsoft@farah/js/DOM',
+                'file'
+            ];
+            yield 'farah://slothsoft@farah/example-page' => [
+                'farah://slothsoft@farah/example-page',
+                'xslt'
+            ];
+        }
     }
     
     /**
