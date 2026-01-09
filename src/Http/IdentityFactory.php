@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\Http;
 use Psr\Http\Message\StreamInterface;
 use Slothsoft\Core\IO\Writable\FilteredStreamWriterInterface;
 
-class IdentityFactory implements FilteredStreamWriterInterface {
+final class IdentityFactory implements FilteredStreamWriterInterface {
     
     public static function getInstance(): self {
         static $instance;

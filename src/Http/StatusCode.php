@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Http;
 
-abstract class StatusCode {
+final class StatusCode {
     
     const STATUS_OK = 200;
     

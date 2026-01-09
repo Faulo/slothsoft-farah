@@ -14,6 +14,7 @@ use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Http\CodingInterface;
 use Slothsoft\Farah\Http\ContentCoding;
 use Slothsoft\Farah\Http\MessageFactory;
 use Slothsoft\Farah\Http\StatusCode;
@@ -85,13 +86,14 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
                     $preferredCompressions = $this->inventPreferredCompressions($fileMime);
                     if (strlen($preferredCompressions)) {
                         $contentCoding = $this->negotiateContentCoding($preferredCompressions);
+                        $body = $contentCoding->encodeStream($body);
+                        $contentCodingName = $contentCoding->getHttpName();
                         $headers['vary'] = 'accept-encoding';
-                        if ($fileHash !== '') {
-                            $fileHash .= "-$contentCoding";
-                        }
-                        if (! $contentCoding->isNoEncoding()) {
-                            $body = $contentCoding->encodeStream($body);
-                            $headers['content-encoding'] = (string) $contentCoding;
+                        if ($contentCodingName !== '') {
+                            if ($fileHash !== '') {
+                                $fileHash .= "-$contentCodingName";
+                            }
+                            $headers['content-encoding'] = $contentCodingName;
                         }
                     }
                 }
@@ -110,9 +112,10 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
                 if ($bodyLength === null) {
                     // we don't know the length of the response, so we better figure out a safe transfer coding
                     $transferCoding = $this->negotiateTransferCoding('chunked');
-                    if (! $transferCoding->isNoEncoding()) {
-                        $body = $transferCoding->encodeStream($body);
-                        $headers['transfer-encoding'] = (string) $transferCoding;
+                    $body = $transferCoding->encodeStream($body);
+                    $transferCodingName = $transferCoding->getHttpName();
+                    if ($transferCodingName !== '') {
+                        $headers['transfer-encoding'] = $transferCodingName;
                     }
                 } else {
                     $headers['accept-ranges'] = 'bytes';
@@ -195,10 +198,9 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
     
     abstract public function createUrl(ServerRequestInterface $request): FarahUrl;
     
-    private function negotiateContentCoding(string $preferred): ContentCoding {
+    private function negotiateContentCoding(string $preferred): CodingInterface {
         $accept = $this->request->getHeaderLine('accept-encoding');
-        foreach (ContentCoding::getEncodings() as $coding) {
-            $name = (string) $coding;
+        foreach (ContentCoding::getEncodings() as $name => $coding) {
             if (strpos($preferred, $name) !== false and strpos($accept, $name) !== false) {
                 return $coding;
             }
@@ -206,13 +208,12 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
         return ContentCoding::identity();
     }
     
-    private function negotiateTransferCoding(string $preferred): TransferCoding {
+    private function negotiateTransferCoding(string $preferred): CodingInterface {
         $accept = $this->request->getHeaderLine('te');
         if (version_compare($this->request->getProtocolVersion(), '1.1', '>=')) {
             $accept .= ', chunked'; // HTTP 1.1 must accept chunked encoding
         }
-        foreach (TransferCoding::getEncodings() as $coding) {
-            $name = (string) $coding;
+        foreach (TransferCoding::getEncodings() as $name => $coding) {
             if (strpos($preferred, $name) !== false and strpos($accept, $name) !== false) {
                 return $coding;
             }
