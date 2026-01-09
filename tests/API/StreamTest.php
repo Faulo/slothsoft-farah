@@ -9,7 +9,7 @@ use Slothsoft\Farah\Module\Module;
 
 class StreamTest extends TestCase {
     
-    private const TEST_ACTIVE = false;
+    private const TEST_ACTIVE = true;
     
     public function someFarahAssets(): iterable {
         if (self::TEST_ACTIVE) {
