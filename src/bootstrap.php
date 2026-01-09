@@ -15,7 +15,7 @@ StreamWrapperRegistrar::registerStreamWrapper('farah', new FarahStreamWrapperFac
 ContentCoding::registerEncodingFilter('gzip', new ZlibFilteredStreamFactory(ZLIB_ENCODING_GZIP));
 ContentCoding::registerEncodingFilter('deflate', new ZlibFilteredStreamFactory(ZLIB_ENCODING_DEFLATE));
 
-TransferCoding::registerEncodingFilter('chunked', new ChunkedFilteredStreamFactory());
+TransferCoding::registerEncodingFilter('chunked-disabled', new ChunkedFilteredStreamFactory());
 
 Module::registerWithXmlManifestAndDefaultAssets('slothsoft@farah', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets');
 
