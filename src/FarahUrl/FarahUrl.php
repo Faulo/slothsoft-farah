@@ -126,9 +126,10 @@ final class FarahUrl implements UriInterface, Hashable {
         return $uri instanceof FarahUrl ? $uri : self::createFromComponents(FarahUrlAuthority::createFromVendorAndModule($uri->getUserInfo(), $uri->getHost()), FarahUrlPath::createFromString($uri->getPath()), FarahUrlArguments::createFromQuery($uri->getQuery()), FarahUrlStreamIdentifier::createFromString($uri->getFragment()));
     }
     
+    private static ?Map $cache;
+    
     private static function cache(): Map {
-        static $cache;
-        return $cache ??= new Map();
+        return self::$cache ??= new Map();
     }
     
     private string $id;
