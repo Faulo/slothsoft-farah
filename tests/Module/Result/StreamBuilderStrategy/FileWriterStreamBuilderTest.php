@@ -10,6 +10,7 @@ use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\FileInfoFactory;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
 /**
@@ -66,6 +67,7 @@ class FileWriterStreamBuilderTest extends TestCase {
         
         $sut = $this->createSuT($expected, $name);
         $context = $this->createMock(ResultInterface::class);
+        $context->method('createUrl')->willReturn(FarahUrl::createFromReference('farah://test@test'));
         
         $actual = $sut->buildDOMWriter($context)->toDocument();
         

@@ -9,6 +9,7 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\FileInfoFactory;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
 /**
@@ -63,6 +64,7 @@ class FileInfoStreamBuilderTest extends TestCase {
         
         $sut = $this->createSuT($expected, $name);
         $context = $this->createMock(ResultInterface::class);
+        $context->method('createUrl')->willReturn(FarahUrl::createFromReference('farah://test@test'));
         
         $actual = $sut->buildDOMWriter($context)->toDocument();
         
