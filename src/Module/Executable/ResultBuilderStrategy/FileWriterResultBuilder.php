@@ -8,11 +8,11 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileWriterStreamBuilder;
 
-class FileWriterResultBuilder implements ResultBuilderStrategyInterface {
+final class FileWriterResultBuilder implements ResultBuilderStrategyInterface {
     
-    private $writer;
+    private FileWriterInterface $writer;
     
-    private $fileName;
+    private string $fileName;
     
     public function __construct(FileWriterInterface $writer, string $fileName) {
         $this->writer = $writer;
