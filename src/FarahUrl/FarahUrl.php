@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\FarahUrl;
 
 use Ds\Hashable;
+use Ds\Map;
 use Psr\Http\Message\UriInterface;
 use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
@@ -15,7 +16,7 @@ use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
  */
 final class FarahUrl implements UriInterface, Hashable {
     
-    private const SCHEME_DEFAULT = 'farah';
+    public const SCHEME_DEFAULT = 'farah';
     
     /**
      *
@@ -65,10 +66,22 @@ final class FarahUrl implements UriInterface, Hashable {
             $id .= "#$fragmentId";
         }
         
-        return self::create($id, $authority, $path, $args, $fragment);
+        $cache = self::cache();
+        if ($url = $cache->get($id, null)) {
+            return $url;
+        }
+        
+        $url = new FarahUrl($id, $authority, $path, $args, $fragment);
+        $cache->put($id, $url);
+        return $url;
     }
     
     public static function createFromReference(string $ref, ?FarahUrl $contextUrl = null): FarahUrl {
+        $cache = self::cache();
+        if ($url = $cache->get($ref, null)) {
+            return $url;
+        }
+        
         $res = parse_url($ref);
         if ($res === false) {
             throw new MalformedUrlException($ref);
@@ -113,12 +126,9 @@ final class FarahUrl implements UriInterface, Hashable {
         return $uri instanceof FarahUrl ? $uri : self::createFromComponents(FarahUrlAuthority::createFromVendorAndModule($uri->getUserInfo(), $uri->getHost()), FarahUrlPath::createFromString($uri->getPath()), FarahUrlArguments::createFromQuery($uri->getQuery()), FarahUrlStreamIdentifier::createFromString($uri->getFragment()));
     }
     
-    private static function create(string $id, FarahUrlAuthority $authority, FarahUrlPath $path, FarahUrlArguments $args, FarahUrlStreamIdentifier $fragment): FarahUrl {
-        static $cache = [];
-        if (! isset($cache[$id])) {
-            $cache[$id] = new FarahUrl($id, $authority, $path, $args, $fragment);
-        }
-        return $cache[$id];
+    private static function cache(): Map {
+        static $cache;
+        return $cache ??= new Map();
     }
     
     private string $id;
