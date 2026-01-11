@@ -13,9 +13,9 @@ use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
  * @author Daniel Schulz
  *        
  */
-class FarahUrl implements UriInterface, Hashable {
+final class FarahUrl implements UriInterface, Hashable {
     
-    const SCHEME_DEFAULT = 'farah';
+    private const SCHEME_DEFAULT = 'farah';
     
     /**
      *

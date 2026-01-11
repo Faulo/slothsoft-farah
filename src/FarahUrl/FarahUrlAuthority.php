@@ -10,10 +10,10 @@ use Slothsoft\Farah\Exception\IncompleteUrlException;
  * @author Daniel Schulz
  *        
  */
-class FarahUrlAuthority implements Hashable {
+final class FarahUrlAuthority implements Hashable {
     
     public static function createFromVendorAndModule(string $vendor, string $module): FarahUrlAuthority {
-        $id = "farah://$vendor@$module";
+        $id = FarahUrl::SCHEME_DEFAULT . '://' . $vendor . '@' . $module;
         if ($vendor === '' or $module === '') {
             throw new IncompleteUrlException($id, 'vendor or module');
         }
@@ -50,7 +50,7 @@ class FarahUrlAuthority implements Hashable {
     }
     
     public function getProtocol(): string {
-        return 'farah';
+        return FarahUrl::SCHEME_DEFAULT;
     }
     
     public function getVendor(): string {

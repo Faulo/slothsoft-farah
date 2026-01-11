@@ -9,7 +9,7 @@ use Ds\Hashable;
  * @author Daniel Schulz
  *        
  */
-class FarahUrlStreamIdentifier implements Hashable {
+final class FarahUrlStreamIdentifier implements Hashable {
     
     public static function createEmpty(): FarahUrlStreamIdentifier {
         return self::create('');

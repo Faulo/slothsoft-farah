@@ -12,10 +12,10 @@ use Traversable;
  * @author Daniel Schulz
  *        
  */
-class FarahUrlArguments implements IteratorAggregate, Hashable {
+final class FarahUrlArguments implements IteratorAggregate, Hashable {
     
     public static function createEmpty(): FarahUrlArguments {
-        return self::create('', '', []);
+        return self::create('', []);
     }
     
     public static function createFromMany(FarahUrlArguments ...$argsList): FarahUrlArguments {
@@ -58,31 +58,28 @@ class FarahUrlArguments implements IteratorAggregate, Hashable {
             ...self::createFromValueListInternal($valueList)
         ];
         $id = implode('&', $query);
-        return self::create($id, $id, $valueList);
+        return self::create($id, $valueList);
     }
     
-    private static function create(string $id, string $query, array $valueList): FarahUrlArguments {
+    private static function create(string $id, array $valueList): FarahUrlArguments {
         static $cache = [];
         if (! isset($cache[$id])) {
-            $cache[$id] = new FarahUrlArguments($id, $query, $valueList);
+            $cache[$id] = new FarahUrlArguments($id, $valueList);
         }
         return $cache[$id];
     }
     
     private string $id;
     
-    private string $query;
-    
     private array $data;
     
-    private function __construct(string $id, string $query, array $data) {
+    private function __construct(string $id, array $data) {
         $this->id = $id;
-        $this->query = $query;
         $this->data = $data;
     }
     
     public function __toString(): string {
-        return $this->query;
+        return $this->id;
     }
     
     public function get(string $key, $default = null) {

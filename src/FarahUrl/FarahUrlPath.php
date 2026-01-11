@@ -10,7 +10,7 @@ use Slothsoft\Farah\Exception\MalformedUrlException;
  * @author Daniel Schulz
  *        
  */
-class FarahUrlPath implements Hashable {
+final class FarahUrlPath implements Hashable {
     
     public const SEPARATOR = '/';
     
