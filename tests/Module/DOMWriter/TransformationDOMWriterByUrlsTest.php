@@ -4,28 +4,27 @@ namespace Slothsoft\Farah\Module\DOMWriter;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsInstanceOf;
-use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\Module;
 use DOMDocument;
 use DOMElement;
+use Slothsoft\Farah\Exception\EmptyTransformationException;
 
 /**
- * TransformationDOMWriterTest
+ * TransformationDOMWriterByUrlsTest
  *
- * @see TransformationDOMWriter
+ * @see TransformationDOMWriterByUrls
  */
-final class TransformationDOMWriterTest extends TestCase {
+final class TransformationDOMWriterByUrlsTest extends TestCase {
     
     public function testClassExists(): void {
-        $this->assertTrue(class_exists(TransformationDOMWriter::class), "Failed to load class 'Slothsoft\Farah\Module\DOMWriter\TransformationDOMWriter'!");
+        $this->assertTrue(class_exists(TransformationDOMWriterByUrls::class), "Failed to load class 'Slothsoft\Farah\Module\DOMWriter\TransformationDOMWriterByUrls'!");
     }
     
     public function test_toDocument() {
         $source = FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo');
         $template = FarahUrl::createFromReference('farah://slothsoft@farah/xsl/html');
         
-        $sut = new TransformationDOMWriter(Module::resolveToDOMWriter($source), Module::resolveToDOMWriter($template));
+        $sut = new TransformationDOMWriterByUrls($source, $template);
         
         $actual = $sut->toDocument();
         
@@ -36,7 +35,7 @@ final class TransformationDOMWriterTest extends TestCase {
         $source = FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo');
         $template = FarahUrl::createFromReference('farah://slothsoft@farah/xsl/html');
         
-        $sut = new TransformationDOMWriter(Module::resolveToDOMWriter($source), Module::resolveToDOMWriter($template));
+        $sut = new TransformationDOMWriterByUrls($source, $template);
         
         $actual = $sut->toElement(new DOMDocument());
         
@@ -47,7 +46,7 @@ final class TransformationDOMWriterTest extends TestCase {
         $source = FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo');
         $template = FarahUrl::createFromReference('farah://slothsoft@farah/xsl/module');
         
-        $sut = new TransformationDOMWriter(Module::resolveToDOMWriter($source), Module::resolveToDOMWriter($template));
+        $sut = new TransformationDOMWriterByUrls($source, $template);
         
         $this->expectException(EmptyTransformationException::class);
         

@@ -6,17 +6,18 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
-use Slothsoft\Farah\Module\Manifest\Manifest;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\Module;
 use DOMDocument;
 
-class TransformationDOMWriter implements DOMWriterInterface {
+final class TransformationDOMWriterByUrls implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
-    private DOMWriterInterface $source;
+    private FarahUrl $source;
     
-    private DOMWriterInterface $template;
+    private FarahUrl $template;
     
-    public function __construct(DOMWriterInterface $source, DOMWriterInterface $template) {
+    public function __construct(FarahUrl $source, FarahUrl $template) {
         $this->source = $source;
         $this->template = $template;
     }
@@ -24,10 +25,10 @@ class TransformationDOMWriter implements DOMWriterInterface {
     public function toDocument(): DOMDocument {
         $dom = new DOMHelper();
         
-        $resultDoc = $dom->transformToDocument($this->source, $this->template);
+        $resultDoc = $dom->transformToDocument(Module::resolveToDOMWriter($this->source), Module::resolveToDOMWriter($this->template));
         
         if (! $resultDoc->documentElement) {
-            throw new EmptyTransformationException($this->source->toDocument()->documentElement->getAttribute(Manifest::ATTR_ID), $this->template->toDocument()->documentURI);
+            throw new EmptyTransformationException((string) $this->source, (string) $this->template);
         }
         
         return $resultDoc;
