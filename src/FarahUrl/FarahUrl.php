@@ -262,7 +262,7 @@ final class FarahUrl implements UriInterface, Hashable {
     }
     
     public function getFragment(): string {
-        return '';
+        return (string) $this->fragment;
     }
     
     public function equals($obj): bool {

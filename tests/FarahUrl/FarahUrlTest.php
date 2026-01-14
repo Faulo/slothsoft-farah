@@ -3,11 +3,12 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\FarahUrl;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Constraint\IsEqual;
 use Slothsoft\Core\FileSystem;
+use Slothsoft\FarahTesting\TestUtils;
 use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
-use Slothsoft\FarahTesting\TestUtils;
 
 class FarahUrlTest extends TestCase {
     
@@ -343,7 +344,6 @@ class FarahUrlTest extends TestCase {
             true
         ];
         
-        
         yield 'add query does not overwrite' => [
             'farah://slothsoft@farah/?a=b',
             'a=1',
@@ -361,6 +361,34 @@ class FarahUrlTest extends TestCase {
             'a[]=1',
             'farah://slothsoft@farah/?a[]=b',
             false
+        ];
+    }
+    
+    /**
+     *
+     * @dataProvider fragmentProvider
+     */
+    public function test_getFragment(string $url, string $expected): void {
+        $url = FarahUrl::createFromReference($url);
+        $actual = $url->getFragment();
+        
+        $this->assertThat($actual, new IsEqual($expected));
+    }
+    
+    public function fragmentProvider(): iterable {
+        yield 'no fragment is empty string' => [
+            'farah://slothsoft@farah/?a=b',
+            ''
+        ];
+        
+        yield 'empty fragment is empty string' => [
+            'farah://slothsoft@farah/?a=b#',
+            ''
+        ];
+        
+        yield 'fragment is something' => [
+            'farah://slothsoft@farah/?a=b#xml',
+            'xml'
         ];
     }
 }
