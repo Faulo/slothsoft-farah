@@ -30,7 +30,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         return new ChunkWriterStreamBuilder($writer, $name, $isBufferable);
     }
     
-    public function test_buildFileWriter() {
+    public function test_buildFileWriter(): void {
         $expected = 'test content';
         $name = 'test.txt';
         
@@ -44,7 +44,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
-    public function test_buildFileWriter_usesChunkWriter() {
+    public function test_buildFileWriter_usesChunkWriter(): void {
         $expected = new AllWriterMock();
         $context = $this->createMock(ResultInterface::class);
         $sut = new ChunkWriterStreamBuilder($expected, 'test');
@@ -54,7 +54,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
-    public function test_buildChunkWriter() {
+    public function test_buildChunkWriter(): void {
         $expected = $this->createMock(ChunkWriterInterface::class);
         
         $sut = new ChunkWriterStreamBuilder($expected, 'test');
@@ -65,7 +65,17 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
-    public function test_buildDOMWriter() {
+    public function test_buildChunkWriter_usesChunkWriter(): void {
+        $expected = new AllWriterMock();
+        $context = $this->createMock(ResultInterface::class);
+        $sut = new ChunkWriterStreamBuilder($expected, 'test');
+        
+        $actual = $sut->buildChunkWriter($context);
+        
+        $this->assertThat($actual, new IsIdentical($expected));
+    }
+    
+    public function test_buildDOMWriter(): void {
         $expected = '<xml>test content</xml>';
         $name = 'test.xml';
         
@@ -77,7 +87,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new DOMNodeEqualTo((new DOMHelper())->parse($expected)));
     }
     
-    public function test_buildDOMWriter_usesChunkWriter() {
+    public function test_buildDOMWriter_usesChunkWriter(): void {
         $expected = new AllWriterMock();
         $context = $this->createMock(ResultInterface::class);
         $sut = new ChunkWriterStreamBuilder($expected, 'test');
@@ -87,7 +97,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
-    public function test_buildStreamFileName() {
+    public function test_buildStreamFileName(): void {
         $content = 'test content';
         $expected = 'test';
         
@@ -99,7 +109,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
-    public function test_buildStreamCharset() {
+    public function test_buildStreamCharset(): void {
         $content = 'test content';
         $name = 'test';
         
@@ -109,7 +119,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($sut->buildStreamCharset($context), new IsIdentical('UTF-8'));
     }
     
-    public function test_buildStreamFileStatistics() {
+    public function test_buildStreamFileStatistics(): void {
         $content = 'test content';
         $name = 'test';
         
@@ -119,7 +129,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($sut->buildStreamFileStatistics($context), new IsIdentical([]));
     }
     
-    public function test_buildStreamMimeType() {
+    public function test_buildStreamMimeType(): void {
         $content = 'test content';
         $name = 'test.txt';
         
@@ -129,7 +139,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($sut->buildStreamMimeType($context), new IsIdentical('text/plain'));
     }
     
-    public function test_buildStreamIsBufferable() {
+    public function test_buildStreamIsBufferable(): void {
         $content = 'test content';
         $name = 'test.txt';
         
@@ -139,7 +149,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($sut->buildStreamIsBufferable($context), new IsFalse());
     }
     
-    public function test_buildStreamHash() {
+    public function test_buildStreamHash(): void {
         $content = 'test content';
         $name = 'test.txt';
         
@@ -149,7 +159,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($sut->buildStreamHash($context), new IsIdentical(''));
     }
     
-    public function test_buildStringWriter() {
+    public function test_buildStringWriter(): void {
         $content = 'test content';
         $name = 'test.txt';
         
@@ -161,7 +171,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($content));
     }
     
-    public function test_buildStringWriter_usesChunkWriter() {
+    public function test_buildStringWriter_usesChunkWriter(): void {
         $expected = new AllWriterMock();
         $context = $this->createMock(ResultInterface::class);
         $sut = new ChunkWriterStreamBuilder($expected, 'test');
@@ -171,7 +181,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
-    public function test_buildStreamWriter() {
+    public function test_buildStreamWriter(): void {
         $content = 'test content';
         $name = 'test.txt';
         
@@ -183,7 +193,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($content));
     }
     
-    public function test_buildStreamWriter_usesChunkWriter() {
+    public function test_buildStreamWriter_usesChunkWriter(): void {
         $expected = new AllWriterMock();
         $context = $this->createMock(ResultInterface::class);
         $sut = new ChunkWriterStreamBuilder($expected, 'test');
@@ -193,7 +203,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
-    public function test_toChunks() {
+    public function test_toChunks(): void {
         $content = 'test content';
         $name = 'test.txt';
         

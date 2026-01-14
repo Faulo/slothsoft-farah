@@ -33,7 +33,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         return new DOMWriterStreamBuilder($writer, $name);
     }
     
-    public function test_buildFileWriter() {
+    public function test_buildFileWriter(): void {
         $content = '<xml>test content</xml>';
         $name = 'test.txt';
         
@@ -46,7 +46,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
             ->getRealPath()), new IsIdentical($this->document->saveXML()));
     }
     
-    public function test_buildFileWriter_usesDOMWriter() {
+    public function test_buildFileWriter_usesDOMWriter(): void {
         $expected = new AllWriterMock();
         $context = $this->createMock(ResultInterface::class);
         $sut = new DOMWriterStreamBuilder($expected, 'test');
@@ -56,7 +56,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
-    public function test_buildChunkWriter() {
+    public function test_buildChunkWriter(): void {
         $content = '<xml>test content</xml>';
         $name = 'test.txt';
         
@@ -71,7 +71,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($this->document->saveXML()));
     }
     
-    public function test_buildChunkWriter_usesDOMWriter() {
+    public function test_buildChunkWriter_usesDOMWriter(): void {
         $expected = new AllWriterMock();
         $context = $this->createMock(ResultInterface::class);
         $sut = new DOMWriterStreamBuilder($expected, 'test');
@@ -81,7 +81,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
-    public function test_buildDOMWriter() {
+    public function test_buildDOMWriter(): void {
         $content = '<xml>test content</xml>';
         $name = 'test.xml';
         
@@ -93,11 +93,21 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($this->document));
     }
     
+    public function test_buildDOMWriter_usesDOMWriter(): void {
+        $expected = new AllWriterMock();
+        $context = $this->createMock(ResultInterface::class);
+        $sut = new DOMWriterStreamBuilder($expected, 'test');
+        
+        $actual = $sut->buildDOMWriter($context);
+        
+        $this->assertThat($actual, new IsIdentical($expected));
+    }
+    
     /**
      *
      * @dataProvider namespaceExamples
      */
-    public function test_buildStreamFileName(string $content, string $extension, string $mimeType) {
+    public function test_buildStreamFileName(string $content, string $extension, string $mimeType): void {
         $name = 'test';
         
         $sut = $this->createSuT($content, $name);
@@ -136,7 +146,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         ];
     }
     
-    public function test_buildStreamCharset() {
+    public function test_buildStreamCharset(): void {
         $content = '<xml>test content</xml>';
         $name = 'test';
         
@@ -146,7 +156,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($sut->buildStreamCharset($context), new IsIdentical('UTF-8'));
     }
     
-    public function test_buildStreamFileStatistics() {
+    public function test_buildStreamFileStatistics(): void {
         $content = '<xml>test content</xml>';
         $name = 'test';
         
@@ -160,7 +170,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
      *
      * @dataProvider namespaceExamples
      */
-    public function test_buildStreamMimeType(string $content, string $extension, string $mimeType) {
+    public function test_buildStreamMimeType(string $content, string $extension, string $mimeType): void {
         $name = 'test';
         
         $sut = $this->createSuT($content, $name);
@@ -169,7 +179,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($sut->buildStreamMimeType($context), new IsIdentical($mimeType));
     }
     
-    public function test_buildStreamIsBufferable() {
+    public function test_buildStreamIsBufferable(): void {
         $content = '<xml>test content</xml>';
         $name = 'test';
         
@@ -179,7 +189,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($sut->buildStreamIsBufferable($context), new IsTrue());
     }
     
-    public function test_buildStreamHash() {
+    public function test_buildStreamHash(): void {
         $content = '<xml>test content</xml>';
         $name = 'test';
         
@@ -189,7 +199,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($sut->buildStreamHash($context), new IsIdentical(md5($this->document->saveXML())));
     }
     
-    public function test_buildStringWriter() {
+    public function test_buildStringWriter(): void {
         $content = '<xml>test content</xml>';
         $name = 'test';
         
@@ -201,7 +211,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($this->document->saveXML()));
     }
     
-    public function test_buildStringWriter_usesDOMWriter() {
+    public function test_buildStringWriter_usesDOMWriter(): void {
         $expected = new AllWriterMock();
         $context = $this->createMock(ResultInterface::class);
         $sut = new DOMWriterStreamBuilder($expected, 'test');
@@ -211,7 +221,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
-    public function test_buildStreamWriter() {
+    public function test_buildStreamWriter(): void {
         $content = '<xml>test content</xml>';
         $name = 'test';
         
@@ -223,7 +233,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($this->document->saveXML()));
     }
     
-    public function test_buildStreamWriter_usesDOMWriter() {
+    public function test_buildStreamWriter_usesDOMWriter(): void {
         $expected = new AllWriterMock();
         $context = $this->createMock(ResultInterface::class);
         $sut = new DOMWriterStreamBuilder($expected, 'test');
@@ -233,7 +243,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
-    public function test_toDocument() {
+    public function test_toDocument(): void {
         $content = '<xml>test content</xml>';
         $name = 'test';
         

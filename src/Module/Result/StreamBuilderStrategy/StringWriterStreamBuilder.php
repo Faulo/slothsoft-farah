@@ -61,19 +61,19 @@ class StringWriterStreamBuilder implements StreamBuilderStrategyInterface {
     }
     
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface {
-        return new StreamWriterFromStringWriter($this->writer);
+        return $this->writer instanceof StreamWriterInterface ? $this->writer : new StreamWriterFromStringWriter($this->writer);
     }
     
     public function buildFileWriter(ResultInterface $context): FileWriterInterface {
-        return new FileWriterFromStringWriter($this->writer);
+        return $this->writer instanceof FileWriterInterface ? $this->writer : new FileWriterFromStringWriter($this->writer);
     }
     
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface {
-        return new DOMWriterFromStringWriter($this->writer);
+        return $this->writer instanceof DOMWriterInterface ? $this->writer : new DOMWriterFromStringWriter($this->writer);
     }
     
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface {
-        return new ChunkWriterFromStringWriter($this->writer);
+        return $this->writer instanceof ChunkWriterInterface ? $this->writer : new ChunkWriterFromStringWriter($this->writer, $this->isBufferable);
     }
     
     public function buildStringWriter(ResultInterface $context): StringWriterInterface {
