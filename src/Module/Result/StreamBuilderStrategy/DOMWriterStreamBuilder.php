@@ -13,9 +13,9 @@ use Slothsoft\Core\IO\Writable\Adapter\ChunkWriterFromStringWriter;
 use Slothsoft\Core\IO\Writable\Adapter\FileWriterFromStringWriter;
 use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromStringWriter;
 use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromDOMWriter;
+use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use DOMDocument;
-use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 
 /**
  *
@@ -86,11 +86,11 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface, DOMWrite
     }
     
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface {
-        return new StreamWriterFromStringWriter($this->buildStringWriter($context));
+        return $this->writer instanceof StreamWriterInterface ? $this->writer : new StreamWriterFromStringWriter($this->buildStringWriter($context));
     }
     
     public function buildFileWriter(ResultInterface $context): FileWriterInterface {
-        return new FileWriterFromStringWriter($this->buildStringWriter($context));
+        return $this->writer instanceof FileWriterInterface ? $this->writer : new FileWriterFromStringWriter($this->buildStringWriter($context));
     }
     
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface {
@@ -98,11 +98,11 @@ class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface, DOMWrite
     }
     
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface {
-        return new ChunkWriterFromStringWriter($this->buildStringWriter($context));
+        return $this->writer instanceof ChunkWriterInterface ? $this->writer : new ChunkWriterFromStringWriter($this->buildStringWriter($context));
     }
     
     public function buildStringWriter(ResultInterface $context): StringWriterInterface {
-        return new StringWriterFromDOMWriter($this->writer);
+        return $this->writer instanceof StringWriterInterface ? $this->writer : new StringWriterFromDOMWriter($this->writer);
     }
 }
 
