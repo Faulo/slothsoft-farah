@@ -14,6 +14,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use DOMDocument;
 use Slothsoft\Core\IO\FileInfoFactory;
 use Slothsoft\Core\Calendar\Seconds;
+use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 
 /**
  * DOMWriterFileCacheByUrlTest
@@ -58,25 +59,46 @@ EOT;
         ]));
     }
     
-    public function test_toFile_path() {
-        $url = $this->createUrl('/directory/path?key=value&b=c#hashtag');
-        
-        $expected = [];
-        $expected[] = ServerEnvironment::getCacheDirectory();
-        $expected[] = 'slothsoft@test';
-        $expected[] = 'directory-path';
-        $expected[] = 'b=c&key=value';
-        $expected[] = 'hashtag.xml';
-        $expected = implode(DIRECTORY_SEPARATOR, $expected);
+    /**
+     *
+     * @dataProvider pathProvider
+     */
+    public function test_toFile_path(string $url, string $path): void {
+        $url = $this->createUrl($url);
         
         $sut = new DOMWriterFileCacheByUrl($url, $this->writer);
         
         $file = $sut->toFile();
         
-        $this->assertThat((string) $file, new IsEqual($expected));
+        $this->assertThat((string) $file, new IsEqual($path));
     }
     
-    public function test_toFile_exists() {
+    public function pathProvider(): iterable {
+        yield 'path' => [
+            '/directory/path?key=value&b=c#hashtag',
+            implode(DIRECTORY_SEPARATOR, [
+                ServerEnvironment::getCacheDirectory(),
+                'slothsoft@test',
+                'directory-path',
+                'b=c&key=value',
+                'hashtag.xml'
+            ])
+        ];
+        
+        yield 'url' => [
+            '?' . FarahUrlArguments::createFromValueList([
+                'url' => 'farah://slothsoft@farah/phpinfo?key=value'
+            ]),
+            implode(DIRECTORY_SEPARATOR, [
+                ServerEnvironment::getCacheDirectory(),
+                'slothsoft@test',
+                'url=' . urlencode('farah://slothsoft@farah/phpinfo?key=value'),
+                'index.xml'
+            ])
+        ];
+    }
+    
+    public function test_toFile_exists(): void {
         $url = $this->createUrl(__METHOD__);
         
         $sut = new DOMWriterFileCacheByUrl($url, $this->writer);
@@ -86,7 +108,7 @@ EOT;
         $this->assertFileExists((string) $file);
     }
     
-    public function test_toFile_contents() {
+    public function test_toFile_contents(): void {
         $url = $this->createUrl(__METHOD__);
         
         $sut = new DOMWriterFileCacheByUrl($url, $this->writer);
@@ -97,7 +119,7 @@ EOT;
         $this->assertThat(file_get_contents((string) $file), new IsEqual($expected));
     }
     
-    public function test_toDocument() {
+    public function test_toDocument(): void {
         $url = $this->createUrl(__METHOD__);
         
         $sut = new DOMWriterFileCacheByUrl($url, $this->writer);
@@ -105,7 +127,7 @@ EOT;
         $this->assertThat($sut->toDocument(), new DOMNodeEqualTo($this->document));
     }
     
-    public function test_toDocument_caches() {
+    public function test_toDocument_caches(): void {
         $url = $this->createUrl(__METHOD__);
         $cacheFile = FileInfoFactory::createTempFile();
         file_put_contents((string) $cacheFile, '');
@@ -125,7 +147,7 @@ EOT;
         }
     }
     
-    public function test_toDocument_invalidates() {
+    public function test_toDocument_invalidates(): void {
         $url = $this->createUrl(__METHOD__);
         $cacheFile = FileInfoFactory::createTempFile();
         file_put_contents((string) $cacheFile, '');
