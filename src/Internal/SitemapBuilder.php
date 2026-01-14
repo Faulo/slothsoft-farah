@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Internal;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\Decorators\DOMWriterMemoryCache;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\EmptySitemapException;
@@ -47,8 +48,9 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
             $this->domainProtocol = $protocol;
         }
         
-        $resultBuilder = new MapResultBuilder(new DOMWriterStreamBuilder($this, 'sitemap'));
-        $resultBuilder->addStreamBuilder(FarahUrlStreamIdentifier::createFromString('json'), new StringWriterStreamBuilder(new SitemapJsonBuilder($this), 'sitemap', 'json'));
+        $writer = new DOMWriterMemoryCache($this);
+        $resultBuilder = new MapResultBuilder(new DOMWriterStreamBuilder($writer, 'sitemap'));
+        $resultBuilder->addStreamBuilder(FarahUrlStreamIdentifier::createFromString('json'), new StringWriterStreamBuilder(new SitemapJsonBuilder($writer), 'sitemap', 'json'));
         return new ExecutableStrategies($resultBuilder);
     }
     
