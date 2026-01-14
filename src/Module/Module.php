@@ -2,7 +2,9 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\Module;
 
+use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\ServerEnvironment;
+use Slothsoft\Core\IO\FileInfoFactory;
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
@@ -22,7 +24,6 @@ use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\XmlTreeLoader;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use OutOfBoundsException;
 use SplFileInfo;
-use Slothsoft\Core\FileSystem;
 
 class Module {
     
@@ -104,13 +105,13 @@ class Module {
     public function createCachedFile(string $fileName, FarahUrl $context): SplFileInfo {
         $path = $this->buildPath(ServerEnvironment::getCacheDirectory(), $context);
         FileSystem::ensureDirectory($path);
-        return new \SplFileInfo($path . DIRECTORY_SEPARATOR . $fileName);
+        return FileInfoFactory::createFromPath($path . DIRECTORY_SEPARATOR . $fileName);
     }
     
     public function createDataFile(string $fileName, FarahUrl $context): SplFileInfo {
         $path = $this->buildPath(ServerEnvironment::getDataDirectory(), $context);
         FileSystem::ensureDirectory($path);
-        return new \SplFileInfo($path . DIRECTORY_SEPARATOR . $fileName);
+        return FileInfoFactory::createFromPath($path . DIRECTORY_SEPARATOR . $fileName);
     }
     
     private function buildPath(string $rootDirectory, FarahUrl $context): string {
@@ -122,11 +123,11 @@ class Module {
             $rootDirectory .= DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $path);
         }
         
-        $rootDirectory .= DIRECTORY_SEPARATOR . md5((string) $context->getArguments());
+        $rootDirectory .= DIRECTORY_SEPARATOR . md5((string) $context->getQuery());
         
-        $fragment = (string) $context->getStreamIdentifier();
+        $fragment = $context->getFragment();
         if ($fragment !== '') {
-            $rootDirectory .= "-$fragment";
+            $rootDirectory .= "#$fragment";
         }
         
         return $rootDirectory;

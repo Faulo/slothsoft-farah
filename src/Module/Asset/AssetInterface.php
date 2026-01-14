@@ -56,6 +56,24 @@ interface AssetInterface {
     public function traverseTo(string $path): AssetInterface;
     
     /**
+     *
+     * @param string $fileName
+     * @param FarahUrlArguments|string $args
+     * @param FarahUrlStreamIdentifier|string $fragment
+     * @return SplFileInfo
+     */
+    public function createCacheFile(string $fileName, $args = null, $fragment = null): SplFileInfo;
+    
+    /**
+     *
+     * @param string $fileName
+     * @param FarahUrlArguments|string $args
+     * @param FarahUrlStreamIdentifier|string $fragment
+     * @return SplFileInfo
+     */
+    public function createDataFile(string $fileName, $args = null, $fragment = null): SplFileInfo;
+    
+    /**
      * Create a FarahUrl for this asset, with arguments and stream set as supplied.
      *
      * @param FarahUrlArguments|string $args

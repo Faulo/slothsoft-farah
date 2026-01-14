@@ -109,6 +109,14 @@ class Asset implements AssetInterface {
         }
     }
     
+    public function createCacheFile(string $fileName, $args = null, $fragment = null): SplFileInfo {
+        return $this->ownerManifest->createCacheFile($fileName, $this->getUrlPath(), $args, $fragment);
+    }
+    
+    public function createDataFile(string $fileName, $args = null, $fragment = null): SplFileInfo {
+        return $this->ownerManifest->createDataFile($fileName, $this->getUrlPath(), $args, $fragment);
+    }
+    
     public function createUrl($args = null, $fragment = null): FarahUrl {
         return $this->ownerManifest->createUrl($this->getUrlPath(), $args, $fragment);
     }
