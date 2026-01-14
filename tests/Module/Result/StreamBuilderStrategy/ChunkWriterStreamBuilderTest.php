@@ -44,6 +44,16 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
+    public function test_buildFileWriter_usesChunkWriter() {
+        $expected = new AllWriterMock();
+        $context = $this->createMock(ResultInterface::class);
+        $sut = new ChunkWriterStreamBuilder($expected, 'test');
+        
+        $actual = $sut->buildFileWriter($context);
+        
+        $this->assertThat($actual, new IsIdentical($expected));
+    }
+    
     public function test_buildChunkWriter() {
         $expected = $this->createMock(ChunkWriterInterface::class);
         
@@ -65,6 +75,16 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $actual = $sut->buildDOMWriter($context)->toDocument();
         
         $this->assertThat($actual, new DOMNodeEqualTo((new DOMHelper())->parse($expected)));
+    }
+    
+    public function test_buildDOMWriter_usesChunkWriter() {
+        $expected = new AllWriterMock();
+        $context = $this->createMock(ResultInterface::class);
+        $sut = new ChunkWriterStreamBuilder($expected, 'test');
+        
+        $actual = $sut->buildDOMWriter($context);
+        
+        $this->assertThat($actual, new IsIdentical($expected));
     }
     
     public function test_buildStreamFileName() {
@@ -141,6 +161,16 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($content));
     }
     
+    public function test_buildStringWriter_usesChunkWriter() {
+        $expected = new AllWriterMock();
+        $context = $this->createMock(ResultInterface::class);
+        $sut = new ChunkWriterStreamBuilder($expected, 'test');
+        
+        $actual = $sut->buildStringWriter($context);
+        
+        $this->assertThat($actual, new IsIdentical($expected));
+    }
+    
     public function test_buildStreamWriter() {
         $content = 'test content';
         $name = 'test.txt';
@@ -151,6 +181,16 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $actual = (string) $sut->buildStreamWriter($context)->toStream();
         
         $this->assertThat($actual, new IsIdentical($content));
+    }
+    
+    public function test_buildStreamWriter_usesChunkWriter() {
+        $expected = new AllWriterMock();
+        $context = $this->createMock(ResultInterface::class);
+        $sut = new ChunkWriterStreamBuilder($expected, 'test');
+        
+        $actual = $sut->buildStreamWriter($context);
+        
+        $this->assertThat($actual, new IsIdentical($expected));
     }
     
     public function test_toChunks() {

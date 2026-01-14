@@ -58,15 +58,15 @@ class ChunkWriterStreamBuilder implements StreamBuilderStrategyInterface, ChunkW
     }
     
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface {
-        return new StreamWriterFromChunkWriter($this->writer, $this->isBufferable);
+        return $this->writer instanceof StreamWriterInterface ? $this->writer : new StreamWriterFromChunkWriter($this->writer, $this->isBufferable);
     }
     
     public function buildFileWriter(ResultInterface $context): FileWriterInterface {
-        return new FileWriterFromStringWriter($this->buildStringWriter($context));
+        return $this->writer instanceof FileWriterInterface ? $this->writer : new FileWriterFromStringWriter($this->buildStringWriter($context));
     }
     
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface {
-        return new DOMWriterFromStringWriter($this->buildStringWriter($context));
+        return $this->writer instanceof DOMWriterInterface ? $this->writer : new DOMWriterFromStringWriter($this->buildStringWriter($context));
     }
     
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface {
@@ -74,6 +74,6 @@ class ChunkWriterStreamBuilder implements StreamBuilderStrategyInterface, ChunkW
     }
     
     public function buildStringWriter(ResultInterface $context): StringWriterInterface {
-        return new StringWriterFromChunkWriter($this->writer);
+        return $this->writer instanceof StringWriterInterface ? $this->writer : new StringWriterFromChunkWriter($this->writer);
     }
 }
