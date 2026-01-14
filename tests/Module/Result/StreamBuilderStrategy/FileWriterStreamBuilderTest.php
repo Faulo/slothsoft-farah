@@ -61,6 +61,16 @@ class FileWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($expected));
     }
     
+    public function test_buildChunkWriter_usesFileWriter() {
+        $expected = new AllWriterMock();
+        $context = $this->createMock(ResultInterface::class);
+        $sut = new FileWriterStreamBuilder($expected, 'test');
+        
+        $actual = $sut->buildChunkWriter($context);
+        
+        $this->assertThat($actual, new IsIdentical($expected));
+    }
+    
     public function test_buildDOMWriter() {
         $expected = '<xml>test content</xml>';
         $name = 'test.xml';
@@ -72,6 +82,16 @@ class FileWriterStreamBuilderTest extends TestCase {
         $actual = $sut->buildDOMWriter($context)->toDocument();
         
         $this->assertThat($actual, new DOMNodeEqualTo((new DOMHelper())->parse($expected)));
+    }
+    
+    public function test_buildDOMWriter_usesFileWriter() {
+        $expected = new AllWriterMock();
+        $context = $this->createMock(ResultInterface::class);
+        $sut = new FileWriterStreamBuilder($expected, 'test');
+        
+        $actual = $sut->buildDOMWriter($context);
+        
+        $this->assertThat($actual, new IsIdentical($expected));
     }
     
     public function test_buildStreamFileName() {
@@ -148,6 +168,16 @@ class FileWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical($content));
     }
     
+    public function test_buildStringWriter_usesFileWriter() {
+        $expected = new AllWriterMock();
+        $context = $this->createMock(ResultInterface::class);
+        $sut = new FileWriterStreamBuilder($expected, 'test');
+        
+        $actual = $sut->buildStringWriter($context);
+        
+        $this->assertThat($actual, new IsIdentical($expected));
+    }
+    
     public function test_buildStreamWriter() {
         $content = 'test content';
         $name = 'test.txt';
@@ -158,6 +188,16 @@ class FileWriterStreamBuilderTest extends TestCase {
         $actual = (string) $sut->buildStreamWriter($context)->toStream();
         
         $this->assertThat($actual, new IsIdentical($content));
+    }
+    
+    public function test_buildStreamWriter_usesFileWriter() {
+        $expected = new AllWriterMock();
+        $context = $this->createMock(ResultInterface::class);
+        $sut = new FileWriterStreamBuilder($expected, 'test');
+        
+        $actual = $sut->buildStreamWriter($context);
+        
+        $this->assertThat($actual, new IsIdentical($expected));
     }
     
     public function test_toFile() {

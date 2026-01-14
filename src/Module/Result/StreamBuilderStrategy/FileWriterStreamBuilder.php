@@ -58,7 +58,7 @@ class FileWriterStreamBuilder implements FileWriterInterface, StreamBuilderStrat
     }
     
     public function buildStreamWriter(ResultInterface $context): StreamWriterInterface {
-        return new StreamWriterFromFileWriter($this->writer);
+        return $this->writer instanceof StreamWriterInterface ? $this->writer : new StreamWriterFromFileWriter($this->writer);
     }
     
     public function buildFileWriter(ResultInterface $context): FileWriterInterface {
@@ -66,14 +66,14 @@ class FileWriterStreamBuilder implements FileWriterInterface, StreamBuilderStrat
     }
     
     public function buildDOMWriter(ResultInterface $context): DOMWriterInterface {
-        return new DOMWriterFromFileWriter($this->writer, (string) $context->createUrl());
+        return $this->writer instanceof DOMWriterInterface ? $this->writer : new DOMWriterFromFileWriter($this->writer, (string) $context->createUrl());
     }
     
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface {
-        return new ChunkWriterFromFileWriter($this->writer);
+        return $this->writer instanceof ChunkWriterInterface ? $this->writer : new ChunkWriterFromFileWriter($this->writer);
     }
     
     public function buildStringWriter(ResultInterface $context): StringWriterInterface {
-        return new StringWriterFromFileWriter($this->writer);
+        return $this->writer instanceof StringWriterInterface ? $this->writer : new StringWriterFromFileWriter($this->writer);
     }
 }
