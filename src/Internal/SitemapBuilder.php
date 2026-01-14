@@ -5,7 +5,6 @@ namespace Slothsoft\Farah\Internal;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
-use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\EmptySitemapException;
@@ -28,7 +27,7 @@ use DOMXPath;
  * @author Daniel Schulz
  *        
  */
-class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInterface, StringWriterInterface {
+final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
     private ?AssetInterface $asset = null;
@@ -49,7 +48,7 @@ class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInt
         }
         
         $resultBuilder = new MapResultBuilder(new DOMWriterStreamBuilder($this, 'sitemap'));
-        $resultBuilder->addStreamBuilder(FarahUrlStreamIdentifier::createFromString('json'), new StringWriterStreamBuilder($this, 'sitemap', 'json'));
+        $resultBuilder->addStreamBuilder(FarahUrlStreamIdentifier::createFromString('json'), new StringWriterStreamBuilder(new SitemapJsonBuilder($this), 'sitemap', 'json'));
         return new ExecutableStrategies($resultBuilder);
     }
     
@@ -57,17 +56,6 @@ class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInt
         $this->loadDocument();
         
         return $this->document;
-    }
-    
-    public function toString(): string {
-        $this->loadDocument();
-        
-        $data = [];
-        foreach ($this->xpath->query('//*[@uri]') as $node) {
-            $data[] = $node->getAttribute('uri');
-        }
-        
-        return json_encode($data);
     }
     
     private function loadDocument(): void {
