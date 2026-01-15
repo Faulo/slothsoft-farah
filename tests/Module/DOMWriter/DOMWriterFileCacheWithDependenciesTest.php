@@ -32,12 +32,6 @@ EOT;
     
     private DOMWriterInterface $writer;
     
-    public static function setUpBeforeClass(): void {
-        parent::setUpBeforeClass();
-        
-        // FileSystem::removeDir(ServerEnvironment::getCacheDirectory(), true);
-    }
-    
     protected function setUp(): void {
         parent::setUp();
         
