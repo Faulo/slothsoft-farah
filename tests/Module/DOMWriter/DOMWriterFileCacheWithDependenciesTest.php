@@ -4,27 +4,24 @@ namespace Slothsoft\Farah\Module\DOMWriter;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsEqual;
-use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\ServerEnvironment;
+use Slothsoft\Core\Calendar\Seconds;
+use Slothsoft\Core\IO\FileInfoFactory;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
-use Slothsoft\Farah\FarahUrl\FarahUrl;
-use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use DOMDocument;
-use Slothsoft\Core\IO\FileInfoFactory;
-use Slothsoft\Core\Calendar\Seconds;
-use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
+use SplFileInfo;
 
 /**
- * DOMWriterFileCacheByUrlTest
+ * DOMWriterFileCacheWithDependenciesTest
  *
- * @see DOMWriterFileCacheByUrl
+ * @see DOMWriterFileCacheWithDependencies
  */
-final class DOMWriterFileCacheByUrlTest extends TestCase {
+final class DOMWriterFileCacheWithDependenciesTest extends TestCase {
     
     public function testClassExists(): void {
-        $this->assertTrue(class_exists(DOMWriterFileCacheByUrl::class), "Failed to load class 'Slothsoft\Farah\Module\DOMWriter\DOMWriterFileCacheByUrl'!");
+        $this->assertTrue(class_exists(DOMWriterFileCacheWithDependencies::class), "Failed to load class 'Slothsoft\Farah\Module\DOMWriter\DOMWriterFileCacheWithDependencies'!");
     }
     
     private string $xml = <<<EOT
@@ -38,7 +35,7 @@ EOT;
     public static function setUpBeforeClass(): void {
         parent::setUpBeforeClass();
         
-        FileSystem::removeDir(ServerEnvironment::getCacheDirectory(), true);
+        // FileSystem::removeDir(ServerEnvironment::getCacheDirectory(), true);
     }
     
     protected function setUp(): void {
@@ -52,56 +49,14 @@ EOT;
         });
     }
     
-    private function createUrl(string $method): FarahUrl {
-        return FarahUrl::createFromReference('farah://slothsoft@test/' . strtr($method, [
-            '\\' => FarahUrlPath::SEPARATOR,
-            '::' => '?'
-        ]));
-    }
-    
-    /**
-     *
-     * @dataProvider pathProvider
-     */
-    public function test_toFile_path(string $url, string $path): void {
-        $url = $this->createUrl($url);
-        
-        $sut = new DOMWriterFileCacheByUrl($url, $this->writer);
-        
-        $file = $sut->toFile();
-        
-        $this->assertThat((string) $file, new IsEqual($path));
-    }
-    
-    public function pathProvider(): iterable {
-        yield 'path' => [
-            '/directory/path?key=value&b=c#hashtag',
-            implode(DIRECTORY_SEPARATOR, [
-                ServerEnvironment::getCacheDirectory(),
-                'slothsoft@test',
-                'directory-path',
-                'b=c&key=value',
-                'hashtag.xml'
-            ])
-        ];
-        
-        yield 'url' => [
-            '?' . FarahUrlArguments::createFromValueList([
-                'url' => 'farah://slothsoft@farah/phpinfo?key=value'
-            ]),
-            implode(DIRECTORY_SEPARATOR, [
-                ServerEnvironment::getCacheDirectory(),
-                'slothsoft@test',
-                'url=' . urlencode('farah://slothsoft@farah/phpinfo?key=value'),
-                'index.xml'
-            ])
-        ];
+    private function createFile(string $method): SplFileInfo {
+        return FileInfoFactory::createFromPath(ServerEnvironment::getCacheDirectory() . DIRECTORY_SEPARATOR . md5($method));
     }
     
     public function test_toFile_exists(): void {
-        $url = $this->createUrl(__METHOD__);
+        $file = $this->createFile(__METHOD__);
         
-        $sut = new DOMWriterFileCacheByUrl($url, $this->writer);
+        $sut = new DOMWriterFileCacheWithDependencies($this->writer, $file);
         
         $file = $sut->toFile();
         
@@ -109,9 +64,9 @@ EOT;
     }
     
     public function test_toFile_contents(): void {
-        $url = $this->createUrl(__METHOD__);
+        $file = $this->createFile(__METHOD__);
         
-        $sut = new DOMWriterFileCacheByUrl($url, $this->writer);
+        $sut = new DOMWriterFileCacheWithDependencies($this->writer, $file);
         
         $file = $sut->toFile();
         $expected = $this->writer->toDocument()->saveXML();
@@ -120,19 +75,19 @@ EOT;
     }
     
     public function test_toDocument(): void {
-        $url = $this->createUrl(__METHOD__);
+        $file = $this->createFile(__METHOD__);
         
-        $sut = new DOMWriterFileCacheByUrl($url, $this->writer);
+        $sut = new DOMWriterFileCacheWithDependencies($this->writer, $file);
         
         $this->assertThat($sut->toDocument(), new DOMNodeEqualTo($this->document));
     }
     
     public function test_toDocument_caches(): void {
-        $url = $this->createUrl(__METHOD__);
+        $file = $this->createFile(__METHOD__);
         $cacheFile = FileInfoFactory::createTempFile();
         file_put_contents((string) $cacheFile, '');
         
-        $sut = new DOMWriterFileCacheByUrl($url, $this->writer, (string) $cacheFile);
+        $sut = new DOMWriterFileCacheWithDependencies($this->writer, $file, (string) $cacheFile);
         $expected = $sut->toDocument();
         
         for ($i = 0; $i < 3; $i ++) {
@@ -142,17 +97,17 @@ EOT;
                 return $document;
             });
             
-            $sut = new DOMWriterFileCacheByUrl($url, $writer, (string) $cacheFile);
+            $sut = new DOMWriterFileCacheWithDependencies($writer, $file, (string) $cacheFile);
             $this->assertThat($sut->toDocument(), new DOMNodeEqualTo($expected));
         }
     }
     
     public function test_toDocument_invalidates(): void {
-        $url = $this->createUrl(__METHOD__);
+        $file = $this->createFile(__METHOD__);
         $cacheFile = FileInfoFactory::createTempFile();
         file_put_contents((string) $cacheFile, '');
         
-        $sut = new DOMWriterFileCacheByUrl($url, $this->writer, (string) $cacheFile);
+        $sut = new DOMWriterFileCacheWithDependencies($this->writer, $file, (string) $cacheFile);
         $sut->toDocument();
         
         $time = time();
@@ -168,7 +123,7 @@ EOT;
             $time += Seconds::MINUTE;
             touch((string) $cacheFile, $time);
             
-            $sut = new DOMWriterFileCacheByUrl($url, $writer, (string) $cacheFile);
+            $sut = new DOMWriterFileCacheWithDependencies($writer, $file, (string) $cacheFile);
             $this->assertThat($sut->toDocument(), new DOMNodeEqualTo($expected));
         }
     }
