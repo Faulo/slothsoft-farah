@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class ContainerInterfaceTest extends TestCase {
+class ContainerInterfaceTest extends TestCase {
     
     public function testInterfaceExists(): void {
         $this->assertTrue(interface_exists(ContainerInterface::class), "Failed to load interface 'Slothsoft\Farah\Container\ContainerInterface'!");

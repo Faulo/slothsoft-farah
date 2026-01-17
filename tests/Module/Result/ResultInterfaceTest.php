@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class ResultInterfaceTest extends TestCase {
+class ResultInterfaceTest extends TestCase {
     
     public function testInterfaceExists(): void {
         $this->assertTrue(interface_exists(ResultInterface::class), "Failed to load interface 'Slothsoft\Farah\Module\Result\ResultInterface'!");

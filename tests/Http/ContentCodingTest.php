@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class ContentCodingTest extends TestCase {
+class ContentCodingTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(ContentCoding::class), "Failed to load class 'Slothsoft\Farah\Http\ContentCoding'!");

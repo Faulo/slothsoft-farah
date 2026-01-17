@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class TreeLoaderStrategyInterfaceTest extends TestCase {
+class TreeLoaderStrategyInterfaceTest extends TestCase {
     
     public function testInterfaceExists(): void {
         $this->assertTrue(interface_exists(TreeLoaderStrategyInterface::class), "Failed to load interface 'Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\TreeLoaderStrategyInterface'!");

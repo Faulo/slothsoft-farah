@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class HTTPResponseTest extends TestCase {
+class HTTPResponseTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(HTTPResponse::class), "Failed to load class 'Slothsoft\Farah\HTTPResponse'!");

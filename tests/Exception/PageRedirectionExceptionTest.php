@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class PageRedirectionExceptionTest extends TestCase {
+class PageRedirectionExceptionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(PageRedirectionException::class), "Failed to load class 'Slothsoft\Farah\Exception\PageRedirectionException'!");

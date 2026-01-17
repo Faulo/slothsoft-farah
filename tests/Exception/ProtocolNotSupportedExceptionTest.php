@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class ProtocolNotSupportedExceptionTest extends TestCase {
+class ProtocolNotSupportedExceptionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(ProtocolNotSupportedException::class), "Failed to load class 'Slothsoft\Farah\Exception\ProtocolNotSupportedException'!");

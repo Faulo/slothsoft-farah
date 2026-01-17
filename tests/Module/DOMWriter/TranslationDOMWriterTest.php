@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class TranslationDOMWriterTest extends TestCase {
+class TranslationDOMWriterTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(TranslationDOMWriter::class), "Failed to load class 'Slothsoft\Farah\Module\DOMWriter\TranslationDOMWriter'!");

@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class ArchiveTest extends TestCase {
+class ArchiveTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(Archive::class), "Failed to load class 'Slothsoft\Farah\Tracking\Archive'!");

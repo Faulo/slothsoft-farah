@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class StreamBuilderStrategyInterfaceTest extends TestCase {
+class StreamBuilderStrategyInterfaceTest extends TestCase {
     
     public function testInterfaceExists(): void {
         $this->assertTrue(interface_exists(StreamBuilderStrategyInterface::class), "Failed to load interface 'Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamBuilderStrategyInterface'!");

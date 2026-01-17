@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class ParameterFilterStrategyInterfaceTest extends TestCase {
+class ParameterFilterStrategyInterfaceTest extends TestCase {
     
     public function testInterfaceExists(): void {
         $this->assertTrue(interface_exists(ParameterFilterStrategyInterface::class), "Failed to load interface 'Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\ParameterFilterStrategyInterface'!");

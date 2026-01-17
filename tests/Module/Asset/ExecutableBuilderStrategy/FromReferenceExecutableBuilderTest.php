@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class FromReferenceExecutableBuilderTest extends TestCase {
+class FromReferenceExecutableBuilderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FromReferenceExecutableBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromReferenceExecutableBuilder'!");

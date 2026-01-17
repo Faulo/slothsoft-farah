@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class NullExecutableBuilderTest extends TestCase {
+class NullExecutableBuilderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(NullExecutableBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\NullExecutableBuilder'!");

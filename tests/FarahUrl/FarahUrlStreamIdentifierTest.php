@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class FarahUrlStreamIdentifierTest extends TestCase {
+class FarahUrlStreamIdentifierTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FarahUrlStreamIdentifier::class), "Failed to load class 'Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier'!");

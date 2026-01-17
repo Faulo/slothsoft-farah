@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class HttpDownloadExceptionTest extends TestCase {
+class HttpDownloadExceptionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(HttpDownloadException::class), "Failed to load class 'Slothsoft\Farah\Exception\HttpDownloadException'!");

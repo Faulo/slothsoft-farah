@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class DecoratorFactoryTest extends TestCase {
+class DecoratorFactoryTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(DecoratorFactory::class), "Failed to load class 'Slothsoft\Farah\LinkDecorator\DecoratorFactory'!");

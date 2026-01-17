@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class LogTableTest extends TestCase {
+class LogTableTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(LogTable::class), "Failed to load class 'Slothsoft\Farah\Tracking\LogTable'!");

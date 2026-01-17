@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class ModuleNotFoundExceptionTest extends TestCase {
+class ModuleNotFoundExceptionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(ModuleNotFoundException::class), "Failed to load class 'Slothsoft\Farah\Exception\ModuleNotFoundException'!");

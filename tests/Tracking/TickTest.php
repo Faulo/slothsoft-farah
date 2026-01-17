@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class TickTest extends TestCase {
+class TickTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(Tick::class), "Failed to load class 'Slothsoft\Farah\Tracking\Tick'!");

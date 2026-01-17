@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class AbstractDaemonServerTest extends TestCase {
+class AbstractDaemonServerTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(AbstractDaemonServer::class), "Failed to load class 'Slothsoft\Farah\Daemon\AbstractDaemonServer'!");

@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class UndefinedBehaviorExceptionTest extends TestCase {
+class UndefinedBehaviorExceptionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(UndefinedBehaviorException::class), "Failed to load class 'Slothsoft\Farah\Exception\UndefinedBehaviorException'!");

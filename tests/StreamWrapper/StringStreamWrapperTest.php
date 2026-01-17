@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class StringStreamWrapperTest extends TestCase {
+class StringStreamWrapperTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(StringStreamWrapper::class), "Failed to load class 'Slothsoft\Farah\StreamWrapper\StringStreamWrapper'!");

@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class FromManifestParameterFilterTest extends TestCase {
+class FromManifestParameterFilterTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FromManifestParameterFilter::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\FromManifestParameterFilter'!");

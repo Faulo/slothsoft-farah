@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class UseManifestInstructionTest extends TestCase {
+class UseManifestInstructionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(UseManifestInstruction::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\InstructionStrategy\UseManifestInstruction'!");

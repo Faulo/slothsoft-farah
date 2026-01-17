@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class ResultTypeNotSupportedExceptionTest extends TestCase {
+class ResultTypeNotSupportedExceptionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(ResultTypeNotSupportedException::class), "Failed to load class 'Slothsoft\Farah\Exception\ResultTypeNotSupportedException'!");

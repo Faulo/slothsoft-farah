@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-final class IncompleteUrlExceptionTest extends TestCase {
+class IncompleteUrlExceptionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(IncompleteUrlException::class), "Failed to load class 'Slothsoft\Farah\Exception\IncompleteUrlException'!");
