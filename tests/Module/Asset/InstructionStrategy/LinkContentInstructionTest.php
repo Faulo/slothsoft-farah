@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class LinkContentInstructionTest extends TestCase {
+final class LinkContentInstructionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(LinkContentInstruction::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\InstructionStrategy\LinkContentInstruction'!");

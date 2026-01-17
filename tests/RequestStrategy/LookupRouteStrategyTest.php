@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class LookupRouteStrategyTest extends TestCase {
+final class LookupRouteStrategyTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(LookupRouteStrategy::class), "Failed to load class 'Slothsoft\Farah\RequestStrategy\LookupRouteStrategy'!");

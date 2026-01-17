@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class EmptySitemapExceptionTest extends TestCase {
+final class EmptySitemapExceptionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(EmptySitemapException::class), "Failed to load class 'Slothsoft\Farah\Exception\EmptySitemapException'!");

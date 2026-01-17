@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class SendBodyStrategyTest extends TestCase {
+final class SendBodyStrategyTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(SendBodyStrategy::class), "Failed to load class 'Slothsoft\Farah\ResponseStrategy\SendBodyStrategy'!");

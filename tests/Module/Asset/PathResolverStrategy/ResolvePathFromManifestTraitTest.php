@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class ResolvePathFromManifestTraitTest extends TestCase {
+final class ResolvePathFromManifestTraitTest extends TestCase {
     
     public function testTraitExists(): void {
         $this->assertTrue(trait_exists(ResolvePathFromManifestTrait::class), "Failed to load trait 'Slothsoft\Farah\Module\Asset\PathResolverStrategy\ResolvePathFromManifestTrait'!");

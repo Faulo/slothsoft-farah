@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class MapResultBuilderTest extends TestCase {
+final class MapResultBuilderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(MapResultBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\MapResultBuilder'!");

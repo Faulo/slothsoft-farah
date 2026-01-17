@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class SitemapJsonBuilderTest extends TestCase {
+final class SitemapJsonBuilderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(SitemapJsonBuilder::class), "Failed to load class 'Slothsoft\Farah\Internal\SitemapJsonBuilder'!");

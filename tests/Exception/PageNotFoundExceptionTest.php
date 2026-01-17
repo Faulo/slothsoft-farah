@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class PageNotFoundExceptionTest extends TestCase {
+final class PageNotFoundExceptionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(PageNotFoundException::class), "Failed to load class 'Slothsoft\Farah\Exception\PageNotFoundException'!");

@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class AssetManifestDOMWriterTest extends TestCase {
+final class AssetManifestDOMWriterTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(AssetManifestDOMWriter::class), "Failed to load class 'Slothsoft\Farah\Module\DOMWriter\AssetManifestDOMWriter'!");

@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class ExecutableStrategiesTest extends TestCase {
+final class ExecutableStrategiesTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(ExecutableStrategies::class), "Failed to load class 'Slothsoft\Farah\Module\Executable\ExecutableStrategies'!");

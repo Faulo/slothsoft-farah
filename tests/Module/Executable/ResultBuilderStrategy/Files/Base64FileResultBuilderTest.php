@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class Base64FileResultBuilderTest extends TestCase {
+final class Base64FileResultBuilderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(Base64FileResultBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\Base64FileResultBuilder'!");

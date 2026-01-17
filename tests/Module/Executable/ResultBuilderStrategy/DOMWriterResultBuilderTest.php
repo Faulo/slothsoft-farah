@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class DOMWriterResultBuilderTest extends TestCase {
+final class DOMWriterResultBuilderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(DOMWriterResultBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\DOMWriterResultBuilder'!");

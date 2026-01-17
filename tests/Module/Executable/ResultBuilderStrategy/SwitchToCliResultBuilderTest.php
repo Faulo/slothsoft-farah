@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class SwitchToCliResultBuilderTest extends TestCase {
+final class SwitchToCliResultBuilderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(SwitchToCliResultBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\SwitchToCliResultBuilder'!");

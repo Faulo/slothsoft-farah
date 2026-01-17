@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class ExecutableInterfaceTest extends TestCase {
+final class ExecutableInterfaceTest extends TestCase {
     
     public function testInterfaceExists(): void {
         $this->assertTrue(interface_exists(ExecutableInterface::class), "Failed to load interface 'Slothsoft\Farah\Module\Executable\ExecutableInterface'!");

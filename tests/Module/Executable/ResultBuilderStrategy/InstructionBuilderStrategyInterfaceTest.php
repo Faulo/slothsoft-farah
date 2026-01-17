@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class InstructionBuilderStrategyInterfaceTest extends TestCase {
+final class InstructionBuilderStrategyInterfaceTest extends TestCase {
     
     public function testInterfaceExists(): void {
         $this->assertTrue(interface_exists(InstructionBuilderStrategyInterface::class), "Failed to load interface 'Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\InstructionBuilderStrategyInterface'!");

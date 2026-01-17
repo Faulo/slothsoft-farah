@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class IdentityFactoryTest extends TestCase {
+final class IdentityFactoryTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(IdentityFactory::class), "Failed to load class 'Slothsoft\Farah\Http\IdentityFactory'!");
