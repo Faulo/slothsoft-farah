@@ -12,6 +12,7 @@ use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStra
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\FileWriterResultBuilder;
 use Generator;
+use SplFileInfo;
 
 final class FontFaceBuilder implements ExecutableBuilderStrategyInterface {
     
@@ -63,7 +64,7 @@ final class FontFaceBuilder implements ExecutableBuilderStrategyInterface {
                 foreach (self::FORMAT_MAPPING as $format) {
                     if (isset($formats[$format])) {
                         $href = $formats[$format];
-                        yield sprintf(',%s       url: local("%s") format("%s")', PHP_EOL, $href, $format);
+                        yield sprintf(',%s       url("%s") format("%s")', PHP_EOL, $href, $format);
                     }
                 }
                 yield ';' . PHP_EOL;
@@ -71,7 +72,11 @@ final class FontFaceBuilder implements ExecutableBuilderStrategyInterface {
             }
         });
         
-        $writer = new ChunkWriterFileCache($writer, $context->createCacheFile(md5(implode(PHP_EOL, $assetUrls)) . ".css", $args));
+        $refreshCache = function (SplFileInfo $cacheFile): bool {
+            return filemtime(__FILE__) > $cacheFile->getMTime();
+        };
+        
+        $writer = new ChunkWriterFileCache($writer, $context->createCacheFile(md5(implode(PHP_EOL, $assetUrls)) . ".css", $args), $refreshCache);
         $resultBuilder = new FileWriterResultBuilder($writer, "font-face.css");
         return new ExecutableStrategies($resultBuilder);
     }
