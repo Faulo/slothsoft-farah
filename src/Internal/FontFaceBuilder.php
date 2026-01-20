@@ -57,6 +57,9 @@ final class FontFaceBuilder implements ExecutableBuilderStrategyInterface {
                     $fonts[$fontName][$format] = $href;
                 }
             }
+            
+            ksort($fonts);
+            
             foreach ($fonts as $name => $formats) {
                 yield '@font-face {' . PHP_EOL;
                 yield sprintf('  font-family: "%s";%s', $name, PHP_EOL);

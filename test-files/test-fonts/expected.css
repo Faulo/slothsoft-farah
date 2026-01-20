@@ -13,16 +13,16 @@
 }
 
 @font-face {
-  font-family: "Amberworld 5px";
-  src: local("Amberworld 5px"),
-       url("/slothsoft@test/fonts/Amberworld 5px.ttf") format("truetype");
-}
-
-@font-face {
   font-family: "Amberworld";
   src: local("Amberworld"),
        url("/slothsoft@test/fonts/Amberworld.woff2") format("woff2"),
        url("/slothsoft@test/fonts/Amberworld.ttf") format("truetype"),
        url("/slothsoft@test/fonts/Amberworld.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Amberworld 5px";
+  src: local("Amberworld 5px"),
+       url("/slothsoft@test/fonts/Amberworld 5px.ttf") format("truetype");
 }
 
