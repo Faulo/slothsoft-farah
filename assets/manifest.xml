@@ -1,61 +1,63 @@
 <?xml version="1.0"?>
 <assets xmlns="http://schema.slothsoft.net/farah/module" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
-	<resource-directory name="js" type="application/javascript" />
-	<resource-directory name="js-core" type="application/javascript" />
-	<resource-directory name="xsl" type="application/xslt+xml" />
+    <resource-directory name="js" type="application/javascript" />
+    <resource-directory name="js-core" type="application/javascript" />
+    <resource-directory name="xsl" type="application/xslt+xml" />
 
-	<directory name="schema">
-		<resource-directory name="dictionary" type="application/x-xsd+xml" />
-		<resource-directory name="module" type="application/x-xsd+xml" />
-		<resource-directory name="sitemap" type="application/x-xsd+xml" />
-		<resource-directory name="xml" type="application/x-xsd+xml" />
-	</directory>
+    <directory name="schema">
+        <resource-directory name="dictionary" type="application/x-xsd+xml" />
+        <resource-directory name="module" type="application/x-xsd+xml" />
+        <resource-directory name="sitemap" type="application/x-xsd+xml" />
+        <resource-directory name="xml" type="application/x-xsd+xml" />
+    </directory>
 
-	<custom-asset name="phpinfo" executable-builder="Slothsoft\Farah\Internal\PhpinfoBuilder" />
+    <custom-asset name="phpinfo" executable-builder="Slothsoft\Farah\Internal\PhpinfoBuilder" />
 
-	<!-- "/sites" is deprecated, use "/current-sitemap" instead -->
-	<use-document name="sites" ref="/current-sitemap" />
+    <!-- "/sites" is deprecated, use "/current-sitemap" instead -->
+    <use-document name="sites" ref="/current-sitemap" />
 
-	<custom-asset name="current-sitemap" executable-builder="Slothsoft\Farah\Internal\SitemapBuilder">
-		<use-manifest name="json" ref="..#json" />
-	</custom-asset>
-	<custom-asset name="current-request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder" />
+    <custom-asset name="current-sitemap" executable-builder="Slothsoft\Farah\Internal\SitemapBuilder">
+        <use-manifest name="json" ref="..#json" />
+    </custom-asset>
+    <custom-asset name="current-request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder" />
 
-	<directory name="sitemap-generator">
-		<resource name="template" type="application/xslt+xml" use="template" />
-		<resource name="prettify" type="application/xslt+xml" />
-		<use-document ref="/current-sitemap" name="sites" />
-	</directory>
+    <directory name="sitemap-generator">
+        <resource name="template" type="application/xslt+xml" use="template" />
+        <resource name="prettify" type="application/xslt+xml" />
+        <use-document ref="/current-sitemap" name="sites" />
+    </directory>
 
-	<resource name="example-domain" type="application/xml" />
-	<fragment name="example-page">
-		<use-template ref="/xsl/html" />
-	</fragment>
+    <custom-asset name="font-face-generator" executable-builder="Slothsoft\Farah\Internal\FontFaceBuilder" parameter-filter="Slothsoft\Farah\Internal\FontFaceParameterFilter" />
 
-	<daemon name="cli-daemon" server="Slothsoft\Farah\Internal\CLIDaemon" port="5050" />
+    <resource name="example-domain" type="application/xml" />
+    <fragment name="example-page">
+        <use-template ref="/xsl/html" />
+    </fragment>
 
-	<fragment name="api">
-		<fragment name="DOM">
-			<link-script ref="/js-core/DOM" />
-			<link-script ref="/js-core/DOMHelper" />
-			<import ref="/api/HTML5" />
-			<import ref="/api/XPath" />
-			<import ref="/api/XSLT" />
-		</fragment>
-		<fragment name="DOMHelper">
-			<link-script ref="/js-core/DOMHelper" />
-			<link-script ref="/js-core/NS" />
-		</fragment>
-		<fragment name="HTML5">
-		</fragment>
-		<fragment name="XPath">
-			<link-script ref="/js-core/NS" />
-			<link-script ref="/js-core/XPath" />
-		</fragment>
-		<fragment name="XSLT">
-			<link-script ref="/js-core/NS" />
-			<link-script ref="/js-core/XSLT" />
-			<import ref="/api/XPath" />
-		</fragment>
-	</fragment>
+    <daemon name="cli-daemon" server="Slothsoft\Farah\Internal\CLIDaemon" port="5050" />
+
+    <fragment name="api">
+        <fragment name="DOM">
+            <link-script ref="/js-core/DOM" />
+            <link-script ref="/js-core/DOMHelper" />
+            <import ref="/api/HTML5" />
+            <import ref="/api/XPath" />
+            <import ref="/api/XSLT" />
+        </fragment>
+        <fragment name="DOMHelper">
+            <link-script ref="/js-core/DOMHelper" />
+            <link-script ref="/js-core/NS" />
+        </fragment>
+        <fragment name="HTML5">
+        </fragment>
+        <fragment name="XPath">
+            <link-script ref="/js-core/NS" />
+            <link-script ref="/js-core/XPath" />
+        </fragment>
+        <fragment name="XSLT">
+            <link-script ref="/js-core/NS" />
+            <link-script ref="/js-core/XSLT" />
+            <import ref="/api/XPath" />
+        </fragment>
+    </fragment>
 </assets>
