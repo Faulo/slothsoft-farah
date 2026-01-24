@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
 use Slothsoft\Core\MimeTypeDictionary;
-use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
@@ -27,7 +26,7 @@ class FileWriterStreamBuilder implements FileWriterInterface, StreamBuilderStrat
         $this->fileName = $fileName;
     }
     
-    private ?FileInfo $file;
+    private ?SplFileInfo $file;
     
     public function toFile(): SplFileInfo {
         return $this->file ??= $this->writer->toFile();
