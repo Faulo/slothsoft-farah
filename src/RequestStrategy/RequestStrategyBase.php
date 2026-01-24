@@ -39,19 +39,29 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
                 try {
                     $result = Module::resolveToResult($url);
                     $fileDisposition = 'inline';
+                    
+                    $fileName = $result->lookupFileName();
+                    $fileMime = $result->lookupMimeType();
+                    $fileCharset = $result->lookupCharset();
+                    $fileTime = $result->lookupFileChangeTime();
+                    $fileHash = $result->lookupHash();
+                    $isBufferable = $result->lookupIsBufferable();
+                    $isCompressable = $isBufferable;
+                    $body = $result->lookupStreamWriter()->toStream();
                 } catch (HttpDownloadException $e) {
                     $result = $e->getResult();
                     $fileDisposition = $e->isInline() ? 'inline' : 'download';
+                    
+                    $fileName = $result->lookupFileName();
+                    $fileMime = $result->lookupMimeType();
+                    $fileCharset = $result->lookupCharset();
+                    $fileTime = $result->lookupFileChangeTime();
+                    $fileHash = $result->lookupHash();
+                    $isBufferable = $result->lookupIsBufferable();
+                    $isCompressable = $isBufferable;
+                    $body = $result->lookupStreamWriter()->toStream();
                 }
                 
-                $fileName = $result->lookupFileName();
-                $fileMime = $result->lookupMimeType();
-                $fileCharset = $result->lookupCharset();
-                $fileTime = $result->lookupFileChangeTime();
-                $fileHash = $result->lookupHash();
-                $isBufferable = $result->lookupIsBufferable();
-                $isCompressable = $isBufferable;
-                $body = $result->lookupStreamWriter()->toStream();
                 $statusCode = StatusCode::STATUS_OK;
                 
                 $headers = [];
