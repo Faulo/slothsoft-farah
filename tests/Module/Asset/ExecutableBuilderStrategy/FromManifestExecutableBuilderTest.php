@@ -15,7 +15,7 @@ use DOMNodeList;
  *
  * @see FromManifestExecutableBuilder
  */
-class FromManifestExecutableBuilderTest extends TestCase {
+final class FromManifestExecutableBuilderTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FromManifestExecutableBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\FromManifestExecutableBuilder'!");
