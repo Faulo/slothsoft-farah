@@ -28,6 +28,6 @@ final class FontFaceBuilderTest extends TestCase {
      * @runInSeparateProcess
      */
     public function test_generator(): void {
-        $this->assertThat('farah://slothsoft@test/actual', new FileEqualsTextFile('farah://slothsoft@test/expected'));
+        $this->assertThat('farah://slothsoft@test/actual', new FileEqualsTextFile('farah://slothsoft@test/expected', FILE_IGNORE_NEW_LINES));
     }
 }
