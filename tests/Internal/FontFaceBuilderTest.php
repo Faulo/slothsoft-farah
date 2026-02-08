@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Internal;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\FarahTesting\TestUtils;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\FarahTesting\Constraints\FileEqualsTextFile;
 
 /**
  * FontFaceBuilderTest
@@ -27,6 +28,6 @@ final class FontFaceBuilderTest extends TestCase {
      * @runInSeparateProcess
      */
     public function test_generator(): void {
-        $this->assertFileEquals('farah://slothsoft@test/expected', 'farah://slothsoft@test/actual');
+        $this->assertThat('farah://slothsoft@test/actual', new FileEqualsTextFile('farah://slothsoft@test/expected'));
     }
 }
