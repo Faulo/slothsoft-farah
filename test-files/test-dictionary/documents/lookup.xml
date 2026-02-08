@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary">
+
+    <head />
+
+    <body>
+        <h1 xml:space="preserve"><sfd:lookup key="h1">h1</sfd:lookup></h1>
+        <p>
+            <sfd:lookup key="not-found-use-default">
+                <span>hello</span>
+                <a href="/">world</a>
+                <span>!</span>
+            </sfd:lookup>
+        </p>
+        <input type="button" value="hello world!" />
+    </body>
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary" xml:lang="en">
+
+    <head />
+
+    <body>
+        <h1 xml:space="preserve">hello <a href="/">world</a>!</h1>
+        <p>
+            <span>hello</span>
+            <a href="/">world</a>
+            <span>!</span>
+        </p>
+        <input type="button" value="hello world!" />
+    </body>
+</html>

@@ -141,6 +141,9 @@ class Dictionary {
                     $fragment = $this->createTranslationReplacement($document, $translatedNode);
                     $targetNode->parentNode->replaceChild($fragment, $targetNode);
                 } else {
+                    while ($targetNode->hasChildNodes()) {
+                        $targetNode->parentNode->insertBefore($targetNode->firstChild, $targetNode);
+                    }
                     $targetNode->parentNode->removeChild($targetNode);
                 }
             }

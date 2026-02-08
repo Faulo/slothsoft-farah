@@ -66,6 +66,13 @@ final class MiscTransformationsTest extends TestCase {
             'en',
             'farah://slothsoft@test-dictionary/documents/utf8-translated-en'
         ];
+        
+        yield 'translate lookup element' => [
+            'farah://slothsoft@test-dictionary/documents/lookup',
+            'farah://slothsoft@test-dictionary/dictionary',
+            'en',
+            'farah://slothsoft@test-dictionary/documents/lookup-translated-en'
+        ];
     }
     
     /**
