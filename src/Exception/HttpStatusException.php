@@ -6,7 +6,7 @@ class HttpStatusException extends \RuntimeException {
     
     private $headers;
     
-    public function __construct(string $message = '', int $code = 0, \Throwable $previous = null, array $headers = []) {
+    public function __construct(string $message = '', int $code = 0, ?\Throwable $previous = null, array $headers = []) {
         parent::__construct($message, $code, $previous);
         $this->setAdditionalHeaders($headers);
     }

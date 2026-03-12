@@ -459,7 +459,7 @@ class Dictionary {
         $word = $this->sanitizeWord($word);
     }
     
-    public function lookupFragment($originalWord, $namespace = null, $language = null, DOMDocument $ownerDoc = null) {
+    public function lookupFragment($originalWord, $namespace = null, $language = null, ?DOMDocument $ownerDoc = null) {
         if (! ($originalWord instanceof DOMNode)) {
             $originalWord = (string) $originalWord;
         }

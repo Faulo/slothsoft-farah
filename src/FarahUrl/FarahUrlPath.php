@@ -22,7 +22,7 @@ final class FarahUrlPath implements Hashable {
         return self::create($segments);
     }
     
-    public static function createFromString(string $path, FarahUrlPath $base = null): self {
+    public static function createFromString(string $path, ?FarahUrlPath $base = null): self {
         if ($base and substr($path, 0, 1) !== self::SEPARATOR) {
             return self::create(self::normalize($base . self::SEPARATOR . $path));
         } else {

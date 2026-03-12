@@ -113,7 +113,7 @@ interface AssetInterface {
      * @param FarahUrlArguments $args
      * @return ExecutableInterface
      */
-    public function lookupExecutable(FarahUrlArguments $args = null): ExecutableInterface;
+    public function lookupExecutable(?FarahUrlArguments $args = null): ExecutableInterface;
     
     public function isImportSelfInstruction(): bool;
     
