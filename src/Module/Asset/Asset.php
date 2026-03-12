@@ -150,7 +150,7 @@ class Asset implements AssetInterface {
         return new SplFileInfo($this->manifestElement->getAttribute(Manifest::ATTR_REALPATH));
     }
     
-    public function lookupExecutable(FarahUrlArguments $args = null): ExecutableInterface {
+    public function lookupExecutable(?FarahUrlArguments $args = null): ExecutableInterface {
         if ($args === null) {
             $args = $this->getManifestArguments();
         } else {

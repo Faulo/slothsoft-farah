@@ -26,7 +26,7 @@ abstract class MessageFactory {
         return $serverRequest->withQueryParams($params);
     }
     
-    public static function createServerResponse(int $statusCode, array $headers, StreamInterface $stream = null): ResponseInterface {
+    public static function createServerResponse(int $statusCode, array $headers, ?StreamInterface $stream = null): ResponseInterface {
         return new Response($statusCode, $headers, $stream);
     }
     

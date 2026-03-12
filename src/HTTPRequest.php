@@ -189,7 +189,7 @@ class HTTPRequest implements DOMWriterInterface {
         }
     }
     
-    public function getHeader(string $key, string $default = null) {
+    public function getHeader(string $key, ?string $default = null) {
         return $this->headerList[$key] ?? $default;
     }
     
