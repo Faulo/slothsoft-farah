@@ -95,7 +95,7 @@ final class Domain {
      *
      * @deprecated
      */
-    public function lookupPageNode(string $path, DOMElement $contextNode = null): DOMElement {
+    public function lookupPageNode(string $path, ?DOMElement $contextNode = null): DOMElement {
         return (new LookupPageStrategy($this))->lookupPageNode($path, $contextNode);
     }
     
