@@ -3,16 +3,21 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\API;
 
 use PHPUnit\Framework\TestCase;
+use Slothsoft\FarahTesting\TestUtils;
 use Symfony\Component\Process\Process;
 
 class ScriptsTest extends TestCase {
+    
+    public function setUp(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
+    }
     
     public function someFarahAssets(): array {
         return [
             'farah://slothsoft@farah/' => [
                 'farah://slothsoft@farah/'
             ],
-            'farah://slothsoft@farah/js/DOMHelper' => [
+            'farah://slothsoft@farah/js/DOM' => [
                 'farah://slothsoft@farah/js/DOM'
             ]
         ];
