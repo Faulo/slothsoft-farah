@@ -13,7 +13,7 @@
 	],
 	"type" : "library",
 	"require" : {
-		"php" : ">=8.3",
+		"php" : ">=8.2",
 		"php-ds/php-ds" : "^1.7.0",
 		"ext-sockets" : "*",
 		"guzzlehttp/psr7" : "^2.9.0",
