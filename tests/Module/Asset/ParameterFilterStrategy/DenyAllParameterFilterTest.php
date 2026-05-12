@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
 
 use PHPUnit\Framework\TestCase;
@@ -13,6 +14,10 @@ use PHPUnit\Framework\TestCase;
  */
 final class DenyAllParameterFilterTest extends TestCase {
     
+    /**
+     *
+     * @test
+     */
     public function testClassExists(): void {
         $this->assertTrue(class_exists(DenyAllParameterFilter::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\DenyAllParameterFilter'!");
     }

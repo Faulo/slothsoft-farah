@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset\InstructionStrategy;
 
 use PHPUnit\Framework\TestCase;
@@ -13,6 +14,10 @@ use PHPUnit\Framework\TestCase;
  */
 final class LinkModuleInstructionTest extends TestCase {
     
+    /**
+     *
+     * @test
+     */
     public function testClassExists(): void {
         $this->assertTrue(class_exists(LinkModuleInstruction::class), "Failed to load class 'Slothsoft\Farah\Module\Asset\InstructionStrategy\LinkModuleInstruction'!");
     }

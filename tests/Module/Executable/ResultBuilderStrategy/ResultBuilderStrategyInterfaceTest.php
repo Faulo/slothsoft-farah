@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy;
 
 use PHPUnit\Framework\TestCase;
@@ -13,6 +14,10 @@ use PHPUnit\Framework\TestCase;
  */
 final class ResultBuilderStrategyInterfaceTest extends TestCase {
     
+    /**
+     *
+     * @test
+     */
     public function testInterfaceExists(): void {
         $this->assertTrue(interface_exists(ResultBuilderStrategyInterface::class), "Failed to load interface 'Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrategyInterface'!");
     }

@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset\PathResolverStrategy;
 
 use PHPUnit\Framework\TestCase;
@@ -13,6 +14,10 @@ use PHPUnit\Framework\TestCase;
  */
 final class LoadChildrenFromManifestTraitTest extends TestCase {
     
+    /**
+     *
+     * @test
+     */
     public function testTraitExists(): void {
         $this->assertTrue(trait_exists(LoadChildrenFromManifestTrait::class), "Failed to load trait 'Slothsoft\Farah\Module\Asset\PathResolverStrategy\LoadChildrenFromManifestTrait'!");
     }
