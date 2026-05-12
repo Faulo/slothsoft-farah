@@ -1,15 +1,16 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset\PathResolverStrategy;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsEqual;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
+use Slothsoft\Farah\Module\Module;
 use Slothsoft\FarahTesting\TestUtils;
 
 /**

@@ -1,17 +1,18 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\IsTrue;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\FileInfoFactory;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
-use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Result\ResultInterface;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 
 /**
  * FileWriterStreamBuilderTest

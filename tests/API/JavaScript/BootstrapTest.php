@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\API\JavaScript;
 
 use PHPUnit\Framework\Constraint\IsTrue;
-use Slothsoft\FarahTesting\FarahServerTestCase;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\FarahTesting\FarahServerTestCase;
 
 final class BootstrapTest extends FarahServerTestCase {
     

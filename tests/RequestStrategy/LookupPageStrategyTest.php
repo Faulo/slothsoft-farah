@@ -1,16 +1,17 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\RequestStrategy;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\ArrayHasKey;
 use PHPUnit\Framework\Constraint\IsEqual;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\FarahTesting\TestUtils;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\MessageFactory;
 use Slothsoft\Farah\Sites\Domain;
+use Slothsoft\FarahTesting\TestUtils;
 
 /**
  * LookupPageStrategyTest
@@ -56,7 +57,7 @@ final class LookupPageStrategyTest extends TestCase {
         
         $this->assertThat($actual, new IsEqual($expected));
         
-        for ($i = 0; $i < self::ITERATIONS; $i ++) {
+        for ($i = 0; $i < self::ITERATIONS; $i++) {
             $requestStrategy->createUrl($request);
         }
     }

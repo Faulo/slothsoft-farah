@@ -1,14 +1,15 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\FarahUrl;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsEqual;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\FileSystem;
-use Slothsoft\FarahTesting\TestUtils;
 use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\MalformedUrlException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
+use Slothsoft\FarahTesting\TestUtils;
 
 class FarahUrlTest extends TestCase {
     

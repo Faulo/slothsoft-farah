@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\API\JavaScript;
 
 use PHPUnit\Framework\Constraint\IsEqual;
-use Slothsoft\FarahTesting\FarahServerTestCase;
-use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
+use Slothsoft\FarahTesting\FarahServerTestCase;
 
 final class DOMTest extends FarahServerTestCase {
     

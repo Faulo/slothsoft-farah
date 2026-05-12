@@ -1,14 +1,15 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\API\JavaScript;
 
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\StringStartsWith;
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\FarahTesting\FarahServerTestCase;
-use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
+use Slothsoft\FarahTesting\FarahServerTestCase;
 
 final class XSLTTest extends FarahServerTestCase {
     

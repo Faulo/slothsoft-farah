@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\API\XSL;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 
 final class IncludeTest extends TestCase {
     

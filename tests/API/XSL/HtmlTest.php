@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\API\XSL;
 
 use PHPUnit\Framework\Constraint\IsEqual;
-use Slothsoft\FarahTesting\FarahServerTestCase;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\FarahTesting\FarahServerTestCase;
 
 final class HtmlTest extends FarahServerTestCase {
     
@@ -19,7 +20,8 @@ final class HtmlTest extends FarahServerTestCase {
     public function test_titleIsUrl(): void {
         $actual = $this->client->executeScript(<<<EOT
 return document.querySelector("title").textContent;
-EOT);
+EOT
+        );
         
         $this->assertThat($actual, new IsEqual('farah://slothsoft@test-module/tests/html'));
     }

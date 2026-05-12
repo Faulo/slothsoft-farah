@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module;
 
 use Slothsoft\Core\IO\Writable\Delegates\StringWriterFromStringDelegate;

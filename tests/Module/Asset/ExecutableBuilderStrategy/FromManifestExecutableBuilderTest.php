@@ -1,14 +1,15 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy;
 
-use PHPUnit\Framework\TestCase;
+use DOMDocument;
+use DOMNodeList;
 use PHPUnit\Framework\Constraint\IsTrue;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\ServerEnvironment;
-use DOMDocument;
-use DOMNodeList;
 
 /**
  * FromManifestExecutableBuilderTest

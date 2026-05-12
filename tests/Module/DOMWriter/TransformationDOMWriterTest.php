@@ -1,14 +1,15 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\DOMWriter;
 
-use PHPUnit\Framework\TestCase;
+use DOMDocument;
+use DOMElement;
 use PHPUnit\Framework\Constraint\IsInstanceOf;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
-use DOMDocument;
-use DOMElement;
 
 /**
  * TransformationDOMWriterTest

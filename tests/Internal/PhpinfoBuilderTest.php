@@ -1,9 +1,10 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Internal;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsEqual;
+use PHPUnit\Framework\TestCase;
 
 /**
  * PhpinfoBuilderTest
@@ -33,7 +34,7 @@ final class PhpinfoBuilderTest extends TestCase {
      * @runInSeparateProcess
      */
     public function test_read(int $count): void {
-        for ($i = 0; $i < $count; $i ++) {
+        for ($i = 0; $i < $count; $i++) {
             $actual = file_get_contents(self::REFERENCE);
             $this->assertThat($actual, new IsEqual(self::getPhpInfo()));
         }

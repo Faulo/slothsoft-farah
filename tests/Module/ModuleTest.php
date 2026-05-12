@@ -1,18 +1,19 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
-use Slothsoft\Farah\Kernel;
+use Slothsoft\Core\ServerEnvironment;
 use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
-use Slothsoft\Core\ServerEnvironment;
 use Slothsoft\FarahTesting\TestUtils;
 
 /**
@@ -143,7 +144,7 @@ final class ModuleTest extends TestCase {
      *
      * @runInSeparateProcess
      * @dataProvider modulePathProvider
-     * @depends testCanLoadTestModule
+     * @depends      testCanLoadTestModule
      */
     public function testModuleUsesManifestDirectory(string $path, string $manifestDirectory): void {
         $manifest = $this->loadTestModule($manifestDirectory);
@@ -186,7 +187,7 @@ final class ModuleTest extends TestCase {
      *
      * @runInSeparateProcess
      * @dataProvider importPathProvider
-     * @depends testCanLoadImportModule
+     * @depends      testCanLoadImportModule
      */
     public function testModuleCanImportAssets(string $path, string $manifestDirectory): void {
         $manifest = $this->loadTestModule($manifestDirectory);
@@ -245,7 +246,7 @@ final class ModuleTest extends TestCase {
      *
      * @runInSeparateProcess
      * @dataProvider importAttributeProvider
-     * @depends testCanLoadImportModule
+     * @depends      testCanLoadImportModule
      */
     public function testModuleDoesNormalizeAttributes(string $path, string $attribute, string $value, string $manifestDirectory): void {
         $manifest = $this->loadTestModule($manifestDirectory);
@@ -326,7 +327,7 @@ final class ModuleTest extends TestCase {
      *
      * @runInSeparateProcess
      * @dataProvider importContentProvider
-     * @depends testCanLoadImportModule
+     * @depends      testCanLoadImportModule
      */
     public function testModuleDoesImportInfo(string $path, array $elements, string $manifestDirectory): void {
         $manifest = $this->loadTestModule($manifestDirectory);
@@ -522,7 +523,7 @@ final class ModuleTest extends TestCase {
      *
      * @runInSeparateProcess
      * @dataProvider importUrlProvider
-     * @depends testCanLoadImportModule
+     * @depends      testCanLoadImportModule
      */
     public function testModuleCanServeImport(string $expectedPath, string $actualPath, string $manifestDirectory): void {
         $manifest = $this->loadTestModule($manifestDirectory);

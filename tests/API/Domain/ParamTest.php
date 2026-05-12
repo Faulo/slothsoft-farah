@@ -1,17 +1,18 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\API\Domain;
 
+use DOMDocument;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\Farah\Kernel;
-use Slothsoft\FarahTesting\TestUtils;
-use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\Http\MessageFactory;
-use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\Manifest\Manifest;
+use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\RequestStrategy\LookupPageStrategy;
-use DOMDocument;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
+use Slothsoft\FarahTesting\TestUtils;
 
 final class ParamTest extends TestCase {
     

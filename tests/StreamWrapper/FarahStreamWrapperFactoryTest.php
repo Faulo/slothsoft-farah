@@ -1,14 +1,15 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\StreamWrapper;
 
-use PHPUnit\Framework\TestCase;
+use Error;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\LogicalNot;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
-use Error;
 
 /**
  * FarahStreamWrapperFactoryTest

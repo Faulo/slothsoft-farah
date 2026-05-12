@@ -1,9 +1,10 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsIdentical;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
 /**

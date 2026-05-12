@@ -1,17 +1,18 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\API\Dictionary;
 
 use Ds\Set;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsEqual;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Dictionary;
-use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
-use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\TransformationResultBuilder;
+use Slothsoft\Farah\Module\Module;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 
 final class MiscTransformationsTest extends TestCase {
     

@@ -1,13 +1,14 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\DOMWriter;
 
+use DOMDocument;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
-use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
-use DOMDocument;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 
 /**
  * FileInfoDOMWriterTest

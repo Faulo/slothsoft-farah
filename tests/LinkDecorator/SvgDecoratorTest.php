@@ -1,11 +1,12 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\LinkDecorator;
 
-use PHPUnit\Framework\TestCase;
-use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
-use Slothsoft\Farah\FarahUrl\FarahUrl;
 use DOMDocument;
+use PHPUnit\Framework\TestCase;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 
 /**
  * SvgDecoratorTest

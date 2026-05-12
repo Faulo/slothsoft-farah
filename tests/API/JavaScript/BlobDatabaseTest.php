@@ -1,13 +1,14 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\API\JavaScript;
 
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\IsNull;
-use PHPUnit\Framework\Constraint\LogicalNot;
-use Slothsoft\FarahTesting\FarahServerTestCase;
-use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use PHPUnit\Framework\Constraint\IsTrue;
+use PHPUnit\Framework\Constraint\LogicalNot;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\FarahTesting\FarahServerTestCase;
 
 final class BlobDatabaseTest extends FarahServerTestCase {
     

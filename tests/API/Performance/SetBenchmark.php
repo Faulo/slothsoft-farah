@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\API\Performance;
 
 use Ds\Set;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\LessThan;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 /**
@@ -26,7 +27,7 @@ final class SetBenchmark extends TestCase {
         $foreachTotalNs = 0;
         $unionTotalNs = 0;
         
-        for ($i = 0; $i < self::ITERATIONS; $i ++) {
+        for ($i = 0; $i < self::ITERATIONS; $i++) {
             $spreadTotalNs += $this->testWithSpread($target, $source);
             $foreachTotalNs += $this->testWithForeach($target, $source);
             $unionTotalNs += $this->testWithUnion($target, $source);
@@ -77,7 +78,7 @@ final class SetBenchmark extends TestCase {
         $spreadTotalNs = 0;
         $iterableTotalNs = 0;
         
-        for ($i = 0; $i < self::ITERATIONS; $i ++) {
+        for ($i = 0; $i < self::ITERATIONS; $i++) {
             $spreadTotalNs += $this->testForeachWithSpread(...$urls);
             $iterableTotalNs += $this->testForeachWithIterable($urls);
         }

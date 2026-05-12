@@ -1,11 +1,12 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Internal;
 
 use PHPUnit\Framework\TestCase;
-use Slothsoft\FarahTesting\TestUtils;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\FarahTesting\Constraints\FileEqualsTextFile;
+use Slothsoft\FarahTesting\TestUtils;
 
 /**
  * FontFaceBuilderTest

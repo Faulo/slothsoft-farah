@@ -1,13 +1,14 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\API\Performance;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Constraint\IsEqual;
-use Slothsoft\Core\DOMHelper;
 use Closure;
 use DOMDocument;
 use DOMNodeList;
+use PHPUnit\Framework\Constraint\IsEqual;
+use PHPUnit\Framework\TestCase;
+use Slothsoft\Core\DOMHelper;
 
 /**
  * DOMNodeListBenchmark
@@ -37,7 +38,7 @@ final class DOMNodeListBenchmark extends TestCase {
     }
     
     private static function yield_items(DOMNodeList $source): iterable {
-        for ($i = 0, $j = $source->length; $i < $j; $i ++) {
+        for ($i = 0, $j = $source->length; $i < $j; $i++) {
             yield $source->item($i);
         }
     }
@@ -98,12 +99,12 @@ final class DOMNodeListBenchmark extends TestCase {
         
         $results = [];
         foreach ($methods as $id => $method) {
-            for ($i = 0; $i < self::WARMUP; $i ++) {
+            for ($i = 0; $i < self::WARMUP; $i++) {
                 $method($source);
             }
             
             $start = hrtime(true);
-            for ($i = 0; $i < self::ITERATIONS; $i ++) {
+            for ($i = 0; $i < self::ITERATIONS; $i++) {
                 assert(count($method($source)) === $expected);
             }
             $result = hrtime(true) - $start;
@@ -158,12 +159,12 @@ final class DOMNodeListBenchmark extends TestCase {
         
         $results = [];
         foreach ($methods as $id => $method) {
-            for ($i = 0; $i < self::WARMUP; $i ++) {
+            for ($i = 0; $i < self::WARMUP; $i++) {
                 $method($source);
             }
             
             $start = hrtime(true);
-            for ($i = 0; $i < self::ITERATIONS; $i ++) {
+            for ($i = 0; $i < self::ITERATIONS; $i++) {
                 assert(count($method($source)) === $expected);
             }
             $result = hrtime(true) - $start;
@@ -218,12 +219,12 @@ final class DOMNodeListBenchmark extends TestCase {
         
         $results = [];
         foreach ($methods as $id => $method) {
-            for ($i = 0; $i < self::WARMUP; $i ++) {
+            for ($i = 0; $i < self::WARMUP; $i++) {
                 $method($source);
             }
             
             $start = hrtime(true);
-            for ($i = 0; $i < self::ITERATIONS; $i ++) {
+            for ($i = 0; $i < self::ITERATIONS; $i++) {
                 assert(count($method($source)) === $expected);
             }
             $result = hrtime(true) - $start;

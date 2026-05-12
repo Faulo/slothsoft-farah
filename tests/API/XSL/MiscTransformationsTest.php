@@ -1,14 +1,15 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\API\XSL;
 
+use DOMDocument;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Dictionary;
-use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
-use DOMDocument;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\FarahTesting\TestUtils;
 
 class MiscTransformationsTest extends TestCase {

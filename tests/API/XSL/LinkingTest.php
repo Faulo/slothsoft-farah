@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\API\XSL;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
+use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
 
 final class LinkingTest extends TestCase {
     
@@ -77,7 +78,8 @@ EOT
 <html:template xmlns:html="http://www.w3.org/1999/xhtml" data-url="farah://slothsoft@test-module/data?includes=embed" xml:base="farah://slothsoft@test-module/data">
     <data />
 </html:template>
-EOT);
+EOT
+        );
         
         $this->assertThat($actual, new DOMNodeEqualTo($expected));
     }

@@ -1,16 +1,17 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\DOMWriter;
 
-use PHPUnit\Framework\TestCase;
+use DOMDocument;
 use PHPUnit\Framework\Constraint\IsEqual;
-use Slothsoft\Core\ServerEnvironment;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Core\IO\FileInfoFactory;
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\ServerEnvironment;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
-use DOMDocument;
 use SplFileInfo;
 
 /**
@@ -84,7 +85,7 @@ EOT;
         $sut = new DOMWriterFileCacheWithDependencies($this->writer, $file, (string) $cacheFile);
         $expected = $sut->toDocument();
         
-        for ($i = 0; $i < 3; $i ++) {
+        for ($i = 0; $i < 3; $i++) {
             $writer = new DOMWriterFromDocumentDelegate(function () use ($i): DOMDocument {
                 $document = new DOMDocument();
                 $document->loadXML("<should-not-see-me-$i/>");
@@ -106,7 +107,7 @@ EOT;
         
         $time = time();
         
-        for ($i = 0; $i < 3; $i ++) {
+        for ($i = 0; $i < 3; $i++) {
             $writer = new DOMWriterFromDocumentDelegate(function () use ($i): DOMDocument {
                 $document = new DOMDocument();
                 $document->loadXML("<should-see-me-$i/>");

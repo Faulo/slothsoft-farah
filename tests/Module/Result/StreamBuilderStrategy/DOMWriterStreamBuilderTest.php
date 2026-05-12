@@ -1,13 +1,14 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
-use PHPUnit\Framework\TestCase;
+use DOMDocument;
 use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\IsTrue;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
 use Slothsoft\Farah\Module\Result\ResultInterface;
-use DOMDocument;
 
 /**
  * DOMWriterStreamBuilderTest
@@ -23,7 +24,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
     private DOMDocument $document;
     
     private function createSuT(string $content, string $name): DOMWriterStreamBuilder {
-        $this->document = new \DOMDocument();
+        $this->document = new DOMDocument();
         $this->document->loadXML($content);
         
         $writer = new DOMWriterFromDocumentDelegate(function (): DOMDocument {
