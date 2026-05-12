@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\FarahUrl;
 
 use Ds\Hashable;
@@ -8,7 +9,7 @@ use Slothsoft\Farah\Exception\MalformedUrlException;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 final class FarahUrlPath implements Hashable {
     

@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Configuration;
 
+use InvalidArgumentException;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
-use InvalidArgumentException;
 
 final class FarahUrlConfigurationField extends ConfigurationField {
     

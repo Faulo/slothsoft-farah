@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Result;
 
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
@@ -12,7 +13,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 interface ResultInterface {
     

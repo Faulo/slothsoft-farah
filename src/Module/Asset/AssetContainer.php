@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset;
 
 use Ds\Map;
@@ -8,7 +9,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class AssetContainer {
     

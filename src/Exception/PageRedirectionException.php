@@ -1,8 +1,10 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Exception;
 
-class PageRedirectionException extends \RuntimeException {
+use RuntimeException;
+class PageRedirectionException extends RuntimeException {
     
     private $targetPath;
     

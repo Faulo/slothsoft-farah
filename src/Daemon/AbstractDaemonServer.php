@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Daemon;
 
+use BadMethodCallException;
+use Generator;
 use Slothsoft\Core\Calendar\DateTimeFormatter;
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
-use BadMethodCallException;
-use Generator;
 use Throwable;
 
 abstract class AbstractDaemonServer implements ChunkWriterInterface {

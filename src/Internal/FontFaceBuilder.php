@@ -1,18 +1,19 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Internal;
 
+use Generator;
 use Slothsoft\Core\IO\Writable\Decorators\ChunkWriterFileCache;
 use Slothsoft\Core\IO\Writable\Delegates\ChunkWriterFromChunksDelegate;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
-use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\FileWriterResultBuilder;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\NullResultBuilder;
-use Generator;
+use Slothsoft\Farah\Module\Module;
 use SplFileInfo;
 
 final class FontFaceBuilder implements ExecutableBuilderStrategyInterface {

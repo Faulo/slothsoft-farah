@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Executable;
 
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\InstructionBuilderStrategyInterface;
-use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\NullInstructionBuilder;
+use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrategyInterface;
 
 class ExecutableStrategies {
     

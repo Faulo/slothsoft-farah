@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Tracking;
 
 use Slothsoft\Core\ServerEnvironment;
@@ -80,7 +81,7 @@ class Tick {
                 if (! isset($this->functionList[$func])) {
                     $this->functionList[$func] = 0;
                 }
-                $this->functionList[$func] ++;
+                $this->functionList[$func]++;
                 $funcList[] = $func . '#' . $backtrace['line'];
             }
             $val = implode('|', array_reverse($funcList));

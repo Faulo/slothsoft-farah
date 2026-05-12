@@ -1,11 +1,12 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\DOMWriter;
 
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
-use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 use DOMDocument;
 use DOMElement;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 use SplFileInfo;
 
 class FileInfoDOMWriter implements DOMWriterInterface {

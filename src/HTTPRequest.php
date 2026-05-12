@@ -9,12 +9,13 @@ declare(strict_types = 1);
  * initial release
  * *********************************************************************
  */
+
 namespace Slothsoft\Farah;
 
-use Slothsoft\Core\Calendar\DateTimeFormatter;
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use DOMDocument;
 use DOMElement;
+use Slothsoft\Core\Calendar\DateTimeFormatter;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 
 class HTTPRequest implements DOMWriterInterface {
     
@@ -144,7 +145,6 @@ class HTTPRequest implements DOMWriterInterface {
         $this->clientIp = isset($env['REMOTE_ADDR']) ? $env['REMOTE_ADDR'] : '127.0.0.1';
         $this->clientAgent = isset($env['HTTP_USER_AGENT']) ? $env['HTTP_USER_AGENT'] : '';
         $this->clientHost = isset($env['HTTP_HOST']) ? $env['HTTP_HOST'] : self::getServerName();
-        ;
         $this->clientHost = strtolower($this->clientHost);
         $this->dict = Dictionary::getInstance();
     }
@@ -238,7 +238,9 @@ class HTTPRequest implements DOMWriterInterface {
         return $doc;
     }
     
-    public function toFileName(): string {}
+    public function toFileName(): string {
+    }
     
-    public function toString(): string {}
+    public function toString(): string {
+    }
 }

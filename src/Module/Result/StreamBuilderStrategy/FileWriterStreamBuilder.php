@@ -1,17 +1,18 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
-use Slothsoft\Core\MimeTypeDictionary;
+use Slothsoft\Core\IO\Writable\Adapter\ChunkWriterFromFileWriter;
+use Slothsoft\Core\IO\Writable\Adapter\DOMWriterFromFileWriter;
+use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromFileWriter;
+use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromFileWriter;
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\Core\IO\Writable\StreamWriterInterface;
 use Slothsoft\Core\IO\Writable\StringWriterInterface;
-use Slothsoft\Core\IO\Writable\Adapter\ChunkWriterFromFileWriter;
-use Slothsoft\Core\IO\Writable\Adapter\DOMWriterFromFileWriter;
-use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromFileWriter;
-use Slothsoft\Core\IO\Writable\Adapter\StringWriterFromFileWriter;
+use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use SplFileInfo;
 

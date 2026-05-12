@@ -1,14 +1,12 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\RequestStrategy;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\IO\Psr7\StreamHelper;
-use Slothsoft\Farah\HTTPRequest;
-use Slothsoft\Farah\HTTPResponse;
-use Slothsoft\Farah\Kernel;
+use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\Exception\HttpStatusException;
@@ -19,6 +17,9 @@ use Slothsoft\Farah\Http\ContentCoding;
 use Slothsoft\Farah\Http\MessageFactory;
 use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Http\TransferCoding;
+use Slothsoft\Farah\HTTPRequest;
+use Slothsoft\Farah\HTTPResponse;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Security\BannedManager;
 

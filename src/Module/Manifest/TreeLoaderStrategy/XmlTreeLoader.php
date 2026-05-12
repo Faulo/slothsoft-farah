@@ -1,13 +1,14 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy;
 
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\XML\LeanElement;
-use Slothsoft\Farah\Module\Manifest\ManifestInterface;
-use Throwable;
 use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use Throwable;
 
 class XmlTreeLoader implements TreeLoaderStrategyInterface {
     
@@ -35,7 +36,8 @@ class XmlTreeLoader implements TreeLoaderStrategyInterface {
                     if ($element and $element->getTag()) {
                         return $element;
                     }
-                } catch (Throwable $e) {}
+                } catch (Throwable $e) {
+                }
             }
         }
         

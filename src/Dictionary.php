@@ -3,16 +3,16 @@ declare(strict_types = 1);
 // © 2012 Daniel Schulz
 namespace Slothsoft\Farah;
 
-use Ds\Map;
-use Ds\Set;
-use Slothsoft\Core\DOMHelper;
-use Slothsoft\Core\Configuration\ConfigurationField;
-use Slothsoft\Farah\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\Module;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMXPath;
+use Ds\Map;
+use Ds\Set;
+use Slothsoft\Core\Configuration\ConfigurationField;
+use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\Module;
 
 class Dictionary {
     
@@ -109,7 +109,7 @@ class Dictionary {
                 /** @var $targetNode DOMNode */
                 foreach ($targetNodes as $targetNode) {
                     if ($translatedNode = $this->lookupKeyInDictionaryDocuments($dictionaryUrls, $targetNode->textContent)) {
-                        $count ++;
+                        $count++;
                         
                         switch ($targetNode->nodeType) {
                             case XML_ATTRIBUTE_NODE:
@@ -137,7 +137,7 @@ class Dictionary {
                 $key = (string) $targetNode->getAttribute('key');
                 
                 if ($translatedNode = $this->lookupKeyInDictionaryDocuments($dictionaryUrls, $key)) {
-                    $count ++;
+                    $count++;
                     $fragment = $this->createTranslationReplacement($document, $translatedNode);
                     $targetNode->parentNode->replaceChild($fragment, $targetNode);
                 } else {
@@ -395,15 +395,15 @@ class Dictionary {
             switch ($node->nodeType) {
                 case XML_ELEMENT_NODE:
                     $node->parentNode->replaceChild($this->lookupFragment($replaceNode, $namespace, $language, $node->ownerDocument), $node);
-                    $ret ++;
+                    $ret++;
                     break;
                 case XML_ATTRIBUTE_NODE:
                     $node->value = $this->lookupText($node->value, $namespace, $language);
-                    $ret ++;
+                    $ret++;
                     break;
                 case XML_TEXT_NODE:
                     $node->parentNode->replaceChild($this->lookupFragment($node->data, $namespace, $language, $node->ownerDocument), $node);
-                    $ret ++;
+                    $ret++;
                     break;
             }
         }

@@ -1,11 +1,12 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Security;
 
-use Slothsoft\Core\ServerEnvironment;
 use Slothsoft\Core\Configuration\ConfigurationField;
-use Slothsoft\Core\Configuration\FileConfigurationField;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
+use Slothsoft\Core\Configuration\FileConfigurationField;
+use Slothsoft\Core\ServerEnvironment;
 
 class BannedManager {
     

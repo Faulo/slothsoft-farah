@@ -1,15 +1,16 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\DOMWriter;
 
+use DOMDocument;
+use DOMElement;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Executable\Executable;
-use DOMDocument;
-use DOMElement;
+use Slothsoft\Farah\Module\Module;
 
 class AssetDocumentDOMWriter implements DOMWriterInterface {
     use DOMWriterDocumentFromElementTrait;

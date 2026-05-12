@@ -1,16 +1,17 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset\PathResolverStrategy;
 
 use Ds\Map;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\XML\LeanElement;
+use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Throwable;
-use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 
 class FromSubManifestPathResolver implements PathResolverStrategyInterface {
     
@@ -55,7 +56,8 @@ class FromSubManifestPathResolver implements PathResolverStrategyInterface {
                         $name = $child->getAttribute(Manifest::ATTR_NAME);
                         $children[$name] = $child;
                     }
-                } catch (Throwable $e) {}
+                } catch (Throwable $e) {
+                }
                 $this->assets->put($context, $children);
                 return $children;
             }
@@ -65,12 +67,12 @@ class FromSubManifestPathResolver implements PathResolverStrategyInterface {
         $subManifest = LeanElement::createTreeFromDOMDocument($dom->loadDocument($xmlFile->getRealPath()));
         
         foreach ([
-            Manifest::ATTR_ID,
-            Manifest::ATTR_NAME,
-            Manifest::ATTR_ASSETPATH,
-            Manifest::ATTR_PATH,
-            Manifest::ATTR_REALPATH
-        ] as $attr) {
+                     Manifest::ATTR_ID,
+                     Manifest::ATTR_NAME,
+                     Manifest::ATTR_ASSETPATH,
+                     Manifest::ATTR_PATH,
+                     Manifest::ATTR_REALPATH
+                 ] as $attr) {
             $subManifest->setAttribute($attr, $element->getAttribute($attr));
         }
         

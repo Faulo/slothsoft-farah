@@ -1,9 +1,10 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\DOMWriter;
 
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Decorators\DOMWriterFileCache;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use SplFileInfo;
 
 final class DOMWriterFileCacheWithDependencies extends DOMWriterFileCache {

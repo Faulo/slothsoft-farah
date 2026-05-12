@@ -1,22 +1,23 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\StreamWrapper;
 
 use Slothsoft\Core\StreamWrapper\Psr7StreamWrapper;
 use Slothsoft\Core\StreamWrapper\StreamWrapperFactoryInterface;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
+use Slothsoft\Farah\Exception\HttpDownloadException;
+use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
-use Slothsoft\Farah\Exception\HttpDownloadException;
-use Slothsoft\Farah\Exception\HttpStatusException;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
     

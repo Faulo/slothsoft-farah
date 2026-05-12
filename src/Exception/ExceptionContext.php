@@ -1,19 +1,20 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Exception;
 
-use Slothsoft\Core\DOMHelper;
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
-use Slothsoft\Farah\Module\Module;
 use DOMDocument;
 use DOMElement;
 use ErrorException;
+use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Farah\Module\Module;
 use Throwable;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class ExceptionContext implements DOMWriterInterface {
     

@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\StreamWrapper;
 
+use DOMDocument;
 use Slothsoft\Blob\BlobUrl;
 use Slothsoft\Core\StreamWrapper\ResourceStreamWrapper;
-use DOMDocument;
 
 class DocumentStreamWrapper extends ResourceStreamWrapper {
     

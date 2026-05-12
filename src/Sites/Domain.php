@@ -1,21 +1,22 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Sites;
 
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\RequestStrategy\LookupPageStrategy;
-use DOMDocument;
-use DOMElement;
-use DOMXPath;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 final class Domain {
     

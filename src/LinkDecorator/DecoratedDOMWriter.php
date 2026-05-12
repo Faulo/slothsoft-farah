@@ -1,11 +1,12 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\LinkDecorator;
 
-use Ds\Set;
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use DOMDocument;
 use DOMElement;
+use Ds\Set;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 
 final class DecoratedDOMWriter implements DOMWriterInterface {
     

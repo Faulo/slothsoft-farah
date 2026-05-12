@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Http;
 
 use Ds\Map;
@@ -52,7 +53,7 @@ final class ContentCoding {
     }
     
     public static function getEncodings(): iterable {
-        /** @var ConfigurableCoding $coding **/
+        /** @var ConfigurableCoding $coding * */
         foreach (self::initStatic() as $name => $coding) {
             if ($coding->hasEncodingFilter()) {
                 yield $name => $coding;
@@ -69,7 +70,7 @@ final class ContentCoding {
     }
     
     public static function getDecodings(): iterable {
-        /** @var ConfigurableCoding $coding **/
+        /** @var ConfigurableCoding $coding * */
         foreach (self::initStatic() as $name => $coding) {
             if ($coding->hasDecodingFilter()) {
                 yield $name => $coding;

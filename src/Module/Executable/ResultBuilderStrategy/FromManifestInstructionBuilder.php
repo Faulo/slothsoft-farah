@@ -1,13 +1,14 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy;
 
+use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
 use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\Manifest\Manifest;
-use Slothsoft\Farah\Dictionary;
 
 class FromManifestInstructionBuilder implements InstructionBuilderStrategyInterface {
     

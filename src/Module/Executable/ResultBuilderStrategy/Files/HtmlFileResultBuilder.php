@@ -1,9 +1,10 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files;
 
-use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use DOMDocument;
+use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 
 class HtmlFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterElementFromDocumentTrait;

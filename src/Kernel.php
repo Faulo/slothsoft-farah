@@ -1,9 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use ReflectionClass;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Farah\Configuration\AssetConfigurationField;
 use Slothsoft\Farah\Configuration\FarahUrlConfigurationField;
@@ -124,7 +126,7 @@ class Kernel {
         
         $response = $requestStrategy->process($request);
         if (self::getTrackingEnabled()) {
-            $this->track((new \ReflectionClass($requestStrategy))->getShortName(), $request, $response);
+            $this->track((new ReflectionClass($requestStrategy))->getShortName(), $request, $response);
         }
         $responseStrategy->process($response);
         return $response;

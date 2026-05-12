@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset\PathResolverStrategy;
 
 use Slothsoft\Core\FileSystem;
@@ -9,11 +10,12 @@ use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\ManifestElementBuilder;
 use Slothsoft\Farah\Module\Manifest\Manifest;
+use SplFileInfo;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class FromFilesystemPathResolver implements PathResolverStrategyInterface {
     
@@ -24,7 +26,7 @@ class FromFilesystemPathResolver implements PathResolverStrategyInterface {
         $path = $element->getAttribute(Manifest::ATTR_REALPATH);
         
         $files = FileSystem::scanDir($path, FileSystem::SCANDIR_FILEINFO);
-        /** @var $file \SplFileInfo */
+        /** @var $file SplFileInfo */
         foreach ($files as $file) {
             $name = $file->getFilename();
             if ($file->isDir()) {

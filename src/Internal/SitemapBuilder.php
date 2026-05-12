@@ -1,32 +1,33 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Internal;
 
-use Slothsoft\Core\DOMHelper;
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\Decorators\DOMWriterMemoryCache;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
-use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\EmptySitemapException;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
-use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\MapResultBuilder;
+use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StringWriterStreamBuilder;
 use Slothsoft\Farah\Sites\Domain;
-use DOMDocument;
-use DOMElement;
-use DOMXPath;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
@@ -103,8 +104,8 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
                 $node = $result->toElement($this->document);
                 $fragment = $this->document->createDocumentFragment();
                 foreach ([
-                    ...$node->childNodes
-                ] as $node) {
+                             ...$node->childNodes
+                         ] as $node) {
                     $fragment->appendChild($node);
                 }
                 $dataNode->parentNode->replaceChild($fragment, $dataNode);

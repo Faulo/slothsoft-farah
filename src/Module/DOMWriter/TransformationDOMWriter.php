@@ -1,13 +1,14 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\DOMWriter;
 
+use DOMDocument;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Module\Manifest\Manifest;
-use DOMDocument;
 
 class TransformationDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;

@@ -1,18 +1,19 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy;
 
 use Slothsoft\Core\IO\Writable\Decorators\DOMWriterMemoryCache;
 use Slothsoft\Farah\Dictionary;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\LinkDecorator\DecoratedDOMWriter;
-use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\DOMWriter\AssetFragmentDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TransformationDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TranslationDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\TranslationDOMWriter2;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
+use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 

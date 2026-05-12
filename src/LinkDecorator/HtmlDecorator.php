@@ -1,19 +1,20 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\LinkDecorator;
 
-use Slothsoft\Farah\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\Module;
 use DOMDocument;
 use DOMElement;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
+use Slothsoft\Farah\Module\Module;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class HtmlDecorator implements LinkDecoratorInterface {
     

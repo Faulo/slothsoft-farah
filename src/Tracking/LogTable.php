@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Tracking;
 
 use Slothsoft\Core\DBMS\Table;
@@ -44,7 +45,6 @@ class LogTable {
     
     public function install() {
         if (! $this->dbmsTable->tableExists()) {
-            
             $sqlCols = [];
             $sqlCols['id'] = 'int NOT NULL AUTO_INCREMENT';
             $sqlCols['data'] = 'longtext NOT NULL';

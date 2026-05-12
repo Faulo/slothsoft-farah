@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\FarahUrl;
 
 use Ds\Hashable;
@@ -12,7 +13,7 @@ use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 final class FarahUrl implements UriInterface, Hashable {
     
@@ -164,9 +165,9 @@ final class FarahUrl implements UriInterface, Hashable {
     
     /**
      *
-     * @todo rename to getQueryArguments
-     *      
      * @return FarahUrlArguments
+     * @todo rename to getQueryArguments
+     *
      */
     public function getArguments(): FarahUrlArguments {
         return $this->args;

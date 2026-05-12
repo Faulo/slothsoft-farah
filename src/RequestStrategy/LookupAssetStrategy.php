@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\RequestStrategy;
 
 use Psr\Http\Message\ServerRequestInterface;

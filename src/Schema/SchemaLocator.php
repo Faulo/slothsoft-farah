@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Schema;
 
-use Slothsoft\Core\DOMHelper;
 use DOMDocument;
 use Exception;
+use Slothsoft\Core\DOMHelper;
 
 class SchemaLocator {
     

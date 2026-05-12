@@ -1,7 +1,10 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy;
 
+use DOMDocument;
+use DOMElement;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromElementDelegate;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\Executable;
@@ -9,8 +12,6 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\NullStreamBuilder;
-use DOMDocument;
-use DOMElement;
 
 class NullResultBuilder implements ResultBuilderStrategyInterface {
     

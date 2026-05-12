@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\DOMWriter;
 
+use DOMDocument;
 use Ds\Set;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Dictionary;
-use DOMDocument;
 
 final class TranslationDOMWriter2 implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;

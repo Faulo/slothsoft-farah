@@ -1,9 +1,10 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Tracking;
 
-use Slothsoft\Farah\HTTPRequest;
 use DOMDocument;
+use Slothsoft\Farah\HTTPRequest;
 
 class View {
     
@@ -142,7 +143,7 @@ class View {
         $count = $table->selectCount($groupFilter, $searchFilter);
         $pageCount = (int) ceil($count / $this->pageLimit);
         $query = $params;
-        for ($i = 0; $i < $pageCount; $i ++) {
+        for ($i = 0; $i < $pageCount; $i++) {
             if ($i < 50 or ($i + 1) === $pageCount) {
                 $query['page'] = $i;
                 

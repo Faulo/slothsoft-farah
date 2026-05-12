@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Internal;
 
 use Slothsoft\Core\DOMHelper;
@@ -9,7 +10,7 @@ use Slothsoft\Core\IO\Writable\StringWriterInterface;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 final class SitemapJsonBuilder implements StringWriterInterface {
     

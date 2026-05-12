@@ -1,16 +1,17 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\FarahUrl;
 
-use Ds\Hashable;
 use ArrayIterator;
+use Ds\Hashable;
 use IteratorAggregate;
 use Traversable;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 final class FarahUrlArguments implements IteratorAggregate, Hashable {
     
@@ -119,8 +120,8 @@ final class FarahUrlArguments implements IteratorAggregate, Hashable {
             return $this;
         } else {
             return self::createFromValueList([
-                $key => $val
-            ] + $this->data);
+                    $key => $val
+                ] + $this->data);
         }
     }
     

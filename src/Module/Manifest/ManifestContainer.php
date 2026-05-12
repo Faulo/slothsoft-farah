@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Manifest;
 
 use Ds\Map;
-use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use IteratorAggregate;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Traversable;
 
 class ManifestContainer implements IteratorAggregate {

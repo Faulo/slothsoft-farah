@@ -1,10 +1,12 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Exception;
 
+use RuntimeException;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 
-class HttpDownloadExecutableException extends \RuntimeException {
+class HttpDownloadExecutableException extends RuntimeException {
     
     private ResultStrategies $strategies;
     

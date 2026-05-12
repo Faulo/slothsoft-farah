@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
 
 abstract class AbstractMapParameterFilter implements ParameterFilterStrategyInterface {

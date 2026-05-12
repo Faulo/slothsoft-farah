@@ -9,19 +9,20 @@ declare(strict_types = 1);
  * initial release
  * *********************************************************************
  */
+
 namespace Slothsoft\Farah;
 
+use DOMDocument;
+use Exception;
+use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Core\CascadingDictionary;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
-use Slothsoft\Core\MimeTypeDictionary;
-use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Core\IO\HTTPStream;
 use Slothsoft\Core\IO\Memory;
+use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Exception\ExceptionContext;
 use Slothsoft\Farah\Exception\StreamTimedOutException;
-use DOMDocument;
-use Exception;
 
 class HTTPResponse {
     

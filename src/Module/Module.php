@@ -1,28 +1,29 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module;
 
+use OutOfBoundsException;
 use Slothsoft\Core\FileSystem;
-use Slothsoft\Core\ServerEnvironment;
 use Slothsoft\Core\IO\FileInfoFactory;
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\Core\IO\Writable\StreamWriterInterface;
-use Slothsoft\Farah\Kernel;
+use Slothsoft\Core\ServerEnvironment;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
+use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\DefaultAssetBuilder;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestContainer;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
-use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\DefaultAssetBuilder;
 use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\XmlTreeLoader;
 use Slothsoft\Farah\Module\Result\ResultInterface;
-use OutOfBoundsException;
 use SplFileInfo;
 
 class Module {

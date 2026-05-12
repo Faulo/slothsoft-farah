@@ -1,17 +1,18 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Result;
 
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
-use Slothsoft\Core\IO\Writable\DOMWriterInterface;
-use Slothsoft\Core\IO\Writable\FileWriterInterface;
-use Slothsoft\Core\IO\Writable\StreamWriterInterface;
-use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Core\IO\Writable\Decorators\ChunkWriterMemoryCache;
 use Slothsoft\Core\IO\Writable\Decorators\DOMWriterMemoryCache;
 use Slothsoft\Core\IO\Writable\Decorators\FileWriterMemoryCache;
 use Slothsoft\Core\IO\Writable\Decorators\StreamWriterMemoryCache;
 use Slothsoft\Core\IO\Writable\Decorators\StringWriterMemoryCache;
+use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Core\IO\Writable\FileWriterInterface;
+use Slothsoft\Core\IO\Writable\StreamWriterInterface;
+use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;

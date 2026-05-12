@@ -1,18 +1,19 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy;
 
-use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Core\IO\FileInfoFactory;
+use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
-use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\Base64FileResultBuilder;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\HtmlFileResultBuilder;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\TextFileResultBuilder;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\XmlFileResultBuilder;
+use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use SplFileInfo;
 

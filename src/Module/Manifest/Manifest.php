@@ -1,15 +1,16 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Manifest;
 
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
-use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\Asset;
 use Slothsoft\Farah\Module\Asset\AssetContainer;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Module;
 use SplFileInfo;
 
 class Manifest implements ManifestInterface {

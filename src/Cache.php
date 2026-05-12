@@ -9,6 +9,7 @@ declare(strict_types = 1);
  * initial release
  * *********************************************************************
  */
+
 namespace Slothsoft\Farah;
 
 use Slothsoft\Core\FileSystem;

@@ -1,7 +1,9 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\RequestStrategy;
 
+use DOMElement;
 use Laminas\Http\Request;
 use Laminas\Router\Http\RouteMatch;
 use Laminas\Router\Http\TreeRouteStack;
@@ -11,7 +13,6 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Sites\Domain;
-use DOMElement;
 
 final class LookupRouteStrategy extends RequestStrategyBase {
     

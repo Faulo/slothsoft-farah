@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Configuration;
 
+use InvalidArgumentException;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
-use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
-use InvalidArgumentException;
+use Slothsoft\Farah\Module\Module;
 
 class AssetConfigurationField extends ConfigurationField {
     

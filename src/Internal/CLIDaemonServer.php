@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Internal;
 
 use Slothsoft\Farah\Daemon\AbstractDaemonServer;
@@ -9,11 +10,12 @@ use Symfony\Component\Process\Process;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class CLIDaemonServer extends AbstractDaemonServer {
     
-    public function onInitialize(FarahUrlArguments $args): void {}
+    public function onInitialize(FarahUrlArguments $args): void {
+    }
     
     public function onMessage($message): iterable {
         assert(is_array($message));

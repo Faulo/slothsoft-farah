@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Result;
 
 use Ds\Map;
@@ -8,7 +9,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class ResultContainer {
     

@@ -1,19 +1,20 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\LinkDecorator;
 
+use DOMDocument;
+use DOMElement;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Module;
-use DOMDocument;
-use DOMElement;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class SvgDecorator implements LinkDecoratorInterface {
     

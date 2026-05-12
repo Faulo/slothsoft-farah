@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\FarahUrl;
 
 use Ds\Hashable;
@@ -7,7 +8,7 @@ use Ds\Hashable;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 final class FarahUrlStreamIdentifier implements Hashable {
     

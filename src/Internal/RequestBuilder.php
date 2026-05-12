@@ -1,24 +1,25 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Internal;
 
-use Slothsoft\Core\DOMHelper;
+use DOMDocument;
+use DOMElement;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
+use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromElementDelegate;
-use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\DOMWriterResultBuilder;
 use Slothsoft\Farah\Module\Manifest\Manifest;
-use DOMDocument;
-use DOMElement;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class RequestBuilder implements ExecutableBuilderStrategyInterface {
     
@@ -29,12 +30,14 @@ class RequestBuilder implements ExecutableBuilderStrategyInterface {
             try {
                 $request = Kernel::getCurrentRequest();
                 $rootNode->setAttribute(Manifest::ATTR_HREF, (string) $request->getUri());
-            } catch (ConfigurationRequiredException $e) {}
+            } catch (ConfigurationRequiredException $e) {
+            }
             
             try {
                 $pageUrl = Kernel::getCurrentPage();
                 $rootNode->setAttribute(Manifest::ATTR_URL, (string) $pageUrl);
-            } catch (ConfigurationRequiredException $e) {}
+            } catch (ConfigurationRequiredException $e) {
+            }
             
             foreach ($args as $name => $value) {
                 if (is_string($value)) {

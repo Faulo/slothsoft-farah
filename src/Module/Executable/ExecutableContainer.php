@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Executable;
 
 use Ds\Map;
@@ -8,7 +9,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class ExecutableContainer {
     

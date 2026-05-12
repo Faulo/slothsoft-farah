@@ -1,9 +1,10 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Tracking;
 
-use Slothsoft\Core\DBMS\Manager;
 use Slothsoft\Core\DBMS\Database;
+use Slothsoft\Core\DBMS\Manager;
 use Slothsoft\Farah\HTTPRequest;
 
 class Archive {
@@ -333,7 +334,7 @@ class Archive {
             ]) as $row) {
                 $this->backupTable->insert($row, $row);
                 echo $row['id'] . PHP_EOL;
-                $ret ++;
+                $ret++;
             }
             $this->tempTable->delete($idList);
         }
@@ -453,7 +454,7 @@ class Archive {
                     }
                 }
                 if ($this->insertTemp($time, $data, $id)) {
-                    $ret ++;
+                    $ret++;
                 }
             }
         }

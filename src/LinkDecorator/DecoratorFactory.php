@@ -1,16 +1,17 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\LinkDecorator;
 
-use Slothsoft\Core\DOMHelper;
-use Slothsoft\Farah\Exception\NamespaceNotSupportedException;
 use DOMDocument;
 use DOMElement;
+use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\Exception\NamespaceNotSupportedException;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 class DecoratorFactory {
     

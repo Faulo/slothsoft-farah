@@ -1,7 +1,9 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\RequestStrategy;
 
+use DOMElement;
 use Psr\Http\Message\ServerRequestInterface;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\PageNotFoundException;
@@ -9,7 +11,6 @@ use Slothsoft\Farah\Exception\PageRedirectionException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Sites\Domain;
-use DOMElement;
 
 final class LookupPageStrategy extends RequestStrategyBase {
     

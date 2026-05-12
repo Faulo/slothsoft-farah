@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset;
 
 use Slothsoft\Core\XML\LeanElement;
@@ -14,7 +15,7 @@ use SplFileInfo;
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 interface AssetInterface {
     

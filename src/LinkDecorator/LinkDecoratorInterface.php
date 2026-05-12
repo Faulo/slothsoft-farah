@@ -1,14 +1,15 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\LinkDecorator;
 
-use Slothsoft\Farah\FarahUrl\FarahUrl;
 use DOMDocument;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 /**
  *
  * @author Daniel Schulz
- *        
+ *
  */
 interface LinkDecoratorInterface {
     

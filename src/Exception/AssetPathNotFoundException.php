@@ -1,9 +1,10 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Exception;
 
-use Slothsoft\Farah\Module\Asset\AssetInterface;
 use RuntimeException;
+use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 class AssetPathNotFoundException extends RuntimeException {
     

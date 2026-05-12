@@ -1,14 +1,15 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\DOMWriter;
 
+use DOMDocument;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
-use DOMDocument;
 
 final class TransformationDOMWriterByUrls implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;

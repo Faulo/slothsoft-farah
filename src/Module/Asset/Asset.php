@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset;
 
 use Ds\Vector;
@@ -10,12 +11,12 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
-use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableContainer;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use Slothsoft\Farah\Module\Module;
 use SplFileInfo;
 
 class Asset implements AssetInterface {

@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\Asset;
 
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\InstructionStrategyInterface;
 use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\ParameterFilterStrategyInterface;
-use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\ParameterSupplierStrategyInterface;
+use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 
 class AssetStrategies {
     

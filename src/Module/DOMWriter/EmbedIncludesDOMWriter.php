@@ -1,15 +1,16 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Module\DOMWriter;
 
+use DOMDocument;
+use DOMElement;
 use Ds\Set;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
-use DOMDocument;
-use DOMElement;
 
 class EmbedIncludesDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;

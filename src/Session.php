@@ -9,11 +9,12 @@ declare(strict_types = 1);
  * initial release
  * *********************************************************************
  */
+
 namespace Slothsoft\Farah;
 
+use Exception;
 use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Core\DBMS\Manager;
-use Exception;
 
 class Session {
     
@@ -144,12 +145,14 @@ class Session {
                     $this->dbmsTable->update([
                         'data' => $this->encodeData($val)
                     ], $idList);
-                } catch (Exception $e) {}
+                } catch (Exception $e) {
+                }
             } else {
                 $arr['data'] = $this->encodeData($val);
                 try {
                     $this->dbmsTable->insert($arr);
-                } catch (Exception $e) {}
+                } catch (Exception $e) {
+                }
             }
         }
     }

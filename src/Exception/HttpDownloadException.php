@@ -1,10 +1,12 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\Farah\Exception;
 
+use RuntimeException;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
-class HttpDownloadException extends \RuntimeException {
+class HttpDownloadException extends RuntimeException {
     
     private ResultInterface $result;
     
