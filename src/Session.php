@@ -131,7 +131,7 @@ class Session {
         $arr['session'] = $session;
         $arr['name'] = $this->hash($key);
         $res = $this->dbmsTable ? $this->dbmsTable->select('data', $arr) : null;
-        return $res ? $this->decodeData(current($res), true) : $val;
+        return $res ? $this->decodeData(current($res)) : $val;
     }
     
     protected function saveData($session, $key, $val) {

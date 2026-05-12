@@ -152,7 +152,7 @@ class Module {
         try {
             return $this->manifests->get($authority);
         } catch (OutOfBoundsException $e) {
-            throw new ModuleNotFoundException((string) $authority, null, $e);
+            throw new ModuleNotFoundException((string) $authority);
         }
     }
     

@@ -14,6 +14,7 @@ namespace Slothsoft\Farah;
 
 use DOMDocument;
 use DOMElement;
+use http\Exception\BadMethodCallException;
 use Slothsoft\Core\Calendar\DateTimeFormatter;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 
@@ -239,8 +240,10 @@ class HTTPRequest implements DOMWriterInterface {
     }
     
     public function toFileName(): string {
+        throw new BadMethodCallException('toFileName');
     }
     
     public function toString(): string {
+        throw new BadMethodCallException('toString');
     }
 }

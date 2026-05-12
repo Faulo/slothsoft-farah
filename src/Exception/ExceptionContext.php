@@ -8,7 +8,7 @@ use DOMElement;
 use ErrorException;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
-use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 use Throwable;
 
 /**
@@ -67,7 +67,7 @@ class ExceptionContext implements DOMWriterInterface {
             }
         }
         
-        $element = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, Module::TAG_ERROR);
+        $element = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, Manifest::TAG_ERROR);
         $element->setAttribute('name', $name);
         $element->setAttribute('code', (string) $this->ownerException->getCode());
         $element->setAttribute('file', $this->ownerException->getFile());

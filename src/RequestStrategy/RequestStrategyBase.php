@@ -218,32 +218,31 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
             $accept .= ', chunked'; // HTTP 1.1 must accept chunked encoding
         }
         foreach (TransferCoding::getEncodings() as $name => $coding) {
-            if (strpos($preferred, $name) !== false and strpos($accept, $name) !== false) {
+            if (str_contains($preferred, $name) and str_contains($accept, $name)) {
                 return $coding;
             }
         }
         return TransferCoding::identity();
     }
     
+    private const BODYLESS_METHODS = [
+        HTTPRequest::METHOD_HEAD,
+        HTTPRequest::METHOD_OPTIONS,
+    ];
+    
+    private const BODYLESS_STATUS_CODES = [
+        StatusCode::STATUS_NO_CONTENT,
+        StatusCode::STATUS_MULTIPLE_CHOICES,
+        StatusCode::STATUS_MOVED_PERMANENTLY,
+        StatusCode::STATUS_SEE_OTHER,
+        StatusCode::STATUS_NOT_MODIFIED,
+        StatusCode::STATUS_TEMPORARY_REDIRECT,
+        StatusCode::STATUS_PERMANENT_REDIRECT,
+    ];
+    
     private function shouldIncludeBody(string $method, int $statusCode): bool {
-        switch ($method) {
-            case HTTPRequest::METHOD_HEAD:
-            case HTTPRequest::METHOD_OPTIONS:
-                return false;
-        }
-        
-        switch ($statusCode) {
-            case StatusCode::STATUS_NO_CONTENT:
-            case StatusCode::STATUS_MULTIPLE_CHOICES:
-            case StatusCode::STATUS_MOVED_PERMANENTLY:
-            case StatusCode::STATUS_SEE_OTHER:
-            case StatusCode::STATUS_NOT_MODIFIED:
-            case StatusCode::STATUS_TEMPORARY_REDIRECT:
-            case StatusCode::STATUS_PERMANENT_REDIRECT:
-                return false;
-        }
-        
-        return true;
+        return ! in_array($method, self::BODYLESS_METHODS, true)
+            && ! in_array($statusCode, self::BODYLESS_STATUS_CODES, true);
     }
     
     private function inventPreferredCompressions(string $mimeType): string {

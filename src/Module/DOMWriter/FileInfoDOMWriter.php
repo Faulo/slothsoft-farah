@@ -22,8 +22,8 @@ class FileInfoDOMWriter implements DOMWriterInterface {
         $node = $targetDoc->createElement($this->file->getType());
         $node->setAttribute('name', $this->file->getFilename());
         if ($this->file->isFile()) {
-            $node->setAttribute('size', $this->file->getSize());
-            $node->setAttribute('modification-time', $this->file->getMTime());
+            $node->setAttribute('size', (string) $this->file->getSize());
+            $node->setAttribute('modification-time', (string) $this->file->getMTime());
             $node->setAttribute('modification-date', date(DATE_W3C, $this->file->getMTime()));
         }
         

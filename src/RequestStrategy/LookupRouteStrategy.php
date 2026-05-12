@@ -81,12 +81,12 @@ final class LookupRouteStrategy extends RequestStrategyBase {
             $contextUrl = $contextUrl->withAssetAuthority(FarahUrlAuthority::createFromVendorAndModule($vendor, $module));
         }
         switch ($pageNode->localName) {
-            case self::TAG_DOMAIN:
+            case Domain::TAG_DOMAIN:
                 $pageName = '/';
                 break;
-            case self::TAG_PAGE:
+            case Domain::TAG_PAGE:
                 $pageName = $pageNode->getAttribute('name') . '/';
-            case self::TAG_FILE:
+            case Domain::TAG_FILE:
                 $pageName = $pageNode->getAttribute('name');
                 break;
         }
@@ -99,8 +99,8 @@ final class LookupRouteStrategy extends RequestStrategyBase {
                     case Manifest::TAG_PARAM:
                         $params[$node->getAttribute('name')] = $node->getAttribute('value');
                         break;
-                    case self::TAG_PAGE:
-                    case self::TAG_FILE:
+                    case Domain::TAG_PAGE:
+                    case Domain::TAG_FILE:
                         $children[] = $this->toRoute($node, $contextUrl);
                         break;
                 }

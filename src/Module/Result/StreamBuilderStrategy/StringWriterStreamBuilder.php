@@ -74,7 +74,7 @@ class StringWriterStreamBuilder implements StreamBuilderStrategyInterface {
     }
     
     public function buildChunkWriter(ResultInterface $context): ChunkWriterInterface {
-        return $this->writer instanceof ChunkWriterInterface ? $this->writer : new ChunkWriterFromStringWriter($this->writer, $this->isBufferable);
+        return $this->writer instanceof ChunkWriterInterface ? $this->writer : new ChunkWriterFromStringWriter($this->writer);
     }
     
     public function buildStringWriter(ResultInterface $context): StringWriterInterface {

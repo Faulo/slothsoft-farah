@@ -48,9 +48,9 @@ class Cache {
         return $ret;
     }
     
-    public function mergeFiles(array $fileList, $targetDir = '', $zipFunction = null) {
+    public function mergeFiles(array $fileList, $targetDir = '', $zipFunction = null): ?string {
         if (! count($fileList)) {
-            return;
+            return null;
         }
         
         $timeList = [];

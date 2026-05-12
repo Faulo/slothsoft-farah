@@ -195,7 +195,7 @@ class Manifest implements ManifestInterface {
         }
         
         if ($path->isEmpty()) {
-            $asset = $this->createAsset($this->getRootElement(), FarahUrlPath::createEmpty());
+            $asset = $this->createAsset($this->getRootElement());
         } else {
             $parent = $this->lookupAssetTyped($path->withoutLastSegment());
             $element = $parent->getChildManifestElement($path->getName());

@@ -504,6 +504,8 @@ class HTTPResponse {
         $this->status = self::STATUS_INTERNAL_SERVER_ERROR;
     }
     
+    private const ERR_REQRES = 'Rendering of this page took %d ms and %.2f MB.';
+    
     public function setDocument(DOMDocument $doc) {
         if ($doc->documentURI and $fileName = basename($doc->documentURI)) {
             $this->setFile(null, $fileName);
@@ -546,9 +548,9 @@ class HTTPResponse {
         }
         
         if (self::$httpConfig['doc-timestamp']) {
-            printf(Kernel::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576);
+            printf(self::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576);
             $this->setEtag(self::calcEtag($doc->saveXML()), false);
-            $doc->documentElement->insertBefore($doc->createComment(PHP_EOL . sprintf(Kernel::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576) . PHP_EOL), $doc->documentElement->firstChild);
+            $doc->documentElement->insertBefore($doc->createComment(PHP_EOL . sprintf(self::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576) . PHP_EOL), $doc->documentElement->firstChild);
             $this->setBody(trim($doc->saveXML()));
         } else {
             $this->setBody(trim($doc->saveXML()));

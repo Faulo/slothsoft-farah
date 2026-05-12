@@ -85,7 +85,7 @@ class Asset implements AssetInterface {
     }
     
     public function traverseTo(string $path): AssetInterface {
-        $path = preg_replace('~^/+~', '', $path);
+        $path = ltrim($path, "/");
         
         if ($path === '') {
             return $this;

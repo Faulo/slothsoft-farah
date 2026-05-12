@@ -100,7 +100,7 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
             $domain ??= new Domain($this->document);
             foreach ($dataNodeList as $dataNode) {
                 $url = $domain->lookupAssetUrl($dataNode);
-                $result = Module::resolveToResult($url);
+                $result = Module::resolveToDOMWriter($url);
                 $node = $result->toElement($this->document);
                 $fragment = $this->document->createDocumentFragment();
                 foreach ([
