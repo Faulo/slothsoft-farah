@@ -165,10 +165,7 @@ class Asset implements AssetInterface {
     }
     
     private function getManifestArguments(): FarahUrlArguments {
-        $data = [];
-        foreach ($this->getSuppliedParameters() as $key => $val) {
-            $data[$key] = $val;
-        }
+        $data = iterator_to_array($this->getSuppliedParameters(), true);
         foreach ($this->getAssetChildren() as $child) {
             if ($child->isParameterSupplierInstruction()) {
                 foreach ($child->getSuppliedParameters() as $key => $val) {

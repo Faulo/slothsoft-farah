@@ -28,16 +28,12 @@ class DecoratorFactory {
     }
     
     public static function createForNamespace(string $ns): LinkDecoratorInterface {
-        switch ($ns) {
-            case DOMHelper::NS_FARAH_MODULE:
-                return new FarahDecorator();
-            case DOMHelper::NS_HTML:
-                return new HtmlDecorator();
-            case DOMHelper::NS_SVG:
-                return new SvgDecorator();
-            default:
-                throw new NamespaceNotSupportedException($ns);
-        }
+        return match ($ns) {
+            DOMHelper::NS_FARAH_MODULE => new FarahDecorator(),
+            DOMHelper::NS_HTML => new HtmlDecorator(),
+            DOMHelper::NS_SVG => new SvgDecorator(),
+            default => throw new NamespaceNotSupportedException($ns),
+        };
     }
 }
 

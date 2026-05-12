@@ -265,7 +265,7 @@ class Archive {
     public function getLogTableByURI($uri) {
         $ret = $this->logTableList[$this->logTableDefault];
         foreach ($this->logTableList as $test => $table) {
-            if (strpos($uri, $test) === 0) {
+            if (str_starts_with($uri, $test)) {
                 $ret = $table;
                 break;
             }
@@ -447,12 +447,9 @@ class Archive {
             foreach ($rowList as $row) {
                 $id = (int) array_shift($row);
                 $time = (float) $row['REQUEST_TIME_FLOAT'];
-                $data = [];
-                foreach ($row as $key => $val) {
-                    if ($val !== null) {
-                        $data[$key] = $val;
-                    }
-                }
+                $data = array_filter($row, function ($val) {
+                    return $val !== null;
+                });
                 if ($this->insertTemp($time, $data, $id)) {
                     $ret++;
                 }

@@ -23,7 +23,7 @@ class SchemaLocator {
             }
             
             if ($ns = $node->namespaceURI) {
-                if (strpos($ns, self::NAMESPACE_BASE) === 0) {
+                if (str_starts_with($ns, self::NAMESPACE_BASE)) {
                     $version = $node->hasAttribute(self::ATTR_VERSION) ? $node->getAttribute(self::ATTR_VERSION) : self::DEFAULT_VERSION;
                     $schema = explode('/', substr($ns, strlen(self::NAMESPACE_BASE)));
                     if (count($schema) !== 2) {

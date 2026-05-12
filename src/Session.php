@@ -123,7 +123,7 @@ class Session {
     }
     
     public function getCookie($key, $val = null) {
-        return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $val;
+        return $_COOKIE[$key] ?? $val;
     }
     
     protected function loadData($session, $key, $val) {

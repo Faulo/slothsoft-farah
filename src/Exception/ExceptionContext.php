@@ -18,25 +18,25 @@ use Throwable;
  */
 class ExceptionContext implements DOMWriterInterface {
     
-    public static function append(Throwable $exception, array $data = []): Throwable {
+    public static function append(Throwable $exception, array $data = []): self {
         if (isset($exception->exceptionContext)) {
             $exception->exceptionContext->addData($data);
         } else {
             $exception->exceptionContext = new ExceptionContext($exception, $data);
         }
-        return $exception;
+        return $exception->exceptionContext;
     }
     
-    private $ownerException;
+    private Throwable $ownerException;
     
-    private $data;
+    private array $data;
     
     private function __construct(Throwable $ownerException, array $data) {
         $this->ownerException = $ownerException;
         $this->data = $data;
     }
     
-    public function addData(array $data) {
+    public function addData(array $data): void {
         $this->data += $data;
     }
     
@@ -89,7 +89,7 @@ class ExceptionContext implements DOMWriterInterface {
         }
         
         if ($exception = $this->ownerException->getPrevious()) {
-            $element->appendChild(self::append($exception)->exceptionContext->toElement($targetDoc));
+            $element->appendChild(self::append($exception)->toElement($targetDoc));
         }
         
         return $element;

@@ -124,7 +124,7 @@ class Module {
             $rootDirectory .= DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $path);
         }
         
-        $rootDirectory .= DIRECTORY_SEPARATOR . md5((string) $context->getQuery());
+        $rootDirectory .= DIRECTORY_SEPARATOR . md5($context->getQuery());
         
         $fragment = $context->getFragment();
         if ($fragment !== '') {

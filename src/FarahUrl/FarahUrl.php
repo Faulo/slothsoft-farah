@@ -108,7 +108,7 @@ final class FarahUrl implements UriInterface, Hashable {
         
         $authority = FarahUrlAuthority::createFromVendorAndModule($res['user'], $res['host']);
         
-        $path = isset($res['path']) ? FarahUrlPath::createFromString($res['path'], $contextUrl ? $contextUrl->getAssetPath() : null) : FarahUrlPath::createEmpty();
+        $path = isset($res['path']) ? FarahUrlPath::createFromString($res['path'], $contextUrl?->getAssetPath()) : FarahUrlPath::createEmpty();
         
         $arguments = FarahUrlArguments::createFromQuery($res['query'] ?? '');
         if ($contextUrl) {
@@ -218,7 +218,7 @@ final class FarahUrl implements UriInterface, Hashable {
     }
     
     public function withPort($port): FarahUrl {
-        throw new MalformedUrlException($port);
+        throw new MalformedUrlException((string) $port);
     }
     
     public function withPath($path): FarahUrl {

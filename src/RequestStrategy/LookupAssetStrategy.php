@@ -50,7 +50,7 @@ class LookupAssetStrategy extends RequestStrategyBase {
     }
     
     private function extractFarahUrl(string $path): string {
-        if (strpos($path, self::getHrefBase()) === 0) {
+        if (str_starts_with($path, self::getHrefBase())) {
             $path = substr($path, strlen(self::getHrefBase()));
         }
         
@@ -58,7 +58,7 @@ class LookupAssetStrategy extends RequestStrategyBase {
             $path = "farah:/$path";
         }
         
-        if (strpos($path, 'farah://') !== 0) {
+        if (! str_starts_with($path, 'farah://')) {
             $path = "farah://$path";
         }
         

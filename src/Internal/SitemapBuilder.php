@@ -5,7 +5,6 @@ namespace Slothsoft\Farah\Internal;
 
 use DOMDocument;
 use DOMElement;
-use DOMXPath;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\Decorators\DOMWriterMemoryCache;
@@ -35,10 +34,6 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
     private ?AssetInterface $asset = null;
     
     private ?DOMDocument $document = null;
-    
-    private DOMXPath $xpath;
-    
-    private DOMElement $domainNode;
     
     private string $domainName;
     
@@ -90,13 +85,13 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
     }
     
     private function initDocument(): void {
-        $this->domainNode = $this->document->documentElement;
-        $this->domainName = $this->domainNode->getAttribute('name');
-        $this->xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT);
+        $domainNode = $this->document->documentElement;
+        $this->domainName = $domainNode->getAttribute('name');
+        $xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT);
         
         // preload all include-pages elements
         $domain = null;
-        while ($dataNodeList = $this->xpath->query('//sfs:include-pages') and $dataNodeList->length) {
+        while ($dataNodeList = $xpath->query('//sfs:include-pages') and $dataNodeList->length) {
             $domain ??= new Domain($this->document);
             foreach ($dataNodeList as $dataNode) {
                 $url = $domain->lookupAssetUrl($dataNode);
@@ -112,9 +107,9 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
             }
         }
         
-        $this->initDomainElement($this->domainNode);
+        $this->initDomainElement($domainNode);
         
-        foreach ($this->xpath->query('//sfs:page | //sfs:file') as $node) {
+        foreach ($xpath->query('//sfs:page | //sfs:file') as $node) {
             $this->initPageElement($node);
         }
     }
@@ -124,7 +119,7 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
             $node->setAttribute('title', $node->getAttribute('name'));
         }
         $node->setAttribute('uri', '/');
-        $node->setAttribute('url', "{$this->domainProtocol}://{$this->domainName}/");
+        $node->setAttribute('url', "$this->domainProtocol://$this->domainName/");
     }
     
     private function initPageElement(DOMElement $node): void {
@@ -133,20 +128,16 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
             $uri = $node->getAttribute('ext');
         } else {
             $parentUri = $node->parentNode->getAttribute('uri');
-            switch ($node->localName) {
-                case Domain::TAG_PAGE:
-                    $uri = $parentUri . $name . '/';
-                    break;
-                case Domain::TAG_FILE:
-                    $uri = $parentUri . $name;
-                    break;
-            }
+            $uri = match ($node->localName) {
+                Domain::TAG_FILE => $parentUri . $name,
+                default => $parentUri . $name . '/',
+            };
         }
         
         if (! $node->hasAttribute('title')) {
             $node->setAttribute('title', $name);
         }
         $node->setAttribute('uri', $uri);
-        $node->setAttribute('url', "{$this->domainProtocol}://{$this->domainName}$uri");
+        $node->setAttribute('url', "$this->domainProtocol://$this->domainName$uri");
     }
 }

@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\Module\Executable;
 
+use Slothsoft\Farah\Exception\HttpDownloadAssetException;
 use Slothsoft\Farah\Exception\HttpDownloadException;
-use Slothsoft\Farah\Exception\HttpDownloadExecutableException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
@@ -83,9 +83,8 @@ class Executable implements ExecutableInterface {
     private function createResult(FarahUrlStreamIdentifier $type): ResultInterface {
         try {
             $strategies = $this->strategies->resultBuilder->buildResultStrategies($this, $type);
-            $result = new Result($this, $type, $strategies);
-            return $result;
-        } catch (HttpDownloadExecutableException $e) {
+            return new Result($this, $type, $strategies);
+        } catch (HttpDownloadAssetException $e) {
             $strategies = $e->getStrategies();
             $result = new Result($this, $type, $strategies);
             throw new HttpDownloadException($result, $e->isInline());

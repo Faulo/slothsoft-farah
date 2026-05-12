@@ -28,14 +28,10 @@ class XmlFileResultBuilder extends AbstractFileResultBuilder {
     }
     
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
-        switch ($this->url->getArguments()->get(Manifest::PARAM_INCLUDES)) {
-            case Manifest::PARAM_INCLUDES_EMBED:
-                $streamBuilder = new DOMWriterStreamBuilder(new EmbedIncludesDOMWriter($this, $this->url), $this->file->getFilename());
-                break;
-            default:
-                $streamBuilder = new FileInfoStreamBuilder($this->file, $this->file->getFilename());
-                break;
-        }
+        $streamBuilder = match ($this->url->getArguments()->get(Manifest::PARAM_INCLUDES)) {
+            Manifest::PARAM_INCLUDES_EMBED => new DOMWriterStreamBuilder(new EmbedIncludesDOMWriter($this, $this->url), $this->file->getFilename()),
+            default => new FileInfoStreamBuilder($this->file, $this->file->getFilename()),
+        };
         
         return new ResultStrategies($streamBuilder);
     }

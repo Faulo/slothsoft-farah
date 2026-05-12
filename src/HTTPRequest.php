@@ -12,9 +12,9 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah;
 
+use BadMethodCallException;
 use DOMDocument;
 use DOMElement;
-use http\Exception\BadMethodCallException;
 use Slothsoft\Core\Calendar\DateTimeFormatter;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 
@@ -105,6 +105,8 @@ class HTTPRequest implements DOMWriterInterface {
     
     public $time;
     
+    public float $timeFloat;
+    
     public $clientIp;
     
     public $clientAgent;
@@ -128,11 +130,11 @@ class HTTPRequest implements DOMWriterInterface {
         $this->protocolMinorVersion = 0;
     }
     
-    public function init(array $env) {
-        $this->method = isset($env['REQUEST_METHOD']) ? $env['REQUEST_METHOD'] : self::METHOD_GET;
-        $this->schema = isset($env['REQUEST_SCHEME']) ? $env['REQUEST_SCHEME'] : self::PROTOCOL_HTTP;
+    public function init(array $env): void {
+        $this->method = $env['REQUEST_METHOD'] ?? self::METHOD_GET;
+        $this->schema = $env['REQUEST_SCHEME'] ?? self::PROTOCOL_HTTP;
         $this->schema = strtolower($this->schema);
-        $protocol = isset($env['SERVER_PROTOCOL']) ? $env['SERVER_PROTOCOL'] : 'HTTP/1.1';
+        $protocol = $env['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
         $protocol = trim($protocol);
         $match = [];
         $this->protocolRecognised = preg_match('/^(\w+)\/(\d+)\.(\d+)$/', $protocol, $match);
@@ -141,33 +143,33 @@ class HTTPRequest implements DOMWriterInterface {
             $this->protocolMajorVersion = (int) $match[2];
             $this->protocolMinorVersion = (int) $match[3];
         }
-        $this->time = isset($env['REQUEST_TIME']) ? $env['REQUEST_TIME'] : time();
-        $this->timeFloat = isset($env['REQUEST_TIME_FLOAT']) ? $env['REQUEST_TIME_FLOAT'] : (float) time();
-        $this->clientIp = isset($env['REMOTE_ADDR']) ? $env['REMOTE_ADDR'] : '127.0.0.1';
-        $this->clientAgent = isset($env['HTTP_USER_AGENT']) ? $env['HTTP_USER_AGENT'] : '';
-        $this->clientHost = isset($env['HTTP_HOST']) ? $env['HTTP_HOST'] : self::getServerName();
+        $this->time = $env['REQUEST_TIME'] ?? time();
+        $this->timeFloat = $env['REQUEST_TIME_FLOAT'] ?? (float) time();
+        $this->clientIp = $env['REMOTE_ADDR'] ?? '127.0.0.1';
+        $this->clientAgent = $env['HTTP_USER_AGENT'] ?? '';
+        $this->clientHost = $env['HTTP_HOST'] ?? self::getServerName();
         $this->clientHost = strtolower($this->clientHost);
         $this->dict = Dictionary::getInstance();
     }
     
-    public function hasInputValue($key) {
+    public function hasInputValue($key): bool {
         return isset($this->input[$key]);
     }
     
     public function getInputValue($key, $val = null) {
-        return isset($this->input[$key]) ? $this->input[$key] : $val;
+        return $this->input[$key] ?? $val;
     }
     
-    public function setInputValue($key, $val = null) {
+    public function setInputValue($key, $val = null): void {
         $this->input[$key] = $val;
     }
     
-    public function setInput(array $input) {
+    public function setInput(array $input): void {
         $this->input = $input;
     }
     
     // deprecated, use getBody(), should return $this->input
-    public function getInput() {
+    public function getInput(): false|string {
         return file_get_contents('php://input');
     }
     
@@ -176,7 +178,7 @@ class HTTPRequest implements DOMWriterInterface {
         return json_decode($this->getInput(), true);
     }
     
-    public function getBody() {
+    public function getBody(): false|string {
         return file_get_contents('php://input');
     }
     
@@ -184,7 +186,7 @@ class HTTPRequest implements DOMWriterInterface {
         return json_decode($this->getBody(), true);
     }
     
-    public function setAllHeaders(array $headerList) {
+    public function setAllHeaders(array $headerList): void {
         foreach ($headerList as $key => $val) {
             $this->headerList[strtolower($key)] = $val;
         }
@@ -194,23 +196,23 @@ class HTTPRequest implements DOMWriterInterface {
         return $this->headerList[$key] ?? $default;
     }
     
-    public function setMode($mode) {
+    public function setMode($mode): void {
         $this->mode = $mode;
     }
     
-    public function setPath($path) {
+    public function setPath($path): void {
         $this->path = $path;
     }
     
-    public function getURL() {
+    public function getURL(): string {
         return sprintf('%s://%s%s', $this->schema, $this->clientHost, $this->path);
     }
     
-    public function getQuery() {
+    public function getQuery(): string {
         return http_build_query($this->input);
     }
     
-    public function asNode(DOMDocument $doc) {
+    public function asNode(DOMDocument $doc): DOMElement {
         $retNode = $doc->createElement('request');
         $retNode->setAttribute('url', $this->getURL());
         $retNode->setAttribute('query', $this->getQuery());

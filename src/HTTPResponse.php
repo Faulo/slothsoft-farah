@@ -302,7 +302,7 @@ class HTTPResponse {
     
     public function getHeader($key) {
         $key = strtolower($key);
-        return isset($this->headerList[$key]) ? $this->headerList[$key] : null;
+        return $this->headerList[$key] ?? null;
     }
     
     public function addNegotiation($negotiation) {
@@ -521,12 +521,12 @@ class HTTPResponse {
             $doc->encoding = $this->charset;
         }
         
-        $ns = $doc->documentElement ? $doc->documentElement->namespaceURI : null;
+        $ns = $doc->documentElement?->namespaceURI;
         $doctype = null;
         switch ($ns) {
             case DOMHelper::NS_HTML:
                 $this->mime = 'application/xhtml+xml';
-                $doctype = $doc->doctype ? $doc->doctype : $doc->implementation->createDocumentType('html');
+                $doctype = $doc->doctype ?? $doc->implementation->createDocumentType('html');
                 break;
             case DOMHelper::NS_SVG:
                 $this->mime = 'image/svg+xml';

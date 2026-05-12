@@ -42,11 +42,7 @@ class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
             return true;
         } catch (HttpStatusException $e) {
             return $e->getCode() < 400;
-        } catch (EmptyTransformationException $e) {
-            return false;
-        } catch (AssetPathNotFoundException $e) {
-            return false;
-        } catch (ModuleNotFoundException $e) {
+        } catch (EmptyTransformationException|AssetPathNotFoundException|ModuleNotFoundException $e) {
             return false;
         }
     }

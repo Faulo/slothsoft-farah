@@ -158,9 +158,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
                         throw new HttpStatusException('', StatusCode::STATUS_NOT_MODIFIED, null, $headers);
                     }
                 }
-            } catch (ModuleNotFoundException $e) {
-                throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_NOT_FOUND, $e);
-            } catch (AssetPathNotFoundException $e) {
+            } catch (ModuleNotFoundException|AssetPathNotFoundException $e) {
                 throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_NOT_FOUND, $e);
             }
         } catch (HttpStatusException $e) {
@@ -205,7 +203,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
     private function negotiateContentCoding(string $preferred): CodingInterface {
         $accept = $this->request->getHeaderLine('accept-encoding');
         foreach (ContentCoding::getEncodings() as $name => $coding) {
-            if (strpos($preferred, $name) !== false and strpos($accept, $name) !== false) {
+            if (str_contains($preferred, $name) and str_contains($accept, $name)) {
                 return $coding;
             }
         }
