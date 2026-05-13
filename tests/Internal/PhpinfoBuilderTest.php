@@ -3,8 +3,12 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\Internal;
 
+use DOMDocument;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
+use Slothsoft\Core\DOMHelper;
+use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
+use Slothsoft\FarahTesting\FarahServer;
 
 /**
  * PhpinfoBuilderTest
@@ -25,7 +29,7 @@ final class PhpinfoBuilderTest extends TestCase {
         $data = ob_get_contents();
         ob_end_clean();
         
-        return '<pre>' . htmlentities($data, ENT_XML1 | ENT_DISALLOWED, 'UTF-8') . '</pre>';
+        return '<pre>\n' . htmlentities($data, ENT_XML1 | ENT_DISALLOWED, 'UTF-8') . '</pre>';
     }
     
     /**
@@ -50,5 +54,24 @@ final class PhpinfoBuilderTest extends TestCase {
         yield 'thrice' => [
             3
         ];
+    }
+    
+    public function test_phpinfo_xhtml() {
+        $server = new FarahServer();
+        $server->start();
+        
+        try {
+            $source = file_get_contents("$server->uri/slothsoft@farah/phpinfo");
+            
+            $document = new DOMDocument();
+            $actual = $document->loadXML($source);
+            $this->assertTrue($actual, "Failed to retrieve /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
+            
+            $xpath = DOMHelper::loadXPath($document);
+            $actual = $xpath->evaluate('string(//html:title)');
+            $this->assertThat($actual, new IsEqual(sprintf('PHP %s - phpinfo()', PHP_VERSION)), "Failed to retrieve <title> from /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
+        } catch (BrowserDriverNotFoundException $e) {
+            $this->markTestSkipped();
+        }
     }
 }
