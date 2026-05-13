@@ -6,7 +6,7 @@ def unstable(def body) {
 
 def runComposerTest(def version, def variant) {
 	unstable {
-		callShell "composer update --prefer-${variant}"
+		callShell "composer update --prefer-${variant} --no-interaction --no-progress"
 		callShell "composer exec phpunit -- --log-junit .reports/${version}-${variant}.xml"
 	}
 }
@@ -37,9 +37,9 @@ pipeline {
 		stage('Setup') {
 			steps {
 				script {
-					def platforms = ['linux', 'windows']
+					def platforms = [ 'linux', 'windows' ]
 					def versions = [ "8.2", "8.3", "8.4", "8.5" ]
-					def variants = ['lowest', 'stable']
+					def variants = [ 'lowest', 'stable' ]
 
 					def branches = [:]
 
