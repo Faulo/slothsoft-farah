@@ -46,9 +46,8 @@ final class FarahUrlPath implements Hashable {
         if ($path !== '') {
             foreach (explode(self::SEPARATOR, str_replace('\\', self::SEPARATOR, $path)) as $val) {
                 switch ($val) {
-                    case '':
-                        break;
                     case '.':
+                    case '':
                         break;
                     case '..':
                         if (! count($segments)) {

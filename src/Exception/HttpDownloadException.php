@@ -19,6 +19,7 @@ final class HttpDownloadException extends RuntimeException {
     private bool $inline;
     
     public function __construct(ResultInterface $result, bool $isInline = false) {
+        parent::__construct();
         $this->result = $result;
         $this->inline = $isInline;
     }

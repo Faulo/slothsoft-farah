@@ -95,24 +95,17 @@ interface AssetInterface {
     
     /**
      * Get the FarahUrlPath for this asset.
-     *
-     * @return FarahUrlPath|NULL
      */
     public function getUrlPath(): FarahUrlPath;
     
     /**
      * Get the filesystem entry for this asset.
      * This might be a file, a directory, or it might not physically exist.
-     *
-     * @return FarahUrlPath|NULL
      */
     public function getFileInfo(): SplFileInfo;
     
     /**
      * Create the executable for this asset, with the arguments supplied.
-     *
-     * @param FarahUrlArguments $args
-     * @return ExecutableInterface
      */
     public function lookupExecutable(?FarahUrlArguments $args = null): ExecutableInterface;
     
@@ -146,7 +139,7 @@ interface AssetInterface {
     public function normalizeManifestElement(LeanElement $child): void;
     
     /**
-     * Get the parameters supplied by this assets's ParameterSupplierStrategy.
+     * Get the parameters supplied by this asset's ParameterSupplierStrategy.
      *
      * @return iterable
      */

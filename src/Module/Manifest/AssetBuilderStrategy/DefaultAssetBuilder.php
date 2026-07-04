@@ -274,7 +274,7 @@ final class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
         }
     }
     
-    private static $services = [];
+    private static array $services = [];
     
     public function buildAssetStrategies(ManifestInterface $ownerManifest, LeanElement $element): AssetStrategies {
         if (! $element->hasAttribute(Manifest::ATTR_EXECUTABLE_BUILDER)) {

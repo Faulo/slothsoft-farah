@@ -41,7 +41,7 @@ abstract class AbstractDaemonServer implements ChunkWriterInterface {
         $this->port = $port;
     }
     
-    public function init(FarahUrlArguments $args) {
+    public function init(FarahUrlArguments $args): void {
         $this->socket = socket_create(static::DAEMON_DOMAIN, static::DAEMON_TYPE, static::DAEMON_PROTOCOL);
         socket_bind($this->socket, static::DAEMON_ADDRESS, $this->port);
         socket_listen($this->socket);
@@ -86,7 +86,7 @@ abstract class AbstractDaemonServer implements ChunkWriterInterface {
     
     public abstract function onMessage($message): iterable;
     
-    public function stop() {
+    public function stop(): void {
         $this->isRunning = false;
     }
     

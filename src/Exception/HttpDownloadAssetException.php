@@ -19,6 +19,7 @@ final class HttpDownloadAssetException extends RuntimeException {
     private bool $inline;
     
     public function __construct(ExecutableStrategies $strategies, bool $isInline = false) {
+        parent::__construct();
         $this->strategies = $strategies;
         $this->inline = $isInline;
     }

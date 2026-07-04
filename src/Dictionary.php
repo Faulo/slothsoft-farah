@@ -497,6 +497,5 @@ final class Dictionary {
     }
     
     protected function addWord(DOMDocument $doc, $word, $originalWord = null): void {
-        return;
     }
 }

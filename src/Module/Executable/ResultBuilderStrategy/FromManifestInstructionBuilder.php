@@ -18,10 +18,10 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
  */
 final class FromManifestInstructionBuilder implements InstructionBuilderStrategyInterface {
     
-    public function buildUseInstructions(AssetInterface $rootAsset, FarahUrlArguments $args): UseInstructionCollection {
-        $instructions = new UseInstructionCollection($rootAsset->createUrl($args));
+    public function buildUseInstructions(AssetInterface $context, FarahUrlArguments $args): UseInstructionCollection {
+        $instructions = new UseInstructionCollection($context->createUrl($args));
         /** @var AssetInterface $asset */
-        foreach ($rootAsset->getAssetChildren() as $asset) {
+        foreach ($context->getAssetChildren() as $asset) {
             $name = $asset->getManifestElement()->getAttribute(Manifest::ATTR_NAME);
             switch ($args->get(Manifest::PARAM_LOAD, '')) {
                 case Manifest::PARAM_LOAD_TREE:
@@ -50,10 +50,10 @@ final class FromManifestInstructionBuilder implements InstructionBuilderStrategy
         return $instructions;
     }
     
-    public function buildLinkInstructions(AssetInterface $rootAsset, FarahUrlArguments $args): LinkInstructionCollection {
+    public function buildLinkInstructions(AssetInterface $context, FarahUrlArguments $args): LinkInstructionCollection {
         $instructions = new LinkInstructionCollection();
         /** @var AssetInterface $asset */
-        foreach ($rootAsset->getAssetChildren() as $asset) {
+        foreach ($context->getAssetChildren() as $asset) {
             if ($asset->isUseDocumentInstruction()) {
                 $executable = $asset->lookupExecutable($args);
                 $instructions->mergeWith($executable->lookupLinkInstructions(), true);
