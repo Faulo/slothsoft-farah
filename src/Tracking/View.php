@@ -6,7 +6,7 @@ namespace Slothsoft\Farah\Tracking;
 use DOMDocument;
 use Slothsoft\Farah\HTTPRequest;
 
-class View {
+final class View {
     
     protected $archive = null;
     

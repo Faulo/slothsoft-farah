@@ -24,7 +24,7 @@ use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Exception\ExceptionContext;
 use Slothsoft\Farah\Exception\StreamTimedOutException;
 
-class HTTPResponse {
+final class HTTPResponse {
     
     public static function cacheDurations(): CascadingDictionary {
         static $field;

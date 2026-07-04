@@ -14,7 +14,7 @@ namespace Slothsoft\Farah;
 
 use Closure;
 
-class HTTPClosure {
+final class HTTPClosure {
     
     protected $options = [
         'isThreaded' => false,

@@ -6,7 +6,7 @@ namespace Slothsoft\Farah\Module\Manifest;
 use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\AssetBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\TreeLoaderStrategyInterface;
 
-class ManifestStrategies {
+final class ManifestStrategies {
     
     public TreeLoaderStrategyInterface $treeLoader;
     

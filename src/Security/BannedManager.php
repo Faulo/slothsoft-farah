@@ -8,7 +8,7 @@ use Slothsoft\Core\Configuration\ConfigurationRequiredException;
 use Slothsoft\Core\Configuration\FileConfigurationField;
 use Slothsoft\Core\ServerEnvironment;
 
-class BannedManager {
+final class BannedManager {
     
     public static function getInstance(): self {
         static $instance;

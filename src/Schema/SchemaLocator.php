@@ -7,7 +7,7 @@ use DOMDocument;
 use Exception;
 use Slothsoft\Core\DOMHelper;
 
-class SchemaLocator {
+final class SchemaLocator {
     
     // attributes
     public const ATTR_VERSION = 'version';

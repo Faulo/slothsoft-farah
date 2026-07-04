@@ -13,7 +13,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Module;
 use SplFileInfo;
 
-class Manifest implements ManifestInterface {
+final class Manifest implements ManifestInterface {
     
     // asset tags
     public const TAG_FRAGMENT = 'fragment';

@@ -15,7 +15,7 @@ namespace Slothsoft\Farah;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\ServerEnvironment;
 
-class Cache {
+final class Cache {
     
     protected $rootDir;
     

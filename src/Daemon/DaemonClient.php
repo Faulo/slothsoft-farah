@@ -6,7 +6,7 @@ namespace Slothsoft\Farah\Daemon;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 
-class DaemonClient {
+final class DaemonClient {
     
     public static function fromUrl(FarahUrl $url): DaemonClient {
         $asset = Module::resolveToAsset($url);

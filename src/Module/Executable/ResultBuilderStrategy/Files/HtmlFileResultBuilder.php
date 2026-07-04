@@ -6,7 +6,7 @@ namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files;
 use DOMDocument;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 
-class HtmlFileResultBuilder extends AbstractFileResultBuilder {
+final class HtmlFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterElementFromDocumentTrait;
     
     public function toDocument(): DOMDocument {

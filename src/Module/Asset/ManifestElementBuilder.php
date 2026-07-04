@@ -6,7 +6,7 @@ namespace Slothsoft\Farah\Module\Asset;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
-class ManifestElementBuilder {
+final class ManifestElementBuilder {
     
     public static function createResource(string $name, string $path, string $type): LeanElement {
         return LeanElement::createOneFromArray(Manifest::TAG_RESOURCE, [

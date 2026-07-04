@@ -46,7 +46,7 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use UnexpectedValueException;
 
-class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
+final class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
     
     private FarahUrlAuthority $module;
     

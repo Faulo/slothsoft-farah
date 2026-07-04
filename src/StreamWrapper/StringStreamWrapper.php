@@ -6,7 +6,7 @@ namespace Slothsoft\Farah\StreamWrapper;
 use Slothsoft\Blob\BlobUrl;
 use Slothsoft\Core\StreamWrapper\ResourceStreamWrapper;
 
-class StringStreamWrapper extends ResourceStreamWrapper {
+final class StringStreamWrapper extends ResourceStreamWrapper {
     
     public function __construct(string $contents) {
         $resource = BlobUrl::createTemporaryObject();

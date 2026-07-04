@@ -9,7 +9,7 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\ProxyStreamBuilder;
 
-class ProxyResultBuilder implements ResultBuilderStrategyInterface {
+final class ProxyResultBuilder implements ResultBuilderStrategyInterface {
     
     private ExecutableInterface $proxy;
     

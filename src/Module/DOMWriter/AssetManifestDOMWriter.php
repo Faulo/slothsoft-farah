@@ -10,7 +10,7 @@ use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 
-class AssetManifestDOMWriter implements DOMWriterInterface {
+final class AssetManifestDOMWriter implements DOMWriterInterface {
     use DOMWriterDocumentFromElementTrait;
     
     private FarahUrl $url;

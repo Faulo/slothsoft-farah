@@ -15,7 +15,7 @@ use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
-class StreamWriterStreamBuilder implements StreamBuilderStrategyInterface {
+final class StreamWriterStreamBuilder implements StreamBuilderStrategyInterface {
     
     private StreamWriterInterface $writer;
     

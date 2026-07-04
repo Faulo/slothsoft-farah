@@ -12,7 +12,7 @@ use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
-class NullStreamBuilder implements StreamBuilderStrategyInterface {
+final class NullStreamBuilder implements StreamBuilderStrategyInterface {
     
     public function buildStreamMimeType(ResultInterface $context): string {
         return 'text/plain';

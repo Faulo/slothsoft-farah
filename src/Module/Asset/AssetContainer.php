@@ -11,7 +11,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlPath;
  * @author Daniel Schulz
  *
  */
-class AssetContainer {
+final class AssetContainer {
     
     private Map $map;
     

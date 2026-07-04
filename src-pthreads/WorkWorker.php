@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\PThreads;
 use Worker;
 use Slothsoft\Core\ServerEnvironment;
 
-class WorkWorker extends Worker {
+final class WorkWorker extends Worker {
     
     public $logger;
     

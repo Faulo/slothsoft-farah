@@ -17,7 +17,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 
-class Result implements ResultInterface {
+final class Result implements ResultInterface {
     
     private ExecutableInterface $ownerExecutable;
     

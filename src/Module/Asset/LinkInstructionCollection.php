@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\Module\Asset;
 
 use Ds\Set;
 
-class LinkInstructionCollection {
+final class LinkInstructionCollection {
     
     public Set $stylesheetUrls;
     

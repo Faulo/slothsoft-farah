@@ -9,7 +9,7 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\ChunkWriterStreamBuilder;
 
-class ChunkWriterResultBuilder implements ResultBuilderStrategyInterface {
+final class ChunkWriterResultBuilder implements ResultBuilderStrategyInterface {
     
     private ChunkWriterInterface $writer;
     

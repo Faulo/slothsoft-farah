@@ -20,7 +20,7 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\DOMWriterResultBuild
  * @author Daniel Schulz
  *
  */
-class PhpinfoBuilder implements ExecutableBuilderStrategyInterface {
+final class PhpinfoBuilder implements ExecutableBuilderStrategyInterface {
     
     private static function getContent(): string {
         ob_start();

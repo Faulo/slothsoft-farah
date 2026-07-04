@@ -7,7 +7,7 @@ use Exception;
 use Slothsoft\Core\DBMS\Manager as DBMSManager;
 use Slothsoft\Core\ServerEnvironment;
 
-class Manager {
+final class Manager {
     
     protected static $dbName = 'tracking';
     

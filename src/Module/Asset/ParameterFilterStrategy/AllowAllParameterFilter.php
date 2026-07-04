@@ -8,7 +8,7 @@ namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
  * @author Daniel Schulz
  *
  */
-class AllowAllParameterFilter implements ParameterFilterStrategyInterface {
+final class AllowAllParameterFilter implements ParameterFilterStrategyInterface {
     
     public function isAllowedName(string $name): bool {
         return true;

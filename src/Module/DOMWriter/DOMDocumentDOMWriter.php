@@ -7,7 +7,7 @@ use DOMDocument;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 
-class DOMDocumentDOMWriter implements DOMWriterInterface {
+final class DOMDocumentDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
     private DOMDocument $document;

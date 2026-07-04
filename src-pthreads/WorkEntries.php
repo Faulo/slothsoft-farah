@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\PThreads;
 use Threaded;
 use Volatile;
 
-class WorkEntries extends Threaded {
+final class WorkEntries extends Threaded {
     
     private $entries;
     

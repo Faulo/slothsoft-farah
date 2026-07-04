@@ -6,7 +6,7 @@ namespace Slothsoft\Farah\Module\Asset\InstructionStrategy;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
-class FromManifestInstruction implements InstructionStrategyInterface {
+final class FromManifestInstruction implements InstructionStrategyInterface {
     
     public function isImportSelf(AssetInterface $context): bool {
         return $context->getManifestElement()->getAttribute(Manifest::ATTR_IMPORT, '') === Manifest::ATTR_IMPORT_SELF;

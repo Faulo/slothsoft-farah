@@ -5,6 +5,6 @@ namespace Slothsoft\Farah\Exception;
 
 use LogicException;
 
-class UndefinedBehaviorException extends LogicException {
+final class UndefinedBehaviorException extends LogicException {
 }
 

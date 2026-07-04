@@ -6,7 +6,7 @@ namespace Slothsoft\Farah\Exception;
 use RuntimeException;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
-class HttpDownloadException extends RuntimeException {
+final class HttpDownloadException extends RuntimeException {
     
     private ResultInterface $result;
     

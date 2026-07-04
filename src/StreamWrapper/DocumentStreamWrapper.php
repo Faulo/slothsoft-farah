@@ -7,7 +7,7 @@ use DOMDocument;
 use Slothsoft\Blob\BlobUrl;
 use Slothsoft\Core\StreamWrapper\ResourceStreamWrapper;
 
-class DocumentStreamWrapper extends ResourceStreamWrapper {
+final class DocumentStreamWrapper extends ResourceStreamWrapper {
     
     public function __construct(DOMDocument $doc) {
         $resource = BlobUrl::createTemporaryObject();

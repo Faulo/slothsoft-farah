@@ -17,7 +17,7 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrateg
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use SplFileInfo;
 
-class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterface {
+final class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $path = $context->getManifestElement()->getAttribute(Manifest::ATTR_REALPATH);

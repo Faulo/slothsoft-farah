@@ -6,7 +6,7 @@ namespace Slothsoft\Farah;
 use Closure;
 use Slothsoft\Core\InterExec;
 
-class HTTPCommand {
+final class HTTPCommand {
     
     protected $exec;
     

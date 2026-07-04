@@ -12,7 +12,7 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamWriterStreamBuilder;
 
-class SwitchToCliResultBuilder implements ResultBuilderStrategyInterface {
+final class SwitchToCliResultBuilder implements ResultBuilderStrategyInterface {
     
     private $resultBuilder;
     

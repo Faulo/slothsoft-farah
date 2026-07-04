@@ -16,7 +16,7 @@ use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use SplFileInfo;
 
-class FileWriterStreamBuilder implements FileWriterInterface, StreamBuilderStrategyInterface {
+final class FileWriterStreamBuilder implements FileWriterInterface, StreamBuilderStrategyInterface {
     
     private FileWriterInterface $writer;
     

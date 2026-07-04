@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Exception;
 
 use RuntimeException;
-class PageRedirectionException extends RuntimeException {
+final class PageRedirectionException extends RuntimeException {
     
     private $targetPath;
     

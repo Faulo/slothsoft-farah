@@ -6,7 +6,7 @@ namespace Slothsoft\Farah\Exception;
 use RuntimeException;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 
-class AssetPathNotFoundException extends RuntimeException {
+final class AssetPathNotFoundException extends RuntimeException {
     
     public function __construct(AssetInterface $asset, string $missingPath, ?array $validPaths = null) {
         $message = "Asset '{$asset->createUrl()}' does not contain an asset '$missingPath'!";

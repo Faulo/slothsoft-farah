@@ -19,7 +19,7 @@ use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Module;
 use SplFileInfo;
 
-class Asset implements AssetInterface {
+final class Asset implements AssetInterface {
     
     private ManifestInterface $ownerManifest;
     

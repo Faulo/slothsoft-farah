@@ -13,7 +13,7 @@ use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\NullStreamBuilder;
 
-class NullResultBuilder implements ResultBuilderStrategyInterface {
+final class NullResultBuilder implements ResultBuilderStrategyInterface {
     
     public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
         return $type === Executable::resultIsXml();

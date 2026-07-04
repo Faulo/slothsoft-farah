@@ -14,7 +14,7 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
  * @author Daniel Schulz
  *
  */
-class FarahDecorator implements LinkDecoratorInterface {
+final class FarahDecorator implements LinkDecoratorInterface {
     
     private string $namespace = DOMHelper::NS_FARAH_MODULE;
     

@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\Tracking;
 
 use Slothsoft\Core\DBMS\Table;
 
-class LogTable {
+final class LogTable {
     
     /*
      * protected $colList = [

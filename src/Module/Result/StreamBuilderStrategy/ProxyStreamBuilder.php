@@ -10,7 +10,7 @@ use Slothsoft\Core\IO\Writable\StreamWriterInterface;
 use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
-class ProxyStreamBuilder implements StreamBuilderStrategyInterface {
+final class ProxyStreamBuilder implements StreamBuilderStrategyInterface {
     
     private ResultInterface $proxy;
     

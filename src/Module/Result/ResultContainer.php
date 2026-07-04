@@ -11,7 +11,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
  * @author Daniel Schulz
  *
  */
-class ResultContainer {
+final class ResultContainer {
     
     private Map $map;
     

@@ -7,7 +7,7 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\InstructionBuilderSt
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\NullInstructionBuilder;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrategyInterface;
 
-class ExecutableStrategies {
+final class ExecutableStrategies {
     
     public ResultBuilderStrategyInterface $resultBuilder;
     

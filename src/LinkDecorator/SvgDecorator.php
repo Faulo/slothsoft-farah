@@ -16,7 +16,7 @@ use Slothsoft\Farah\Module\Module;
  * @author Daniel Schulz
  *
  */
-class SvgDecorator implements LinkDecoratorInterface {
+final class SvgDecorator implements LinkDecoratorInterface {
     
     private DOMDocument $targetDocument;
     

@@ -10,7 +10,7 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
  * @author Daniel Schulz
  *
  */
-class FromFilesystemParameterFilter implements ParameterFilterStrategyInterface {
+final class FromFilesystemParameterFilter implements ParameterFilterStrategyInterface {
     
     public function isAllowedName(string $name): bool {
         return $name === Manifest::PARAM_INCLUDES;

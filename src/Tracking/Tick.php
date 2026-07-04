@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\Tracking;
 
 use Slothsoft\Core\ServerEnvironment;
 
-class Tick {
+final class Tick {
     
     protected static $logTick;
     

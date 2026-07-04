@@ -17,7 +17,7 @@ use SplFileInfo;
  * @author Daniel Schulz
  *
  */
-class FromFilesystemPathResolver implements PathResolverStrategyInterface {
+final class FromFilesystemPathResolver implements PathResolverStrategyInterface {
     
     public function loadChildren(AssetInterface $context): iterable {
         $element = $context->getManifestElement();

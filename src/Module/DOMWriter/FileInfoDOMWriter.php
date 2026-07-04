@@ -9,7 +9,7 @@ use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 use SplFileInfo;
 
-class FileInfoDOMWriter implements DOMWriterInterface {
+final class FileInfoDOMWriter implements DOMWriterInterface {
     use DOMWriterDocumentFromElementTrait;
     
     private SplFileInfo $file;

@@ -12,8 +12,10 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\Manifest\Manifest;
+use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\AssetBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
+use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\TreeLoaderStrategyInterface;
 use Slothsoft\FarahTesting\TestUtils;
 
 /**
@@ -50,7 +52,7 @@ final class ModuleTest extends TestCase {
         
         Kernel::clearCurrentSitemap();
         
-        Module::register('vendor@module', temp_dir(__CLASS__), $this->createMock(ManifestStrategies::class));
+        Module::register('vendor@module', temp_dir(__CLASS__), new ManifestStrategies($this->createMock(TreeLoaderStrategyInterface::class), $this->createMock(AssetBuilderStrategyInterface::class)));
         
         $actual = Module::getBaseUrl();
         

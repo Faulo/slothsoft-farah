@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Exception;
 
 use RuntimeException;
-class EmptySitemapException extends RuntimeException {
+final class EmptySitemapException extends RuntimeException {
     
     public function __construct(string $path) {
         parent::__construct("Sitemap document '$path' appears to be empty.");

@@ -10,7 +10,7 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ProxyInstructionBuil
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ProxyResultBuilder;
 use Slothsoft\Farah\Module\Module;
 
-class FromReferenceExecutableBuilder implements ExecutableBuilderStrategyInterface {
+final class FromReferenceExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         $url = $context->createRealUrl($args);

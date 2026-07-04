@@ -9,7 +9,7 @@ use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileInfoStreamBuilder;
 use SplFileInfo;
 
-class FileInfoResultBuilder implements ResultBuilderStrategyInterface {
+final class FileInfoResultBuilder implements ResultBuilderStrategyInterface {
     
     private SplFileInfo $file;
     

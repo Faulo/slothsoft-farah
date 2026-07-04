@@ -18,7 +18,7 @@ use DOMElement;
 use Slothsoft\Core\Calendar\DateTimeFormatter;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 
-class HTTPRequest implements DOMWriterInterface {
+final class HTTPRequest implements DOMWriterInterface {
     
     private static function getServerName(): string {
         return defined('SERVER_NAME') ? constant('SERVER_NAME') : 'localhost';

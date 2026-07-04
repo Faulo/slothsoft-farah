@@ -10,7 +10,7 @@ use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
 use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
-class FromManifestInstructionBuilder implements InstructionBuilderStrategyInterface {
+final class FromManifestInstructionBuilder implements InstructionBuilderStrategyInterface {
     
     public function buildUseInstructions(AssetInterface $rootAsset, FarahUrlArguments $args): UseInstructionCollection {
         $instructions = new UseInstructionCollection($rootAsset->createUrl($args));

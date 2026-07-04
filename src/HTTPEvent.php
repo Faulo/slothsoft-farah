@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah;
 
-class HTTPEvent {
+final class HTTPEvent {
     
     // implements https://dom.spec.whatwg.org/#interface-event
     public $type;

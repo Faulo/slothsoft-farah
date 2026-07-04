@@ -12,7 +12,7 @@ use Symfony\Component\Process\Process;
  * @author Daniel Schulz
  *
  */
-class CLIDaemonServer extends AbstractDaemonServer {
+final class CLIDaemonServer extends AbstractDaemonServer {
     
     public function onInitialize(FarahUrlArguments $args): void {
     }

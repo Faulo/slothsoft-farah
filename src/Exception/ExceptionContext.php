@@ -16,7 +16,7 @@ use Throwable;
  * @author Daniel Schulz
  *
  */
-class ExceptionContext implements DOMWriterInterface {
+final class ExceptionContext implements DOMWriterInterface {
     
     public static function append(Throwable $exception, array $data = []): self {
         if (isset($exception->exceptionContext)) {

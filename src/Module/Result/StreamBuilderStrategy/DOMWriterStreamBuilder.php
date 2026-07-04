@@ -23,7 +23,7 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
  * @author Daniel Schulz
  *
  */
-class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface, DOMWriterInterface {
+final class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface, DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
     private DOMWriterInterface $writer;

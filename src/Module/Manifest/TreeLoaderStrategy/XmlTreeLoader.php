@@ -10,7 +10,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Throwable;
 
-class XmlTreeLoader implements TreeLoaderStrategyInterface {
+final class XmlTreeLoader implements TreeLoaderStrategyInterface {
     
     private const VERSION = 1;
     

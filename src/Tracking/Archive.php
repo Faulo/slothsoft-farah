@@ -7,7 +7,7 @@ use Slothsoft\Core\DBMS\Database;
 use Slothsoft\Core\DBMS\Manager;
 use Slothsoft\Farah\HTTPRequest;
 
-class Archive {
+final class Archive {
     
     const PREPARE_OK = 1;
     

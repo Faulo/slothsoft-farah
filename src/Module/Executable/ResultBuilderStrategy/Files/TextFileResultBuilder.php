@@ -7,7 +7,7 @@ use DOMDocument;
 use DOMElement;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 
-class TextFileResultBuilder extends AbstractFileResultBuilder {
+final class TextFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterDocumentFromElementTrait;
     
     public function toElement(DOMDocument $targetDoc): DOMElement {

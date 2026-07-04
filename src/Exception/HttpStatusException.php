@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\Exception;
 
 use RuntimeException;
 use Throwable;
-class HttpStatusException extends RuntimeException {
+final class HttpStatusException extends RuntimeException {
     
     private $headers;
     

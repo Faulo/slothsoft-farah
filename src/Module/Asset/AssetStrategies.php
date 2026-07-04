@@ -9,7 +9,7 @@ use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\ParameterFilterStrategy
 use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\ParameterSupplierStrategyInterface;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 
-class AssetStrategies {
+final class AssetStrategies {
     
     public ExecutableBuilderStrategyInterface $executableBuilder;
     

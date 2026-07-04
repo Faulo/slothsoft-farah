@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Slothsoft\Farah\PThreads;
 
-class WorkInstruction {
+final class WorkInstruction {
     
     public $className;
     

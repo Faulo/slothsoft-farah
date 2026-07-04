@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Exception;
 
 use InvalidArgumentException;
-class IncompleteUrlException extends InvalidArgumentException {
+final class IncompleteUrlException extends InvalidArgumentException {
     
     public function __construct(string $url, string $missing) {
         parent::__construct("The URL '$url' is missing the $missing part.");

@@ -11,7 +11,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
  * @author Daniel Schulz
  *
  */
-class ExecutableContainer {
+final class ExecutableContainer {
     
     private Map $map;
     

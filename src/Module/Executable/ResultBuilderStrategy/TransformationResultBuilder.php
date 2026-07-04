@@ -17,7 +17,7 @@ use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 
-class TransformationResultBuilder implements ResultBuilderStrategyInterface {
+final class TransformationResultBuilder implements ResultBuilderStrategyInterface {
     
     private static function resultIsDefault(): FarahUrlStreamIdentifier {
         return Executable::resultIsDefault();

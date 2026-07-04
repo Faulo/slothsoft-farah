@@ -16,7 +16,7 @@ use Exception;
 use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Core\DBMS\Manager;
 
-class Session {
+final class Session {
     
     const GLOBAL_SESSION = null;
     

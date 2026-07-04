@@ -13,7 +13,7 @@ use Slothsoft\Farah\Exception\NamespaceNotSupportedException;
  * @author Daniel Schulz
  *
  */
-class DecoratorFactory {
+final class DecoratorFactory {
     
     public static function createForDocument(DOMDocument $targetDocument): LinkDecoratorInterface {
         $decorator = self::createForNamespace((string) $targetDocument->documentElement->namespaceURI);

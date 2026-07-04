@@ -6,7 +6,7 @@ namespace Slothsoft\Farah\Exception;
 use RuntimeException;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 
-class HttpDownloadAssetException extends RuntimeException {
+final class HttpDownloadAssetException extends RuntimeException {
     
     private ExecutableStrategies $strategies;
     

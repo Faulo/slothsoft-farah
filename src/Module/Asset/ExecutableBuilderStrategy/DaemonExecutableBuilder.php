@@ -10,7 +10,7 @@ use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ChunkWriterResultBuilder;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\NullResultBuilder;
 
-class DaemonExecutableBuilder implements ExecutableBuilderStrategyInterface {
+final class DaemonExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
     private bool $todo = true;
     

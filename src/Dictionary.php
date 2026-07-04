@@ -14,7 +14,7 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 
-class Dictionary {
+final class Dictionary {
     
     public static function xsltCurrentLanguage(): string {
         $dict = self::getInstance();

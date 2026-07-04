@@ -8,7 +8,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
 use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 
-class NullInstructionBuilder implements InstructionBuilderStrategyInterface {
+final class NullInstructionBuilder implements InstructionBuilderStrategyInterface {
     
     public function buildUseInstructions(AssetInterface $context, FarahUrlArguments $args): UseInstructionCollection {
         return new UseInstructionCollection($context->createUrl($args));

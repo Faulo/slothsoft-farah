@@ -14,7 +14,7 @@ use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileInfoStreamBuilder;
 
-class XmlFileResultBuilder extends AbstractFileResultBuilder {
+final class XmlFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterElementFromDocumentTrait;
     
     public function toDocument(): DOMDocument {

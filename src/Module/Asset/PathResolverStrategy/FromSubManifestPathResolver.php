@@ -13,7 +13,7 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Throwable;
 
-class FromSubManifestPathResolver implements PathResolverStrategyInterface {
+final class FromSubManifestPathResolver implements PathResolverStrategyInterface {
     
     private const VERSION = 1;
     

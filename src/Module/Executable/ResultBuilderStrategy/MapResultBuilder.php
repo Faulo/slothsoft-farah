@@ -9,7 +9,7 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamBuilderStrategyInterface;
 
-class MapResultBuilder implements ResultBuilderStrategyInterface {
+final class MapResultBuilder implements ResultBuilderStrategyInterface {
     
     private StreamBuilderStrategyInterface $defaultStream;
     

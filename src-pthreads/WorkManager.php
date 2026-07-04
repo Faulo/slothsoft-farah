@@ -6,7 +6,7 @@ use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Generator;
 use Throwable;
 
-class WorkManager implements ChunkWriterInterface {
+final class WorkManager implements ChunkWriterInterface {
     
     private $treadCount;
     

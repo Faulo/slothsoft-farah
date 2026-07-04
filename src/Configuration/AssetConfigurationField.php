@@ -9,7 +9,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Module;
 
-class AssetConfigurationField extends ConfigurationField {
+final class AssetConfigurationField extends ConfigurationField {
     
     public function getValue() {
         $value = parent::getValue();

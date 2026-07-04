@@ -15,7 +15,7 @@ use Slothsoft\Farah\Module\Result\Result;
 use Slothsoft\Farah\Module\Result\ResultContainer;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
-class Executable implements ExecutableInterface {
+final class Executable implements ExecutableInterface {
     
     const RESULT_IS_DEFAULT = '';
     

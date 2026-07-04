@@ -8,7 +8,7 @@ use IteratorAggregate;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Traversable;
 
-class ManifestContainer implements IteratorAggregate {
+final class ManifestContainer implements IteratorAggregate {
     
     private Map $map;
     

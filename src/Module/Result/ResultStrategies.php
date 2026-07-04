@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\Module\Result;
 
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamBuilderStrategyInterface;
 
-class ResultStrategies {
+final class ResultStrategies {
     
     public StreamBuilderStrategyInterface $streamBuilder;
     

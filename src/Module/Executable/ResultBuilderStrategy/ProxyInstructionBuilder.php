@@ -9,7 +9,7 @@ use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
 use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 
-class ProxyInstructionBuilder implements InstructionBuilderStrategyInterface {
+final class ProxyInstructionBuilder implements InstructionBuilderStrategyInterface {
     
     private ExecutableInterface $proxy;
     

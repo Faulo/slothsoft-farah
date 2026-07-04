@@ -12,7 +12,7 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\FromManifestInstruct
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\TransformationResultBuilder;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 
-class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterface {
+final class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
     private const DICTIONARY_PATH = '/dictionary';
     

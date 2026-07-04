@@ -15,7 +15,7 @@ use Slothsoft\Farah\RequestStrategy\RequestStrategyInterface;
 use Slothsoft\Farah\ResponseStrategy\ResponseStrategyInterface;
 use Slothsoft\Farah\Tracking\Manager;
 
-class Kernel {
+final class Kernel {
     
     public static function getInstance(): self {
         static $instance;

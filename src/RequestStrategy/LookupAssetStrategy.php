@@ -9,7 +9,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Module;
 
-class LookupAssetStrategy extends RequestStrategyBase {
+final class LookupAssetStrategy extends RequestStrategyBase {
     
     private static function hrefBase(): ConfigurationField {
         static $field;

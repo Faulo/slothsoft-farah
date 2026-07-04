@@ -10,7 +10,7 @@ use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
-class TransformationDOMWriter implements DOMWriterInterface {
+final class TransformationDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
     private DOMWriterInterface $source;

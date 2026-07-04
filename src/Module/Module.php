@@ -26,7 +26,7 @@ use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\XmlTreeLoader;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use SplFileInfo;
 
-class Module {
+final class Module {
     
     private static function getInstance(): self {
         static $instance;

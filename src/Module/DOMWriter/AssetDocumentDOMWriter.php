@@ -12,7 +12,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Module;
 
-class AssetDocumentDOMWriter implements DOMWriterInterface {
+final class AssetDocumentDOMWriter implements DOMWriterInterface {
     use DOMWriterDocumentFromElementTrait;
     
     private FarahUrl $url;

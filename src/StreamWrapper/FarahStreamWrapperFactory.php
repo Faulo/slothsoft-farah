@@ -19,7 +19,7 @@ use Slothsoft\Farah\Module\Module;
  * @author Daniel Schulz
  *
  */
-class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
+final class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
     
     public function createStreamWrapper(string $url, string $mode, int $options) {
         $url = FarahUrl::createFromReference($url);

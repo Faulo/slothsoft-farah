@@ -4,7 +4,7 @@ namespace Slothsoft\Farah\PThreads;
 
 use Pool;
 
-class WorkPool extends Pool {
+final class WorkPool extends Pool {
     
     private $workCount = 0;
     

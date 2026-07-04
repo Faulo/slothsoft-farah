@@ -16,7 +16,7 @@ use Slothsoft\Farah\Module\Module;
  * @author Daniel Schulz
  *
  */
-class HtmlDecorator implements LinkDecoratorInterface {
+final class HtmlDecorator implements LinkDecoratorInterface {
     
     private DOMDocument $targetDocument;
     

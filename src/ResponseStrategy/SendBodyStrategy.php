@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Slothsoft\Core\IO\Memory;
 use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 
-class SendBodyStrategy implements ResponseStrategyInterface {
+final class SendBodyStrategy implements ResponseStrategyInterface {
     
     private $destination;
     

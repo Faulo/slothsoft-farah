@@ -12,7 +12,7 @@ use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 
-class EmbedIncludesDOMWriter implements DOMWriterInterface {
+final class EmbedIncludesDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
     private DOMWriterInterface $source;

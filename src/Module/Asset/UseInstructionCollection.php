@@ -9,7 +9,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\DOMWriter\AssetDocumentDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\AssetManifestDOMWriter;
 
-class UseInstructionCollection {
+final class UseInstructionCollection {
     
     public FarahUrl $rootUrl;
     

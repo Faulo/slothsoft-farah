@@ -20,7 +20,7 @@ use Slothsoft\Farah\Module\Result\ResultInterface;
  * @author Daniel Schulz
  *
  */
-class StringWriterStreamBuilder implements StreamBuilderStrategyInterface {
+final class StringWriterStreamBuilder implements StreamBuilderStrategyInterface {
     
     private StringWriterInterface $writer;
     

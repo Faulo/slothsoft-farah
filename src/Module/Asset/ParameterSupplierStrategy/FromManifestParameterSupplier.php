@@ -6,7 +6,7 @@ namespace Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
-class FromManifestParameterSupplier implements ParameterSupplierStrategyInterface {
+final class FromManifestParameterSupplier implements ParameterSupplierStrategyInterface {
     
     public function supplyParameters(AssetInterface $context): iterable {
         $element = $context->getManifestElement();
