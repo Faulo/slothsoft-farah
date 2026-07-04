@@ -12,6 +12,12 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Sites\Domain;
 
+/**
+ * Request strategy that resolves a sitemap page request to its target Farah asset URL.
+ *
+ * @author Daniel Schulz
+ * @since 2018-04-17
+ */
 final class LookupPageStrategy extends RequestStrategyBase {
     
     private ?Domain $domain;

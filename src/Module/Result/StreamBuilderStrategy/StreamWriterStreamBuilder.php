@@ -15,6 +15,12 @@ use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
+/**
+ * Stream builder strategy for stream writer result streams.
+ *
+ * @author Daniel Schulz
+ * @since 2018-07-04
+ */
 final class StreamWriterStreamBuilder implements StreamBuilderStrategyInterface {
     
     private StreamWriterInterface $writer;

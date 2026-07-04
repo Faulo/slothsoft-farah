@@ -19,9 +19,10 @@ use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
 /**
+ * Stream builder strategy for d o m writer result streams.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-03-01
  */
 final class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface, DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;

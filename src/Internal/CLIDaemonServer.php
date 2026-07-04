@@ -8,9 +8,10 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Symfony\Component\Process\Process;
 
 /**
+ * Daemon server implementation for executing Farah CLI asset requests.
  *
  * @author Daniel Schulz
- *
+ * @since 2021-01-01
  */
 final class CLIDaemonServer extends AbstractDaemonServer {
     

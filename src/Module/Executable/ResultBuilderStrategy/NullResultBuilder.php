@@ -13,6 +13,12 @@ use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\NullStreamBuilder;
 
+/**
+ * Result builder strategy for null executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class NullResultBuilder implements ResultBuilderStrategyInterface {
     
     public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {

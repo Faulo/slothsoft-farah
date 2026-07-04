@@ -9,6 +9,12 @@ use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
 use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 
+/**
+ * Result builder strategy for proxy instruction builder executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2025-11-13
+ */
 final class ProxyInstructionBuilder implements InstructionBuilderStrategyInterface {
     
     private ExecutableInterface $proxy;

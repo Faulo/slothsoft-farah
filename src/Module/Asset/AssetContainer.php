@@ -7,9 +7,10 @@ use Ds\Map;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 
 /**
+ * Container for assets keyed by normalized Farah asset paths.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-05-27
  */
 final class AssetContainer {
     

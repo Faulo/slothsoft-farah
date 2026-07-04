@@ -6,6 +6,12 @@ namespace Slothsoft\Farah\Http;
 use Psr\Http\Message\StreamInterface;
 use Slothsoft\Core\IO\Writable\FilteredStreamWriterInterface;
 
+/**
+ * HTTP coding implementation that wraps a configurable set of stream filters.
+ *
+ * @author Daniel Schulz
+ * @since 2026-01-09
+ */
 final class ConfigurableCoding implements CodingInterface {
     
     private string $httpName;

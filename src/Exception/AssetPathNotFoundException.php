@@ -6,6 +6,12 @@ namespace Slothsoft\Farah\Exception;
 use RuntimeException;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 
+/**
+ * Exception type for the Farah asset path not found error condition.
+ *
+ * @author Daniel Schulz
+ * @since 2018-03-19
+ */
 final class AssetPathNotFoundException extends RuntimeException {
     
     public function __construct(AssetInterface $asset, string $missingPath, ?array $validPaths = null) {

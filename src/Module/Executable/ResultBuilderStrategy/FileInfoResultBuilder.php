@@ -9,6 +9,12 @@ use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileInfoStreamBuilder;
 use SplFileInfo;
 
+/**
+ * Result builder strategy for file info executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class FileInfoResultBuilder implements ResultBuilderStrategyInterface {
     
     private SplFileInfo $file;

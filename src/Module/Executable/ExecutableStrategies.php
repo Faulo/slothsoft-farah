@@ -7,6 +7,12 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\InstructionBuilderSt
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\NullInstructionBuilder;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrategyInterface;
 
+/**
+ * Strategy bundle used when building executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class ExecutableStrategies {
     
     public ResultBuilderStrategyInterface $resultBuilder;

@@ -17,6 +17,12 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrateg
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use SplFileInfo;
 
+/**
+ * Executable builder strategy for assets backed by files on disk.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {

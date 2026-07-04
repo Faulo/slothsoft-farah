@@ -6,6 +6,12 @@ namespace Slothsoft\Farah\Module\Asset\InstructionStrategy;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
+/**
+ * Instruction strategy that reads instruction behavior from manifest element metadata.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class FromManifestInstruction implements InstructionStrategyInterface {
     
     public function isImportSelf(AssetInterface $context): bool {

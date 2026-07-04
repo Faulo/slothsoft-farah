@@ -15,9 +15,10 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 
 /**
+ * Stream wrapper factory for resolving farah:// URLs into readable streams.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-04-17
  */
 final class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
     

@@ -6,6 +6,12 @@ namespace Slothsoft\Farah\Http;
 use Psr\Http\Message\StreamInterface;
 use Slothsoft\Core\IO\Writable\FilteredStreamWriterInterface;
 
+/**
+ * Stream writer factory for identity HTTP coding without transformation.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-07
+ */
 final class IdentityFactory implements FilteredStreamWriterInterface {
     
     public static function getInstance(): self {

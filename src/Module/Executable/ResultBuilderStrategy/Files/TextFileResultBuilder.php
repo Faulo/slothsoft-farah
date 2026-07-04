@@ -7,6 +7,12 @@ use DOMDocument;
 use DOMElement;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 
+/**
+ * Result builder for plain-text file results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class TextFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterDocumentFromElementTrait;
     

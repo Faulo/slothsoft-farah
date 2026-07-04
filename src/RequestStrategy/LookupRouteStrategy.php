@@ -14,6 +14,12 @@ use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Sites\Domain;
 
+/**
+ * Request strategy that resolves route-style requests to Farah page or asset targets.
+ *
+ * @author Daniel Schulz
+ * @since 2018-10-17
+ */
 final class LookupRouteStrategy extends RequestStrategyBase {
     
     private ?Domain $domain = null;

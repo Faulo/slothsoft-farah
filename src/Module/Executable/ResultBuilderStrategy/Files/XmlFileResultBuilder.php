@@ -14,6 +14,12 @@ use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileInfoStreamBuilder;
 
+/**
+ * Result builder for XML file results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class XmlFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterElementFromDocumentTrait;
     

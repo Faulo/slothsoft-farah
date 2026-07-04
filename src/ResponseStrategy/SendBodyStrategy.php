@@ -7,6 +7,12 @@ use Psr\Http\Message\ResponseInterface;
 use Slothsoft\Core\IO\Memory;
 use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 
+/**
+ * Response strategy that emits only the response body.
+ *
+ * @author Daniel Schulz
+ * @since 2018-04-17
+ */
 final class SendBodyStrategy implements ResponseStrategyInterface {
     
     private $destination;

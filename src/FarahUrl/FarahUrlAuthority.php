@@ -7,9 +7,10 @@ use Ds\Hashable;
 use Slothsoft\Farah\Exception\IncompleteUrlException;
 
 /**
+ * Immutable value object for the vendor and module authority of a Farah URL.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-03-01
  */
 final class FarahUrlAuthority implements Hashable {
     

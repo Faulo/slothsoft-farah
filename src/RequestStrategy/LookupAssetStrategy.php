@@ -9,6 +9,12 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Module;
 
+/**
+ * Request strategy that resolves an incoming request directly to a Farah asset URL.
+ *
+ * @author Daniel Schulz
+ * @since 2018-04-17
+ */
 final class LookupAssetStrategy extends RequestStrategyBase {
     
     private static function hrefBase(): ConfigurationField {

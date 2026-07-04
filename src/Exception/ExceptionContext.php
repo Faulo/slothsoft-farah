@@ -12,9 +12,10 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
 use Throwable;
 
 /**
+ * Serializes exception metadata into DOM for Farah error responses.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-02-21
  */
 final class ExceptionContext implements DOMWriterInterface {
     

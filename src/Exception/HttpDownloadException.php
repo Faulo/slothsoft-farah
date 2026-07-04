@@ -6,6 +6,12 @@ namespace Slothsoft\Farah\Exception;
 use RuntimeException;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
+/**
+ * Exception type for HTTP download failures while resolving Farah results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-06-27
+ */
 final class HttpDownloadException extends RuntimeException {
     
     private ResultInterface $result;

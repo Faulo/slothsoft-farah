@@ -9,6 +9,12 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamBuilderStrategyInterface;
 
+/**
+ * Result builder strategy for map executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2025-09-25
+ */
 final class MapResultBuilder implements ResultBuilderStrategyInterface {
     
     private StreamBuilderStrategyInterface $defaultStream;

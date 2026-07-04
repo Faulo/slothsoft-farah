@@ -10,6 +10,12 @@ use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ChunkWriterResultBuilder;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\NullResultBuilder;
 
+/**
+ * Executable builder strategy for daemon assets.
+ *
+ * @author Daniel Schulz
+ * @since 2021-01-01
+ */
 final class DaemonExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
     private bool $todo = true;

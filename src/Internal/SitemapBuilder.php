@@ -24,9 +24,10 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StringWriterStreamBuilde
 use Slothsoft\Farah\Sites\Domain;
 
 /**
+ * Executable builder and DOM writer for Farah sitemap output.
  *
  * @author Daniel Schulz
- *
+ * @since 2025-09-18
  */
 final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;

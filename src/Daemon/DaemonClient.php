@@ -6,6 +6,13 @@ namespace Slothsoft\Farah\Daemon;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 
+/**
+ * Client for invoking Farah daemon assets and reading their streamed responses.
+ *
+ * @author Daniel Schulz
+ * @since 2021-01-01
+ * @deprecated Included for historical compatibility only. This API is deprecated and should not be used in new code.
+ */
 final class DaemonClient {
     
     public static function fromUrl(FarahUrl $url): DaemonClient {

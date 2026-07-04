@@ -9,9 +9,10 @@ use IteratorAggregate;
 use Traversable;
 
 /**
+ * Immutable value object for Farah URL query arguments.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-03-01
  */
 final class FarahUrlArguments implements IteratorAggregate, Hashable {
     

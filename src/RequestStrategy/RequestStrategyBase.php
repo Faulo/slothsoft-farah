@@ -23,6 +23,12 @@ use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Security\BannedManager;
 
+/**
+ * Base class for request strategies that convert Farah URLs into PSR-7 responses.
+ *
+ * @author Daniel Schulz
+ * @since 2018-04-17
+ */
 abstract class RequestStrategyBase implements RequestStrategyInterface {
     
     private ServerRequestInterface $request;

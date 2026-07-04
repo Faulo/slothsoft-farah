@@ -5,6 +5,12 @@ namespace Slothsoft\Farah\ResponseStrategy;
 
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Response strategy that emits only response headers.
+ *
+ * @author Daniel Schulz
+ * @since 2018-04-17
+ */
 final class SendHeaderStrategy implements ResponseStrategyInterface {
     
     public function process(ResponseInterface $response) {

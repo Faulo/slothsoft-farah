@@ -1,20 +1,18 @@
 <?php
 declare(strict_types = 1);
-/**
- * *********************************************************************
- * Slothsoft\Farah\Cache v1.00 19.10.2012 © Daniel Schulz
- *
- * Changelog:
- * v1.00 19.10.2012
- * initial release
- * *********************************************************************
- */
 
 namespace Slothsoft\Farah;
 
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\ServerEnvironment;
 
+/**
+ * Legacy helper for resolving cache directories and cache file names.
+ *
+ * @author Daniel Schulz
+ * @since 2012-10-19
+ * @deprecated Included for historical compatibility only. This API is deprecated and should not be used in new code.
+ */
 final class Cache {
     
     protected $rootDir;

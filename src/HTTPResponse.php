@@ -1,14 +1,5 @@
 <?php
 declare(strict_types = 1);
-/**
- * *********************************************************************
- * Slothsoft\Farah\HTTPResponse v1.00 19.10.2012 © Daniel Schulz
- *
- * Changelog:
- * v1.00 19.10.2012
- * initial release
- * *********************************************************************
- */
 
 namespace Slothsoft\Farah;
 
@@ -24,6 +15,13 @@ use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Exception\ExceptionContext;
 use Slothsoft\Farah\Exception\StreamTimedOutException;
 
+/**
+ * Legacy HTTP response emitter for headers, body streams, ranges, and content negotiation.
+ *
+ * @author Daniel Schulz
+ * @since 2012-10-19
+ * @deprecated Included for historical compatibility only. This API is deprecated and should not be used in new code.
+ */
 final class HTTPResponse {
     
     public static function cacheDurations(): CascadingDictionary {

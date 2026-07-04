@@ -8,6 +8,12 @@ use DOMElement;
 use Ds\Set;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 
+/**
+ * DOM writer decorator that rewrites links in generated DOM output.
+ *
+ * @author Daniel Schulz
+ * @since 2018-04-27
+ */
 final class DecoratedDOMWriter implements DOMWriterInterface {
     
     private DOMWriterInterface $source;

@@ -12,6 +12,12 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamWriterStreamBuilder;
 
+/**
+ * Result builder strategy for switch to cli executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-07-14
+ */
 final class SwitchToCliResultBuilder implements ResultBuilderStrategyInterface {
     
     private $resultBuilder;

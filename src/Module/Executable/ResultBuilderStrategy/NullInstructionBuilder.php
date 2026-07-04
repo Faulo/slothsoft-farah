@@ -8,6 +8,12 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
 use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 
+/**
+ * Result builder strategy for null instruction builder executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2025-11-13
+ */
 final class NullInstructionBuilder implements InstructionBuilderStrategyInterface {
     
     public function buildUseInstructions(AssetInterface $context, FarahUrlArguments $args): UseInstructionCollection {

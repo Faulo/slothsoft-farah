@@ -9,6 +9,12 @@ use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Dictionary;
 
+/**
+ * DOM writer variant for dictionary translation of Farah documents.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class TranslationDOMWriter2 implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     

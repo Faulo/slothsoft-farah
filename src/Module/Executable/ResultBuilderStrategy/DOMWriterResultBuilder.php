@@ -9,6 +9,12 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 
+/**
+ * Result builder strategy for d o m writer executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class DOMWriterResultBuilder implements ResultBuilderStrategyInterface {
     
     private DOMWriterInterface $writer;

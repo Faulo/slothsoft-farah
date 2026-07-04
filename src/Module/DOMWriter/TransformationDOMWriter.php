@@ -10,6 +10,12 @@ use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
+/**
+ * DOM writer that applies an XSLT transformation to a source document.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class TransformationDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     

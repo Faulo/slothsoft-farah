@@ -1,19 +1,17 @@
 <?php
 declare(strict_types = 1);
-/**
- * *********************************************************************
- * Slothsoft\Farah\HTTPClosure v1.00 21.06.2017 © Daniel Schulz
- *
- * Changelog:
- * v1.00 21.06.2017
- * initial release
- * *********************************************************************
- */
 
 namespace Slothsoft\Farah;
 
 use Closure;
 
+/**
+ * Legacy wrapper around a callable with HTTP command execution options.
+ *
+ * @author Daniel Schulz
+ * @since 2017-06-21
+ * @deprecated Included for historical compatibility only. This API is deprecated and should not be used in new code.
+ */
 final class HTTPClosure {
     
     protected $options = [

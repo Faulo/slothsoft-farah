@@ -5,6 +5,12 @@ namespace Slothsoft\Farah\Module\Asset;
 
 use Ds\Set;
 
+/**
+ * Collection of link instructions emitted while building executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class LinkInstructionCollection {
     
     public Set $stylesheetUrls;

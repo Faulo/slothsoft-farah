@@ -9,9 +9,10 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Exception\NamespaceNotSupportedException;
 
 /**
+ * Factory for selecting link decorators by DOM namespace.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-03-01
  */
 final class DecoratorFactory {
     

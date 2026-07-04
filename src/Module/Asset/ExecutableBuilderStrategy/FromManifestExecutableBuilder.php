@@ -12,6 +12,12 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\FromManifestInstruct
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\TransformationResultBuilder;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 
+/**
+ * Executable builder strategy for assets whose executable results are defined in a manifest.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class FromManifestExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
     private const DICTIONARY_PATH = '/dictionary';

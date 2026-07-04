@@ -5,6 +5,13 @@ namespace Slothsoft\Farah\Tracking;
 
 use Slothsoft\Core\ServerEnvironment;
 
+/**
+ * Legacy helper for collecting lightweight timing information.
+ *
+ * @author Daniel Schulz
+ * @since 2017-12-28
+ * @deprecated Included for historical compatibility only. This API is deprecated and should not be used in new code.
+ */
 final class Tick {
     
     protected static $logTick;

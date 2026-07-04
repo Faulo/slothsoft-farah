@@ -19,6 +19,12 @@ use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Module;
 use SplFileInfo;
 
+/**
+ * Runtime representation of a manifest asset and its executable variants.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class Asset implements AssetInterface {
     
     private ManifestInterface $ownerManifest;

@@ -16,6 +16,12 @@ use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use SplFileInfo;
 
+/**
+ * Stream builder strategy for file writer result streams.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class FileWriterStreamBuilder implements FileWriterInterface, StreamBuilderStrategyInterface {
     
     private FileWriterInterface $writer;

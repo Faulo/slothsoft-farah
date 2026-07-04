@@ -1,14 +1,5 @@
 <?php
 declare(strict_types = 1);
-/**
- * *********************************************************************
- * Slothsoft\Farah\Session v1.00 16.12.2012 © Daniel Schulz
- *
- * Changelog:
- * v1.00 16.12.2012
- * initial release
- * *********************************************************************
- */
 
 namespace Slothsoft\Farah;
 
@@ -16,6 +7,13 @@ use Exception;
 use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Core\DBMS\Manager;
 
+/**
+ * Legacy session persistence helper backed by cookies and the slothsoft DBMS layer.
+ *
+ * @author Daniel Schulz
+ * @since 2012-12-16
+ * @deprecated Included for historical compatibility only. This API is deprecated and should not be used in new code.
+ */
 final class Session {
     
     const GLOBAL_SESSION = null;

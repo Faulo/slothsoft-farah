@@ -7,6 +7,12 @@ use InvalidArgumentException;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 
+/**
+ * Configuration field that normalizes string references into Farah URL instances.
+ *
+ * @author Daniel Schulz
+ * @since 2018-04-01
+ */
 final class FarahUrlConfigurationField extends ConfigurationField {
     
     public function getValue() {

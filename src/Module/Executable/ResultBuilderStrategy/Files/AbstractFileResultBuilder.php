@@ -15,6 +15,12 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileInfoStreamBuilder;
 use SplFileInfo;
 
+/**
+ * Result builder for abstract file results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 abstract class AbstractFileResultBuilder implements ResultBuilderStrategyInterface, FileWriterInterface, DOMWriterInterface {
     
     protected FarahUrl $url;

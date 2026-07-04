@@ -3,6 +3,12 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\Http;
 
+/**
+ * Lookup table for HTTP status code reason phrases used by Farah responses.
+ *
+ * @author Daniel Schulz
+ * @since 2018-04-17
+ */
 final class StatusCode {
     
     const STATUS_OK = 200;

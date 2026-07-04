@@ -12,6 +12,12 @@ use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
+/**
+ * Stream builder strategy for null result streams.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class NullStreamBuilder implements StreamBuilderStrategyInterface {
     
     public function buildStreamMimeType(ResultInterface $context): string {

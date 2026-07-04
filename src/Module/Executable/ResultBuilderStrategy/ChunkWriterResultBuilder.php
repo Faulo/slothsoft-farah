@@ -9,6 +9,12 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\ChunkWriterStreamBuilder;
 
+/**
+ * Result builder strategy for chunk writer executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class ChunkWriterResultBuilder implements ResultBuilderStrategyInterface {
     
     private ChunkWriterInterface $writer;

@@ -17,6 +17,12 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 
+/**
+ * Runtime result for an executable and a Farah stream identifier.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class Result implements ResultInterface {
     
     private ExecutableInterface $ownerExecutable;

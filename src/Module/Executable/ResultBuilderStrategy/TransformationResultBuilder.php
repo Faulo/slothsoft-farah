@@ -17,6 +17,12 @@ use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
 
+/**
+ * Result builder strategy for transformation executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class TransformationResultBuilder implements ResultBuilderStrategyInterface {
     
     private static function resultIsDefault(): FarahUrlStreamIdentifier {

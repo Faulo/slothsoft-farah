@@ -10,9 +10,10 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
 /**
+ * Link decorator for Farah module XML output.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-03-01
  */
 final class FarahDecorator implements LinkDecoratorInterface {
     

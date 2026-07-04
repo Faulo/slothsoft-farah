@@ -13,6 +13,12 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Module;
 use SplFileInfo;
 
+/**
+ * Runtime manifest that loads, normalizes, and resolves Farah assets.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class Manifest implements ManifestInterface {
     
     // asset tags

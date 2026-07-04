@@ -12,6 +12,12 @@ use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 
+/**
+ * DOM writer that embeds included Farah documents into a result document.
+ *
+ * @author Daniel Schulz
+ * @since 2025-11-13
+ */
 final class EmbedIncludesDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     

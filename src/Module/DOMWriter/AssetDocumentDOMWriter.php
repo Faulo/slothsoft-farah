@@ -12,6 +12,12 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Module;
 
+/**
+ * DOM writer that embeds a Farah asset document into generated output.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class AssetDocumentDOMWriter implements DOMWriterInterface {
     use DOMWriterDocumentFromElementTrait;
     

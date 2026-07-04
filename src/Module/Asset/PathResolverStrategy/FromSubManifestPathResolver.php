@@ -13,6 +13,12 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Throwable;
 
+/**
+ * Path resolver strategy that loads child paths from a referenced sub-manifest.
+ *
+ * @author Daniel Schulz
+ * @since 2025-09-22
+ */
 final class FromSubManifestPathResolver implements PathResolverStrategyInterface {
     
     private const VERSION = 1;

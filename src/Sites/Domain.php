@@ -14,9 +14,10 @@ use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\RequestStrategy\LookupPageStrategy;
 
 /**
+ * Represents a Farah sitemap domain and resolves page nodes to asset URLs.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-02-21
  */
 final class Domain {
     

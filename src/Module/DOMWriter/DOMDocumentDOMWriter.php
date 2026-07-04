@@ -7,6 +7,12 @@ use DOMDocument;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 
+/**
+ * DOM writer adapter for an existing DOMDocument.
+ *
+ * @author Daniel Schulz
+ * @since 2025-09-15
+ */
 final class DOMDocumentDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     

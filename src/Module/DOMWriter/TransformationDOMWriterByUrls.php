@@ -11,6 +11,12 @@ use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 
+/**
+ * DOM writer that resolves source and stylesheet documents from Farah URLs before transforming them.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class TransformationDOMWriterByUrls implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     

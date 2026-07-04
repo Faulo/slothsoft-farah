@@ -8,6 +8,12 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\NullResultBuilder;
 
+/**
+ * Executable builder strategy for null assets.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class NullExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {

@@ -6,6 +6,13 @@ namespace Slothsoft\Farah;
 use Closure;
 use Slothsoft\Core\InterExec;
 
+/**
+ * Legacy command dispatcher for event-driven HTTP work units.
+ *
+ * @author Daniel Schulz
+ * @since 2017-12-28
+ * @deprecated Included for historical compatibility only. This API is deprecated and should not be used in new code.
+ */
 final class HTTPCommand {
     
     protected $exec;

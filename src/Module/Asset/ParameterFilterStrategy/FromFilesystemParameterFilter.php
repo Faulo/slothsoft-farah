@@ -6,9 +6,10 @@ namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
 /**
+ * Parameter filter strategy that restricts parameters for file-backed assets.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-02-21
  */
 final class FromFilesystemParameterFilter implements ParameterFilterStrategyInterface {
     

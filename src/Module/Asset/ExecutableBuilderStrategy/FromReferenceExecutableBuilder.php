@@ -10,6 +10,12 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ProxyInstructionBuil
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ProxyResultBuilder;
 use Slothsoft\Farah\Module\Module;
 
+/**
+ * Executable builder strategy for assets that proxy another Farah reference.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class FromReferenceExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {

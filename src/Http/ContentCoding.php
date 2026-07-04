@@ -7,8 +7,11 @@ use Ds\Map;
 use Slothsoft\Core\IO\Writable\FilteredStreamWriterInterface;
 
 /**
+ * Registry for supported HTTP content codings.
  *
  * @see https://www.iana.org/assignments/http-parameters/http-parameters.xhtml#content-coding
+ * @author Daniel Schulz
+ * @since 2018-04-17
  */
 final class ContentCoding {
     

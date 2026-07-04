@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-// © 2012 Daniel Schulz
+
 namespace Slothsoft\Farah;
 
 use DOMDocument;
@@ -14,6 +14,12 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 
+/**
+ * Loads Farah dictionary assets and applies dictionary-based XML transformations.
+ *
+ * @author Daniel Schulz
+ * @since 2018-02-21
+ */
 final class Dictionary {
     
     public static function xsltCurrentLanguage(): string {

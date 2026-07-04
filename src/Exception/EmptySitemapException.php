@@ -4,6 +4,13 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Exception;
 
 use RuntimeException;
+
+/**
+ * Exception type for the Farah empty sitemap error condition.
+ *
+ * @author Daniel Schulz
+ * @since 2018-03-19
+ */
 final class EmptySitemapException extends RuntimeException {
     
     public function __construct(string $path) {

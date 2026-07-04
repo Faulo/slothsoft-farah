@@ -9,6 +9,12 @@ use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 use SplFileInfo;
 
+/**
+ * DOM writer adapter for loading XML from a file.
+ *
+ * @author Daniel Schulz
+ * @since 2018-06-25
+ */
 final class FileInfoDOMWriter implements DOMWriterInterface {
     use DOMWriterDocumentFromElementTrait;
     

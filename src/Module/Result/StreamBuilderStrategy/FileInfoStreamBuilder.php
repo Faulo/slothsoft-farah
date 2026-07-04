@@ -16,6 +16,12 @@ use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use SplFileInfo;
 
+/**
+ * Stream builder strategy for file info result streams.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, FileWriterInterface {
     
     private SplFileInfo $file;

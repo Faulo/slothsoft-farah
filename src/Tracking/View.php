@@ -6,6 +6,13 @@ namespace Slothsoft\Farah\Tracking;
 use DOMDocument;
 use Slothsoft\Farah\HTTPRequest;
 
+/**
+ * Legacy helper for parsing and grouping tracking archive views.
+ *
+ * @author Daniel Schulz
+ * @since 2017-12-28
+ * @deprecated Included for historical compatibility only. This API is deprecated and should not be used in new code.
+ */
 final class View {
     
     protected $archive = null;

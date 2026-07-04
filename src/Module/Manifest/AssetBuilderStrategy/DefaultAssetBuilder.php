@@ -46,6 +46,12 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use UnexpectedValueException;
 
+/**
+ * Asset builder strategy for default manifest assets.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
     
     private FarahUrlAuthority $module;

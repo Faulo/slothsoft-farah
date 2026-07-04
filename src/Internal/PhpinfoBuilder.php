@@ -16,9 +16,10 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ChunkWriterResultBui
 use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\DOMWriterResultBuilder;
 
 /**
+ * Executable builder for exposing PHP runtime information through a Farah asset.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-07-02
  */
 final class PhpinfoBuilder implements ExecutableBuilderStrategyInterface {
     

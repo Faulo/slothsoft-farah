@@ -7,6 +7,12 @@ use DOMDocument;
 use Exception;
 use Slothsoft\Core\DOMHelper;
 
+/**
+ * Locates bundled XML schema files for Farah namespaces.
+ *
+ * @author Daniel Schulz
+ * @since 2025-09-28
+ */
 final class SchemaLocator {
     
     // attributes

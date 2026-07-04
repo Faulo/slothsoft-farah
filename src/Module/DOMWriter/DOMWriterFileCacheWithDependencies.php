@@ -10,6 +10,12 @@ use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use SplFileInfo;
 
+/**
+ * File-backed DOM writer cache that refreshes when dependent files change.
+ *
+ * @author Daniel Schulz
+ * @since 2026-01-15
+ */
 final class DOMWriterFileCacheWithDependencies implements DOMWriterInterface, FileWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     

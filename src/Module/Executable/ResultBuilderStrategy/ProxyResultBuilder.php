@@ -9,6 +9,12 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\ProxyStreamBuilder;
 
+/**
+ * Result builder strategy for proxy executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class ProxyResultBuilder implements ResultBuilderStrategyInterface {
     
     private ExecutableInterface $proxy;

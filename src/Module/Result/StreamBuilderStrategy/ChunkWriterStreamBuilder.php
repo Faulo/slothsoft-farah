@@ -16,6 +16,12 @@ use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
+/**
+ * Stream builder strategy for chunk writer result streams.
+ *
+ * @author Daniel Schulz
+ * @since 2018-07-04
+ */
 final class ChunkWriterStreamBuilder implements StreamBuilderStrategyInterface, ChunkWriterInterface {
     
     private ChunkWriterInterface $writer;

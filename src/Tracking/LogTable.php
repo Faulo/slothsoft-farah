@@ -5,6 +5,13 @@ namespace Slothsoft\Farah\Tracking;
 
 use Slothsoft\Core\DBMS\Table;
 
+/**
+ * Legacy tracking log table view over archived request data.
+ *
+ * @author Daniel Schulz
+ * @since 2017-12-28
+ * @deprecated Included for historical compatibility only. This API is deprecated and should not be used in new code.
+ */
 final class LogTable {
     
     /*

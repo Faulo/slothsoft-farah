@@ -15,6 +15,12 @@ use Slothsoft\Farah\RequestStrategy\RequestStrategyInterface;
 use Slothsoft\Farah\ResponseStrategy\ResponseStrategyInterface;
 use Slothsoft\Farah\Tracking\Manager;
 
+/**
+ * Coordinates Farah request strategies, response strategies, current request state, and optional tracking.
+ *
+ * @author Daniel Schulz
+ * @since 2017-12-28
+ */
 final class Kernel {
     
     public static function getInstance(): self {

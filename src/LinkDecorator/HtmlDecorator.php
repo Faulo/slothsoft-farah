@@ -12,9 +12,10 @@ use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Module\Module;
 
 /**
+ * Link decorator for HTML output generated from Farah assets.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-03-01
  */
 final class HtmlDecorator implements LinkDecoratorInterface {
     

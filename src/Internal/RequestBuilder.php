@@ -17,9 +17,10 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\DOMWriterResultBuild
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
 /**
+ * Executable builder for exposing the current Farah request as XML.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-05-27
  */
 final class RequestBuilder implements ExecutableBuilderStrategyInterface {
     

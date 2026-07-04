@@ -9,6 +9,12 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Module;
 
+/**
+ * Configuration field that normalizes Farah asset references into asset instances.
+ *
+ * @author Daniel Schulz
+ * @since 2018-04-01
+ */
 final class AssetConfigurationField extends ConfigurationField {
     
     public function getValue() {

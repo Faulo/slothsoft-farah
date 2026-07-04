@@ -10,6 +10,12 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Throwable;
 
+/**
+ * Tree loader strategy for XML manifest trees.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class XmlTreeLoader implements TreeLoaderStrategyInterface {
     
     private const VERSION = 1;

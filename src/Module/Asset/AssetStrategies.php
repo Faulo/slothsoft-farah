@@ -9,6 +9,12 @@ use Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\ParameterFilterStrategy
 use Slothsoft\Farah\Module\Asset\ParameterSupplierStrategy\ParameterSupplierStrategyInterface;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 
+/**
+ * Strategy bundle used when resolving and executing a Farah asset.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class AssetStrategies {
     
     public ExecutableBuilderStrategyInterface $executableBuilder;

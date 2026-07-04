@@ -7,9 +7,10 @@ use Ds\Map;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 
 /**
+ * Container for results keyed by Farah URL stream identifiers.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-05-27
  */
 final class ResultContainer {
     

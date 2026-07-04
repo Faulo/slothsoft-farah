@@ -7,9 +7,10 @@ use Ds\Hashable;
 use Slothsoft\Farah\Exception\MalformedUrlException;
 
 /**
+ * Immutable value object for normalized Farah asset paths.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-03-01
  */
 final class FarahUrlPath implements Hashable {
     

@@ -13,9 +13,10 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
 use SplFileInfo;
 
 /**
+ * Path resolver strategy that maps manifest asset paths to files on disk.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-05-27
  */
 final class FromFilesystemPathResolver implements PathResolverStrategyInterface {
     

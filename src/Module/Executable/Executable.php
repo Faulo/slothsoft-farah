@@ -15,6 +15,12 @@ use Slothsoft\Farah\Module\Result\Result;
 use Slothsoft\Farah\Module\Result\ResultContainer;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
+/**
+ * Runtime executable for an asset and a normalized argument set.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class Executable implements ExecutableInterface {
     
     const RESULT_IS_DEFAULT = '';

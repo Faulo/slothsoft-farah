@@ -6,9 +6,10 @@ namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
 /**
+ * Parameter filter strategy that reads allowed parameters from manifest metadata.
  *
  * @author Daniel Schulz
- *
+ * @since 2025-07-05
  */
 final class FromManifestParameterFilter implements ParameterFilterStrategyInterface {
     

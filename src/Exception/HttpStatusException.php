@@ -5,6 +5,13 @@ namespace Slothsoft\Farah\Exception;
 
 use RuntimeException;
 use Throwable;
+
+/**
+ * Exception type for converting Farah failures into HTTP status responses.
+ *
+ * @author Daniel Schulz
+ * @since 2018-03-19
+ */
 final class HttpStatusException extends RuntimeException {
     
     private $headers;

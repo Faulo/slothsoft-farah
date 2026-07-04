@@ -10,6 +10,12 @@ use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 
+/**
+ * DOM writer that serializes Farah asset fragment metadata.
+ *
+ * @author Daniel Schulz
+ * @since 2018-06-28
+ */
 final class AssetFragmentDOMWriter implements DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     

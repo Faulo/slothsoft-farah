@@ -9,6 +9,12 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileWriterStreamBuilder;
 
+/**
+ * Result builder strategy for file writer executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class FileWriterResultBuilder implements ResultBuilderStrategyInterface {
     
     private FileWriterInterface $writer;

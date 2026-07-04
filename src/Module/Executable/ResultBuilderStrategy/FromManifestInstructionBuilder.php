@@ -10,6 +10,12 @@ use Slothsoft\Farah\Module\Asset\LinkInstructionCollection;
 use Slothsoft\Farah\Module\Asset\UseInstructionCollection;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
+/**
+ * Instruction builder that creates link and use collections from manifest metadata.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class FromManifestInstructionBuilder implements InstructionBuilderStrategyInterface {
     
     public function buildUseInstructions(AssetInterface $rootAsset, FarahUrlArguments $args): UseInstructionCollection {

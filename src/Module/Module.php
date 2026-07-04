@@ -26,6 +26,12 @@ use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\XmlTreeLoader;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use SplFileInfo;
 
+/**
+ * Registry and resolver for Farah modules, manifests, assets, executables, and results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-01-23
+ */
 final class Module {
     
     private static function getInstance(): self {

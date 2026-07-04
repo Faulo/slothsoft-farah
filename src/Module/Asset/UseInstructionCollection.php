@@ -9,6 +9,12 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\DOMWriter\AssetDocumentDOMWriter;
 use Slothsoft\Farah\Module\DOMWriter\AssetManifestDOMWriter;
 
+/**
+ * Collection of use instructions emitted while building executable results.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class UseInstructionCollection {
     
     public FarahUrl $rootUrl;

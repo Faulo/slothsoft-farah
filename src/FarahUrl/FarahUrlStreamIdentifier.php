@@ -6,9 +6,10 @@ namespace Slothsoft\Farah\FarahUrl;
 use Ds\Hashable;
 
 /**
+ * Immutable value object for Farah URL stream fragments.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-04-17
  */
 final class FarahUrlStreamIdentifier implements Hashable {
     

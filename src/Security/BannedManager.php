@@ -8,6 +8,13 @@ use Slothsoft\Core\Configuration\ConfigurationRequiredException;
 use Slothsoft\Core\Configuration\FileConfigurationField;
 use Slothsoft\Core\ServerEnvironment;
 
+/**
+ * Legacy helper for recording and checking banned request origins.
+ *
+ * @author Daniel Schulz
+ * @since 2018-03-19
+ * @deprecated Included for historical compatibility only. This API is deprecated and should not be used in new code.
+ */
 final class BannedManager {
     
     public static function getInstance(): self {

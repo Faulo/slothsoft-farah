@@ -10,6 +10,13 @@ use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Throwable;
 
+/**
+ * Base class for socket-backed Farah daemon servers that process chunk writer requests.
+ *
+ * @author Daniel Schulz
+ * @since 2021-01-01
+ * @deprecated Included for historical compatibility only. This API is deprecated and should not be used in new code.
+ */
 abstract class AbstractDaemonServer implements ChunkWriterInterface {
     
     public const DAEMON_DOMAIN = AF_INET;

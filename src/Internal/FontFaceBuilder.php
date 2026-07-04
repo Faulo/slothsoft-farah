@@ -16,6 +16,12 @@ use Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\NullResultBuilder;
 use Slothsoft\Farah\Module\Module;
 use SplFileInfo;
 
+/**
+ * Executable builder for generating CSS @font-face output from Farah font assets.
+ *
+ * @author Daniel Schulz
+ * @since 2026-01-20
+ */
 final class FontFaceBuilder implements ExecutableBuilderStrategyInterface {
     
     /**

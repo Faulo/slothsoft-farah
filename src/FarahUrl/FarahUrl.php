@@ -11,9 +11,10 @@ use Slothsoft\Farah\Exception\MalformedUrlException;
 use Slothsoft\Farah\Exception\ProtocolNotSupportedException;
 
 /**
+ * Immutable PSR-7 URI value object for Farah asset URLs.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-03-01
  */
 final class FarahUrl implements UriInterface, Hashable {
     

@@ -6,6 +6,12 @@ namespace Slothsoft\Farah\Exception;
 use RuntimeException;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 
+/**
+ * Exception type for HTTP download failures while resolving Farah executables.
+ *
+ * @author Daniel Schulz
+ * @since 2018-06-27
+ */
 final class HttpDownloadExecutableException extends RuntimeException {
     
     private ResultStrategies $strategies;

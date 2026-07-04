@@ -8,6 +8,12 @@ use IteratorAggregate;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Traversable;
 
+/**
+ * Container for manifests keyed by Farah URL authority.
+ *
+ * @author Daniel Schulz
+ * @since 2018-05-27
+ */
 final class ManifestContainer implements IteratorAggregate {
     
     private Map $map;

@@ -14,6 +14,12 @@ use Slothsoft\Core\IO\HTTPFile;
 use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 
+/**
+ * Factory for PSR-7 requests, responses, streams, and Farah-specific request messages.
+ *
+ * @author Daniel Schulz
+ * @since 2018-04-17
+ */
 abstract class MessageFactory {
     
     public static function createServerRequest(): ServerRequestInterface {

@@ -7,6 +7,13 @@ use Slothsoft\Core\DBMS\Database;
 use Slothsoft\Core\DBMS\Manager;
 use Slothsoft\Farah\HTTPRequest;
 
+/**
+ * Legacy request tracking archive built on the slothsoft DBMS layer.
+ *
+ * @author Daniel Schulz
+ * @since 2017-12-28
+ * @deprecated Included for historical compatibility only. This API is deprecated and should not be used in new code.
+ */
 final class Archive {
     
     const PREPARE_OK = 1;

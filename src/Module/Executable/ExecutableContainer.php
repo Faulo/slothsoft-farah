@@ -7,9 +7,10 @@ use Ds\Map;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 
 /**
+ * Container for executables keyed by Farah URL arguments.
  *
  * @author Daniel Schulz
- *
+ * @since 2018-05-27
  */
 final class ExecutableContainer {
     
