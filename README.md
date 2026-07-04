@@ -162,7 +162,7 @@ Run tests with:
 vendor/bin/phpunit
 ```
 
-The full suite can take up to 300 seconds. Some API tests use browser mocking to validate the bundled JavaScript assets, including the first-run browser driver detection/download step.
+The full suite can take up to 600 seconds. Some API tests use browser mocking to validate the bundled JavaScript assets, including the first-run browser driver detection/download step.
 
 Generate API documentation with:
 

@@ -21,77 +21,39 @@ interface AssetInterface {
     
     public function __toString(): string;
     
-    /**
-     *
-     * @return ManifestInterface
-     */
     public function getManifest(): ManifestInterface;
     
-    /**
-     *
-     * @return LeanElement
-     */
     public function getManifestElement(): LeanElement;
     
     /**
      * Used by Manifest to create the asset tree.
-     *
-     * @param string $name
-     * @return LeanElement
      */
     public function getChildManifestElement(string $name): LeanElement;
     
     /**
      * Get all child assets.
-     *
-     * @return AssetInterface[]
      */
     public function getAssetChildren(): iterable;
     
     /**
      * Traverse to a descendant asset.
-     *
-     * @param string $path
-     * @return AssetInterface
      */
     public function traverseTo(string $path): AssetInterface;
     
-    /**
-     *
-     * @param string $fileName
-     * @param FarahUrlArguments|string $args
-     * @param FarahUrlStreamIdentifier|string $fragment
-     * @return SplFileInfo
-     */
-    public function createCacheFile(string $fileName, $args = null, $fragment = null): SplFileInfo;
+    public function createCacheFile(string $fileName, FarahUrlArguments|string|null $args = null, FarahUrlStreamIdentifier|string|null $fragment = null): SplFileInfo;
     
-    /**
-     *
-     * @param string $fileName
-     * @param FarahUrlArguments|string $args
-     * @param FarahUrlStreamIdentifier|string $fragment
-     * @return SplFileInfo
-     */
-    public function createDataFile(string $fileName, $args = null, $fragment = null): SplFileInfo;
+    public function createDataFile(string $fileName, FarahUrlArguments|string|null $args = null, FarahUrlStreamIdentifier|string|null $fragment = null): SplFileInfo;
     
     /**
      * Create a FarahUrl for this asset, with arguments and stream set as supplied.
-     *
-     * @param FarahUrlArguments|string $args
-     * @param FarahUrlStreamIdentifier|string $fragment
-     * @return FarahUrl
      */
-    public function createUrl($args = null, $fragment = null): FarahUrl;
+    public function createUrl(FarahUrlArguments|string|null $args = null, FarahUrlStreamIdentifier|string|null $fragment = null): FarahUrl;
     
     /**
      * Create a FarahUrl for this asset, with arguments and stream set as supplied.
      * Follows any ref attributes, if present.
-     *
-     * @param FarahUrlArguments|string $args
-     * @param FarahUrlStreamIdentifier|string $fragment
-     * @return FarahUrl
      */
-    public function createRealUrl($args = null, $fragment = null): FarahUrl;
+    public function createRealUrl(FarahUrlArguments|string|null $args = null, FarahUrlStreamIdentifier|string|null $fragment = null): FarahUrl;
     
     /**
      * Get the FarahUrlPath for this asset.
@@ -133,15 +95,11 @@ interface AssetInterface {
     
     /**
      * Set any missing attributes according to the manifest's AssetBuilderStrategy.
-     *
-     * @param LeanElement $child
      */
     public function normalizeManifestElement(LeanElement $child): void;
     
     /**
      * Get the parameters supplied by this asset's ParameterSupplierStrategy.
-     *
-     * @return iterable
      */
     public function getSuppliedParameters(): iterable;
 }
