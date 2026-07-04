@@ -38,7 +38,7 @@ final class BannedManager {
         return $field;
     }
     
-    public static function setIpFile(string $path) {
+    public static function setIpFile(string $path): void {
         self::ipFile()->setValue($path);
     }
     
@@ -55,13 +55,13 @@ final class BannedManager {
         return in_array($ip, $this->getBannedList(), true);
     }
     
-    public function addBanned(string $ip) {
+    public function addBanned(string $ip): void {
         $this->setBannedList(array_merge($this->getBannedList(), [
             $ip
         ]));
     }
     
-    public function removeBanned(string $ip) {
+    public function removeBanned(string $ip): void {
         $this->setBannedList(array_diff($this->getBannedList(), [
             $ip
         ]));
@@ -77,7 +77,7 @@ final class BannedManager {
         return $this->bannedList;
     }
     
-    private function setBannedList(array $list) {
+    private function setBannedList(array $list): void {
         $this->bannedList = $list;
         $logFile = self::getIpFile();
         file_put_contents($logFile, implode(PHP_EOL, $this->bannedList));

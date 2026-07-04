@@ -28,11 +28,11 @@ final class ConfigurableCoding implements CodingInterface {
         return $this->httpName;
     }
     
-    public function setEncodingFilter(FilteredStreamWriterInterface $encodingWriter) {
+    public function setEncodingFilter(FilteredStreamWriterInterface $encodingWriter): void {
         $this->encodingWriter = $encodingWriter;
     }
     
-    public function clearEncodingFilter() {
+    public function clearEncodingFilter(): void {
         $this->encodingWriter = null;
     }
     
@@ -44,11 +44,11 @@ final class ConfigurableCoding implements CodingInterface {
         return $this->encodingWriter->toFilteredStream($stream);
     }
     
-    public function setDecodingFilter(FilteredStreamWriterInterface $decodingWriter) {
+    public function setDecodingFilter(FilteredStreamWriterInterface $decodingWriter): void {
         $this->decodingWriter = $decodingWriter;
     }
     
-    public function clearDecodingFilter() {
+    public function clearDecodingFilter(): void {
         $this->decodingWriter = null;
     }
     

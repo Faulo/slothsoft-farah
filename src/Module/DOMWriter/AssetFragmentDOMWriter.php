@@ -27,7 +27,7 @@ final class AssetFragmentDOMWriter implements DOMWriterInterface {
         $this->url = $url;
     }
     
-    public function appendChild(DOMWriterInterface $child) {
+    public function appendChild(DOMWriterInterface $child): void {
         $this->children[] = $child;
     }
     

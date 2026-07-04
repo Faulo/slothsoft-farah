@@ -8,7 +8,10 @@ use DOMElement;
 use ErrorException;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
+use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use Slothsoft\Farah\Module\Result\ResultInterface;
 use Throwable;
 
 /**
@@ -41,19 +44,19 @@ final class ExceptionContext implements DOMWriterInterface {
         $this->data += $data;
     }
     
-    public function getModule() {
+    public function getModule(): ?ManifestInterface {
         return $this->data['module'] ?? null;
     }
     
-    public function getAsset() {
+    public function getAsset(): ?AssetInterface {
         return $this->data['asset'] ?? null;
     }
     
-    public function getResult() {
+    public function getResult(): ?ResultInterface {
         return $this->data['result'] ?? null;
     }
     
-    public function getClass() {
+    public function getClass(): ?string {
         return $this->data['class'] ?? null;
     }
     
@@ -77,13 +80,13 @@ final class ExceptionContext implements DOMWriterInterface {
         $element->setAttribute('trace', $this->ownerException->getTraceAsString());
         
         if ($module = $this->getModule()) {
-            $element->setAttribute('module', $module->getId());
+            $element->setAttribute('module', (string) $module->createUrl());
         }
         if ($asset = $this->getAsset()) {
-            $element->setAttribute('asset', $asset->getId());
+            $element->setAttribute('asset', (string) $asset->createUrl());
         }
         if ($result = $this->getResult()) {
-            $element->setAttribute('result', $result->getId());
+            $element->setAttribute('result', (string) $result->createUrl());
         }
         if ($class = $this->getClass()) {
             $element->setAttribute('class', $class);

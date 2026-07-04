@@ -87,7 +87,7 @@ final class Kernel {
         return $field;
     }
     
-    public static function setCurrentRequest(ServerRequestInterface $request) {
+    public static function setCurrentRequest(ServerRequestInterface $request): void {
         self::currentRequest()->setValue($request);
     }
     
@@ -103,7 +103,7 @@ final class Kernel {
         return $field;
     }
     
-    public static function setTrackingEnabled(bool $value) {
+    public static function setTrackingEnabled(bool $value): void {
         self::trackingEnabled()->setValue($value);
     }
     
@@ -111,7 +111,7 @@ final class Kernel {
         return self::trackingEnabled()->getValue();
     }
     
-    private static function trackingExceptionUris() {
+    private static function trackingExceptionUris(): ConfigurationField {
         static $field;
         if ($field === null) {
             $field = new ConfigurationField([]);
@@ -119,7 +119,7 @@ final class Kernel {
         return $field;
     }
     
-    public static function setTrackingExceptionUris(string ...$uriList) {
+    public static function setTrackingExceptionUris(string ...$uriList): void {
         self::trackingExceptionUris()->setValue($uriList);
     }
     
@@ -138,7 +138,7 @@ final class Kernel {
         return $response;
     }
     
-    private function track(string $strategy, ServerRequestInterface $request, ResponseInterface $response) {
+    private function track(string $strategy, ServerRequestInterface $request, ResponseInterface $response): void {
         $env = $request->getServerParams();
         
         // request parameters

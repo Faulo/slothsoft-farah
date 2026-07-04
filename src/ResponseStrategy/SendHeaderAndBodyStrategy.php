@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class SendHeaderAndBodyStrategy implements ResponseStrategyInterface {
     
-    public function process(ResponseInterface $response) {
+    public function process(ResponseInterface $response): void {
         if (! headers_sent()) {
             $header = new SendHeaderStrategy();
             $header->process($response);

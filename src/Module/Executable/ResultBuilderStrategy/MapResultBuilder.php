@@ -26,7 +26,7 @@ final class MapResultBuilder implements ResultBuilderStrategyInterface {
         $this->streams = new Map();
     }
     
-    public function addStreamBuilder(FarahUrlStreamIdentifier $type, StreamBuilderStrategyInterface $proxy) {
+    public function addStreamBuilder(FarahUrlStreamIdentifier $type, StreamBuilderStrategyInterface $proxy): void {
         $this->streams[$type] = $proxy;
     }
     

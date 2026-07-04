@@ -26,15 +26,15 @@ final class HTTPClosure {
         $this->task = $task;
     }
     
-    public function run(...$args) {
+    public function run(...$args): mixed {
         return ($this->task)(...$args);
     }
     
-    public function isThreaded() {
+    public function isThreaded(): bool {
         return (bool) $this->options['isThreaded'];
     }
     
-    public function isCachable() {
+    public function isCachable(): bool {
         return (bool) $this->options['isCachable'];
     }
 }

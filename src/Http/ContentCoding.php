@@ -47,11 +47,11 @@ final class ContentCoding {
         return $coding;
     }
     
-    public static function registerEncodingFilter(string $name, FilteredStreamWriterInterface $writer) {
+    public static function registerEncodingFilter(string $name, FilteredStreamWriterInterface $writer): void {
         self::getCoding($name)->setEncodingFilter($writer);
     }
     
-    public static function unregisterEncodingFilter(string $name) {
+    public static function unregisterEncodingFilter(string $name): void {
         self::getCoding($name)->clearEncodingFilter();
     }
     
@@ -64,11 +64,11 @@ final class ContentCoding {
         }
     }
     
-    public static function registerDecodingFilter(string $name, FilteredStreamWriterInterface $writer) {
+    public static function registerDecodingFilter(string $name, FilteredStreamWriterInterface $writer): void {
         self::getCoding($name)->setDecodingFilter($writer);
     }
     
-    public static function unregisterDecodingFilter(string $name) {
+    public static function unregisterDecodingFilter(string $name): void {
         self::getCoding($name)->clearDecodingFilter();
     }
     
@@ -81,4 +81,3 @@ final class ContentCoding {
         }
     }
 }
-

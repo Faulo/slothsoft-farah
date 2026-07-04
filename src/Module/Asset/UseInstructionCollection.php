@@ -28,15 +28,15 @@ final class UseInstructionCollection {
         $this->dataWriters = new Set();
     }
     
-    public function addData(DOMWriterInterface $dataWriter) {
+    public function addData(DOMWriterInterface $dataWriter): void {
         $this->dataWriters[] = $dataWriter;
     }
     
-    public function addManifestData(FarahUrl $url, string $name) {
+    public function addManifestData(FarahUrl $url, string $name): void {
         $this->addData(new AssetManifestDOMWriter($url, $name));
     }
     
-    public function addDocumentData(FarahUrl $url, string $name) {
+    public function addDocumentData(FarahUrl $url, string $name): void {
         $this->addData(new AssetDocumentDOMWriter($url, $name));
     }
 }

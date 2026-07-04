@@ -24,7 +24,7 @@ final class SendBodyStrategy implements ResponseStrategyInterface {
         $this->chunkSize = $chunkSize ?? Memory::ONE_KILOBYTE;
     }
     
-    public function process(ResponseInterface $response) {
+    public function process(ResponseInterface $response): void {
         $input = $response->getBody();
         $output = fopen($this->destination, StreamWrapperInterface::MODE_CREATE_WRITEONLY);
         

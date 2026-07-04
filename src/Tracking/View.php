@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Tracking;
 
 use DOMDocument;
+use DOMDocumentFragment;
 use Slothsoft\Farah\HTTPRequest;
 
 /**
@@ -31,7 +32,10 @@ final class View {
         $this->archive = $archive;
         
         $config = $this->archive->getConfig();
-        foreach ($config['logColumns'] as $key => $column) {
+        $logColumns = $config['logColumns'];
+        assert(is_array($logColumns));
+        /** @var array<string, array<string, mixed>> $logColumns */
+        foreach ($logColumns as $key => $column) {
             if ($column['groupable']) {
                 $this->groupList[$key] = '';
             }
@@ -41,7 +45,7 @@ final class View {
         }
     }
     
-    public function parseRequest(HTTPRequest $request) {
+    public function parseRequest(HTTPRequest $request): void {
         $this->pageNo = (int) $request->getInputValue('page', 0);
         $this->logURI = (string) $request->getInputValue('log');
         /*
@@ -72,10 +76,13 @@ final class View {
         unset($val);
     }
     
-    public function asNode(DOMDocument $dataDoc) {
+    public function asNode(DOMDocument $dataDoc): DOMDocumentFragment {
         $retFragment = $dataDoc->createDocumentFragment();
         
         $config = $this->archive->getConfig();
+        $logColumns = $config['logColumns'];
+        assert(is_array($logColumns));
+        /** @var array<string, array<string, mixed>> $logColumns */
         $table = $this->archive->getLogTableByURI($this->logURI);
         
         $groupFilter = [];
@@ -167,7 +174,7 @@ final class View {
         
         $rowList = $table->select($groupFilter, $searchFilter, $this->pageNo, $this->pageLimit);
         
-        foreach ($config['logColumns'] as $key => $column) {
+        foreach ($logColumns as $key => $column) {
             if ($column['visible']) {
                 $node = $dataDoc->createElement('col');
                 $node->appendChild($dataDoc->createTextNode($key));

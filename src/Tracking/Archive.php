@@ -203,7 +203,7 @@ final class Archive {
         unset($table);
     }
     
-    public function install() {
+    public function install(): void {
         if (! $this->db->databaseExists()) {
             $this->db->createDatabase();
         }
@@ -227,11 +227,11 @@ final class Archive {
         }
     }
     
-    public function getConfig() {
+    public function getConfig(): array {
         return $this->config;
     }
     
-    public function insertTemp($time, array $data, $id = null) {
+    public function insertTemp($time, array $data, $id = null): mixed {
         if ($id === null) {
             $ret = $this->tempTable->insert([
                 'time' => $time,
@@ -250,25 +250,25 @@ final class Archive {
         return $ret;
     }
     
-    public function updateOutdated(array $idList) {
+    public function updateOutdated(array $idList): void {
         $this->tempTable->update([
             'version' => $this->config['version']
         ], $idList);
     }
     
-    public function getOutdated() {
+    public function getOutdated(): array {
         return $this->tempTable->select('id', sprintf('version < %d LIMIT %d', $this->config['version'], $this->config['parseLimit']));
     }
     
-    public function getCurrent() {
+    public function getCurrent(): array {
         return $this->tempTable->select('id', sprintf('version = %d LIMIT %d', $this->config['version'], $this->config['parseLimit']));
     }
     
-    public function getLogTableList() {
+    public function getLogTableList(): array {
         return $this->logTableList;
     }
     
-    public function getLogTableByURI($uri) {
+    public function getLogTableByURI($uri): LogTable {
         $ret = $this->logTableList[$this->logTableDefault];
         foreach ($this->logTableList as $test => $table) {
             if (str_starts_with($uri, $test)) {
@@ -279,11 +279,11 @@ final class Archive {
         return $ret;
     }
     
-    public function getLogTableByStrategy($strategy) {
+    public function getLogTableByStrategy($strategy): LogTable {
         return $this->logTableList[$strategy];
     }
     
-    protected function fixTemp() {
+    protected function fixTemp(): int {
         // fix temp table
         $ret = 0;
         while ($idList = $this->getOutdated()) {
@@ -293,13 +293,13 @@ final class Archive {
         return $ret;
     }
     
-    protected function fixIndex() {
+    protected function fixIndex(): void {
         foreach ($this->logTableList as $table) {
             $table->fixIndeX();
         }
     }
     
-    protected function fixRollback() {
+    protected function fixRollback(): bool {
         // rollback temp table to log
         ini_set('memory_limit', '2G');
         foreach ($this->logTableList as $table) {
@@ -311,7 +311,7 @@ final class Archive {
         return false;
     }
     
-    public function backup() {
+    public function backup(): void {
         $ret = 0;
         while ($idList = $this->getCurrent()) {
             foreach ($this->tempTable->select(true, [
@@ -328,7 +328,7 @@ final class Archive {
         }
     }
     
-    public function parse() {
+    public function parse(): int {
         // my_dump($this->fixRollback()); die;
         // $this->fixTemp();
         // $this->fixIndex();
@@ -376,7 +376,7 @@ final class Archive {
         return $ret;
     }
     
-    protected function prepareData(array &$data) {
+    protected function prepareData(array &$data): int {
         $ret = self::PREPARE_OK;
         
         // preset null
@@ -418,7 +418,7 @@ final class Archive {
         return $ret;
     }
     
-    public function import() {
+    public function import(): int {
         $ret = 0;
         $step = 1000;
         $dbName = 'cms';

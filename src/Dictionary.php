@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
 use DOMDocument;
+use DOMDocumentFragment;
 use DOMElement;
 use DOMNode;
 use DOMXPath;
@@ -49,7 +50,7 @@ final class Dictionary {
     
     private Set $dictionaryUrls;
     
-    public function registerDictionary(FarahUrl $url) {
+    public function registerDictionary(FarahUrl $url): void {
         $this->dictionaryUrls[] = $url;
     }
     
@@ -187,7 +188,7 @@ final class Dictionary {
         }
     }
     
-    private static function supportedLanguages() {
+    private static function supportedLanguages(): ConfigurationField {
         static $field;
         if ($field === null) {
             $field = new ConfigurationField([]);
@@ -195,7 +196,7 @@ final class Dictionary {
         return $field;
     }
     
-    public static function setSupportedLanguages(string ...$languageList) {
+    public static function setSupportedLanguages(string ...$languageList): void {
         self::supportedLanguages()->setValue($languageList);
         self::getInstance()->calcAcceptLanguage();
     }
@@ -264,16 +265,16 @@ final class Dictionary {
         return $instance;
     }
     
-    public static function lookup($word, $namespace = null, $language = null) {
+    public static function lookup($word, $namespace = null, $language = null): string {
         $dict = self::getInstance();
         return $dict->lookupText($word, $namespace, $language);
     }
     
-    public static function createLink($uri, $lang = null) {
+    public static function createLink($uri, $lang = null): string {
         return $uri . '?' . self::KEY_SET_LANG . '=' . $lang;
     }
     
-    public static function languageInfo($rawCode) {
+    public static function languageInfo($rawCode): array {
         $rawCode = trim($rawCode);
         $ret = [
             'source' => $rawCode,
@@ -314,7 +315,7 @@ final class Dictionary {
         $this->calcAcceptLanguage();
     }
     
-    private function calcAcceptLanguage() {
+    private function calcAcceptLanguage(): void {
         $this->currentLang = self::getSupportedLanguages()[0] ?? null;
         
         $langReqs = [];
@@ -337,7 +338,7 @@ final class Dictionary {
     private $isSettingUp = false;
     
     /* public functions */
-    public function translateDoc(DOMDocument $doc, FarahUrl $context) {
+    public function translateDoc(DOMDocument $doc, FarahUrl $context): int {
         if ($this->isSettingUp) {
             return 0;
         }
@@ -386,7 +387,7 @@ final class Dictionary {
         return $ret ? $ret + $this->translateDoc($doc, $context) : 0;
     }
     
-    public function translateNode(DOMXPath $xpath, DOMElement $node, $expr, $namespace = null, $language = null) {
+    public function translateNode(DOMXPath $xpath, DOMElement $node, $expr, $namespace = null, $language = null): int {
         $ret = 0;
         $res = $xpath->evaluate($expr, $node);
         $nodeList = [];
@@ -416,7 +417,7 @@ final class Dictionary {
         return $ret;
     }
     
-    public function acceptLanguage($acceptLang) {
+    public function acceptLanguage($acceptLang): bool {
         $acceptArr = explode(',', $acceptLang);
         foreach ($acceptArr as $lang) {
             $lang = explode(';', $lang);
@@ -432,27 +433,27 @@ final class Dictionary {
         return false;
     }
     
-    public function setLang($lang) {
+    public function setLang($lang): ?string {
         $ret = $this->currentLang;
         $this->currentLang = $lang;
         return $ret;
     }
     
-    public function setNS($ns) {
+    public function setNS($ns): string {
         $ret = $this->currentNS;
         $this->currentNS = $ns;
         return $ret;
     }
     
-    public function getLang() {
+    public function getLang(): ?string {
         return $this->currentLang;
     }
     
-    public function getNS() {
+    public function getNS(): string {
         return $this->currentNS;
     }
     
-    public function lookupText($originalWord, $namespace = null, $language = null) {
+    public function lookupText($originalWord, $namespace = null, $language = null): string {
         $word = $this->sanitizeWord($originalWord);
         $xpath = $this->getLangPath($namespace, $language);
         if (! $xpath->evaluate(sprintf(self::XPATH_EXISTS, $word))) {
@@ -461,11 +462,11 @@ final class Dictionary {
         return $xpath->evaluate(sprintf(self::XPATH_TEXT, $word));
     }
     
-    public function lookupXML($word, $namespace = null, $language = null) {
+    public function lookupXML($word, $namespace = null, $language = null): void {
         $word = $this->sanitizeWord($word);
     }
     
-    public function lookupFragment($originalWord, $namespace = null, $language = null, ?DOMDocument $ownerDoc = null) {
+    public function lookupFragment($originalWord, $namespace = null, $language = null, ?DOMDocument $ownerDoc = null): DOMDocumentFragment {
         if (! ($originalWord instanceof DOMNode)) {
             $originalWord = (string) $originalWord;
         }
@@ -493,7 +494,7 @@ final class Dictionary {
     }
     
     /* private functions */
-    protected function sanitizeWord($word) {
+    protected function sanitizeWord($word): string {
         if ($word instanceof DOMNode) {
             $word = $word->textContent;
         }
@@ -503,7 +504,7 @@ final class Dictionary {
         ], '', $word));
     }
     
-    protected function getLangPath($namespace = null, $language = null) {
+    protected function getLangPath($namespace = null, $language = null): DOMXPath {
         if ($namespace === null) {
             $namespace = '';
         } else {
@@ -525,25 +526,7 @@ final class Dictionary {
         return $this->langPaths[$key];
     }
     
-    protected function addWord(DOMDocument $doc, $word, $originalWord = null) {
+    protected function addWord(DOMDocument $doc, $word, $originalWord = null): void {
         return;
-        
-        $word = trim($word);
-        if (strlen($word)) {
-            $node = $doc->createElementNS(self::NS_HTML, self::XPATH_LANGNODE);
-            $node->setAttribute(self::XPATH_LANGATTR, $word);
-            if ($originalWord === null) {
-                $originalWord = $word;
-            }
-            if ($originalWord instanceof DOMNode) {
-                $child = $doc->importNode($originalWord, true);
-            } else {
-                $child = $doc->createTextNode($originalWord);
-            }
-            $node->appendChild($child);
-            $doc->documentElement->appendChild($node);
-            $doc->documentElement->appendChild($doc->createTextNode(self::XPATH_EOL));
-            $doc->save($doc->documentURI);
-        }
     }
 }

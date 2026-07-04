@@ -22,7 +22,7 @@ final class ManifestContainer implements IteratorAggregate {
         $this->map = new Map();
     }
     
-    public function put(FarahUrlAuthority $id, ManifestInterface $item) {
+    public function put(FarahUrlAuthority $id, ManifestInterface $item): void {
         $this->map->put($id, $item);
     }
     

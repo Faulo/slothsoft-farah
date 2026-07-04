@@ -17,7 +17,7 @@ use Slothsoft\Farah\Module\Module;
  */
 final class AssetConfigurationField extends ConfigurationField {
     
-    public function getValue() {
+    public function getValue(): AssetInterface {
         $value = parent::getValue();
         return $value instanceof AssetInterface ? $value : $this->loadValue($value);
     }

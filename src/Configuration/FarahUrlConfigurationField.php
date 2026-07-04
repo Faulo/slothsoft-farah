@@ -15,7 +15,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
  */
 final class FarahUrlConfigurationField extends ConfigurationField {
     
-    public function getValue() {
+    public function getValue(): FarahUrl {
         $value = parent::getValue();
         return $value instanceof FarahUrl ? $value : $this->loadValue($value);
     }

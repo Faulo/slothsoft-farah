@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\StreamWrapper;
 
 use Slothsoft\Core\StreamWrapper\Psr7StreamWrapper;
 use Slothsoft\Core\StreamWrapper\StreamWrapperFactoryInterface;
+use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Exception\HttpDownloadException;
@@ -22,7 +23,7 @@ use Slothsoft\Farah\Module\Module;
  */
 final class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
     
-    public function createStreamWrapper(string $url, string $mode, int $options) {
+    public function createStreamWrapper(string $url, string $mode, int $options): StreamWrapperInterface {
         $url = FarahUrl::createFromReference($url);
         
         $stream = Module::resolveToStreamWriter($url)->toStream();
@@ -30,7 +31,7 @@ final class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
         return new Psr7StreamWrapper($stream);
     }
     
-    public function statUrl(string $url, int $flags) {
+    public function statUrl(string $url, int $flags): array|bool {
         try {
             $url = FarahUrl::createFromReference($url);
         } catch (IncompleteUrlException) {

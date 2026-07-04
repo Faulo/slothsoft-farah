@@ -23,21 +23,21 @@ final class Cache {
         $this->rootDir = ServerEnvironment::getCacheDirectory();
     }
     
-    public function getPath($uri, $cacheDir = '') {
+    public function getPath($uri, $cacheDir = ''): string {
         $path = $this->sanitizeName($uri);
         $ret = $this->rootDir . $cacheDir;
         FileSystem::ensureDirectory($ret);
         return realpath($ret) . DIRECTORY_SEPARATOR . $path;
     }
     
-    public function getURI($uri, $cacheDir = '') {
+    public function getURI($uri, $cacheDir = ''): string {
         $ret = $this->getPath($uri, $cacheDir);
         $ret = substr($ret, strlen($this->rootDir));
         $ret = str_replace('\\', '/', $ret);
         return $this->loadScript . $ret;
     }
     
-    public function getFile($path) {
+    public function getFile($path): ?string {
         $ret = null;
         if (file_exists($this->rootDir . $path)) {
             $ret = $this->rootDir . $path;
@@ -85,11 +85,11 @@ final class Cache {
         return $cacheURI;
     }
     
-    protected function createName(array $names) {
+    protected function createName(array $names): string {
         return md5(implode(PHP_EOL, $names));
     }
     
-    protected function sanitizeName($path) {
+    protected function sanitizeName($path): string {
         return trim(str_replace([
             '/',
             '\\',

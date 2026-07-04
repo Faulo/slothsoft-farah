@@ -20,7 +20,7 @@ final class ResultContainer {
         $this->map = new Map();
     }
     
-    public function put(FarahUrlStreamIdentifier $id, ResultInterface $item) {
+    public function put(FarahUrlStreamIdentifier $id, ResultInterface $item): void {
         $this->map->put($id, $item);
     }
     

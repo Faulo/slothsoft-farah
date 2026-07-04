@@ -36,7 +36,7 @@ final class Session {
         $this->initialized = false;
     }
     
-    protected function install() {
+    protected function install(): void {
         $sqlCols = [
             'id' => 'int NOT NULL AUTO_INCREMENT',
             'session' => 'CHAR(40) CHARACTER SET ascii COLLATE ascii_bin NULL',
@@ -67,7 +67,7 @@ final class Session {
         $this->dbmsTable->createTable($sqlCols, $sqlKeys, $options);
     }
     
-    protected function init() {
+    protected function init(): void {
         if (! $this->initialized) {
             $this->initialized = true;
             try {
@@ -82,7 +82,7 @@ final class Session {
         }
     }
     
-    protected function initKey($key = null) {
+    protected function initKey($key = null): void {
         if ($key === null) {
             $key = $this->generateKey();
         }
@@ -91,40 +91,40 @@ final class Session {
         $this->setCookie($this->cookieName, $this->key);
     }
     
-    public function getGlobalValue($key, $val = null) {
+    public function getGlobalValue($key, $val = null): mixed {
         $this->init();
         return $this->loadData(self::GLOBAL_SESSION, $key, $val);
     }
     
-    public function setGlobalValue($key, $val = null) {
+    public function setGlobalValue($key, $val = null): void {
         $this->init();
         $this->saveData(self::GLOBAL_SESSION, $key, $val);
     }
     
-    public function getDataValue($key, $val = null) {
+    public function getDataValue($key, $val = null): mixed {
         $this->init();
         $this->data[$key] = $this->loadData($this->key, $key, $val);
         return $this->data[$key];
     }
     
-    public function setDataValue($key, $val = null) {
+    public function setDataValue($key, $val = null): void {
         $this->init();
         $this->data[$key] = $val;
         $this->saveData($this->key, $key, $val);
     }
     
-    public function setCookie($key, $val = null) {
+    public function setCookie($key, $val = null): void {
         if (! headers_sent()) {
             setcookie($key, $val, time() + Seconds::MONTH, '/');
         }
         $_COOKIE[$key] = $val;
     }
     
-    public function getCookie($key, $val = null) {
+    public function getCookie($key, $val = null): mixed {
         return $_COOKIE[$key] ?? $val;
     }
     
-    protected function loadData($session, $key, $val) {
+    protected function loadData($session, $key, $val): mixed {
         $arr = [];
         $arr['session'] = $session;
         $arr['name'] = $this->hash($key);
@@ -132,7 +132,7 @@ final class Session {
         return $res ? $this->decodeData(current($res)) : $val;
     }
     
-    protected function saveData($session, $key, $val) {
+    protected function saveData($session, $key, $val): void {
         $arr = [];
         $arr['session'] = $session;
         $arr['name'] = $this->hash($key);
@@ -155,7 +155,7 @@ final class Session {
         }
     }
     
-    protected function generateKey() {
+    protected function generateKey(): string {
         if (isset($_SERVER, $_SERVER['REQUEST_TIME_FLOAT'], $_SERVER['REMOTE_ADDR'])) {
             $ret = sha1($_SERVER['REQUEST_TIME_FLOAT'] . '-' . $_SERVER['REMOTE_ADDR']);
         } else {
@@ -166,18 +166,18 @@ final class Session {
     
     protected static $hashList = [];
     
-    protected function hash($name) {
+    protected function hash($name): string {
         if (! isset(self::$hashList[$name])) {
             self::$hashList[$name] = sha1($name);
         }
         return self::$hashList[$name];
     }
     
-    protected function encodeData($data) {
+    protected function encodeData($data): string|false {
         return json_encode($data);
     }
     
-    protected function decodeData($data) {
+    protected function decodeData($data): mixed {
         return json_decode($data, true);
     }
 }

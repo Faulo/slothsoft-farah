@@ -21,7 +21,7 @@ final class HttpStatusException extends RuntimeException {
         $this->setAdditionalHeaders($headers);
     }
     
-    public function setAdditionalHeaders(array $headers) {
+    public function setAdditionalHeaders(array $headers): void {
         $this->headers = $headers;
     }
     

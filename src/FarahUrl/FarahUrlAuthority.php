@@ -67,7 +67,7 @@ final class FarahUrlAuthority implements Hashable {
         return ($obj instanceof self and ((string) $this === (string) $obj));
     }
     
-    public function hash() {
+    public function hash(): string {
         return (string) $this;
     }
 }

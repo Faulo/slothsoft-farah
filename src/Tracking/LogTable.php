@@ -41,16 +41,22 @@ final class LogTable {
     
     protected $dbmsTable;
     
-    protected $columnConfig;
+    /**
+     * @var array<string, array<string, mixed>>
+     */
+    protected array $columnConfig;
     
     public function __construct(Archive $archive, Table $dbmsTable) {
         $this->archive = $archive;
         $this->dbmsTable = $dbmsTable;
         $config = $this->archive->getConfig();
-        $this->columnConfig = $config['logColumns'];
+        $columnConfig = $config['logColumns'];
+        assert(is_array($columnConfig));
+        /** @var array<string, array<string, mixed>> $columnConfig */
+        $this->columnConfig = $columnConfig;
     }
     
-    public function install() {
+    public function install(): void {
         if (! $this->dbmsTable->tableExists()) {
             $sqlCols = [];
             $sqlCols['id'] = 'int NOT NULL AUTO_INCREMENT';
@@ -69,11 +75,11 @@ final class LogTable {
         }
     }
     
-    public function getName() {
+    public function getName(): string {
         return $this->dbmsTable->getName();
     }
     
-    public function insert($id, $json, array $data) {
+    public function insert($id, $json, array $data): mixed {
         $sql = [];
         $sql['id'] = $id;
         $sql['data'] = $json;
@@ -83,27 +89,27 @@ final class LogTable {
         return $this->dbmsTable->insert($sql, $sql);
     }
     
-    public function delete($id) {
+    public function delete($id): mixed {
         return $this->dbmsTable->delete($id);
     }
     
-    public function selectGroup($column, array $filter, $sql) {
+    public function selectGroup($column, array $filter, $sql): array {
         if (isset($filter[$column])) {
             unset($filter[$column]);
         }
         return $this->dbmsTable->select(sprintf('DISTINCT %s', $column), $filter, sprintf('%s ORDER BY %s', $sql, $column));
     }
     
-    public function selectCount(array $filter, $sql) {
+    public function selectCount(array $filter, $sql): mixed {
         $res = $this->dbmsTable->select('COUNT(*)', $filter, $sql);
         return reset($res);
     }
     
-    public function select(array $filter, $sql, $page, $limit) {
+    public function select(array $filter, $sql, $page, $limit): array {
         return $this->dbmsTable->select(array_keys($this->columnConfig), $filter, sprintf('%s ORDER BY id DESC LIMIT %d, %d', $sql, $page * $limit, $limit));
     }
     
-    public function fixIndex() {
+    public function fixIndex(): void {
         foreach ($this->columnConfig as $key => $column) {
             if ($column['searchable'] or $column['groupable']) {
                 $index = [];
@@ -115,7 +121,7 @@ final class LogTable {
         }
     }
     
-    public function fixRollback(Table $tempTable) {
+    public function fixRollback(Table $tempTable): int {
         $ret = 0;
         $rowList = $this->dbmsTable->select();
         foreach ($rowList as $row) {

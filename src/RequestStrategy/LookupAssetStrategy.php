@@ -25,7 +25,7 @@ final class LookupAssetStrategy extends RequestStrategyBase {
         return $field;
     }
     
-    public static function setHrefBase($hrefBase) {
+    public static function setHrefBase($hrefBase): void {
         self::hrefBase()->setValue($hrefBase);
     }
     

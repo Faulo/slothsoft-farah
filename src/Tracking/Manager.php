@@ -20,7 +20,7 @@ final class Manager {
     
     protected static $archive = null;
     
-    public static function getArchive() {
+    public static function getArchive(): Archive {
         if (! self::$archive) {
             $db = DBMSManager::getDatabase(self::$dbName);
             self::$archive = new Archive($db);
@@ -28,12 +28,12 @@ final class Manager {
         return self::$archive;
     }
     
-    public static function getView() {
+    public static function getView(): View {
         $archive = self::getArchive();
         return new View($archive);
     }
     
-    public static function track(array $request) {
+    public static function track(array $request): void {
         try {
             $archive = self::getArchive();
             $archive->insertTemp($request['REQUEST_TIME_FLOAT'] ?? microtime(true), $request);

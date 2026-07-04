@@ -195,7 +195,7 @@ final class FarahUrl implements UriInterface, Hashable {
         return $this->withQueryArguments($args);
     }
     
-    public function withStreamIdentifier(FarahUrlStreamIdentifier $fragment) {
+    public function withStreamIdentifier(FarahUrlStreamIdentifier $fragment): FarahUrl {
         return self::createFromComponents($this->authority, $this->path, $this->args, $fragment);
     }
     
@@ -271,7 +271,7 @@ final class FarahUrl implements UriInterface, Hashable {
         return ($obj instanceof self and ((string) $this === (string) $obj));
     }
     
-    public function hash() {
+    public function hash(): string {
         return $this->id;
     }
 }

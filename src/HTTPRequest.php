@@ -22,7 +22,7 @@ final class HTTPRequest implements DOMWriterInterface {
         return defined('SERVER_NAME') ? constant('SERVER_NAME') : 'localhost';
     }
     
-    public static function prepareEnvironment(array &$env) {
+    public static function prepareEnvironment(array &$env): void {
         $lang = null;
         if (isset($env['HTTP_ACCEPT_LANGUAGE'])) {
             if ($matchList = Dictionary::parseAcceptLanguageHeader($env['HTTP_ACCEPT_LANGUAGE'])) {
@@ -154,7 +154,7 @@ final class HTTPRequest implements DOMWriterInterface {
         return isset($this->input[$key]);
     }
     
-    public function getInputValue($key, $val = null) {
+    public function getInputValue($key, $val = null): mixed {
         return $this->input[$key] ?? $val;
     }
     
@@ -172,7 +172,7 @@ final class HTTPRequest implements DOMWriterInterface {
     }
     
     // deprecated, use getBodyJSON()
-    public function getInputJSON() {
+    public function getInputJSON(): mixed {
         return json_decode($this->getInput(), true);
     }
     
@@ -180,7 +180,7 @@ final class HTTPRequest implements DOMWriterInterface {
         return file_get_contents('php://input');
     }
     
-    public function getBodyJSON() {
+    public function getBodyJSON(): mixed {
         return json_decode($this->getBody(), true);
     }
     
@@ -190,7 +190,7 @@ final class HTTPRequest implements DOMWriterInterface {
         }
     }
     
-    public function getHeader(string $key, ?string $default = null) {
+    public function getHeader(string $key, ?string $default = null): mixed {
         return $this->headerList[$key] ?? $default;
     }
     

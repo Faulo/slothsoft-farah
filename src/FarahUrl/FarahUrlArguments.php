@@ -84,19 +84,19 @@ final class FarahUrlArguments implements IteratorAggregate, Hashable {
         return $this->id;
     }
     
-    public function get(string $key, $default = null) {
+    public function get(string $key, $default = null): mixed {
         return $this->data[$key] ?? $default;
     }
     
-    public function set(string $key, $val) {
+    public function set(string $key, $val): void {
         $this->data[$key] = $val;
     }
     
-    public function has(string $key) {
+    public function has(string $key): bool {
         return isset($this->data[$key]);
     }
     
-    public function delete(string $key) {
+    public function delete(string $key): void {
         unset($this->data[$key]);
     }
     
@@ -150,7 +150,7 @@ final class FarahUrlArguments implements IteratorAggregate, Hashable {
         return ($obj instanceof self and ($this->id === $obj->id));
     }
     
-    public function hash() {
+    public function hash(): string {
         return $this->id;
     }
 }

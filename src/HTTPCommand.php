@@ -21,24 +21,24 @@ final class HTTPCommand {
         $this->exec = new InterExec($command);
     }
     
-    public function getMime() {
+    public function getMime(): ?string {
         return null;
     }
     
-    public function getEncoding() {
+    public function getEncoding(): ?string {
         return null;
     }
     
-    public function getHeaderList() {
+    public function getHeaderList(): array {
         return [];
     }
     
-    public function run() {
+    public function run(): void {
         $this->exec->run();
     }
     
     // EventTarget
-    public function addEventListener($type, Closure $listener, $capture = false) {
+    public function addEventListener($type, Closure $listener, $capture = false): void {
         $this->exec->on($type, function (InterExec $exec, $data) use ($type, $listener) {
             $eve = new HTTPEvent($type);
             $eve->target = $this;
@@ -47,11 +47,11 @@ final class HTTPCommand {
         });
     }
     
-    public function removeEventListener($type, $listener, $capture = false) {
+    public function removeEventListener($type, $listener, $capture = false): void {
         // not implemented
     }
     
-    public function dispatchEvent($event) {
+    public function dispatchEvent($event): void {
         // not implemented
     }
 }

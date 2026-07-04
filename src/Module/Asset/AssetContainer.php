@@ -20,7 +20,7 @@ final class AssetContainer {
         $this->map = new Map();
     }
     
-    public function put(FarahUrlPath $id, AssetInterface $item) {
+    public function put(FarahUrlPath $id, AssetInterface $item): void {
         $this->map->put($id, $item);
     }
     

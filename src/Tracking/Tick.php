@@ -16,7 +16,7 @@ final class Tick {
     
     protected static $logTick;
     
-    public static function log() {
+    public static function log(): void {
         if (! self::$logTick) {
             self::$logTick = new Tick();
         }
@@ -45,7 +45,7 @@ final class Tick {
         $this->save();
     }
     
-    protected function create() {
+    protected function create(): void {
         $this->lastTime = get_execution_time();
         
         $this->functionList = [];
@@ -57,7 +57,7 @@ final class Tick {
         file_put_contents($this->timelineFile, '');
     }
     
-    protected function save() {
+    protected function save(): void {
         $arr = $this->functionList;
         arsort($arr);
         foreach ($arr as $key => &$val) {
@@ -68,7 +68,7 @@ final class Tick {
         file_put_contents($this->timelineFile, implode(PHP_EOL, $this->timelineList));
     }
     
-    protected function append() {
+    protected function append(): void {
         $time = get_execution_time();
         $backtraceList = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
         $backtrace = array_pop($backtraceList);
