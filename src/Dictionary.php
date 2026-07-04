@@ -274,36 +274,6 @@ final class Dictionary {
         return $uri . '?' . self::KEY_SET_LANG . '=' . $lang;
     }
     
-    public static function languageInfo($rawCode): array {
-        $rawCode = trim($rawCode);
-        $ret = [
-            'source' => $rawCode,
-            'code' => 'und',
-            'name' => 'Undetermined'
-        ];
-        if ($httpDocument = Kernel::getInstance()) {
-            $registryDoc = $httpDocument->getResourceDoc('/core/language-registry', 'xml');
-            $registryPath = DOMHelper::loadXPath($registryDoc);
-            $iso639Doc = $httpDocument->getResourceDoc('/core/iso-639', 'xml');
-            $iso639Path = DOMHelper::loadXPath($iso639Doc);
-            
-            if (strlen($rawCode) === 3) {
-                $langCode = $iso639Path->evaluate(sprintf('string(//tr[td[1][contains(., "%s")]]/td[2])', $rawCode));
-                $ret['code'] = $langCode;
-                $langName = $registryPath->evaluate(sprintf('string(//registry/language[subtag = "%s"]/description)', $langCode));
-                $ret['name'] = $langName;
-            }
-            if ($ret['code'] === 'und') {
-                $langName = $registryPath->evaluate(sprintf('string(//registry/language[subtag = "%s"]/description)', $rawCode));
-                if (strlen($langName)) {
-                    $ret['code'] = $rawCode;
-                    $ret['name'] = $langName;
-                }
-            }
-        }
-        return $ret;
-    }
-    
     private function __construct() {
         $this->dictionaryUrls = new Set();
         $this->dictionaryDocuments = new Map();
