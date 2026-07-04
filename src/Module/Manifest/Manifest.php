@@ -154,11 +154,6 @@ final class Manifest implements ManifestInterface {
     
     public const PARAM_INCLUDES_EMBED = 'embed';
     
-    // misc
-    private const TEMPLATE_ERROR = 'slothsoft@farah/xsl/error';
-    
-    private const FILE_MANIFEST = 'manifest.xml';
-    
     private Module $ownerKernel;
     
     private FarahUrlAuthority $authority;
@@ -218,8 +213,7 @@ final class Manifest implements ManifestInterface {
     
     private function createAsset(LeanElement $element): AssetInterface {
         $strategies = $this->strategies->assetBuilder->buildAssetStrategies($this, $element);
-        $asset = new Asset($this, $element, FarahUrlPath::createFromString($element->getAttribute(self::ATTR_ASSETPATH)), $strategies);
-        return $asset;
+        return new Asset($this, $element, FarahUrlPath::createFromString($element->getAttribute(self::ATTR_ASSETPATH)), $strategies);
     }
     
     public function createManifestFile(string $fileName): SplFileInfo {
@@ -254,11 +248,11 @@ final class Manifest implements ManifestInterface {
     
     private function getManifestAttributes(): array {
         return [
-            static::ATTR_ID => $this->getId(),
-            static::ATTR_NAME => $this->authority->getModule(),
-            static::ATTR_ASSETPATH => '',
-            static::ATTR_PATH => '',
-            static::ATTR_REALPATH => $this->manifestDirectory
+            self::ATTR_ID => $this->getId(),
+            self::ATTR_NAME => $this->authority->getModule(),
+            self::ATTR_ASSETPATH => '',
+            self::ATTR_PATH => '',
+            self::ATTR_REALPATH => $this->manifestDirectory
         ];
     }
 }

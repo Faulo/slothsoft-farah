@@ -88,8 +88,7 @@ export default {
     },
     saveXML: function(doc) {
         const serializer = new XMLSerializer();
-        const xml = serializer.serializeToString(doc);
-        return xml;
+        return serializer.serializeToString(doc);
     },
     evaluate: function(query, contextNode = document) {
         try {
@@ -107,7 +106,8 @@ export default {
                     return result.booleanValue;
                 default:
                     const nodes = [];
-                    for (let tmp; tmp = result.iterateNext();) {
+                    let tmp;
+                    while ((tmp = result.iterateNext())) {
                         nodes.push(tmp);
                     }
                     return nodes;

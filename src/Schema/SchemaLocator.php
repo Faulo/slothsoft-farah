@@ -35,13 +35,11 @@ final class SchemaLocator {
                     if (count($schema) !== 2) {
                         throw new Exception("Invalid slothsoft schema: $ns");
                     }
-                    $url = "farah://slothsoft@$schema[0]/schema/$schema[1]/$version";
-                    return $url;
+                    return "farah://slothsoft@$schema[0]/schema/$schema[1]/$version";
                 }
             } else {
-                switch ($node->localName) {
-                    case 'testsuites':
-                        return 'farah://slothsoft@schema/schema/junit/1.0';
+                if ($node->localName === 'testsuites') {
+                    return 'farah://slothsoft@schema/schema/junit/1.0';
                 }
             }
         }

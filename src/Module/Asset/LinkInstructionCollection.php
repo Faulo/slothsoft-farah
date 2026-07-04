@@ -47,7 +47,7 @@ final class LinkInstructionCollection {
         }
     }
     
-    private function clear() {
+    private function clear(): void {
         $this->stylesheetUrls->clear();
         $this->scriptUrls->clear();
         $this->moduleUrls->clear();

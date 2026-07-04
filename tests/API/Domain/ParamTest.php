@@ -33,7 +33,7 @@ final class ParamTest extends TestCase {
             }
         }
         
-        $request = MessageFactory::createServerRequest($_SERVER, $_REQUEST, $_FILES);
+        $request = MessageFactory::createServerRequest();
         
         Kernel::setCurrentRequest($request);
         

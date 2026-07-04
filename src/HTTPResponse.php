@@ -80,10 +80,10 @@ final class HTTPResponse {
         'date-format' => 'D, d M Y H:i:s \\G\\M\\T',
         'doc-timestamp' => false, // "rendering took X seconds and Y MB"
         'cache-duration' => 0, // max-age, Sekunden
-        'input-size' => 1 * Memory::ONE_MEGABYTE, // maximum $env['RESPONSE_INPUT'] size
+        'input-size' => Memory::ONE_MEGABYTE, // maximum $env['RESPONSE_INPUT'] size
         'download-size' => 10 * Memory::ONE_MEGABYTE, // if above, force download
         'file-size' => 16 * Memory::ONE_MEGABYTE, // maximum setFile-load
-        'seek-size' => 1 * Memory::ONE_MEGABYTE, // maximum fseek
+        'seek-size' => Memory::ONE_MEGABYTE, // maximum fseek
         'chunk-size' => 256 * Memory::ONE_KILOBYTE, // transfer-encoding
         'gzip-level' => 9 // encoding-level
     ];
@@ -442,6 +442,7 @@ final class HTTPResponse {
                 if ($this->protocolMajorVersion >= 1 and $this->protocolMinorVersion >= 1) {
                     $this->transferEncoding = self::TRANSFER_ENCODING_CHUNKED;
                 }
+                break;
             default:
                 break;
         }
@@ -511,8 +512,6 @@ final class HTTPResponse {
         if ($doc->documentElement) {
             if ($doc->documentElement->hasAttribute('xml:lang')) {
                 $this->setLanguage($doc->documentElement->getAttribute('xml:lang'));
-            } elseif ($this->language) {
-                // $doc->documentElement->setAttribute('xml:lang', $this->language);
             }
         }
         if ($this->charset) {
@@ -537,7 +536,7 @@ final class HTTPResponse {
                 break;
         }
         if ($ext = MimeTypeDictionary::guessExtension($this->mime)) {
-            $this->setFileExt($ext, false);
+            $this->setFileExt($ext);
         }
         $this->setStatus(self::STATUS_OK);
         
@@ -552,14 +551,14 @@ final class HTTPResponse {
             $this->setBody(trim($doc->saveXML()));
         } else {
             $this->setBody(trim($doc->saveXML()));
-            $this->setEtag(self::calcEtag($this->body), true);
+            $this->setEtag(self::calcEtag($this->body));
         }
     }
     
     public function setBody($data) {
         $data = (string) $data;
         if (in_array(self::CONTENT_ENCODING_GZIP, $this->contentEncodingList)) {
-            $data = gzencode($data, self::$httpConfig['gzip-level'], FORCE_GZIP);
+            $data = gzencode($data, self::$httpConfig['gzip-level']);
             $this->contentEncoding = self::CONTENT_ENCODING_GZIP;
         } else {
             $this->contentEncoding = self::CONTENT_ENCODING_RAW;
@@ -678,15 +677,15 @@ final class HTTPResponse {
                     }
                     break;
                 case self::BODY_FILE:
-                    $start = $this->rangeStart;
+                    $start = (int) $this->rangeStart;
                     $end = $this->rangeEnd;
                     $length = $end - $start;
                     
                     if ($handle = fopen($this->body, 'rb')) {
                         if ($start < PHP_INT_MAX) {
-                            fseek($handle, $start, SEEK_SET);
+                            fseek($handle, $start);
                         } else {
-                            fseek($handle, PHP_INT_MAX, SEEK_SET);
+                            fseek($handle, PHP_INT_MAX);
                             $start -= PHP_INT_MAX;
                             while ($start > 0) {
                                 fread($handle, min(self::$httpConfig['seek-size'], $start));
@@ -715,7 +714,7 @@ final class HTTPResponse {
                             if ($timeoutTime > $heartbeatTimeout) {
                                 throw new StreamTimedOutException(get_class($this->body));
                             }
-                        } catch (Exception $e) {
+                        } catch (Exception) {
                             $status = HTTPStream::STATUS_ERROR;
                         }
                         switch ($status) {
@@ -724,11 +723,10 @@ final class HTTPResponse {
                                 if ($content !== '') {
                                     if ($heartbeatSent and $heartbeatEOL !== null) {
                                         $this->sendBodyChunk($heartbeatEOL);
-                                        $heartbeatSent = false;
                                     }
                                     $this->sendBodyChunk($content);
                                 }
-                            // fallthrouuugh /o/
+                            // no break
                             case HTTPStream::STATUS_DONE:
                             case HTTPStream::STATUS_ERROR:
                                 break 2;

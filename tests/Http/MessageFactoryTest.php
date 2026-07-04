@@ -9,7 +9,7 @@ class MessageFactoryTest extends AbstractTestCase {
     
     public function testCreateServerRequest() {
         $_SERVER['REQUEST_URI'] = 'farah://slothsoft@farah/?a=b';
-        $pageRequest = MessageFactory::createServerRequest($_SERVER, $_REQUEST, $_FILES);
+        $pageRequest = MessageFactory::createServerRequest();
         $this->assertEquals('a=b', $pageRequest->getUri()
             ->getQuery());
     }

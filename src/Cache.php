@@ -34,8 +34,7 @@ final class Cache {
         $ret = $this->getPath($uri, $cacheDir);
         $ret = substr($ret, strlen($this->rootDir));
         $ret = str_replace('\\', '/', $ret);
-        $ret = $this->loadScript . $ret;
-        return $ret;
+        return $this->loadScript . $ret;
     }
     
     public function getFile($path) {

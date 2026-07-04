@@ -20,9 +20,6 @@ use Throwable;
  * @since 2025-09-22
  */
 final class FromSubManifestPathResolver implements PathResolverStrategyInterface {
-    
-    private const VERSION = 1;
-    
     private Map $assets;
     
     public function __construct() {
@@ -62,7 +59,7 @@ final class FromSubManifestPathResolver implements PathResolverStrategyInterface
                         $name = $child->getAttribute(Manifest::ATTR_NAME);
                         $children[$name] = $child;
                     }
-                } catch (Throwable $e) {
+                } catch (Throwable) {
                 }
                 $this->assets->put($context, $children);
                 return $children;

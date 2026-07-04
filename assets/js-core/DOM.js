@@ -79,7 +79,6 @@ var DOM = {
     },
     saveXML: function(doc) {
         const serializer = new XMLSerializer();
-        const xml = serializer.serializeToString(doc);
-        return xml;
+        return serializer.serializeToString(doc);
     }
 };

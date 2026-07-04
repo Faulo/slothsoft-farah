@@ -171,7 +171,7 @@ final class Asset implements AssetInterface {
     }
     
     private function getManifestArguments(): FarahUrlArguments {
-        $data = iterator_to_array($this->getSuppliedParameters(), true);
+        $data = iterator_to_array($this->getSuppliedParameters());
         foreach ($this->getAssetChildren() as $child) {
             if ($child->isParameterSupplierInstruction()) {
                 foreach ($child->getSuppliedParameters() as $key => $val) {
@@ -211,7 +211,7 @@ final class Asset implements AssetInterface {
         return $hasChanged ? FarahUrlArguments::createFromValueList($valueList) : $args;
     }
     
-    private function createExecutable(FarahUrlArguments $args) {
+    private function createExecutable(FarahUrlArguments $args): ExecutableInterface {
         try {
             $strategies = $this->strategies->executableBuilder->buildExecutableStrategies($this, $args);
             return new Executable($this, $args, $strategies);
@@ -270,4 +270,3 @@ final class Asset implements AssetInterface {
         $this->ownerManifest->normalizeManifestElement($this->manifestElement, $child);
     }
 }
-

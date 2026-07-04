@@ -41,7 +41,7 @@ final class LookupPageStrategyTest extends TestCase {
         
         $requestStrategy = new LookupPageStrategy($domain);
         
-        $request = MessageFactory::createServerRequest($_SERVER, $_REQUEST, $_FILES);
+        $request = MessageFactory::createServerRequest();
         
         $expected = FarahUrl::createFromReference($reference);
         
@@ -51,7 +51,7 @@ final class LookupPageStrategyTest extends TestCase {
             $headers = $e->getAdditionalHeaders();
             $this->assertThat($headers, new ArrayHasKey('location'), "Expected a redirect to '$reference', but got: $e");
             $_SERVER['REQUEST_URI'] = $headers['location'];
-            $request = MessageFactory::createServerRequest($_SERVER, $_REQUEST, $_FILES);
+            $request = MessageFactory::createServerRequest();
             $actual = $requestStrategy->createUrl($request);
         }
         
@@ -112,7 +112,7 @@ final class LookupPageStrategyTest extends TestCase {
         
         $requestStrategy = new LookupPageStrategy($domain);
         
-        $request = MessageFactory::createServerRequest($_SERVER, $_REQUEST, $_FILES);
+        $request = MessageFactory::createServerRequest();
         
         try {
             $requestStrategy->createUrl($request);

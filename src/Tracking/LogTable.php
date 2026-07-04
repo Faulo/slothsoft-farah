@@ -44,9 +44,9 @@ final class LogTable {
     protected $columnConfig;
     
     public function __construct(Archive $archive, Table $dbmsTable) {
-        $this->ownerArchive = $archive;
+        $this->archive = $archive;
         $this->dbmsTable = $dbmsTable;
-        $config = $this->ownerArchive->getConfig();
+        $config = $this->archive->getConfig();
         $this->columnConfig = $config['logColumns'];
     }
     

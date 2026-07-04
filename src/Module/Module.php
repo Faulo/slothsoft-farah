@@ -59,7 +59,7 @@ final class Module {
         if (is_string($authority)) {
             $authority = FarahUrlAuthority::createFromHttpAuthority($authority);
         }
-        $module = static::getInstance();
+        $module = self::getInstance();
         $manifest = $module->createManifest($authority, $assetDirectory, $strategies);
         $module->setManifest($authority, $manifest);
         self::$latestModule = $authority;
@@ -74,39 +74,39 @@ final class Module {
         if (is_string($authority)) {
             $authority = FarahUrlAuthority::createFromHttpAuthority($authority);
         }
-        static::register($authority, $assetDirectory, new ManifestStrategies(new XmlTreeLoader(), new DefaultAssetBuilder($authority)));
+        self::register($authority, $assetDirectory, new ManifestStrategies(new XmlTreeLoader(), new DefaultAssetBuilder($authority)));
     }
     
     public static function resolveToManifest(FarahUrl $url): ManifestInterface {
-        return static::getInstance()->getManifest($url->getAssetAuthority());
+        return self::getInstance()->getManifest($url->getAssetAuthority());
     }
     
     public static function resolveToAsset(FarahUrl $url): AssetInterface {
-        return static::resolveToManifest($url)->lookupAsset($url->getAssetPath());
+        return self::resolveToManifest($url)->lookupAsset($url->getAssetPath());
     }
     
     public static function resolveToExecutable(FarahUrl $url): ExecutableInterface {
-        return static::resolveToAsset($url)->lookupExecutable($url->getArguments());
+        return self::resolveToAsset($url)->lookupExecutable($url->getArguments());
     }
     
     public static function resolveToResult(FarahUrl $url): ResultInterface {
-        return static::resolveToExecutable($url)->lookupResult($url->getStreamIdentifier());
+        return self::resolveToExecutable($url)->lookupResult($url->getStreamIdentifier());
     }
     
     public static function resolveToDOMWriter(FarahUrl $url): DOMWriterInterface {
-        return static::resolveToResult($url)->lookupDOMWriter();
+        return self::resolveToResult($url)->lookupDOMWriter();
     }
     
     public static function resolveToFileWriter(FarahUrl $url): FileWriterInterface {
-        return static::resolveToResult($url)->lookupFileWriter();
+        return self::resolveToResult($url)->lookupFileWriter();
     }
     
     public static function resolveToStreamWriter(FarahUrl $url): StreamWriterInterface {
-        return static::resolveToResult($url)->lookupStreamWriter();
+        return self::resolveToResult($url)->lookupStreamWriter();
     }
     
     public static function resolveToChunkWriter(FarahUrl $url): ChunkWriterInterface {
-        return static::resolveToResult($url)->lookupChunkWriter();
+        return self::resolveToResult($url)->lookupChunkWriter();
     }
     
     public function createCachedFile(string $fileName, FarahUrl $context): SplFileInfo {
@@ -157,7 +157,7 @@ final class Module {
     private function getManifest(FarahUrlAuthority $authority): ManifestInterface {
         try {
             return $this->manifests->get($authority);
-        } catch (OutOfBoundsException $e) {
+        } catch (OutOfBoundsException) {
             throw new ModuleNotFoundException((string) $authority);
         }
     }

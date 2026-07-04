@@ -24,7 +24,7 @@ abstract class AbstractWorkThread extends Threaded {
     }
     
     protected function getOptions(): array {
-        return (array) $this->options;
+        return $this->options;
     }
     
     protected function getOption(string $key) {
@@ -44,4 +44,3 @@ abstract class AbstractWorkThread extends Threaded {
         $this->worker->instructions->append(new WorkInstruction($className, $options));
     }
 }
-

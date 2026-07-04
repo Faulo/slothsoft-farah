@@ -50,9 +50,7 @@ final class LookupAssetStrategy extends RequestStrategyBase {
             $args = $params;
         }
         
-        $url = $url->withQueryArguments(FarahUrlArguments::createFromValueList($args));
-        
-        return $url;
+        return $url->withQueryArguments(FarahUrlArguments::createFromValueList($args));
     }
     
     private function extractFarahUrl(string $path): string {
@@ -68,9 +66,7 @@ final class LookupAssetStrategy extends RequestStrategyBase {
             $path = "farah://$path";
         }
         
-        $path = urldecode($path);
-        
-        return $path;
+        return urldecode($path);
     }
 }
 

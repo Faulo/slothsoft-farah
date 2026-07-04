@@ -31,13 +31,13 @@ final class RequestBuilder implements ExecutableBuilderStrategyInterface {
             try {
                 $request = Kernel::getCurrentRequest();
                 $rootNode->setAttribute(Manifest::ATTR_HREF, (string) $request->getUri());
-            } catch (ConfigurationRequiredException $e) {
+            } catch (ConfigurationRequiredException) {
             }
             
             try {
                 $pageUrl = Kernel::getCurrentPage();
                 $rootNode->setAttribute(Manifest::ATTR_URL, (string) $pageUrl);
-            } catch (ConfigurationRequiredException $e) {
+            } catch (ConfigurationRequiredException) {
             }
             
             foreach ($args as $name => $value) {

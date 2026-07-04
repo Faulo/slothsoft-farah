@@ -60,9 +60,7 @@ final class LookupPageStrategy extends RequestStrategyBase {
             throw new HttpStatusException("The URL $uri does not contain an asset.\n{$pageNode->ownerDocument->saveXML($pageNode)}", StatusCode::STATUS_NOT_IMPLEMENTED);
         }
         
-        $url = $this->domain->lookupAssetUrl($pageNode, $args);
-        
-        return $url;
+        return $this->domain->lookupAssetUrl($pageNode, $args);
     }
     
     public function lookupPageNode(string $path, ?DOMElement $contextNode = null): DOMElement {

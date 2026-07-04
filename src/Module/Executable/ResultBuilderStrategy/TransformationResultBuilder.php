@@ -25,10 +25,6 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
  */
 final class TransformationResultBuilder implements ResultBuilderStrategyInterface {
     
-    private static function resultIsDefault(): FarahUrlStreamIdentifier {
-        return Executable::resultIsDefault();
-    }
-    
     private static function resultIsXslSource(): FarahUrlStreamIdentifier {
         return FarahUrlStreamIdentifier::createFromString('xsl-source');
     }
@@ -60,7 +56,7 @@ final class TransformationResultBuilder implements ResultBuilderStrategyInterfac
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         $useInstructions = $context->lookupUseInstructions();
         
-        if ($useInstructions->templateUrl and $type === static::resultIsXslTemplate()) {
+        if ($useInstructions->templateUrl and $type === self::resultIsXslTemplate()) {
             $writer = Module::resolveToDOMWriter($useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
         } else {
             $writer = new AssetFragmentDOMWriter($useInstructions->rootUrl);
@@ -69,7 +65,7 @@ final class TransformationResultBuilder implements ResultBuilderStrategyInterfac
                 $writer->appendChild($data);
             }
             
-            if ($useInstructions->templateUrl and $type !== static::resultIsXslSource()) {
+            if ($useInstructions->templateUrl and $type !== self::resultIsXslSource()) {
                 $template = Module::resolveToDOMWriter($useInstructions->templateUrl->withStreamIdentifier(Executable::resultIsXml()));
                 $writer = new TransformationDOMWriter($writer, $template);
                 if ($this->translateResult) {

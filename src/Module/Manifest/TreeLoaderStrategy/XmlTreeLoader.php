@@ -17,9 +17,6 @@ use Throwable;
  * @since 2018-05-27
  */
 final class XmlTreeLoader implements TreeLoaderStrategyInterface {
-    
-    private const VERSION = 1;
-    
     public function loadTree(ManifestInterface $context): LeanElement {
         $xmlFile = $context->createManifestFile('manifest.xml');
         
@@ -42,7 +39,7 @@ final class XmlTreeLoader implements TreeLoaderStrategyInterface {
                     if ($element and $element->getTag()) {
                         return $element;
                     }
-                } catch (Throwable $e) {
+                } catch (Throwable) {
                 }
             }
         }

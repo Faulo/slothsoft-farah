@@ -98,11 +98,11 @@ final class Executable implements ExecutableInterface {
     }
     
     public function lookupDefaultResult(): ResultInterface {
-        return $this->lookupResult(static::resultIsDefault());
+        return $this->lookupResult(self::resultIsDefault());
     }
     
     public function lookupXmlResult(): ResultInterface {
-        return $this->lookupResult(static::resultIsXml());
+        return $this->lookupResult(self::resultIsXml());
     }
     
     public function createUrl($fragment = null): FarahUrl {

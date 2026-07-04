@@ -69,35 +69,12 @@ final class Tick {
     }
     
     protected function append() {
-        $mode = true;
-        if ($mode) {
-            $time = get_execution_time();
-            $backtraceList = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-            $backtrace = array_pop($backtraceList);
-            $func = isset($backtrace['class'], $backtrace['type']) ? $backtrace['class'] . $backtrace['type'] . $backtrace['function'] : $backtrace['function'];
-            $this->timelineList[] = sprintf('%6dms (+%4dms) & %5dMB to get to %s', $time, $time - $this->lastTime, memory_get_peak_usage() / 1048576, $func);
-            $this->lastTime = $time;
-        } else {
-            $backtraceList = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-            array_shift($backtraceList);
-            array_shift($backtraceList);
-            
-            $funcList = [];
-            foreach ($backtraceList as $backtrace) {
-                $func = isset($backtrace['class'], $backtrace['type']) ? $backtrace['class'] . $backtrace['type'] . $backtrace['function'] : $backtrace['function'];
-                if (! isset($this->functionList[$func])) {
-                    $this->functionList[$func] = 0;
-                }
-                $this->functionList[$func]++;
-                $funcList[] = $func . '#' . $backtrace['line'];
-            }
-            $val = implode('|', array_reverse($funcList));
-            if ($this->lastTimeline !== $val) {
-                $this->lastTimeline = $val;
-                $this->timelineList[] = $val;
-                $this->timelineList[] = print_execution_time(false);
-            }
-        }
+        $time = get_execution_time();
+        $backtraceList = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+        $backtrace = array_pop($backtraceList);
+        $func = isset($backtrace['class'], $backtrace['type']) ? $backtrace['class'] . $backtrace['type'] . $backtrace['function'] : $backtrace['function'];
+        $this->timelineList[] = sprintf('%6dms (+%4dms) & %5dMB to get to %s', $time, $time - $this->lastTime, memory_get_peak_usage() / 1048576, $func);
+        $this->lastTime = $time;
         // $this->save();
     }
 }

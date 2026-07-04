@@ -33,17 +33,17 @@ final class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
     public function statUrl(string $url, int $flags) {
         try {
             $url = FarahUrl::createFromReference($url);
-        } catch (IncompleteUrlException $e) {
+        } catch (IncompleteUrlException) {
             return false;
         }
         
         try {
             return Module::resolveToResult($url)->lookupFileStatistics();
-        } catch (HttpDownloadException $e) {
+        } catch (HttpDownloadException) {
             return true;
         } catch (HttpStatusException $e) {
             return $e->getCode() < 400;
-        } catch (EmptyTransformationException|AssetPathNotFoundException|ModuleNotFoundException $e) {
+        } catch (EmptyTransformationException|AssetPathNotFoundException|ModuleNotFoundException) {
             return false;
         }
     }

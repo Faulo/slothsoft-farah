@@ -232,7 +232,6 @@ final class Archive {
     }
     
     public function insertTemp($time, array $data, $id = null) {
-        $ret = null;
         if ($id === null) {
             $ret = $this->tempTable->insert([
                 'time' => $time,
@@ -288,27 +287,6 @@ final class Archive {
         // fix temp table
         $ret = 0;
         while ($idList = $this->getOutdated()) {
-            $rowList = $this->tempTable->select([
-                'id',
-                'data'
-            ], [
-                'id' => $idList
-            ]);
-            foreach ($rowList as $row) {
-                $id = $row['id'];
-                $data = json_decode($row['data'], true);
-                if (is_array($data)) {
-                    $update = false;
-                    
-                    // HTTPRequest::prepareEnvironment($data);
-                    
-                    if ($update) {
-                        $this->tempTable->update([
-                            'data' => json_encode($data)
-                        ], $id);
-                    }
-                }
-            }
             $ret += count($idList);
             $this->updateOutdated($idList);
         }
@@ -394,9 +372,6 @@ final class Archive {
             }
             $ret += count($idList);
             $this->updateOutdated($idList);
-        }
-        if ($ret > 0) {
-            // die("...done! $ret entries parsed.");
         }
         return $ret;
     }
