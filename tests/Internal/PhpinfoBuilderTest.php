@@ -31,6 +31,35 @@ final class PhpinfoBuilderTest extends TestCase {
         
         return '<pre>\n' . htmlentities($data, ENT_XML1 | ENT_DISALLOWED, 'UTF-8') . '</pre>';
     }
+
+    private static function normalizeOpcacheStatistics(string $phpInfo): string {
+        $statisticNames = [
+            'Cache hits',
+            'Cache misses',
+            'Used memory',
+            'Free memory',
+            'Wasted memory',
+            'Interned Strings Used memory',
+            'Interned Strings Free memory',
+            'Cached scripts',
+            'Cached keys',
+            'OOM restarts',
+            'Hash keys restarts',
+            'Manual restarts'
+        ];
+        $pattern = sprintf(
+            '/^(%s) =&gt; .*$/m',
+            implode('|', array_map('preg_quote', $statisticNames))
+        );
+
+        return preg_replace_callback(
+            '/^Zend OPcache\R.*?^Manual restarts =&gt; [^\r\n]*$/ms',
+            static function (array $matches) use ($pattern): string {
+                return preg_replace($pattern, '$1 =&gt; [runtime value]', $matches[0]);
+            },
+            $phpInfo
+        );
+    }
     
     /**
      *
@@ -40,7 +69,10 @@ final class PhpinfoBuilderTest extends TestCase {
     public function test_read(int $count): void {
         for ($i = 0; $i < $count; $i++) {
             $actual = file_get_contents(self::REFERENCE);
-            $this->assertThat($actual, new IsEqual(self::getPhpInfo()));
+            $this->assertThat(
+                self::normalizeOpcacheStatistics($actual),
+                new IsEqual(self::normalizeOpcacheStatistics(self::getPhpInfo()))
+            );
         }
     }
     
