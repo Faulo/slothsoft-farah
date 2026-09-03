@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\API\XSL;
 
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
@@ -82,5 +83,20 @@ EOT
         );
         
         $this->assertThat($actual, new DOMNodeEqualTo($expected));
+    }
+
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function test_canSerializeLinkedModulesAsHTML5(): void {
+        $result = Module::resolveToResult(FarahUrl::createFromReference('farah://slothsoft@test-module/tests/linking#html'));
+
+        $this->assertSame('text/html', $result->lookupMimeType());
+        $this->assertSame('transformation.html', $result->lookupFileName());
+
+        $html = $result->lookupStringWriter()->toString();
+        $this->assertStringContainsString('<script src="/slothsoft@test-module/test" type="module" async="async"></script>', $html);
+        $this->assertStringNotContainsString('default:', $html);
     }
 }

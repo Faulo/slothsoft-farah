@@ -5,9 +5,11 @@ namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy;
 
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
+use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
+use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\HTML5DOMWriterStreamBuilder;
 
 /**
  * Result builder strategy for d o m writer executable results.
@@ -27,12 +29,13 @@ final class DOMWriterResultBuilder implements ResultBuilderStrategyInterface {
     }
     
     public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
-        return false;
+        return $type === Executable::resultIsHtml();
     }
     
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
-        $streamBuilder = new DOMWriterStreamBuilder($this->writer, $this->fileName);
+        $streamBuilder = $type === Executable::resultIsHtml()
+            ? new HTML5DOMWriterStreamBuilder($this->writer, $this->fileName)
+            : new DOMWriterStreamBuilder($this->writer, $this->fileName);
         return new ResultStrategies($streamBuilder);
     }
 }
-

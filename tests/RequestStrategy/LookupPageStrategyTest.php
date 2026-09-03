@@ -3,13 +3,17 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\RequestStrategy;
 
+use DOMDocument;
 use PHPUnit\Framework\Constraint\ArrayHasKey;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Http\MessageFactory;
+use Slothsoft\Farah\Module\Executable\Executable;
+use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Sites\Domain;
 use Slothsoft\FarahTesting\TestUtils;
 
@@ -97,6 +101,60 @@ final class LookupPageStrategyTest extends TestCase {
             '/Schema/historical-Games-night/',
             'farah://slothsoft@schema.slothsoft.net/pages/schema/home?schema=farah://slothsoft@schema/schema/historical-games-night'
         ];
+    }
+
+    public function test_createUrl_appliesConfiguredDefaultStream(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
+        $document = DOMHelper::loadDocument(self::SITEMAP);
+        $domain = new Domain($document);
+
+        $_SERVER['REQUEST_URI'] = '/';
+
+        $requestStrategy = new LookupPageStrategy($domain, Executable::resultIsHtml());
+        $actual = $requestStrategy->createUrl(MessageFactory::createServerRequest());
+
+        $this->assertThat($actual, new IsEqual(FarahUrl::createFromReference('farah://slothsoft@schema.slothsoft.net/pages/index#html')));
+    }
+
+    public function test_createUrl_preservesExplicitStream(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
+        $document = DOMHelper::loadDocument(self::SITEMAP);
+        $document->documentElement->setAttribute(Domain::ATTR_REFERENCE, 'pages/index#xml');
+        $domain = new Domain($document);
+
+        $_SERVER['REQUEST_URI'] = '/';
+
+        $requestStrategy = new LookupPageStrategy($domain, Executable::resultIsHtml());
+        $actual = $requestStrategy->createUrl(MessageFactory::createServerRequest());
+
+        $this->assertThat($actual, new IsEqual(FarahUrl::createFromReference('farah://slothsoft@schema.slothsoft.net/pages/index#xml')));
+    }
+
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function test_process_appliesHTMLOnlyToPageLookup(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
+        Module::registerWithXmlManifestAndDefaultAssets(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), 'test-files/test-module');
+
+        $document = new DOMDocument();
+        $document->loadXML(<<<'XML'
+<domain xmlns="http://schema.slothsoft.net/farah/sitemap" name="localhost" vendor="slothsoft" module="test-module" ref="/tests/linking" uri="/" version="1.1" />
+XML
+        );
+        $domain = new Domain($document);
+
+        $assetUrl = FarahUrl::createFromReference('farah://slothsoft@test-module/tests/linking');
+        $this->assertSame('application/xhtml+xml', Module::resolveToResult($assetUrl)->lookupMimeType());
+
+        $_SERVER['REQUEST_URI'] = '/';
+        $requestStrategy = new LookupPageStrategy($domain, Executable::resultIsHtml());
+        $response = $requestStrategy->process(MessageFactory::createServerRequest());
+
+        $this->assertSame('text/html; charset=UTF-8', $response->getHeaderLine('content-type'));
+        $this->assertStringContainsString('filename="transformation.html"', $response->getHeaderLine('content-disposition'));
+        $this->assertStringStartsWith('<!DOCTYPE html>', (string) $response->getBody());
     }
     
     /**

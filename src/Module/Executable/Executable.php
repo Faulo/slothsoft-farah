@@ -34,6 +34,12 @@ final class Executable implements ExecutableInterface {
     public static function resultIsXml(): FarahUrlStreamIdentifier {
         return FarahUrlStreamIdentifier::createFromString(self::RESULT_IS_XML);
     }
+
+    const RESULT_IS_HTML = 'html';
+
+    public static function resultIsHtml(): FarahUrlStreamIdentifier {
+        return FarahUrlStreamIdentifier::createFromString(self::RESULT_IS_HTML);
+    }
     
     private AssetInterface $ownerAsset;
     
@@ -113,4 +119,3 @@ final class Executable implements ExecutableInterface {
         return $this->ownerAsset->createRealUrl($this->args, $fragment);
     }
 }
-

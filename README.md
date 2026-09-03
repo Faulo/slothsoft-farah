@@ -116,6 +116,17 @@ The module manifest describes resources, directories, fragments, custom assets, 
 FarahUrl -> Manifest -> Asset -> Executable -> Result -> Writer/Response
 ```
 
+Page routing can select HTML5 as the default representation without changing direct or internal asset lookups:
+
+```php
+use Slothsoft\Farah\Module\Executable\Executable;
+use Slothsoft\Farah\RequestStrategy\LookupPageStrategy;
+
+$requestStrategy = new LookupPageStrategy(null, Executable::resultIsHtml());
+```
+
+References with an explicit stream identifier keep that representation. Omitting the second constructor argument preserves the XHTML/XML default.
+
 Example URLs:
 
 ```text

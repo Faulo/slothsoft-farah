@@ -9,6 +9,7 @@ use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\PageNotFoundException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Sites\Domain;
 
@@ -21,9 +22,12 @@ use Slothsoft\Farah\Sites\Domain;
 final class LookupPageStrategy extends RequestStrategyBase {
     
     private ?Domain $domain;
+
+    private ?FarahUrlStreamIdentifier $defaultStream;
     
-    public function __construct(?Domain $domain = null) {
+    public function __construct(?Domain $domain = null, ?FarahUrlStreamIdentifier $defaultStream = null) {
         $this->domain = $domain;
+        $this->defaultStream = $defaultStream;
     }
     
     public function createUrl(ServerRequestInterface $request): FarahUrl {
@@ -60,7 +64,11 @@ final class LookupPageStrategy extends RequestStrategyBase {
             throw new HttpStatusException("The URL $uri does not contain an asset.\n{$pageNode->ownerDocument->saveXML($pageNode)}", StatusCode::STATUS_NOT_IMPLEMENTED);
         }
         
-        return $this->domain->lookupAssetUrl($pageNode, $args);
+        $url = $this->domain->lookupAssetUrl($pageNode, $args);
+        if ($url->getStreamIdentifier() === FarahUrlStreamIdentifier::createEmpty() and $this->defaultStream !== null) {
+            $url = $url->withStreamIdentifier($this->defaultStream);
+        }
+        return $url;
     }
     
     public function lookupPageNode(string $path, ?DOMElement $contextNode = null): DOMElement {
@@ -121,4 +129,3 @@ final class LookupPageStrategy extends RequestStrategyBase {
         return $contextNode;
     }
 }
-

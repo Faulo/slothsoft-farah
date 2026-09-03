@@ -16,6 +16,7 @@ use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Result\ResultStrategies;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\DOMWriterStreamBuilder;
+use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\HTML5DOMWriterStreamBuilder;
 
 /**
  * Result builder strategy for transformation executable results.
@@ -34,7 +35,7 @@ final class TransformationResultBuilder implements ResultBuilderStrategyInterfac
     }
     
     public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
-        return $type === self::resultIsXslSource() or $type === self::resultIsXslTemplate();
+        return $type === Executable::resultIsHtml() or $type === self::resultIsXslSource() or $type === self::resultIsXslTemplate();
     }
     
     private bool $translateResult;
@@ -54,6 +55,7 @@ final class TransformationResultBuilder implements ResultBuilderStrategyInterfac
     public static bool $translateDictionary = true;
     
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
+        $isHtml = $type === Executable::resultIsHtml();
         $useInstructions = $context->lookupUseInstructions();
         
         if ($useInstructions->templateUrl and $type === self::resultIsXslTemplate()) {
@@ -93,8 +95,9 @@ final class TransformationResultBuilder implements ResultBuilderStrategyInterfac
             $writer = new DOMWriterMemoryCache($writer);
         }
         
-        $streamBuilder = new DOMWriterStreamBuilder($writer, 'transformation');
+        $streamBuilder = $isHtml
+            ? new HTML5DOMWriterStreamBuilder($writer, 'transformation')
+            : new DOMWriterStreamBuilder($writer, 'transformation');
         return new ResultStrategies($streamBuilder);
     }
 }
-
