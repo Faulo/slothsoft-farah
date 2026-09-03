@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\RequestStrategy;
 
 use DOMDocument;
+use Exception;
 use PHPUnit\Framework\Constraint\ArrayHasKey;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
@@ -35,6 +36,7 @@ final class LookupPageStrategyTest extends TestCase {
     /**
      *
      * @dataProvider urlProvider
+     * @throws Exception
      */
     public function test_createUrl(string $path, string $reference): void {
         TestUtils::changeWorkingDirectoryToComposerRoot();
@@ -103,6 +105,9 @@ final class LookupPageStrategyTest extends TestCase {
         ];
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_createUrl_appliesConfiguredDefaultStream(): void {
         TestUtils::changeWorkingDirectoryToComposerRoot();
         $document = DOMHelper::loadDocument(self::SITEMAP);
@@ -116,6 +121,9 @@ final class LookupPageStrategyTest extends TestCase {
         $this->assertThat($actual, new IsEqual(FarahUrl::createFromReference('farah://slothsoft@schema.slothsoft.net/pages/index#html')));
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_createUrl_preservesExplicitStream(): void {
         TestUtils::changeWorkingDirectoryToComposerRoot();
         $document = DOMHelper::loadDocument(self::SITEMAP);
@@ -133,12 +141,14 @@ final class LookupPageStrategyTest extends TestCase {
     /**
      *
      * @runInSeparateProcess
+     * @throws Exception
      */
     public function test_process_appliesHTMLOnlyToPageLookup(): void {
         TestUtils::changeWorkingDirectoryToComposerRoot();
         Module::registerWithXmlManifestAndDefaultAssets(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), 'test-files/test-module');
 
         $document = new DOMDocument();
+        /** @noinspection HttpUrlsUsage */
         $document->loadXML(<<<'XML'
 <domain xmlns="http://schema.slothsoft.net/farah/sitemap" name="localhost" vendor="slothsoft" module="test-module" ref="/tests/linking" uri="/" version="1.1" />
 XML
@@ -160,6 +170,7 @@ XML
     /**
      *
      * @dataProvider redirectProvider
+     * @throws Exception
      */
     public function test_createUrl_redirects(string $path, string $redirect): void {
         TestUtils::changeWorkingDirectoryToComposerRoot();

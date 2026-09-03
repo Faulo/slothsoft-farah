@@ -39,6 +39,7 @@ final class LinkingTest extends TestCase {
         yield 'only one link' => [
             DOMHelper::NS_HTML,
             'link',
+            /** @lang TEXT */
             <<<EOT
 <link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" type="text/css" href="/slothsoft@test-module/test" />
 EOT
@@ -47,6 +48,7 @@ EOT
         yield 'only one script and module' => [
             DOMHelper::NS_HTML,
             'script',
+            /** @lang TEXT */
             <<<EOT
 <script xmlns="http://www.w3.org/1999/xhtml" type="application/javascript" src="/slothsoft@test-module/test" defer="defer" />
 <script xmlns="http://www.w3.org/1999/xhtml" type="module" src="/slothsoft@test-module/test" async="async" />
@@ -56,6 +58,7 @@ EOT
         yield 'only one template' => [
             DOMHelper::NS_HTML,
             'template',
+            /** @lang TEXT */
             <<<EOT
 <template xmlns="http://www.w3.org/1999/xhtml" data-url="farah://slothsoft@test-module/test" xml:base="farah://slothsoft@test-module/test" />
 EOT
@@ -75,7 +78,9 @@ EOT
         }
         
         $dom = new DOMHelper();
-        $expected = $dom->parse(<<<EOT
+        $expected = $dom->parse(
+            /** @lang TEXT */
+            <<<EOT
 <html:template xmlns:html="http://www.w3.org/1999/xhtml" data-url="farah://slothsoft@test-module/data?includes=embed" xml:base="farah://slothsoft@test-module/data">
     <data />
 </html:template>
@@ -96,7 +101,9 @@ EOT
         $this->assertSame('transformation.html', $result->lookupFileName());
 
         $html = $result->lookupStringWriter()->toString();
-        $this->assertStringContainsString('<script src="/slothsoft@test-module/test" type="module" async="async"></script>', $html);
+        $modulePath = sprintf('/%s/%s', 'slothsoft@test-module', 'test');
+        $expectedScript = '<' . sprintf('script src="%s" type="module" async="async"></script>', $modulePath);
+        $this->assertStringContainsString($expectedScript, $html);
         $this->assertStringNotContainsString('default:', $html);
     }
 }
