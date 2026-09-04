@@ -8,6 +8,7 @@ use DOMDocument;
 use DOMElement;
 use Slothsoft\Core\Calendar\DateTimeFormatter;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
+use Slothsoft\Farah\Http\WebScheme;
 
 /**
  * Legacy HTTP request model that can expose request data as DOM.
@@ -130,8 +131,12 @@ final class HTTPRequest implements DOMWriterInterface {
     
     public function init(array $env): void {
         $this->method = $env['REQUEST_METHOD'] ?? self::METHOD_GET;
-        $this->schema = $env['REQUEST_SCHEME'] ?? self::PROTOCOL_HTTP;
-        $this->schema = strtolower($this->schema);
+        $scheme = strtolower((string) ($env['REQUEST_SCHEME'] ?? ''));
+        if (! WebScheme::isSupported($scheme)) {
+            $https = strtolower((string) ($env['HTTPS'] ?? ''));
+            $scheme = $https !== '' && $https !== 'off' ? WebScheme::HTTPS : WebScheme::HTTP;
+        }
+        $this->schema = $scheme;
         $protocol = $env['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
         $protocol = trim($protocol);
         $match = [];

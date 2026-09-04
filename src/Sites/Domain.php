@@ -10,6 +10,8 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\Http\WebScheme;
+use Slothsoft\Farah\Internal\SitemapBuilder;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\RequestStrategy\LookupPageStrategy;
 
@@ -23,8 +25,11 @@ final class Domain {
     
     public const CURRENT_SITEMAP = 'farah://slothsoft@farah/current-sitemap';
     
-    public static function createWithDefaultSitemap(): Domain {
+    public static function createWithDefaultSitemap(string $scheme = WebScheme::HTTP): Domain {
         $url = FarahUrl::createFromReference(self::CURRENT_SITEMAP);
+        $url = $url->withQueryArguments(FarahUrlArguments::createFromValueList([
+            SitemapBuilder::PARAM_SCHEME => WebScheme::normalize($scheme)
+        ]));
         return new self(Module::resolveToDOMWriter($url)->toDocument());
     }
     
@@ -126,4 +131,3 @@ final class Domain {
         return $ret;
     }
 }
-

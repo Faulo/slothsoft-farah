@@ -14,14 +14,14 @@
     <custom-asset name="phpinfo" executable-builder="Slothsoft\Farah\Internal\PhpinfoBuilder" />
 
     <!-- "/sites" is deprecated, use "/current-sitemap" instead -->
-    <use-document name="sites" ref="/current-sitemap" />
+    <use-document name="sites" ref="/current-sitemap" parameter-filter="Slothsoft\Farah\Internal\CurrentSitemapParameterFilter" />
 
-    <custom-asset name="current-sitemap" executable-builder="Slothsoft\Farah\Internal\SitemapBuilder">
+    <custom-asset name="current-sitemap" executable-builder="Slothsoft\Farah\Internal\SitemapBuilder" parameter-filter="Slothsoft\Farah\Internal\CurrentSitemapParameterFilter">
         <use-manifest name="json" ref="..#json" />
     </custom-asset>
     <custom-asset name="current-request" executable-builder="Slothsoft\Farah\Internal\RequestBuilder" />
 
-    <directory name="sitemap-generator">
+    <directory name="sitemap-generator" parameter-filter="Slothsoft\Farah\Internal\SitemapParameterFilter">
         <resource name="template" type="application/xslt+xml" use="template" />
         <resource name="prettify" type="application/xslt+xml" />
         <use-document ref="/current-sitemap" name="sites" />

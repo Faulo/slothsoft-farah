@@ -11,6 +11,8 @@ use Slothsoft\Farah\Exception\PageRedirectionException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Http\StatusCode;
+use Slothsoft\Farah\Http\WebScheme;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Sites\Domain;
 
 /**
@@ -25,15 +27,25 @@ final class LookupPageStrategy extends RequestStrategyBase {
 
     private ?FarahUrlStreamIdentifier $defaultStream;
     
+    private bool $usesDefaultDomain;
+    
+    private ?string $domainScheme = null;
+    
     public function __construct(?Domain $domain = null, ?FarahUrlStreamIdentifier $defaultStream = null) {
         $this->domain = $domain;
         $this->defaultStream = $defaultStream;
+        $this->usesDefaultDomain = $domain === null;
     }
     
     public function createUrl(ServerRequestInterface $request): FarahUrl {
-        $this->domain ??= Domain::createWithDefaultSitemap();
-        
+        Kernel::setCurrentRequest($request);
         $uri = $request->getUri();
+        if ($this->usesDefaultDomain and $this->domainScheme !== $uri->getScheme()) {
+            $scheme = WebScheme::isSupported($uri->getScheme()) ? WebScheme::normalize($uri->getScheme()) : WebScheme::HTTP;
+            $this->domain = Domain::createWithDefaultSitemap($scheme);
+            $this->domainScheme = $uri->getScheme();
+        }
+
         $body = $request->getParsedBody();
         $params = $request->getQueryParams();
         

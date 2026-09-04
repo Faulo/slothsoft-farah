@@ -4,8 +4,11 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\API\Domain;
 
 use DOMDocument;
+use DOMXPath;
+use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\MessageFactory;
 use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\Manifest\Manifest;
@@ -22,8 +25,9 @@ final class ParamTest extends TestCase {
         Kernel::setCurrentSitemap('farah://slothsoft@test.slothsoft.net/sitemap');
     }
     
-    private static function requestPage(string $path): string {
+    private static function requestPage(string $path, string $scheme = 'http'): string {
         $_SERVER['REQUEST_URI'] = $path;
+        $_SERVER['HTTPS'] = $scheme === 'https' ? 'on' : 'off';
         
         if ($query = parse_url($path, PHP_URL_QUERY)) {
             $args = [];
@@ -39,6 +43,67 @@ final class ParamTest extends TestCase {
         
         $lookup = new LookupPageStrategy();
         return (string) $lookup->process($request)->getBody();
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function test_currentRequestPreservesHttpsScheme(): void {
+        $document = new DOMDocument();
+        $document->loadXML(self::requestPage('/request', 'https'));
+        
+        $this->assertSame('https://localhost/request', $document->documentElement->getAttribute('href'));
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function test_lookupPageUsesRequestSchemeForGeneratedUrls(): void {
+        $lookup = new LookupPageStrategy();
+        foreach ([
+            'http',
+            'https'
+        ] as $scheme) {
+            $request = new ServerRequest('GET', "$scheme://localhost/");
+            if ($scheme === 'https') {
+                $request = $request->withQueryParams([
+                    'scheme' => 'http'
+                ]);
+            }
+            Kernel::setCurrentRequest($request);
+            $response = $lookup->process($request);
+            $document = new DOMDocument();
+            $document->loadXML((string) $response->getBody());
+            $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_SLOTHSOFT);
+            
+            foreach ($xpath->query('//*[@url]') as $node) {
+                $this->assertStringStartsWith("$scheme://", $node->getAttribute('url'));
+            }
+        }
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function test_sitemapUsesRequestSchemeForFullyQualifiedUrls(): void {
+        $url = FarahUrl::createFromReference('farah://slothsoft@farah/sitemap-generator');
+        foreach ([
+            'http',
+            'https'
+        ] as $scheme) {
+            Kernel::setCurrentRequest(new ServerRequest('GET', "$scheme://localhost/sitemap/"));
+            $document = Module::resolveToDOMWriter($url)->toDocument();
+            $xpath = new DOMXPath($document);
+            $locations = $xpath->query('//*[local-name() = "loc"]');
+            
+            $this->assertGreaterThan(0, $locations->length);
+            foreach ($locations as $location) {
+                $this->assertStringStartsWith("$scheme://", $location->textContent);
+            }
+        }
     }
     
     /**

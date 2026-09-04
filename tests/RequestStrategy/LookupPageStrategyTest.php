@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\RequestStrategy;
 
 use DOMDocument;
 use Exception;
+use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\Constraint\ArrayHasKey;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
@@ -165,6 +166,56 @@ XML
         $this->assertSame('text/html; charset=UTF-8', $response->getHeaderLine('content-type'));
         $this->assertStringContainsString('filename="transformation.html"', $response->getHeaderLine('content-disposition'));
         $this->assertStringStartsWith('<!DOCTYPE html>', (string) $response->getBody());
+    }
+    
+    /**
+     *
+     * @dataProvider webSchemeProvider
+     * @runInSeparateProcess
+     * @throws Exception
+     */
+    public function test_process_acceptsWebScheme(string $scheme): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
+        Module::registerWithXmlManifestAndDefaultAssets(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), 'test-files/test-module');
+        
+        $document = new DOMDocument();
+        /** @noinspection HttpUrlsUsage */
+        $document->loadXML(<<<'XML'
+<domain xmlns="http://schema.slothsoft.net/farah/sitemap" name="localhost" vendor="slothsoft" module="test-module" ref="/tests/linking" uri="/" version="1.1" />
+XML
+        );
+        $request = new ServerRequest('GET', "$scheme://localhost/");
+        $response = (new LookupPageStrategy(new Domain($document)))->process($request);
+        
+        $this->assertSame(200, $response->getStatusCode());
+    }
+    
+    public function webSchemeProvider(): iterable {
+        yield 'HTTP' => [
+            'http'
+        ];
+        yield 'HTTPS' => [
+            'https'
+        ];
+    }
+    
+    /**
+     *
+     * @runInSeparateProcess
+     * @throws Exception
+     */
+    public function test_process_rejectsUnsupportedScheme(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
+        $document = new DOMDocument();
+        /** @noinspection HttpUrlsUsage */
+        $document->loadXML(<<<'XML'
+<domain xmlns="http://schema.slothsoft.net/farah/sitemap" name="localhost" vendor="slothsoft" module="test-module" ref="/tests/linking" uri="/" version="1.1" />
+XML
+        );
+        $request = new ServerRequest('GET', 'ftp://localhost/');
+        $response = (new LookupPageStrategy(new Domain($document)))->process($request);
+        
+        $this->assertSame(501, $response->getStatusCode());
     }
     
     /**

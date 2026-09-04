@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Added HTTPS support to page requests and generated sitemap URLs.
+
 ## [1.13.0] - 2025-01-15
 
 ### Added

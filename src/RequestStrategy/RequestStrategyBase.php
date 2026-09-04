@@ -17,6 +17,7 @@ use Slothsoft\Farah\Http\ContentCoding;
 use Slothsoft\Farah\Http\MessageFactory;
 use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Http\TransferCoding;
+use Slothsoft\Farah\Http\WebScheme;
 use Slothsoft\Farah\HTTPRequest;
 use Slothsoft\Farah\HTTPResponse;
 use Slothsoft\Farah\Kernel;
@@ -187,10 +188,8 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
             throw new HttpStatusException('You have been found wanting.', StatusCode::STATUS_PRECONDITION_FAILED);
         }
         
-        if (! in_array($this->request->getUri()->getScheme(), [
-            'http',
-            'farah'
-        ])) {
+        $scheme = $this->request->getUri()->getScheme();
+        if (! WebScheme::isSupported($scheme) and $scheme !== FarahUrl::SCHEME_DEFAULT) {
             throw new HttpStatusException("Scheme '{$this->request->getUri()->getScheme()}' is not supported by this implementation.", StatusCode::STATUS_NOT_IMPLEMENTED);
         }
         
@@ -253,4 +252,3 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
         return MimeTypeDictionary::guessCompressions($mimeType);
     }
 }
-
