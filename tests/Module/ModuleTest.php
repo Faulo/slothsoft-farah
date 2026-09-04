@@ -141,6 +141,26 @@ final class ModuleTest extends TestCase {
         $this->assertEquals($manifest, Module::resolveToManifest($manifest->createUrl()));
         return $directory;
     }
+
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function testModuleCacheUsesAbsoluteManifestDirectory(): void {
+        $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-cache-path');
+        $relativeDirectory = 'test-files' . DIRECTORY_SEPARATOR . 'test-module';
+        $url = FarahUrl::createFromComponents($authority, '/document');
+
+        Module::registerWithXmlManifestAndDefaultAssets($authority, $relativeDirectory);
+        Module::resolveToAsset($url);
+
+        $absoluteDirectory = realpath($relativeDirectory);
+        chdir(temp_dir(__METHOD__));
+        Module::registerWithXmlManifestAndDefaultAssets($authority, $absoluteDirectory);
+
+        $stream = Module::resolveToResult($url)->lookupStreamWriter()->toStream();
+        $this->assertSame(filesize($absoluteDirectory . DIRECTORY_SEPARATOR . 'document.html'), $stream->getSize());
+    }
     
     /**
      *

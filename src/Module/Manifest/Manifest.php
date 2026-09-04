@@ -169,7 +169,7 @@ final class Manifest implements ManifestInterface {
     public function __construct(Module $ownerKernel, FarahUrlAuthority $authority, string $manifestDirectory, ManifestStrategies $strategies) {
         $this->ownerKernel = $ownerKernel;
         $this->authority = $authority;
-        $this->manifestDirectory = $manifestDirectory;
+        $this->manifestDirectory = realpath($manifestDirectory) ?: $manifestDirectory;
         $this->strategies = $strategies;
         
         $this->assets = new AssetContainer();
@@ -256,4 +256,3 @@ final class Manifest implements ManifestInterface {
         ];
     }
 }
-
