@@ -155,7 +155,7 @@ final class ModuleTest extends TestCase {
         Module::resolveToAsset($url);
 
         $absoluteDirectory = realpath($relativeDirectory);
-        chdir(temp_dir(__METHOD__));
+        chdir(temp_dir(__CLASS__));
         Module::registerWithXmlManifestAndDefaultAssets($authority, $absoluteDirectory);
 
         $stream = Module::resolveToResult($url)->lookupStreamWriter()->toStream();
