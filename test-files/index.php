@@ -8,9 +8,8 @@ use Slothsoft\Farah\ResponseStrategy\SendHeaderAndBodyStrategy;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$requestStrategy = new LookupAssetStrategy();
 $request = MessageFactory::createServerRequest();
-$request = $request->withUri($requestStrategy->createUrl($request));
+$requestStrategy = new LookupAssetStrategy();
 $responseStrategy = new SendHeaderAndBodyStrategy();
 
 $kernel = Kernel::getInstance();
