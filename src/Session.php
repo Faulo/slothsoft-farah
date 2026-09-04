@@ -76,7 +76,7 @@ final class Session {
                 if (! $this->dbmsTable->tableExists()) {
                     $this->install();
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $this->dbmsTable = null;
             }
         }
@@ -143,13 +143,13 @@ final class Session {
                     $this->dbmsTable->update([
                         'data' => $this->encodeData($val)
                     ], $idList);
-                } catch (Exception $e) {
+                } catch (Exception) {
                 }
             } else {
                 $arr['data'] = $this->encodeData($val);
                 try {
                     $this->dbmsTable->insert($arr);
-                } catch (Exception $e) {
+                } catch (Exception) {
                 }
             }
         }

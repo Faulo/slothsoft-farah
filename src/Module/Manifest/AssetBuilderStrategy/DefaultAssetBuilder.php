@@ -301,38 +301,37 @@ final class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
     }
     
     private function newExecutableBuilder(string $className): ExecutableBuilderStrategyInterface {
-        if (! isset(static::$services[$className])) {
-            static::$services[$className] = new $className();
+        if (! isset(self::$services[$className])) {
+            self::$services[$className] = new $className();
         }
-        return static::$services[$className];
+        return self::$services[$className];
     }
     
     private function newPathResolver(string $className): PathResolverStrategyInterface {
-        if (! isset(static::$services[$className])) {
-            static::$services[$className] = new $className();
+        if (! isset(self::$services[$className])) {
+            self::$services[$className] = new $className();
         }
-        return static::$services[$className];
+        return self::$services[$className];
     }
     
     private function newParameterFilter(string $className): ParameterFilterStrategyInterface {
-        if (! isset(static::$services[$className])) {
-            static::$services[$className] = new $className();
+        if (! isset(self::$services[$className])) {
+            self::$services[$className] = new $className();
         }
-        return static::$services[$className];
+        return self::$services[$className];
     }
     
     private function newParameterSupplier(string $className): ParameterSupplierStrategyInterface {
-        if (! isset(static::$services[$className])) {
-            static::$services[$className] = new $className();
+        if (! isset(self::$services[$className])) {
+            self::$services[$className] = new $className();
         }
-        return static::$services[$className];
+        return self::$services[$className];
     }
     
     private function newInstruction(string $className): InstructionStrategyInterface {
-        if (! isset(static::$services[$className])) {
-            static::$services[$className] = new $className();
+        if (! isset(self::$services[$className])) {
+            self::$services[$className] = new $className();
         }
-        return static::$services[$className];
+        return self::$services[$className];
     }
 }
-

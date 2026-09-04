@@ -102,7 +102,7 @@ final class PhpinfoBuilderTest extends TestCase {
             $xpath = DOMHelper::loadXPath($document);
             $actual = $xpath->evaluate('string(//html:title)');
             $this->assertThat($actual, new IsEqual(sprintf('PHP %s - phpinfo()', PHP_VERSION)), "Failed to retrieve <title> from /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
-        } catch (BrowserDriverNotFoundException $e) {
+        } catch (BrowserDriverNotFoundException) {
             $this->markTestSkipped();
         }
     }

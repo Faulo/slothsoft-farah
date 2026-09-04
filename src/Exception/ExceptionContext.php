@@ -13,6 +13,7 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use Throwable;
+use WeakMap;
 
 /**
  * Serializes exception metadata into DOM for Farah error responses.
@@ -22,13 +23,16 @@ use Throwable;
  */
 final class ExceptionContext implements DOMWriterInterface {
     
+    private static ?WeakMap $contexts = null;
+
     public static function append(Throwable $exception, array $data = []): self {
-        if (isset($exception->exceptionContext)) {
-            $exception->exceptionContext->addData($data);
+        $contexts = self::$contexts ??= new WeakMap();
+        if (isset($contexts[$exception])) {
+            $contexts[$exception]->addData($data);
         } else {
-            $exception->exceptionContext = new ExceptionContext($exception, $data);
+            $contexts[$exception] = new ExceptionContext($exception, $data);
         }
-        return $exception->exceptionContext;
+        return $contexts[$exception];
     }
     
     private Throwable $ownerException;
@@ -105,11 +109,10 @@ final class ExceptionContext implements DOMWriterInterface {
             // let's retrieve the error template to make sure it exists
             assert((bool) @file_get_contents('farah://slothsoft@farah/xsl/error'));
             $targetDoc->appendChild($targetDoc->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="/slothsoft@farah/xsl/error"'));
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // we don't really care if it doesn't tho
         }
         $targetDoc->appendChild($this->toElement($targetDoc));
         return $targetDoc;
     }
 }
-

@@ -18,6 +18,7 @@ final class CLIDaemonServerTest extends TestCase {
             PHP_BINARY,
             '--version'
         ]) as $type => $output) {
+            $output = (string) $output;
             switch ($type) {
                 case CLIDaemonServer::STDOUT:
                     $this->assertStringContainsString(PHP_VERSION, $output);

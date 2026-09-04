@@ -64,10 +64,7 @@ class FileWriterStreamBuilderTest extends TestCase {
         $sut = $this->createSuT($expected, $name);
         $context = $this->createMock(ResultInterface::class);
         
-        $actual = '';
-        foreach ($sut->buildChunkWriter($context)->toChunks() as $chunk) {
-            $actual .= $chunk;
-        }
+        $actual = implode('', iterator_to_array($sut->buildChunkWriter($context)->toChunks(), false));
         
         $this->assertThat($actual, new IsIdentical($expected));
     }

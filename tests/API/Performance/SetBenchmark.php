@@ -65,8 +65,10 @@ final class SetBenchmark extends TestCase {
         $target = new Set($target);
         
         $start = hrtime(true);
-        $target = $target->union($source);
-        return hrtime(true) - $start;
+        $result = $target->union($source);
+        $elapsed = hrtime(true) - $start;
+        unset($result);
+        return $elapsed;
     }
     
     public function test_performance_addUrls(): void {

@@ -22,7 +22,7 @@ class FarahUrlTest extends TestCase {
         FarahUrl::createFromReference($ref);
     }
     
-    public function malformedUrlProvider() {
+    public function malformedUrlProvider(): iterable {
         $urls = [];
         $urls[] = 'farah:///slothsoft@farah';
         $urls[] = 'farah://slothsoft@farah:port';
@@ -393,4 +393,3 @@ class FarahUrlTest extends TestCase {
         ];
     }
 }
-

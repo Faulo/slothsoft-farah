@@ -27,7 +27,7 @@ final class MapResultBuilder implements ResultBuilderStrategyInterface {
     }
     
     public function addStreamBuilder(FarahUrlStreamIdentifier $type, StreamBuilderStrategyInterface $proxy): void {
-        $this->streams[$type] = $proxy;
+        $this->streams->put($type, $proxy);
     }
     
     public function isDifferentFromDefault(FarahUrlStreamIdentifier $type): bool {
@@ -35,7 +35,6 @@ final class MapResultBuilder implements ResultBuilderStrategyInterface {
     }
     
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
-        return new ResultStrategies($this->streams[$type] ?? $this->defaultStream);
+        return new ResultStrategies($this->streams->get($type, $this->defaultStream));
     }
 }
-

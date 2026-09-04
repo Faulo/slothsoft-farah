@@ -210,10 +210,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         
         $sut = $this->createSuT($content, $name);
         
-        $actual = '';
-        foreach ($sut->toChunks() as $chunk) {
-            $actual .= $chunk;
-        }
+        $actual = implode('', iterator_to_array($sut->toChunks(), false));
         
         $this->assertThat($actual, new IsIdentical($content));
     }

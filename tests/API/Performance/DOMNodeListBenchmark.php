@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\API\Performance;
 
-use Closure;
 use DOMDocument;
 use DOMNodeList;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
+use UnexpectedValueException;
 
 /**
  * DOMNodeListBenchmark
@@ -75,22 +75,10 @@ final class DOMNodeListBenchmark extends TestCase {
      */
     public function test_getElementsByTagName(string $tag, ?string $ns = null): void {
         $methods = [];
-        $methods['stub'] = Closure::fromCallable([
-            __CLASS__,
-            'stub_DOMNodeList'
-        ]);
-        $methods['foreach'] = Closure::fromCallable([
-            __CLASS__,
-            'foreach_DOMNodeList'
-        ]);
-        $methods['iterator_to_array'] = Closure::fromCallable([
-            __CLASS__,
-            'iterator_to_array_DOMNodeList'
-        ]);
-        $methods['generator'] = Closure::fromCallable([
-            __CLASS__,
-            'generator_DOMNodeList'
-        ]);
+        $methods['stub'] = self::stub_DOMNodeList(...);
+        $methods['foreach'] = self::foreach_DOMNodeList(...);
+        $methods['iterator_to_array'] = self::iterator_to_array_DOMNodeList(...);
+        $methods['generator'] = self::generator_DOMNodeList(...);
         
         $document = DOMHelper::loadDocument('farah://slothsoft@farah/schema/module/1.1');
         $source = $ns === null ? $document->getElementsByTagName($tag) : $document->getElementsByTagNameNS($ns, $tag);
@@ -124,26 +112,11 @@ final class DOMNodeListBenchmark extends TestCase {
      */
     public function test_evaluate(string $tag, ?string $ns = null): void {
         $methods = [];
-        $methods['stub'] = Closure::fromCallable([
-            __CLASS__,
-            'stub_DOMNodeList'
-        ]);
-        $methods['spread'] = Closure::fromCallable([
-            __CLASS__,
-            'spread_DOMNodeList'
-        ]);
-        $methods['foreach'] = Closure::fromCallable([
-            __CLASS__,
-            'foreach_DOMNodeList'
-        ]);
-        $methods['iterator_to_array'] = Closure::fromCallable([
-            __CLASS__,
-            'iterator_to_array_DOMNodeList'
-        ]);
-        $methods['generator'] = Closure::fromCallable([
-            __CLASS__,
-            'generator_DOMNodeList'
-        ]);
+        $methods['stub'] = self::stub_DOMNodeList(...);
+        $methods['spread'] = self::spread_DOMNodeList(...);
+        $methods['foreach'] = self::foreach_DOMNodeList(...);
+        $methods['iterator_to_array'] = self::iterator_to_array_DOMNodeList(...);
+        $methods['generator'] = self::generator_DOMNodeList(...);
         
         $document = DOMHelper::loadDocument('farah://slothsoft@farah/schema/module/1.1');
         $xpath = DOMHelper::loadXPath($document);
@@ -184,26 +157,11 @@ final class DOMNodeListBenchmark extends TestCase {
      */
     public function test_query(string $tag, ?string $ns = null): void {
         $methods = [];
-        $methods['stub'] = Closure::fromCallable([
-            __CLASS__,
-            'stub_DOMNodeList'
-        ]);
-        $methods['spread'] = Closure::fromCallable([
-            __CLASS__,
-            'spread_DOMNodeList'
-        ]);
-        $methods['foreach'] = Closure::fromCallable([
-            __CLASS__,
-            'foreach_DOMNodeList'
-        ]);
-        $methods['iterator_to_array'] = Closure::fromCallable([
-            __CLASS__,
-            'iterator_to_array_DOMNodeList'
-        ]);
-        $methods['generator'] = Closure::fromCallable([
-            __CLASS__,
-            'generator_DOMNodeList'
-        ]);
+        $methods['stub'] = self::stub_DOMNodeList(...);
+        $methods['spread'] = self::spread_DOMNodeList(...);
+        $methods['foreach'] = self::foreach_DOMNodeList(...);
+        $methods['iterator_to_array'] = self::iterator_to_array_DOMNodeList(...);
+        $methods['generator'] = self::generator_DOMNodeList(...);
         
         $document = DOMHelper::loadDocument('farah://slothsoft@farah/schema/module/1.1');
         $xpath = DOMHelper::loadXPath($document);
@@ -247,17 +205,12 @@ final class DOMNodeListBenchmark extends TestCase {
         $node = $document->createElement('root');
         $document->appendChild($node);
         
-        switch ($mode) {
-            case 'getElementsByTagName':
-                $result = $document->getElementsByTagName('root');
-                break;
-            case 'evaluate':
-                $result = DOMHelper::loadXPath($document)->evaluate('.//root', $document);
-                break;
-            case 'query':
-                $result = DOMHelper::loadXPath($document)->query('.//root', $document);
-                break;
-        }
+        $result = match ($mode) {
+            'getElementsByTagName' => $document->getElementsByTagName('root'),
+            'evaluate' => DOMHelper::loadXPath($document)->evaluate('.//root', $document),
+            'query' => DOMHelper::loadXPath($document)->query('.//root', $document),
+            default => throw new UnexpectedValueException("Unknown DOMNodeList mode: $mode")
+        };
         
         if ($remove) {
             $document->removeChild($node);

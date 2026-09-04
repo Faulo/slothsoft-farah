@@ -43,6 +43,8 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
             
             Kernel::setCurrentPage($url);
             
+            $statusCode = StatusCode::STATUS_OK;
+
             try {
                 try {
                     $result = Module::resolveToResult($url);
@@ -69,8 +71,6 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
                     $isCompressable = $isBufferable;
                     $body = $result->lookupStreamWriter()->toStream();
                 }
-                
-                $statusCode = StatusCode::STATUS_OK;
                 
                 $headers = [];
                 
@@ -122,7 +122,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
                 
                 if ($bodyLength === null) {
                     // we don't know the length of the response, so we better figure out a safe transfer coding
-                    $transferCoding = $this->negotiateTransferCoding('chunked');
+                    $transferCoding = $this->negotiateTransferCoding();
                     $body = $transferCoding->encodeStream($body);
                     $transferCodingName = $transferCoding->getHttpName();
                     if ($transferCodingName !== '') {
@@ -215,13 +215,13 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
         return ContentCoding::identity();
     }
     
-    private function negotiateTransferCoding(string $preferred): CodingInterface {
+    private function negotiateTransferCoding(): CodingInterface {
         $accept = $this->request->getHeaderLine('te');
         if (version_compare($this->request->getProtocolVersion(), '1.1', '>=')) {
             $accept .= ', chunked'; // HTTP 1.1 must accept chunked encoding
         }
         foreach (TransferCoding::getEncodings() as $name => $coding) {
-            if (str_contains($preferred, $name) and str_contains($accept, $name)) {
+            if ($name === 'chunked' and str_contains($accept, $name)) {
                 return $coding;
             }
         }
