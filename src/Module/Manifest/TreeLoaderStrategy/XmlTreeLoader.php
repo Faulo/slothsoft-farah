@@ -23,13 +23,15 @@ final class XmlTreeLoader implements TreeLoaderStrategyInterface {
         if (! $xmlFile->isFile()) {
             throw new FileNotFoundException($xmlFile);
         }
+        $xmlMTime = $xmlFile->getMTime();
         
         $tmpFile = $context->createCacheFile('manifest.tmp', null, FarahUrlArguments::createFromValueList([
+            'loader' => hash_file('sha256', __FILE__),
             'path' => $xmlFile->getRealPath()
         ]));
         
         if ($tmpFile->isFile()) {
-            if ($tmpFile->getMTime() > max($xmlFile->getMTime(), filemtime(__FILE__))) {
+            if ($tmpFile->getMTime() === $xmlMTime) {
                 try {
                     $element = unserialize(file_get_contents((string) $tmpFile), [
                         'allowed_classes' => [
@@ -49,8 +51,8 @@ final class XmlTreeLoader implements TreeLoaderStrategyInterface {
         
         $context->normalizeManifestTree($element);
         file_put_contents((string) $tmpFile, serialize($element));
+        touch((string) $tmpFile, $xmlMTime);
         
         return $element;
     }
 }
-

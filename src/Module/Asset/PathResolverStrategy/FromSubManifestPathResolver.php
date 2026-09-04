@@ -40,13 +40,15 @@ final class FromSubManifestPathResolver implements PathResolverStrategyInterface
         if (! $xmlFile->isFile()) {
             throw new FileNotFoundException($xmlFile);
         }
+        $xmlMTime = $xmlFile->getMTime();
         
         $tmpFile = $manifest->createCacheFile('manifest.tmp', $directory, FarahUrlArguments::createFromValueList([
+            'loader' => hash_file('sha256', __FILE__),
             'path' => $xmlFile->getRealPath()
         ]));
         
         if ($tmpFile->isFile()) {
-            if ($tmpFile->getMTime() > max($xmlFile->getMTime(), filemtime(__FILE__))) {
+            if ($tmpFile->getMTime() === $xmlMTime) {
                 $children = [];
                 try {
                     $subManifest = unserialize(file_get_contents((string) $tmpFile), [
@@ -87,6 +89,7 @@ final class FromSubManifestPathResolver implements PathResolverStrategyInterface
         }
         
         file_put_contents((string) $tmpFile, serialize($subManifest));
+        touch((string) $tmpFile, $xmlMTime);
         
         $this->assets->put($context, $children);
         return $children;
@@ -108,4 +111,3 @@ final class FromSubManifestPathResolver implements PathResolverStrategyInterface
         return $children[$name];
     }
 }
-
