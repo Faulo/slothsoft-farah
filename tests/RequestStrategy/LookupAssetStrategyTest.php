@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\UriInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\MessageFactory;
+use Slothsoft\Farah\Module\Module;
 
 /**
  * LookupAssetStrategyTest
@@ -32,18 +33,32 @@ final class LookupAssetStrategyTest extends TestCase {
         
         $this->assertEquals($expected, $actual);
     }
-    
+
+    /**
+     *
+     * @dataProvider relativeAssetUrlProvider
+     */
+    public function testLookupRelativeUrl(string $path): void {
+        $request = MessageFactory::createCustomRequest('GET', new Uri($path));
+        $expected = FarahUrl::createFromReference($path, Module::getBaseUrl());
+
+        $sut = new LookupAssetStrategy();
+        $actual = $sut->createUrl($request);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function relativeAssetUrlProvider(): iterable {
+        yield 'root path' => [
+            '/'
+        ];
+
+        yield 'path without authority' => [
+            '/phpinfo'
+        ];
+    }
+
     public function assetUrlProvider(): iterable {
-        yield 'root path falls back to current module' => [
-            new Uri('/'),
-            FarahUrl::createFromReference('farah://slothsoft@farah/')
-        ];
-
-        yield 'path without authority falls back to current module' => [
-            new Uri('/phpinfo'),
-            FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo')
-        ];
-
         yield 'path' => [
             new Uri('/slothsoft@farah/phpinfo'),
             FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo')
