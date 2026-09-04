@@ -10,10 +10,13 @@ use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Farah\Configuration\AssetConfigurationField;
 use Slothsoft\Farah\Configuration\FarahUrlConfigurationField;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Http\MessageFactory;
+use Slothsoft\Farah\Http\StatusCode;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\RequestStrategy\RequestStrategyInterface;
 use Slothsoft\Farah\ResponseStrategy\ResponseStrategyInterface;
 use Slothsoft\Farah\Tracking\Manager;
+use Throwable;
 
 /**
  * Coordinates Farah request strategies, response strategies, current request state, and optional tracking.
@@ -129,10 +132,19 @@ final class Kernel {
     
     public function handle(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy, ServerRequestInterface $request): ResponseInterface {
         self::setCurrentRequest($request);
-        
-        $response = $requestStrategy->process($request);
-        if (self::getTrackingEnabled()) {
-            $this->track((new ReflectionClass($requestStrategy))->getShortName(), $request, $response);
+
+        try {
+            $response = $requestStrategy->process($request);
+            if (self::getTrackingEnabled()) {
+                $this->track((new ReflectionClass($requestStrategy))->getShortName(), $request, $response);
+            }
+        } catch (Throwable $exception) {
+            $statusCode = StatusCode::STATUS_INTERNAL_SERVER_ERROR;
+            $body = MessageFactory::createStreamFromContents(StatusCode::getMessage($statusCode, (string) $exception) . PHP_EOL);
+            $response = MessageFactory::createServerResponse($statusCode, [
+                'content-type' => 'text/plain; charset=UTF-8',
+                'content-length' => (string) $body->getSize()
+            ], $body);
         }
         $responseStrategy->process($response);
         return $response;
@@ -157,5 +169,4 @@ final class Kernel {
         Manager::track($env);
     }
 }
-
 
