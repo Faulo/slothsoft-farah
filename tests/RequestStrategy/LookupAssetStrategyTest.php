@@ -34,6 +34,16 @@ final class LookupAssetStrategyTest extends TestCase {
     }
     
     public function assetUrlProvider(): iterable {
+        yield 'root path falls back to current module' => [
+            new Uri('/'),
+            FarahUrl::createFromReference('farah://slothsoft@farah/')
+        ];
+
+        yield 'path without authority falls back to current module' => [
+            new Uri('/phpinfo'),
+            FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo')
+        ];
+
         yield 'path' => [
             new Uri('/slothsoft@farah/phpinfo'),
             FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo')

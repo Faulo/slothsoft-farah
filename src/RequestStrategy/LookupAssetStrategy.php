@@ -58,15 +58,16 @@ final class LookupAssetStrategy extends RequestStrategyBase {
             $path = substr($path, strlen(self::getHrefBase()));
         }
         
-        if ($path[0] === '/') {
-            $path = "farah:/$path";
+        $path = urldecode($path);
+
+        if (str_starts_with($path, 'farah://')) {
+            return $path;
         }
-        
-        if (! str_starts_with($path, 'farah://')) {
-            $path = "farah://$path";
+
+        if (preg_match('~^/?[^/]+@[^/]+(?:/|$)~', $path)) {
+            return 'farah://' . ltrim($path, '/');
         }
-        
-        return urldecode($path);
+
+        return '/' . ltrim($path, '/');
     }
 }
-
