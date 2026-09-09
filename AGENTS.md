@@ -35,6 +35,7 @@ When the user has authorized the required release, Git, CI, tagging, and publica
 3. Commit and push the release preparation.
 4. Validate that exact commit in both GitHub CI and the matching Jenkins job. If it fails, fix it and return to Phase 1, step 2.
 5. Tag the exact commit, using the repository's existing version-tag format, and push the tag. Never reuse or move a published tag.
+6. If the feature was based on a ticket, update the ticket's body to reflect the shipped design and mark it complete.
 
 If the expected behavior or its test contract changes at any point, restart at Phase 1, step 1.
 
