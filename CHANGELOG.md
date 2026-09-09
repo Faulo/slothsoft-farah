@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.29.3] - 2026-09-09
+
 ### Fixed
 
 - Physical HTML and XHTML page assets now honor the selected HTML or XML response stream.
@@ -1296,7 +1298,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial stable release of the manifest-driven Farah asset, transformation, response, stream, sitemap, and CLI APIs.
 
-[Unreleased]: https://github.com/Faulo/slothsoft-farah/compare/1.29.2...HEAD
+[Unreleased]: https://github.com/Faulo/slothsoft-farah/compare/1.29.3...HEAD
+[1.29.3]: https://github.com/Faulo/slothsoft-farah/compare/1.29.2...1.29.3
 [1.29.2]: https://github.com/Faulo/slothsoft-farah/compare/1.29.1...1.29.2
 [1.29.1]: https://github.com/Faulo/slothsoft-farah/compare/1.29.0...1.29.1
 [1.29.0]: https://github.com/Faulo/slothsoft-farah/compare/1.28.4...1.29.0
