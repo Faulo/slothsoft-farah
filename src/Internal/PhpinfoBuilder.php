@@ -5,7 +5,7 @@ namespace Slothsoft\Farah\Internal;
 
 use DOMDocument;
 use Generator;
-use Slothsoft\Core\DOMHelper;
+use Masterminds\HTML5;
 use Slothsoft\Core\IO\Writable\Delegates\ChunkWriterFromChunksDelegate;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
@@ -41,7 +41,7 @@ final class PhpinfoBuilder implements ExecutableBuilderStrategyInterface {
                 }), 'phpinfo.xhtml'),
             default => new DOMWriterResultBuilder(
                 new DOMWriterFromDocumentDelegate(function (): DOMDocument {
-                    $document = DOMHelper::parseDocument(self::getContent(), true);
+                    $document = (new HTML5())->loadHTML(self::getContent());
                     foreach ($document->documentElement->attributes as $attr) {
                         $document->documentElement->removeAttributeNode($attr);
                     }

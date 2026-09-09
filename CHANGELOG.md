@@ -9,6 +9,10 @@ This history was reconstructed from release tags and the commits between them.
 
 ## [Unreleased]
 
+### Fixed
+
+- Generated phpinfo XHTML responses now use the `application/xhtml+xml` media type.
+
 ## [1.29.2] - 2026-09-04
 
 ### Fixed

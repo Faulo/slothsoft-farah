@@ -6,8 +6,10 @@ namespace Slothsoft\Farah\Internal;
 use DOMDocument;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\FarahTesting\FarahServer;
 
 /**
@@ -88,22 +90,85 @@ final class PhpinfoBuilderTest extends TestCase {
         ];
     }
     
-    public function test_phpinfo_xhtml() {
+    /**
+     * @dataProvider responseProvider
+     */
+    public function test_phpinfo_response(string $path, string $mimeType, string $fileName, bool $isHTML): void {
         $server = new FarahServer();
+        $server->setModule(
+            FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'phpinfo-test'),
+            'test-files/phpinfo-test'
+        );
+        $server->setSitemap(FarahUrl::createFromReference('farah://slothsoft@phpinfo-test/sitemap'));
         $server->start();
-        
+
         try {
-            $source = file_get_contents("$server->uri/slothsoft@farah/phpinfo");
-            
+            [$source, $headers] = $this->request($server->uri . $path);
+
+            $this->assertSame("$mimeType; charset=UTF-8", $headers['content-type']);
+            $this->assertStringContainsString(sprintf('filename="%s"', $fileName), $headers['content-disposition']);
+
             $document = new DOMDocument();
-            $actual = $document->loadXML($source);
-            $this->assertTrue($actual, "Failed to retrieve /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
-            
-            $xpath = DOMHelper::loadXPath($document);
-            $actual = $xpath->evaluate('string(//html:title)');
-            $this->assertThat($actual, new IsEqual(sprintf('PHP %s - phpinfo()', PHP_VERSION)), "Failed to retrieve <title> from /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
-        } catch (BrowserDriverNotFoundException) {
-            $this->markTestSkipped();
+            if ($isHTML) {
+                $this->assertStringStartsWith('<!DOCTYPE html>', $source);
+                $this->assertStringNotContainsString('<?xml', $source);
+                $this->assertTrue($document->loadHTML($source), "Failed to parse HTML response from $path:" . PHP_EOL . $source);
+                $title = $document->getElementsByTagName('title')->item(0)->textContent;
+            } else {
+                $this->assertStringStartsWith('<?xml', $source);
+                $this->assertTrue($document->loadXML($source), "Failed to parse XHTML response from $path:" . PHP_EOL . $source);
+                $this->assertSame(DOMHelper::NS_HTML, $document->documentElement->namespaceURI);
+                $title = DOMHelper::loadXPath($document)->evaluate('string(//html:title)');
+            }
+
+            $this->assertThat($title, new IsEqual(sprintf('PHP %s - phpinfo()', PHP_VERSION)), "Failed to retrieve <title> from $path:" . PHP_EOL . $source);
+        } finally {
+            $server->quit();
         }
+    }
+
+    public function responseProvider(): iterable {
+        yield 'asset XML' => [
+            '/slothsoft@farah/phpinfo%23xml',
+            'application/xhtml+xml',
+            'phpinfo.xhtml',
+            false
+        ];
+        yield 'asset HTML' => [
+            '/slothsoft@farah/phpinfo%23html',
+            'text/html',
+            'phpinfo.html',
+            true
+        ];
+        yield 'page XML' => [
+            '/phpinfo-xml/',
+            'application/xhtml+xml',
+            'phpinfo.xhtml',
+            false
+        ];
+        yield 'page HTML' => [
+            '/phpinfo-html/',
+            'text/html',
+            'phpinfo.html',
+            true
+        ];
+    }
+
+    private function request(string $url): array {
+        $source = file_get_contents($url);
+        if (! is_string($source)) {
+            throw new RuntimeException("Failed to retrieve $url.");
+        }
+
+        $headers = [];
+        foreach ($http_response_header ?? [] as $header) {
+            if (($separator = strpos($header, ':')) !== false) {
+                $headers[strtolower(substr($header, 0, $separator))] = trim(substr($header, $separator + 1));
+            }
+        }
+        return [
+            $source,
+            $headers
+        ];
     }
 }
