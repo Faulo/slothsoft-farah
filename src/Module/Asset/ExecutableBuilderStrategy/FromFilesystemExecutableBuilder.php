@@ -36,7 +36,7 @@ final class FromFilesystemExecutableBuilder implements ExecutableBuilderStrategy
     
     private function createResultBuilderForType(FarahUrl $url, SplFileInfo $file, string $type): ResultBuilderStrategyInterface {
         if (MimeTypeDictionary::isXml($type)) {
-            return new XmlFileResultBuilder($url, $file);
+            return new XmlFileResultBuilder($url, $file, $type);
         }
         if (MimeTypeDictionary::isHtml($type)) {
             return new HtmlFileResultBuilder($url, $file);

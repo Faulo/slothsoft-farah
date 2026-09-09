@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files;
 
 use DOMDocument;
+use Masterminds\HTML5;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 
 /**
@@ -16,8 +17,8 @@ final class HtmlFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterElementFromDocumentTrait;
     
     public function toDocument(): DOMDocument {
-        $doc = new DOMDocument();
-        $doc->loadHTMLFile((string) $this->file);
-        return $doc;
+        $document = (new HTML5())->loadHTMLFile((string) $this->file);
+        $document->documentURI = (string) $this->url;
+        return $document;
     }
 }

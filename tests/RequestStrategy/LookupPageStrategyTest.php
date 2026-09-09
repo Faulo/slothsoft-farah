@@ -13,6 +13,7 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Http\MessageFactory;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Module;
@@ -166,6 +167,84 @@ XML
         $this->assertSame('text/html; charset=UTF-8', $response->getHeaderLine('content-type'));
         $this->assertStringContainsString('filename="transformation.html"', $response->getHeaderLine('content-disposition'));
         $this->assertStringStartsWith('<!DOCTYPE html>', (string) $response->getBody());
+    }
+
+    /**
+     * @dataProvider physicalHtmlPageProvider
+     * @runInSeparateProcess
+     * @throws Exception
+     */
+    public function test_process_honorsStreamForPhysicalHtmlPage(string $assetName, string $stream, string $expectedMimeType): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
+        Module::registerWithXmlManifestAndDefaultAssets(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), 'test-files/test-module');
+
+        $document = new DOMDocument();
+        /** @noinspection HttpUrlsUsage */
+        $document->loadXML(<<<XML
+<domain xmlns="http://schema.slothsoft.net/farah/sitemap" name="localhost" vendor="slothsoft" module="test-module" ref="/$assetName" uri="/" version="1.1" />
+XML
+        );
+        $requestStrategy = new LookupPageStrategy(new Domain($document), FarahUrlStreamIdentifier::createFromString($stream));
+        $response = $requestStrategy->process(new ServerRequest('GET', 'http://localhost/'));
+        $body = (string) $response->getBody();
+
+        $this->assertSame("$expectedMimeType; charset=UTF-8", $response->getHeaderLine('content-type'));
+        if ($stream === Executable::RESULT_IS_HTML) {
+            $this->assertStringStartsWith('<!DOCTYPE html>', $body);
+            $this->assertStringNotContainsString('<?xml', $body);
+            $this->assertStringContainsString('<br>', $body);
+            $this->assertStringNotContainsString('<br />', $body);
+            $this->assertStringContainsString('<script type="module"></script>', $body);
+        } else {
+            $this->assertStringStartsWith('<?xml', $body);
+            $this->assertStringContainsString('xmlns="http://www.w3.org/1999/xhtml"', $body);
+            $this->assertMatchesRegularExpression('~<br\s*/>~', $body);
+        }
+    }
+
+    public function physicalHtmlPageProvider(): iterable {
+        yield '.html + #html' => [
+            'page-html',
+            Executable::RESULT_IS_HTML,
+            'text/html'
+        ];
+        yield '.html + #xml' => [
+            'page-html',
+            Executable::RESULT_IS_XML,
+            'application/xhtml+xml'
+        ];
+        yield '.xhtml + #html' => [
+            'page-xhtml',
+            Executable::RESULT_IS_HTML,
+            'text/html'
+        ];
+        yield '.xhtml + #xml' => [
+            'page-xhtml',
+            Executable::RESULT_IS_XML,
+            'application/xhtml+xml'
+        ];
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @throws Exception
+     */
+    public function test_process_preservesExplicitStreamForPhysicalHtmlPage(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
+        Module::registerWithXmlManifestAndDefaultAssets(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), 'test-files/test-module');
+
+        $document = new DOMDocument();
+        /** @noinspection HttpUrlsUsage */
+        $document->loadXML(<<<'XML'
+<domain xmlns="http://schema.slothsoft.net/farah/sitemap" name="localhost" vendor="slothsoft" module="test-module" ref="/page-xhtml#xml" uri="/" version="1.1" />
+XML
+        );
+        $response = (new LookupPageStrategy(new Domain($document), Executable::resultIsHtml()))->process(new ServerRequest('GET', 'http://localhost/'));
+        $body = (string) $response->getBody();
+
+        $this->assertSame('application/xhtml+xml; charset=UTF-8', $response->getHeaderLine('content-type'));
+        $this->assertStringStartsWith('<?xml', $body);
+        $this->assertStringContainsString('xmlns="http://www.w3.org/1999/xhtml"', $body);
     }
     
     /**

@@ -3,6 +3,8 @@
 	<fragment name="test" />
 
 	<resource name="document" type="text/html" />
+	<resource name="page-html" type="text/html" />
+	<resource name="page-xhtml" type="application/xhtml+xml" />
 
 	<resource name="data" type="application/xml" />
 

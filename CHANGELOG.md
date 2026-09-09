@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Physical HTML and XHTML page assets now honor the selected HTML or XML response stream.
 - Generated phpinfo XHTML responses now use the `application/xhtml+xml` media type.
 
 ## [1.29.2] - 2026-09-04
