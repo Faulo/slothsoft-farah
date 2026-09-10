@@ -2,42 +2,11 @@
 
 Shared instructions for coding agents. Project-specific information is kept in [README.md](README.md), read it before non-trivial changes.
 
-## Farah Module Development
-
-### Module contract
+## Farah Module
 
 This project is a Farah module. Its module assets live in `assets/`, with `assets/manifest.xml` as the public entry point. Treat published asset paths, manifest identifiers, parameters, and stream names as public API. Preserve them unless the task explicitly permits a breaking release.
 
 Keep manifests, schemas, PHP registration code, fixtures, and documentation synchronized when the module contract changes. Test both lookup and the resolved result: a manifest entry existing is not sufficient if it produces the wrong stream, media type, transformation, or content.
-
-### Validation
-
-Use the PHP project's DDEV and PHPUnit workflow for local validation. Add focused tests for each changed asset or public behavior, and retain coverage for previously discovered regressions.
-
-Keep cross-platform and supported-PHP integration coverage in `.jenkins/Jenkinsfile.groovy`. The project job lives under `https://ci.slothsoft.net/job/php-packages/` and matches the repository name. GitHub CI validates the supported PHP and dependency matrix; Jenkins validates the repository's Linux and Windows integration matrix. For either system, inspect the result for the exact commit and read the complete relevant logs.
-
-### Release cycle
-
-When the user has authorized the required release, Git, CI, tagging, and publication operations, complete every phase in order.
-
-#### Phase 1: Build and validate the candidate
-
-1. Implement the change, add or update its tests, and document user-visible behavior under `Unreleased` in `CHANGELOG.md`.
-2. Run focused tests while developing, then run the complete local test suite.
-3. Commit and push the candidate changes.
-4. Watch the complete GitHub CI run and the matching job under `https://ci.slothsoft.net/job/php-packages/`for the pushed commit.
-5. If either validation fails, fix the issue and repeat from step 2 with a new commit and push.
-
-#### Phase 2: Prepare and tag the release
-
-1. Select the next version according to semantic versioning. If a new development line begins, keep Composer's branch alias aligned with it.
-2. Move the relevant `CHANGELOG.md` entries from `Unreleased` into a heading for the selected version and release date.
-3. Commit and push the release preparation.
-4. Validate that exact commit in both GitHub CI and the matching Jenkins job. If it fails, fix it and return to Phase 1, step 2.
-5. Tag the exact commit, using the repository's existing version-tag format, and push the tag. Never reuse or move a published tag.
-6. If the feature was based on a ticket, update the ticket's body to reflect the shipped design and mark it complete.
-
-If the expected behavior or its test contract changes at any point, restart at Phase 1, step 1.
 
 ## PHP
 
@@ -128,3 +97,36 @@ The three CI servers are:
 - `groke`: Ubuntu; runs the Jenkins controller and a Jenkins agent in the `agents_jenkins-agent` container. SSH alias and Docker context: `groke`.
 - `garl`: Ubuntu; runs a Jenkins agent in the `agents_jenkins-agent` container, connected to the controller on `groke`. SSH alias and Docker context: `garl`.
 - `dende`: Windows Server 2019; runs a Jenkins agent in the `agents_jenkins-agent` container, connected to the controller on `groke`. SSH alias and Docker context: `dende`.
+
+## Composer Package
+
+This project is a Composer package. Its `composer.json` lists the minimum versions of its dependencies.
+
+### Validation
+
+Use the PHP project's DDEV and PHPUnit workflow for local validation. Add focused tests for each changed asset or public behavior, and retain coverage for previously discovered regressions.
+
+Keep cross-platform and supported-PHP integration coverage in `.jenkins/Jenkinsfile.groovy`. The project job lives under `https://ci.slothsoft.net/job/php-packages/` and matches the repository name. GitHub CI validates the supported PHP and dependency matrix; Jenkins validates the repository's Linux and Windows integration matrix. For either system, inspect the result for the exact commit and read the complete relevant logs.
+
+### Release cycle
+
+When the user has authorized the required release, Git, CI, tagging, and publication operations, complete every phase in order.
+
+#### Phase 1: Build and validate the candidate
+
+1. Implement the change, add or update its tests, and document user-visible behavior under `Unreleased` in `CHANGELOG.md`.
+2. Run focused tests while developing, then run the complete local test suite.
+3. Commit and push the candidate changes.
+4. Watch the complete GitHub CI run and the matching job under `https://ci.slothsoft.net/job/php-packages/`for the pushed commit.
+5. If either validation fails, fix the issue and repeat from step 2 with a new commit and push.
+
+#### Phase 2: Prepare and tag the release
+
+1. Select the next version according to semantic versioning. If a new development line begins, keep Composer's branch alias aligned with it.
+2. Move the relevant `CHANGELOG.md` entries from `Unreleased` into a heading for the selected version and release date.
+3. Commit and push the release preparation.
+4. Validate that exact commit in both GitHub CI and the matching Jenkins job. If it fails, fix it and return to Phase 1, step 2.
+5. Tag the exact commit, using the repository's existing version-tag format, and push the tag. Never reuse or move a published tag.
+6. If the feature was based on a ticket, update the ticket's body to reflect the shipped design and mark it complete.
+
+If the expected behavior or its test contract changes at any point, restart at Phase 1, step 1.
