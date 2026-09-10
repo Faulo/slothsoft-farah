@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.29.4-rc.1] - 2026-09-10
+
 ### Fixed
 
 - HTML5 responses omit XML namespace artifacts while preserving namespaced attribute semantics.
@@ -1302,7 +1304,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial stable release of the manifest-driven Farah asset, transformation, response, stream, sitemap, and CLI APIs.
 
-[Unreleased]: https://github.com/Faulo/slothsoft-farah/compare/1.29.3...HEAD
+[Unreleased]: https://github.com/Faulo/slothsoft-farah/compare/1.29.4-rc.1...HEAD
+[1.29.4-rc.1]: https://github.com/Faulo/slothsoft-farah/compare/1.29.3...1.29.4-rc.1
 [1.29.3]: https://github.com/Faulo/slothsoft-farah/compare/1.29.2...1.29.3
 [1.29.2]: https://github.com/Faulo/slothsoft-farah/compare/1.29.1...1.29.2
 [1.29.1]: https://github.com/Faulo/slothsoft-farah/compare/1.29.0...1.29.1
