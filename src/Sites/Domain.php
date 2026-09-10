@@ -6,12 +6,12 @@ namespace Slothsoft\Farah\Sites;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
+use InvalidArgumentException;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Http\WebScheme;
-use Slothsoft\Farah\Internal\SitemapBuilder;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\RequestStrategy\LookupPageStrategy;
 
@@ -26,10 +26,10 @@ final class Domain {
     public const CURRENT_SITEMAP = 'farah://slothsoft@farah/current-sitemap';
     
     public static function createWithDefaultSitemap(string $scheme = WebScheme::HTTP): Domain {
+        // Keep validating the parameter for backward compatibility. The current
+        // request scheme is baked into the singleton sitemap when it is loaded.
+        WebScheme::normalize($scheme);
         $url = FarahUrl::createFromReference(self::CURRENT_SITEMAP);
-        $url = $url->withQueryArguments(FarahUrlArguments::createFromValueList([
-            SitemapBuilder::PARAM_SCHEME => WebScheme::normalize($scheme)
-        ]));
         return new self(Module::resolveToDOMWriter($url)->toDocument());
     }
     
@@ -82,19 +82,17 @@ final class Domain {
     }
     
     public function setCurrentPageNode(DOMElement $pageNode): void {
-        if ($oldNode = $this->getCurrentPageNode()) {
-            if ($oldNode === $pageNode) {
-                return;
-            }
-            $oldNode->removeAttribute(self::ATTR_CURRENT_PAGE);
+        if ($pageNode->ownerDocument !== $this->document) {
+            throw new InvalidArgumentException('The current page node must belong to this domain.');
         }
-        
+
+        $this->clearCurrentPageNode();
         $pageNode->setAttribute(self::ATTR_CURRENT_PAGE, '1');
     }
     
     public function clearCurrentPageNode(): void {
-        if ($oldNode = $this->getCurrentPageNode()) {
-            $oldNode->removeAttribute(self::ATTR_CURRENT_PAGE);
+        while ($node = $this->getCurrentPageNode()) {
+            $node->removeAttribute(self::ATTR_CURRENT_PAGE);
         }
     }
     

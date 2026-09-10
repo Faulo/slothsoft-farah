@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\API\Domain;
 
 use DOMDocument;
+use DOMElement;
 use DOMXPath;
 use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
@@ -58,51 +59,72 @@ final class ParamTest extends TestCase {
     
     /**
      *
+     * @dataProvider webSchemeProvider
      * @runInSeparateProcess
      */
-    public function test_lookupPageUsesRequestSchemeForGeneratedUrls(): void {
+    public function test_lookupPageUsesRequestSchemeForGeneratedUrls(string $scheme): void {
         $lookup = new LookupPageStrategy();
-        foreach ([
-            'http',
-            'https'
-        ] as $scheme) {
-            $request = new ServerRequest('GET', "$scheme://localhost/");
-            if ($scheme === 'https') {
-                $request = $request->withQueryParams([
-                    'scheme' => 'http'
-                ]);
-            }
-            Kernel::setCurrentRequest($request);
-            $response = $lookup->process($request);
-            $document = new DOMDocument();
-            $document->loadXML((string) $response->getBody());
-            $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_SLOTHSOFT);
-            
-            foreach ($xpath->query('//*[@url]') as $node) {
-                $this->assertStringStartsWith("$scheme://", $node->getAttribute('url'));
-            }
+        $request = new ServerRequest('GET', "$scheme://localhost/");
+        Kernel::setCurrentRequest($request);
+        $response = $lookup->process($request);
+        $document = new DOMDocument();
+        $document->loadXML((string) $response->getBody());
+        $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_SLOTHSOFT);
+
+        foreach ($xpath->query('//*[@url]') as $node) {
+            $this->assertStringStartsWith("$scheme://", $node->getAttribute('url'));
         }
+    }
+
+    public function webSchemeProvider(): iterable {
+        yield 'HTTP' => [
+            'http'
+        ];
+        yield 'HTTPS' => [
+            'https'
+        ];
     }
     
     /**
      *
+     * @dataProvider webSchemeProvider
      * @runInSeparateProcess
      */
-    public function test_sitemapUsesRequestSchemeForFullyQualifiedUrls(): void {
+    public function test_sitemapUsesRequestSchemeForFullyQualifiedUrls(string $scheme): void {
         $url = FarahUrl::createFromReference('farah://slothsoft@farah/sitemap-generator');
+        Kernel::setCurrentRequest(new ServerRequest('GET', "$scheme://localhost/sitemap/"));
+        $document = Module::resolveToDOMWriter($url)->toDocument();
+        $xpath = new DOMXPath($document);
+        $locations = $xpath->query('//*[local-name() = "loc"]');
+
+        $this->assertGreaterThan(0, $locations->length);
+        foreach ($locations as $location) {
+            $this->assertStringStartsWith("$scheme://", $location->textContent);
+        }
+    }
+
+    /**
+     *
+     * @runInSeparateProcess
+     */
+    public function test_currentSitemapTracksResolvedPageAcrossExecutableVariants(): void {
+        $lookup = new LookupPageStrategy();
+
         foreach ([
-            'http',
-            'https'
-        ] as $scheme) {
-            Kernel::setCurrentRequest(new ServerRequest('GET', "$scheme://localhost/sitemap/"));
-            $document = Module::resolveToDOMWriter($url)->toDocument();
-            $xpath = new DOMXPath($document);
-            $locations = $xpath->query('//*[local-name() = "loc"]');
-            
-            $this->assertGreaterThan(0, $locations->length);
-            foreach ($locations as $location) {
-                $this->assertStringStartsWith("$scheme://", $location->textContent);
-            }
+            '/page' => 'page',
+            '/page-with-param' => 'page-with-param',
+        ] as $path => $expectedName) {
+            $response = $lookup->process(new ServerRequest('GET', "http://localhost$path"));
+            $document = new DOMDocument();
+            $document->loadXML((string) $response->getBody());
+            $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_SLOTHSOFT);
+            $currentNodes = $xpath->query('//*[@current]');
+
+            $this->assertCount(1, $currentNodes);
+            $currentNode = $currentNodes->item(0);
+            $this->assertInstanceOf(DOMElement::class, $currentNode);
+            $this->assertSame($expectedName, $currentNode->getAttribute('name'));
+            $this->assertSame($path, $currentNode->getAttribute('uri'));
         }
     }
     

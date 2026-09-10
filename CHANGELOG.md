@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Current sitemap consumers now receive the shared sitemap with the resolved page marked as current.
+
 ## [1.29.4] - 2026-09-10
 
 ### Fixed

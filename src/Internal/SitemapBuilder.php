@@ -8,7 +8,6 @@ use DOMElement;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\Decorators\DOMWriterMemoryCache;
-use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Exception\EmptySitemapException;
@@ -34,29 +33,24 @@ use Slothsoft\Farah\Sites\Domain;
 final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWriterInterface {
     use DOMWriterElementFromDocumentTrait;
     
-    public const PARAM_SCHEME = 'scheme';
-
     private ?AssetInterface $asset = null;
     
     private ?DOMDocument $document = null;
+
+    private string $domainName;
+
+    private string $domainScheme = WebScheme::HTTP;
     
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
-        $scheme = WebScheme::normalize((string) $args->get(self::PARAM_SCHEME, WebScheme::HTTP));
-        $writer = new DOMWriterFromDocumentDelegate(fn(): DOMDocument => $this->createDocument($scheme));
-        $writer = new DOMWriterMemoryCache($writer);
+        $writer = new DOMWriterMemoryCache($this);
         $resultBuilder = new MapResultBuilder(new DOMWriterStreamBuilder($writer, 'sitemap'));
         $resultBuilder->addStreamBuilder(FarahUrlStreamIdentifier::createFromString('json'), new StringWriterStreamBuilder(new SitemapJsonBuilder($writer), 'sitemap', 'json'));
         return new ExecutableStrategies($resultBuilder);
     }
     
     public function toDocument(): DOMDocument {
-        try {
-            $scheme = Kernel::getCurrentRequest()->getUri()->getScheme();
-            $scheme = WebScheme::isSupported($scheme) ? WebScheme::normalize($scheme) : WebScheme::HTTP;
-        } catch (ConfigurationRequiredException) {
-            $scheme = WebScheme::HTTP;
-        }
-        return $this->createDocument($scheme);
+        $this->loadDocument();
+        return $this->document;
     }
     
     private function loadDocument(): void {
@@ -73,7 +67,8 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
                 if (! $this->document->documentElement) {
                     throw new EmptySitemapException((string) $this->asset->createUrl());
                 }
-                
+
+                $this->initDocument();
             }
         } catch (ConfigurationRequiredException $e) {
             $this->document = new DOMDocument();
@@ -82,25 +77,33 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
             $node->setAttribute('version', '1.1');
             $node->setAttribute('title', $e->getMessage());
             $this->document->appendChild($node);
+            $this->initDocument();
         }
     }
     
-    private function createDocument(string $scheme): DOMDocument {
-        $this->loadDocument();
-        $document = clone $this->document;
-        $domainNode = $document->documentElement;
-        $domainName = $domainNode->getAttribute('name');
-        $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_SLOTHSOFT);
+    private function initDocument(): void {
+        $domainNode = $this->document->documentElement;
+        $this->domainName = $domainNode->getAttribute('name');
+        $xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT);
+
+        $this->domainScheme = WebScheme::HTTP;
+        try {
+            $scheme = Kernel::getCurrentRequest()->getUri()->getScheme();
+            if (WebScheme::isSupported($scheme)) {
+                $this->domainScheme = WebScheme::normalize($scheme);
+            }
+        } catch (ConfigurationRequiredException) {
+        }
         
         // preload all include-pages elements
         $domain = null;
         while ($dataNodeList = $xpath->query('//sfs:include-pages') and $dataNodeList->length) {
-            $domain ??= new Domain($document);
+            $domain ??= new Domain($this->document);
             foreach ($dataNodeList as $dataNode) {
                 $url = $domain->lookupAssetUrl($dataNode);
                 $result = Module::resolveToDOMWriter($url);
-                $node = $result->toElement($document);
-                $fragment = $document->createDocumentFragment();
+                $node = $result->toElement($this->document);
+                $fragment = $this->document->createDocumentFragment();
                 foreach ([
                              ...$node->childNodes
                          ] as $node) {
@@ -110,23 +113,22 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
             }
         }
         
-        $this->initDomainElement($domainNode, $scheme, $domainName);
+        $this->initDomainElement($domainNode);
         
         foreach ($xpath->query('//sfs:page | //sfs:file') as $node) {
-            $this->initPageElement($node, $scheme, $domainName);
+            $this->initPageElement($node);
         }
-        return $document;
     }
     
-    private function initDomainElement(DOMElement $node, string $scheme, string $domainName): void {
+    private function initDomainElement(DOMElement $node): void {
         if (! $node->hasAttribute('title')) {
             $node->setAttribute('title', $node->getAttribute('name'));
         }
         $node->setAttribute('uri', '/');
-        $node->setAttribute('url', "$scheme://$domainName/");
+        $node->setAttribute('url', "$this->domainScheme://$this->domainName/");
     }
     
-    private function initPageElement(DOMElement $node, string $scheme, string $domainName): void {
+    private function initPageElement(DOMElement $node): void {
         $name = $node->getAttribute('name');
         if ($node->hasAttribute('ext')) {
             $uri = $node->getAttribute('ext');
@@ -142,6 +144,6 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
             $node->setAttribute('title', $name);
         }
         $node->setAttribute('uri', $uri);
-        $node->setAttribute('url', "$scheme://$domainName$uri");
+        $node->setAttribute('url', "$this->domainScheme://$this->domainName$uri");
     }
 }

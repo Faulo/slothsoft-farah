@@ -15,15 +15,10 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
 final class SitemapParameterFilter implements ParameterFilterStrategyInterface {
     
     public function isAllowedName(string $name): bool {
-        return in_array($name, [
-            SitemapBuilder::PARAM_SCHEME,
-            Manifest::PARAM_LOAD,
-        ], true);
+        return $name === Manifest::PARAM_LOAD;
     }
     
     public function getValueSanitizers(): iterable {
-        return [
-            SitemapBuilder::PARAM_SCHEME => new CurrentRequestSchemeSanitizer()
-        ];
+        return [];
     }
 }

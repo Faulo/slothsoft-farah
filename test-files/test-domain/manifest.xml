@@ -4,9 +4,11 @@
 
     <fragment name="page">
         <use-document ref="//slothsoft@farah/current-request" />
+        <use-document ref="//slothsoft@farah/current-sitemap" name="sites" />
     </fragment>
 
     <fragment name="page-with-query">
         <use-document ref="//slothsoft@farah/current-request?param=value" />
+        <use-document ref="//slothsoft@farah/current-sitemap" name="sites" />
     </fragment>
 </assets>
