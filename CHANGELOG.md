@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- HTML5 responses omit XML namespace artifacts while preserving namespaced attribute semantics.
+
 ## [1.29.3] - 2026-09-09
 
 ### Fixed
