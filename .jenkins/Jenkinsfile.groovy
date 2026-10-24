@@ -6,18 +6,16 @@ def unstable(def body) {
 
 def runComposerTest(def version, def variant) {
 	unstable {
-        docker.image("faulo/farah:${version}").inside {
-            exec "composer -d .. update --prefer-${variant} --no-interaction --no-progress"
-            exec "composer -d .. exec phpunit -- --log-junit ${version}-${variant}.xml"
-        }
+        exec "composer update --prefer-${variant} --no-interaction --no-progress"
+        exec "composer exec phpunit -- --log-junit .reports/${version}-${variant}.xml"
 	}
 }
 
 def runLinter() {
 	unstable {
-		exec "composer -d .. update --no-interaction --no-progress"
-        exec 'composer -d .. require phpstan/phpstan --no-interaction --no-progress'
-        exec 'composer -d .. exec phpstan -- --no-progress --configuration=phpstan.neon.dist --error-format=junit > phpstan.xml'
+		exec "composer update --no-interaction --no-progress"
+        exec 'composer require phpstan/phpstan --no-interaction --no-progress'
+        exec 'composer exec phpstan -- --no-progress --configuration=phpstan.neon.dist --error-format=junit > .reports/phpstan.xml'
 	}
 }
 
@@ -47,8 +45,12 @@ pipeline {
                     dir('.reports') {
                         deleteDir()
 
-                        runLinter();
+                        echo "Running Linter..."
+                    }
 
+                    runLinter();
+
+                    dir('.reports') {
                         junit "*.xml"
                     }
                 }
@@ -82,9 +84,14 @@ pipeline {
 
 												dir('.reports') {
 													deleteDir()
+													echo "Running Tests..."
+                                                }
 
+                                                docker.image("faulo/farah:${version}").inside {
                                                     runComposerTest(version, variant)
+                                                }
 
+                                                dir('.reports') {
 													junit "*.xml"
 												}
 											}
