@@ -45,13 +45,11 @@ pipeline {
                 }
             }
 			steps {
-				checkout scm
-
                 script {
+				    checkout scm
+
                     dir('.reports') {
                         deleteDir()
-
-                        echo "Running Linter..."
                     }
 
                     runLinter();
@@ -90,7 +88,6 @@ pipeline {
 
 												dir('.reports') {
 													deleteDir()
-													echo "Running Tests..."
                                                 }
 
                                                 docker.image("faulo/farah:${version}").inside {
