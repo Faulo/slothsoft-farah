@@ -6,8 +6,15 @@ def unstable(def body) {
 
 def runComposerTest(def version, def variant) {
 	unstable {
-		callShell "composer update --prefer-${variant} --no-interaction --no-progress"
-		callShell "composer exec phpunit -- --log-junit .reports/${version}-${variant}.xml"
+		exec "composer update --prefer-${variant} --no-interaction --no-progress"
+		exec "composer exec phpunit -- --log-junit .reports/${version}-${variant}.xml"
+	}
+}
+
+def runLinter() {
+	unstable {
+        exec 'composer require phpstan/phpstan --no-interaction --no-progress'
+        exec 'composer exec phpstan -- --no-progress --configuration=phpstan.neon.dist --error-format=junit > phpstan-report.xml'
 	}
 }
 
@@ -23,6 +30,32 @@ pipeline {
 		COMPOSER_PROCESS_TIMEOUT = '3600'
 	}
 	stages {
+		stage('Lint') {
+			agent {
+				docker {
+				    image 'faulo/farah:8.2'
+					label 'docker'
+                }
+            }
+			steps {
+				checkout scm
+
+                dir('.reports') {
+                    deleteDir()
+                }
+
+				script {
+					runLinter();
+				}
+			}
+			post {
+				always {
+                    dir('.reports') {
+                        junit "*.xml"
+                    }
+				}
+			}
+		}
 		stage('Setup') {
 			steps {
 				script {
