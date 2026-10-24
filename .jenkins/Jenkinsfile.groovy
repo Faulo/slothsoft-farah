@@ -8,7 +8,7 @@ def runComposerTest(def version, def variant) {
 	unstable {
         exec "composer update --prefer-${variant} --no-interaction --no-progress"
 
-		fileOperations([folderCreateOperation('.jenkins')])
+		fileOperations([folderCreateOperation('.reports')])
 
         exec "composer exec phpunit -- --log-junit .jenkins/${version}-${variant}.xml"
 	}
@@ -19,9 +19,9 @@ def runLinter() {
         exec 'composer require phpstan/phpstan --no-interaction --no-progress'
 		exec "composer update --no-interaction --no-progress"
 
-		fileOperations([folderCreateOperation('.jenkins')])
+		fileOperations([folderCreateOperation('.reports')])
 
-        exec 'composer exec phpstan -- --no-progress --configuration=phpstan.neon.dist --error-format=junit > .jenkins/phpstan.xml'
+        exec 'composer exec phpstan -- --no-progress --configuration=phpstan.neon.dist --error-format=junit > .reports/phpstan.xml'
 	}
 }
 
