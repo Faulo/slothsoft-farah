@@ -10,7 +10,7 @@ def runComposerTest(def version, def variant) {
 
 		fileOperations([folderCreateOperation('.reports')])
 
-        exec "composer exec phpunit -- --log-junit .jenkins/${version}-${variant}.xml"
+        exec "composer exec phpunit -- --log-junit .reports/${version}-${variant}.xml"
 	}
 }
 
