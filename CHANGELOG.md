@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Non-bufferable HTTP responses now preserve their streaming designation, send `X-Accel-Buffering: no`, and flush the active PHP output buffer when supported, followed by the SAPI, after each chunk. Other destinations use `fflush()` on their output stream after each chunk. Existing output buffers remain registered. Bufferable responses do not explicitly flush their destination.
+
 ## [1.29.5] - 2026-09-10
 
 ### Fixed

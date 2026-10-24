@@ -17,14 +17,11 @@ final class SendHeaderAndBodyStrategy implements ResponseStrategyInterface {
         if (! headers_sent()) {
             $header = new SendHeaderStrategy();
             $header->process($response);
-            flush();
             
             if ($response->getBody()) {
                 $body = new SendBodyStrategy();
                 $body->process($response);
-                flush();
             }
         }
     }
 }
-

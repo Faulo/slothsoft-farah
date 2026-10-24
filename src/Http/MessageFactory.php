@@ -33,8 +33,10 @@ abstract class MessageFactory {
         return $serverRequest->withQueryParams($params);
     }
     
-    public static function createServerResponse(int $statusCode, array $headers, ?StreamInterface $stream = null): ResponseInterface {
-        return new Response($statusCode, $headers, $stream);
+    public static function createServerResponse(int $statusCode, array $headers, ?StreamInterface $stream = null, bool $isBufferable = true): ResponseInterface {
+        return $isBufferable 
+            ? new Response($statusCode, $headers, $stream)
+            : (new StreamingResponse($statusCode, $headers, $stream))->withHeader('X-Accel-Buffering', 'no');
     }
     
     public static function createStreamFromResource($resource): StreamInterface {
@@ -56,4 +58,3 @@ abstract class MessageFactory {
         return self::createStreamFromResource(fopen((string) $url, StreamWrapperInterface::MODE_OPEN_READONLY));
     }
 }
-

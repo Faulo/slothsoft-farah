@@ -44,7 +44,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
             Kernel::setCurrentPage($url);
             
             $statusCode = StatusCode::STATUS_OK;
-
+            
             try {
                 try {
                     $result = Module::resolveToResult($url);
@@ -169,6 +169,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
                 throw new HttpStatusException($e->getMessage(), StatusCode::STATUS_NOT_FOUND, $e);
             }
         } catch (HttpStatusException $e) {
+            $isBufferable = true;
             $statusCode = $e->getCode();
             $headers = $e->getAdditionalHeaders();
             $body = MessageFactory::createStreamFromContents(StatusCode::getMessage($statusCode, $e->getMessage()) . PHP_EOL);
@@ -178,7 +179,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
             $body = null;
         }
         
-        return MessageFactory::createServerResponse($statusCode, $headers, $body);
+        return MessageFactory::createServerResponse($statusCode, $headers, $body, $isBufferable);
     }
     
     private function validateRequest(): void {

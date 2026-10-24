@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<assets xmlns="http://schema.slothsoft.net/farah/module" version="1.1">
+    <custom-asset name="events" executable-builder="Slothsoft\Farah\ResponseStrategy\StreamingBuilder" />
+</assets>
