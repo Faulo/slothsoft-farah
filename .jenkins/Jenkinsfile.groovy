@@ -7,7 +7,6 @@ def unstable(def body) {
 def runComposerTest(def version, def variant) {
 	unstable {
         exec "composer update --prefer-${variant} --no-interaction --no-progress"
-        exec "composer config --global use-parent-dir true"
 
 		fileOperations([folderCreateOperation('.jenkins')])
 
