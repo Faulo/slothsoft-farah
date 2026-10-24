@@ -26,17 +26,27 @@ Run all Composer commands through DDEV with `ddev composer ...`. Do not run Comp
 
 ### PHPUnit
 
-The PHPUnit config is `phpunit.xml`. Run all PHPUnit invocations, including filtered and targeted runs, in DDEV's default `web` container:
+The PHPUnit config is `phpunit.xml`. Run PHPUnit in DDEV unless debugging the host specifically:
 
 ```bash
 ddev exec vendor/bin/phpunit
 ```
 
-Never run PHPUnit on the host. Start DDEV first when necessary. If an optional extension or platform feature is unavailable in DDEV, report which validation could not run and why. Treat skipped tests as intentional unless the task concerns test skipping.
+If an optional extension or platform feature is unavailable in DDEV, report which validation could not run and why. Treat skipped tests as intentional unless the task concerns test skipping.
 
 Use `@runInSeparateProcess` for tests of APIs with global or static process state. When manually changing a test marked `@todo auto-generated`, remove the marker so the generator no longer treats it as disposable. Files in `test-files/` are canonical fixtures, not disposable output.
 
 Tests may create temporary files through `temp_file`, `temp_dir`, or `Slothsoft\Core\IO\FileInfoFactory::createTempFile`; manual cleanup is not required for files managed by these helpers.
+
+### PHPStan
+
+The PHPStan config is `phpstan.neon.dist`. Run PHPStan in DDEV's default `web` container:
+
+```bash
+ddev exec vendor/bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress --error-format=json
+```
+
+PhpStorm MCP inspection tools (`get_file_problems`, `get_inspections`, and `lint_files`) have been observed to omit PHPStan diagnostics even when PHPStan validation is enabled in the IDE. Use those inspections alongside the explicit PHPStan run; an empty IDE inspection response is not a PHPStan pass. If a PHPStan run configuration is available, it can also be executed through MCP; read its complete `fullOutputPath` when the returned preview is truncated, and verify that it uses the DDEV interpreter and shared configuration.
 
 ### MCP validation
 
