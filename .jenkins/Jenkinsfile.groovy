@@ -7,15 +7,21 @@ def unstable(def body) {
 def runComposerTest(def version, def variant) {
 	unstable {
         exec "composer update --prefer-${variant} --no-interaction --no-progress"
-        exec "composer exec phpunit -- --log-junit .reports/${version}-${variant}.xml"
+
+		dir('.jenkins') {
+            exec "composer exec phpunit -- --log-junit ${version}-${variant}.xml"
+		}
 	}
 }
 
 def runLinter() {
 	unstable {
-		exec "composer update --no-interaction --no-progress"
         exec 'composer require phpstan/phpstan --no-interaction --no-progress'
-        exec 'composer exec phpstan -- --no-progress --configuration=phpstan.neon.dist --error-format=junit > .reports/phpstan.xml'
+		exec "composer update --no-interaction --no-progress"
+
+		dir('.jenkins') {
+            exec 'composer -d .. exec phpstan -- --no-progress --configuration=phpstan.neon.dist --error-format=junit > phpstan.xml'
+		}
 	}
 }
 
