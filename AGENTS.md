@@ -53,10 +53,8 @@ The PHPDoc config is `phpdoc.xml`. Generate documentation in DDEV with `ddev exe
 These short messages have special handling when they appear alone in a user message:
 
 - `ping`: Reply with `pong`.
-- `.`: Reply with `.`.
 - `?`: Continue the previous response or task after an interruption.
 - `ticket <URI>`: Read the linked ticket and all comments through the available integration. Inspect the project, reproduce the current behavior, and run relevant checks as needed. Then explain the request, project context, reproducibility, risks, and a proposed implementation plan. Do not edit files, change remote state, commit, or push until the user approves the approach.
-- `can you <x>?` is a question about your knowledge, capabilities or permissions. It is not an instruction to perform `x`.
 
 ### Compatibility
 
@@ -74,7 +72,7 @@ An agent may perform Git mutations only after the user explicitly opts in. Permi
 
 When Git mutations are authorized:
 
-- The user is responsible for choosing the branch. Verify the current branch and working-tree status before editing and again before creating commits.
+- Do not change the current branch unless asked. Verify the working-tree status before editing and again before creating commits.
 - Treat all unknown local changes as user work. Do not overwrite, stage, commit, restore, or otherwise alter them.
 - Keep commits small and cohesive.
 - Format agent-authored commits according to Conventional Commits 1.0.0: `<type>[optional scope]: <description>`.
@@ -92,11 +90,12 @@ Use these access methods:
 - `ssh <host>` opens that server's shell.
 - `docker --context <host> ...` talks to that server's Docker daemon. Always name the context explicitly.
 
-The three CI servers are:
+The CI servers are:
 
-- `groke`: Ubuntu; runs the Jenkins controller and a Jenkins agent in the `agents_jenkins-agent` container. SSH alias and Docker context: `groke`.
-- `garl`: Ubuntu; runs a Jenkins agent in the `agents_jenkins-agent` container, connected to the controller on `groke`. SSH alias and Docker context: `garl`.
-- `dende`: Windows Server 2019; runs a Jenkins agent in the `agents_jenkins-agent` container, connected to the controller on `groke`. SSH alias and Docker context: `dende`.
+- `groke`: Mörkö, Ubuntu; Jenkins controller and Swarm manager. SSH alias and Docker context: `groke`.
+- `garl`: Garl, Ubuntu; Jenkins agent and Swarm worker for `groke`. SSH alias and Docker context: `garl`.
+- `dende`: Dende, Windows Server 2019; domain controller and Hyper-V host for `popo`. SSH alias and Docker context: `dende`.
+- `popo`: Mr. Popo, Windows Server 2019 Standard Core VM on `dende`; Jenkins agent and Swarm worker for `groke`. SSH alias and Docker context: `popo`.
 
 ## Composer Package
 
