@@ -39,10 +39,7 @@ pipeline {
 	stages {
 		stage('Lint') {
 			agent {
-				docker {
-				    image 'faulo/farah:8.2'
-					label 'docker'
-                }
+                label 'docker'
             }
 			steps {
                 script {
@@ -52,7 +49,9 @@ pipeline {
                         deleteDir()
                     }
 
-                    runLinter();
+                    docker.image("faulo/farah:8.2").inside {
+                        runLinter();
+                    }
 
                     dir('.reports') {
                         junit "*.xml"
