@@ -36,6 +36,10 @@ final class RangeEntityStream implements StreamInterface {
         return self::compare($this->size, (string) PHP_INT_MAX) <= 0 ? (int) $this->size : null;
     }
     
+    public function getBytesRead(): int {
+        return $this->bytesRead;
+    }
+    
     public function tell(): int {
         if (self::compare($this->position, (string) PHP_INT_MAX) > 0) {
             throw new RuntimeException('Virtual stream position does not fit a PSR-7 integer.');

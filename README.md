@@ -27,36 +27,36 @@ Adding dependencies is acceptable when the dependency is justified by the change
 These parts are suitable for use in new or maintained Farah code:
 
 - `Slothsoft\Farah\Kernel`
-  - Request/response orchestration for Farah page and asset lookups.
-  - Process-wide current request, page, sitemap, and tracking configuration.
+    - Request/response orchestration for Farah page and asset lookups.
+    - Process-wide current request, page, sitemap, and tracking configuration.
 - `Slothsoft\Farah\FarahUrl`
-  - Immutable Farah URL value objects for authorities, paths, query arguments, and stream identifiers.
-  - PSR-7 `UriInterface` integration for the `farah://vendor@module/path?arguments#stream` URL format.
+    - Immutable Farah URL value objects for authorities, paths, query arguments, and stream identifiers.
+    - PSR-7 `UriInterface` integration for the `farah://vendor@module/path?arguments#stream` URL format.
 - `Slothsoft\Farah\Module`
-  - Module registration and resolution from manifest to asset, executable, result, and writer interfaces.
-  - File-system cache/data path helpers scoped by Farah URL.
+    - Module registration and resolution from manifest to asset, executable, result, and writer interfaces.
+    - File-system cache/data path helpers scoped by Farah URL.
 - `Slothsoft\Farah\Module\Manifest`
-  - XML manifest loading and asset construction.
-  - Strategy interfaces for tree loading and asset building.
+    - XML manifest loading and asset construction.
+    - Strategy interfaces for tree loading and asset building.
 - `Slothsoft\Farah\Module\Asset`
-  - Asset lookup, path resolution, manifest instructions, parameter filtering, parameter suppliers, and executable builders.
-  - Built-in instruction strategies for imports, links, templates, documents, manifests, scripts, stylesheets, and dictionaries.
+    - Asset lookup, path resolution, manifest instructions, parameter filtering, parameter suppliers, and executable builders.
+    - Built-in instruction strategies for imports, links, templates, documents, manifests, scripts, stylesheets, and dictionaries.
 - `Slothsoft\Farah\Module\Executable`
-  - Executable lookup and result building.
-  - Result builders for DOM writers, file writers, streams, chunk writers, transformations, maps, proxies, and CLI delegation.
+    - Executable lookup and result building.
+    - Result builders for DOM writers, file writers, streams, chunk writers, transformations, maps, proxies, and CLI delegation.
 - `Slothsoft\Farah\Module\Result`
-  - Result lookup and conversion into DOM, file, stream, string, and chunk writer forms.
+    - Result lookup and conversion into DOM, file, stream, string, and chunk writer forms.
 - `Slothsoft\Farah\RequestStrategy` and `Slothsoft\Farah\ResponseStrategy`
-  - Page, asset, and route lookup strategies.
-  - Header/body response sending strategies.
+    - Page, asset, and route lookup strategies.
+    - Header/body response sending strategies.
 - `Slothsoft\Farah\Http`
-  - Namespaced HTTP helpers for PSR-7 messages, status codes, content coding, transfer coding, and identity encoding.
+    - Namespaced HTTP helpers for PSR-7 messages, status codes, content coding, transfer coding, and identity encoding.
 - `Slothsoft\Farah\LinkDecorator`
-  - HTML, SVG, and Farah link decoration for generated DOM output.
+    - HTML, SVG, and Farah link decoration for generated DOM output.
 - `Slothsoft\Farah\StreamWrapper`
-  - Stream wrapper factory and wrappers for Farah document and string resources.
+    - Stream wrapper factory and wrappers for Farah document and string resources.
 - `Slothsoft\Farah\Schema`
-  - Schema lookup for bundled Farah XML schemas.
+    - Schema lookup for bundled Farah XML schemas.
 - `Slothsoft\Farah\Exception`
     - Package-specific exception types and DOM-serializable exception context.
 - `Slothsoft\Farah\Internal`
@@ -68,34 +68,42 @@ These parts are suitable for use in new or maintained Farah code:
 - `Slothsoft\Farah\Configuration`
     - Mutable configuration field wrappers for Farah URLs and assets.
 - `assets/`
-  - Farah's own module manifest, XML schemas, XSLT templates, sitemap generator assets, and JavaScript helper assets.
+    - Farah's own module manifest, XML schemas, XSLT templates, sitemap generator assets, and JavaScript helper assets.
 - `scripts/farah-asset` and `scripts/farah-page`
-  - Composer binaries for resolving a Farah asset URL or page URL from the command line.
+    - Composer binaries for resolving a Farah asset URL or page URL from the command line.
+
+## HTTP Byte Ranges
+
+Request strategies support single bounded, open-ended, and suffix byte ranges on GET requests. Range offsets and representation sizes remain exact even above `PHP_INT_MAX`; result file statistics may supply an exact size as a decimal string when the PSR-7 stream cannot report it as an integer. Sizes describe the selected representation: raw result statistics are never used for compressed content.
+
+Ranges are read lazily with bounded reads. Seekable sources use native absolute, end-relative, or bounded relative seeks; non-seekable sources discard preceding bytes incrementally. Reading a range never caches the entire source. Unknown-size bufferable representations retain the existing caching fallback to discover their length.
+
+Unsatisfiable single ranges return 416 with `Content-Range: bytes */size`. Malformed or unsupported ranges, valid multiple ranges, ranges on empty or unknown-size representations, and ranges on other methods are ignored. Conditional requests take precedence over ranges, and `If-Range` must match the selected representation. The internal range stream is forward-only and read-only; its PSR-7 size is `null` if the exact range length exceeds the integer limit.
 
 ## Historical / Deprecated
 
 These components are included for historical reasons only. Do not use them for new code.
 
 - `Slothsoft\Farah\Cache`
-  - Small cache helpers retained for existing module behavior.
+    - Small cache helpers retained for existing module behavior.
 - `Slothsoft\Farah\Container`
-  - Minimal container interface used by existing code.
+    - Minimal container interface used by existing code.
 - `Slothsoft\Farah\Daemon`
-  - Socket-based daemon server/client helpers for long-running executable builders.
+    - Socket-based daemon server/client helpers for long-running executable builders.
 - `Slothsoft\Farah\Security`
-  - Banned-user/session helper retained for existing deployments.
+    - Banned-user/session helper retained for existing deployments.
 - `Slothsoft\Farah\Session`
-  - Legacy session persistence helper.
+    - Legacy session persistence helper.
 - `Slothsoft\Farah\Tracking`
-  - Request tracking, log table, archive, tick, and view helpers.
+    - Request tracking, log table, archive, tick, and view helpers.
 - `Slothsoft\Farah\HTTPClosure`, `HTTPCommand`, `HTTPEvent`, `HTTPRequest`, and `HTTPResponse`
-  - Legacy root-level HTTP classes predating the current PSR-7 request/response flow.
-  - Prefer `Slothsoft\Farah\Http`, `Slothsoft\Farah\RequestStrategy`, `Slothsoft\Farah\ResponseStrategy`, and PSR-7 message interfaces for new code.
+    - Legacy root-level HTTP classes predating the current PSR-7 request/response flow.
+    - Prefer `Slothsoft\Farah\Http`, `Slothsoft\Farah\RequestStrategy`, `Slothsoft\Farah\ResponseStrategy`, and PSR-7 message interfaces for new code.
 - `Slothsoft\Farah\PThreads` in `src-pthreads/`
-  - Deprecated pthreads integration retained for old consumers.
-  - New code should avoid `ext-pthreads` and use maintained process, queue, or async infrastructure instead.
+    - Deprecated pthreads integration retained for old consumers.
+    - New code should avoid `ext-pthreads` and use maintained process, queue, or async infrastructure instead.
 - The `/sites` asset in `assets/manifest.xml`
-  - Deprecated alias for `/current-sitemap`.
+    - Deprecated alias for `/current-sitemap`.
 
 ## Farah Modules
 

@@ -10,11 +10,13 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Slothsoft\Core\IO\Writable\StreamWriterInterface;
+use Slothsoft\Core\IO\Writable\FilteredStreamWriterInterface;
+use Slothsoft\Farah\Http\ContentCoding;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamBuilderStrategyInterface;
 
 /**
- * Response-level range contract, intentionally exposing current implementation gaps.
+ * Response-level range contract, including regressions for large byte offsets.
  * @see RequestStrategyBase
  * @see https://www.rfc-editor.org/rfc/rfc9110.html#section-14
  */
@@ -122,7 +124,7 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         $this->assertSame(200, $response->getStatusCode());
         $this->assertFalse($response->hasHeader('Content-Range'));
         $this->assertSame('10', $response->getHeaderLine('Content-Length'));
-        $this->assertSame($method === 'HEAD' ? '' : self::CONTENT, (string) $response->getBody());
+        $this->assertSame(in_array($method, ['HEAD', 'OPTIONS'], true) ? '' : self::CONTENT, (string) $response->getBody());
     }
     
     public function ignoredRangeProvider(): iterable {
@@ -318,14 +320,94 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         $this->assertSame('', (string) $response->getBody());
     }
     
-    private function request(array $headers, string $method = 'GET', ?StreamInterface $stream = null, ?string $size = '10', bool $bufferable = true): ResponseInterface {
+    /** @runInSeparateProcess */
+    public function testIfNoneMatchOverridesModificationDate(): void {
+        $response = $this->request([
+            'Range' => 'bytes=2-5',
+            'If-None-Match' => '"another-entity"',
+            'If-Modified-Since' => gmdate('D, d M Y H:i:s \\G\\M\\T', self::MODIFIED)
+        ]);
+        $this->assertRepresentation($response, 206, 'bytes 2-5/10', '2345');
+    }
+    
+    /** @runInSeparateProcess */
+    public function testNotModifiedDoesNotReadOrSeekSource(): void {
+        $stream = new RangeEntityStream(self::HUGE_SIZE, 0);
+        $response = $this->request(['If-None-Match' => '"range-entity"', 'Range' => 'bytes=2-5'], 'GET', $stream, self::HUGE_SIZE);
+        $this->assertSame(304, $response->getStatusCode());
+        $this->assertSame(0, $stream->getBytesRead());
+        $this->assertFalse($response->hasHeader('Content-Length'));
+        $this->assertSame(0, $stream->tell());
+    }
+    
+    /** @runInSeparateProcess */
+    public function testHugeBufferableRangeIsLazyWhenSizeIsInStatistics(): void {
+        $stream = new RangeEntityStream(self::HUGE_SIZE, 4);
+        $response = $this->request(['Range' => 'bytes=2-5'], 'GET', $stream, self::HUGE_SIZE);
+        $this->assertSame(0, $stream->getBytesRead());
+        $this->assertRepresentation($response, 206, 'bytes 2-5/' . self::HUGE_SIZE, '2345');
+        $this->assertSame(4, $stream->getBytesRead());
+    }
+    
+    /** @runInSeparateProcess */
+    public function testTrulyUnknownBufferableSizeIsDiscoveredByCaching(): void {
+        $stream = FnStream::decorate(Utils::streamFor(self::CONTENT), ['getSize' => static fn(): ?int => null]);
+        $response = $this->request(['Range' => 'bytes=2-5'], 'GET', $stream, null);
+        $this->assertRepresentation($response, 206, 'bytes 2-5/10', '2345');
+    }
+    
+    /**
+     * @dataProvider encodedRangeProvider
+     * @runInSeparateProcess
+     */
+    public function testRangesUseEncodedRepresentationSize(bool $unknownSize, ?string $ifRange, int $status, string $range = 'bytes=2-5'): void {
+        $encoded = gzencode(self::CONTENT);
+        $this->assertIsString($encoded);
+        $stream = Utils::streamFor($encoded);
+        if ($unknownSize) {
+            $stream = FnStream::decorate($stream, ['getSize' => static fn(): ?int => null]);
+        }
+        $filter = $this->createMock(FilteredStreamWriterInterface::class);
+        $filter->method('toFilteredStream')->willReturn($stream);
+        ContentCoding::registerEncodingFilter('gzip', $filter);
+        $headers = ['Accept-Encoding' => 'gzip', 'Range' => $range];
+        if ($ifRange !== null) {
+            $headers['If-Range'] = $ifRange;
+        }
+        $response = $this->request($headers, 'GET', null, self::HUGE_SIZE, true, 'text/plain');
+        $this->assertSame($status, $response->getStatusCode());
+        if ($status === 416) {
+            $this->assertFalse($response->hasHeader('Content-Encoding'));
+            $this->assertSame('text/plain; charset=UTF-8', $response->getHeaderLine('Content-Type'));
+            $this->assertSame('bytes */' . strlen($encoded), $response->getHeaderLine('Content-Range'));
+            $this->assertSame((string) strlen((string) $response->getBody()), $response->getHeaderLine('Content-Length'));
+            return;
+        }
+        $this->assertSame('gzip', $response->getHeaderLine('Content-Encoding'));
+        $this->assertSame('"range-entity-gzip"', $response->getHeaderLine('ETag'));
+        $this->assertSame('accept-encoding', $response->getHeaderLine('Vary'));
+        $expected = $status === 206 ? substr($encoded, 2, 4) : $encoded;
+        $this->assertSame((string) strlen($expected), $response->getHeaderLine('Content-Length'));
+        $this->assertSame($status === 206 ? 'bytes 2-5/' . strlen($encoded) : '', $response->getHeaderLine('Content-Range'));
+        $this->assertSame($expected, (string) $response->getBody());
+    }
+    
+    public function encodedRangeProvider(): iterable {
+        yield 'native encoded size' => [false, null, 206];
+        yield 'unknown encoded size must not use raw statistics' => [true, null, 206];
+        yield 'raw ETag does not validate encoding' => [false, '"range-entity"', 200];
+        yield 'encoded ETag validates encoding' => [false, '"range-entity-gzip"', 206];
+        yield 'encoded unsatisfiable range has a plain error body' => [false, null, 416, 'bytes=999-'];
+    }
+    
+    private function request(array $headers, string $method = 'GET', ?StreamInterface $stream = null, ?string $size = '10', bool $bufferable = true, string $mime = 'application/octet-stream'): ResponseInterface {
         $stream ??= Utils::streamFor(self::CONTENT);
         $writer = $this->createMock(StreamWriterInterface::class);
         $writer->method('toStream')->willReturn($stream);
         $builder = $this->createMock(StreamBuilderStrategyInterface::class);
         $builder->method('buildStreamWriter')->willReturn($writer);
         $builder->method('buildStreamFileName')->willReturn('range-entity.bin');
-        $builder->method('buildStreamMimeType')->willReturn('application/octet-stream');
+        $builder->method('buildStreamMimeType')->willReturn($mime);
         $builder->method('buildStreamCharset')->willReturn('');
         $builder->method('buildStreamHash')->willReturn('range-entity');
         $builder->method('buildStreamIsBufferable')->willReturn($bufferable);
