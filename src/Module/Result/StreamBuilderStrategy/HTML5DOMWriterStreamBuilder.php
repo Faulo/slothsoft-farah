@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
-use DOMDocument;
 use DOMAttr;
+use DOMDocument;
 use DOMElement;
 use Masterminds\HTML5\Elements;
 use Masterminds\HTML5\Serializer\OutputRules;

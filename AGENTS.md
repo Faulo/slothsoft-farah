@@ -50,7 +50,9 @@ PhpStorm MCP inspection tools (`get_file_problems`, `get_inspections`, and `lint
 
 ### MCP validation
 
-When an IDE MCP server is available, use it after editing code to review changes and retrieve inspections for touched files. Fix relevant in-scope findings and report remaining ones. When a CI MCP server is available, use it to validate the exact SHA of every pushed agent-authored commit. An authorized push normally starts CI; do not trigger another build unless needed for diagnosis. Investigate relevant failures and report the job, commit SHA, and result. If changes are not pushed, report CI validation as pending. Do not push or trigger jobs without authorization.
+After creating or editing a file, always format it with PhpStorm's MCP `reformat_file` tool (`mcp.phpstorm.reformat_file`), passing the explicit project-relative paths of the files you changed. Do this before the final inspections and validation.
+
+When an IDE MCP server is available, use it after editing code to review changes and retrieve inspections for touched files. Fix relevant in-scope findings and report remaining ones. An authorized push normally starts CI; do not trigger another build unless needed for diagnosis. Investigate relevant failures and report the job, commit SHA, and result. If changes are not pushed, report CI validation as pending. Do not push or trigger jobs without authorization.
 
 ### Documentation and style
 
