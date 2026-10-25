@@ -55,31 +55,28 @@ abstract class AbstractDaemonServer implements ChunkWriterInterface {
         $this->isRunning = true;
         while ($this->isRunning) {
             if (($client = socket_accept($this->socket)) !== false) {
-                while (is_resource($client)) {
-                    $data = (string) socket_read($client, 65535);
-                    if ($data !== '') {
-                        try {
-                            $data = json_decode($data, true);
-                            foreach ($this->onMessage($data) as $type => $response) {
-                                switch ($type) {
-                                    case static::STDOUT:
-                                        socket_write($client, json_encode($response));
-                                        break;
-                                    case static::STDERR:
-                                        yield $response;
-                                        break;
-                                    default:
-                                        throw new BadMethodCallException("Response type '$type' is not supported by this implementation.");
-                                }
+                while (($data = socket_read($client, 65535)) !== false && $data !== '') {
+                    try {
+                        $data = json_decode($data, true);
+                        foreach ($this->onMessage($data) as $type => $response) {
+                            switch ($type) {
+                                case static::STDOUT:
+                                    socket_write($client, json_encode($response));
+                                    break;
+                                case static::STDERR:
+                                    yield $response;
+                                    break;
+                                default:
+                                    throw new BadMethodCallException("Response type '$type' is not supported by this implementation.");
                             }
-                        } catch (Throwable $e) {
-                            yield $e->getMessage() . PHP_EOL;
                         }
-                        socket_write($client, "\0");
-                        socket_close($client);
-                        break;
+                    } catch (Throwable $e) {
+                        yield $e->getMessage() . PHP_EOL;
                     }
+                    socket_write($client, "\0");
+                    break;
                 }
+                socket_close($client);
             }
         }
     }

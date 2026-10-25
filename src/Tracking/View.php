@@ -162,7 +162,7 @@ final class View {
                 $query['page'] = $i;
                 
                 $node = $dataDoc->createElement('group');
-                $node->appendChild($dataDoc->createTextNode($i + 1));
+                $node->appendChild($dataDoc->createTextNode((string) ($i + 1)));
                 $node->setAttribute('uri', './?' . http_build_query($query));
                 if ($this->pageNo === $i) {
                     $node->setAttribute('active', 'active');

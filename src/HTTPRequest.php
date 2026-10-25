@@ -65,7 +65,7 @@ final class HTTPRequest implements DOMWriterInterface {
         } else {
             $turing = 'bot';
         }
-        if (isset($env['HTTP_HOST'], $env['SERVER_NAME'])) {
+        if (isset($env['HTTP_HOST'])) {
             if ($env['HTTP_HOST'] !== $env['SERVER_NAME']) {
                 $turing = 'bot';
             }

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\Internal;
 
+use DOMElement;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\StringWriterInterface;
@@ -26,6 +27,7 @@ final class SitemapJsonBuilder implements StringWriterInterface {
         $xpath = DOMHelper::loadXPath($document, 0);
         
         $data = [];
+        /** @var DOMElement $node XPath selects elements with a uri attribute. */
         foreach ($xpath->query('//*[@uri]') as $node) {
             $data[] = $node->getAttribute('uri');
         }

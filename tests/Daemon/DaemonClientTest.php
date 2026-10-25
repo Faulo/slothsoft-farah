@@ -10,9 +10,32 @@ use PHPUnit\Framework\TestCase;
  *
  * @see DaemonClient
  *
- * @todo auto-generated
  */
 final class DaemonClientTest extends TestCase {
+
+    /** @runInSeparateProcess */
+    public function testReadsResponseUntilPeerCloses(): void {
+        $process = proc_open([PHP_BINARY, __DIR__ . '/response-server.php'], [
+            0 => ['pipe', 'r'],
+            1 => ['pipe', 'w'],
+            2 => ['pipe', 'w']
+        ], $pipes);
+        $this->assertIsResource($process);
+        try {
+            stream_set_timeout($pipes[1], 5);
+            $port = (int) fgets($pipes[1]);
+            $this->assertGreaterThan(0, $port);
+
+            $client = new DaemonClient($port);
+            $this->assertSame(['hello'], iterator_to_array($client->call('hello')));
+        } finally {
+            proc_terminate($process);
+            foreach ($pipes as $pipe) {
+                fclose($pipe);
+            }
+            proc_close($process);
+        }
+    }
     
     /**
      *

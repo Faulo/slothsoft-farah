@@ -82,7 +82,7 @@ final class DOMNodeListBenchmark extends TestCase {
         
         $document = DOMHelper::loadDocument('farah://slothsoft@farah/schema/module/1.1');
         $source = $ns === null ? $document->getElementsByTagName($tag) : $document->getElementsByTagNameNS($ns, $tag);
-        $this->assertNotNull($source);
+        $this->assertInstanceOf(DOMNodeList::class, $source);
         $expected = $source->length;
         
         $results = [];
@@ -127,7 +127,7 @@ final class DOMNodeListBenchmark extends TestCase {
             $query = "//test:$tag";
         }
         $source = $xpath->evaluate($query);
-        $this->assertNotNull($source);
+        $this->assertInstanceOf(DOMNodeList::class, $source);
         $expected = $source->length;
         
         $results = [];
@@ -172,7 +172,7 @@ final class DOMNodeListBenchmark extends TestCase {
             $query = "//test:$tag";
         }
         $source = $xpath->query($query);
-        $this->assertNotNull($source);
+        $this->assertInstanceOf(DOMNodeList::class, $source);
         $expected = $source->length;
         
         $results = [];

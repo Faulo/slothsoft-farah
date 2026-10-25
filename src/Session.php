@@ -156,10 +156,10 @@ final class Session {
     }
     
     protected function generateKey(): string {
-        if (isset($_SERVER, $_SERVER['REQUEST_TIME_FLOAT'], $_SERVER['REMOTE_ADDR'])) {
+        if (isset($_SERVER['REQUEST_TIME_FLOAT'], $_SERVER['REMOTE_ADDR'])) {
             $ret = sha1($_SERVER['REQUEST_TIME_FLOAT'] . '-' . $_SERVER['REMOTE_ADDR']);
         } else {
-            $ret = sha1(microtime(true));
+            $ret = sha1((string) microtime(true));
         }
         return $ret;
     }

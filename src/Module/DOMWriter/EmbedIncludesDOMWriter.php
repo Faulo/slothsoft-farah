@@ -50,7 +50,7 @@ final class EmbedIncludesDOMWriter implements DOMWriterInterface {
         do {
             $includeNodes = $xpath->evaluate('/*/xsl:include[@href]');
             
-            /** @var $includeNode DOMElement */
+            /** @var DOMElement $includeNode */
             foreach ($includeNodes as $includeNode) {
                 $href = $includeNode->getAttribute('href');
                 $url = FarahUrl::createFromReference($href);

@@ -70,12 +70,13 @@ final class ParamTest extends TestCase {
         $document = new DOMDocument();
         $document->loadXML((string) $response->getBody());
         $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_SLOTHSOFT);
-
+        
         foreach ($xpath->query('//*[@url]') as $node) {
+            $this->assertInstanceOf(DOMElement::class, $node);
             $this->assertStringStartsWith("$scheme://", $node->getAttribute('url'));
         }
     }
-
+    
     public function webSchemeProvider(): iterable {
         yield 'HTTP' => [
             'http'
@@ -96,30 +97,30 @@ final class ParamTest extends TestCase {
         $document = Module::resolveToDOMWriter($url)->toDocument();
         $xpath = new DOMXPath($document);
         $locations = $xpath->query('//*[local-name() = "loc"]');
-
+        
         $this->assertGreaterThan(0, $locations->length);
         foreach ($locations as $location) {
             $this->assertStringStartsWith("$scheme://", $location->textContent);
         }
     }
-
+    
     /**
      *
      * @runInSeparateProcess
      */
     public function test_currentSitemapTracksResolvedPageAcrossExecutableVariants(): void {
         $lookup = new LookupPageStrategy();
-
+        
         foreach ([
-            '/page' => 'page',
-            '/page-with-param' => 'page-with-param',
-        ] as $path => $expectedName) {
+                     '/page' => 'page',
+                     '/page-with-param' => 'page-with-param',
+                 ] as $path => $expectedName) {
             $response = $lookup->process(new ServerRequest('GET', "http://localhost$path"));
             $document = new DOMDocument();
             $document->loadXML((string) $response->getBody());
             $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_SLOTHSOFT);
             $currentNodes = $xpath->query('//*[@current]');
-
+            
             $this->assertCount(1, $currentNodes);
             $currentNode = $currentNodes->item(0);
             $this->assertInstanceOf(DOMElement::class, $currentNode);

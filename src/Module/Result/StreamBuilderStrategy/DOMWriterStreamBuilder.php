@@ -36,7 +36,7 @@ final class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface, DO
         $this->documentName = $documentName;
     }
     
-    private ?DOMDocument $document;
+    private DOMDocument $document;
     
     public function toDocument(): DOMDocument {
         return $this->document ??= $this->writer->toDocument();
@@ -107,4 +107,3 @@ final class DOMWriterStreamBuilder implements StreamBuilderStrategyInterface, DO
         return $this->writer instanceof StringWriterInterface ? $this->writer : new StringWriterFromDOMWriter($this->writer);
     }
 }
-

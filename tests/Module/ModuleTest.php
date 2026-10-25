@@ -137,11 +137,10 @@ final class ModuleTest extends TestCase {
     public function testCanLoadTestModule(): string {
         $directory = 'test-files' . DIRECTORY_SEPARATOR . 'test-module';
         $manifest = $this->loadTestModule($directory);
-        $this->assertNotNull($manifest);
         $this->assertEquals($manifest, Module::resolveToManifest($manifest->createUrl()));
         return $directory;
     }
-
+    
     /**
      *
      * @runInSeparateProcess
@@ -150,14 +149,14 @@ final class ModuleTest extends TestCase {
         $authority = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-cache-path');
         $relativeDirectory = 'test-files' . DIRECTORY_SEPARATOR . 'test-module';
         $url = FarahUrl::createFromComponents($authority, '/document');
-
+        
         Module::registerWithXmlManifestAndDefaultAssets($authority, $relativeDirectory);
         Module::resolveToAsset($url);
-
+        
         $absoluteDirectory = realpath($relativeDirectory);
         chdir(temp_dir(__CLASS__));
         Module::registerWithXmlManifestAndDefaultAssets($authority, $absoluteDirectory);
-
+        
         $stream = Module::resolveToResult($url)->lookupStreamWriter()->toStream();
         $this->assertSame(filesize($absoluteDirectory . DIRECTORY_SEPARATOR . 'document.html'), $stream->getSize());
     }
@@ -200,7 +199,6 @@ final class ModuleTest extends TestCase {
     public function testCanLoadImportModule(): string {
         $directory = 'test-files' . DIRECTORY_SEPARATOR . 'test-import';
         $manifest = $this->loadTestModule($directory);
-        $this->assertNotNull($manifest);
         $this->assertEquals($manifest, Module::resolveToManifest($manifest->createUrl()));
         return $directory;
     }
@@ -246,17 +244,17 @@ final class ModuleTest extends TestCase {
             ]
         ];
         
-        function traverse(array $hierarchy, array $segments = []): iterable {
+        $traverse = static function (array $hierarchy, array $segments = []) use (&$traverse): iterable {
             yield $segments;
             foreach ($hierarchy as $key => $value) {
-                yield from traverse($value, [
+                yield from $traverse($value, [
                     ...$segments,
                     $key
                 ]);
             }
-        }
+        };
         
-        foreach (traverse($hierarchy) as $segments) {
+        foreach ($traverse($hierarchy) as $segments) {
             $path = '/' . implode('/', $segments);
             yield $path => [
                 $path
@@ -356,7 +354,6 @@ final class ModuleTest extends TestCase {
         $url = FarahUrl::createFromReference($path, $manifest->createUrl());
         
         $document = DOMHelper::loadDocument((string) $url);
-        $this->assertNotNull($document, "Failed to load document '$url'");
         $document->formatOutput = true;
         $xpath = DOMHelper::loadXPath($document);
         

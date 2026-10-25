@@ -34,16 +34,15 @@ final class DaemonClient {
         socket_connect($socket, AbstractDaemonServer::DAEMON_ADDRESS, $this->port);
         socket_write($socket, $message);
         
-        while (is_resource($socket)) {
-            $data = (string) socket_read($socket, 65535);
-            if ($data !== '') {
+        try {
+            while (($data = socket_read($socket, 65535)) !== false && $data !== '') {
                 if ($data === "\0") {
-                    socket_close($socket);
                     break;
-                } else {
-                    yield json_decode($data, true);
                 }
+                yield json_decode($data, true);
             }
+        } finally {
+            socket_close($socket);
         }
     }
 }

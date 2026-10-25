@@ -27,7 +27,7 @@ final class FromFilesystemPathResolver implements PathResolverStrategyInterface 
         $path = $element->getAttribute(Manifest::ATTR_REALPATH);
         
         $files = FileSystem::scanDir($path, FileSystem::SCANDIR_FILEINFO);
-        /** @var $file SplFileInfo */
+        /** @var SplFileInfo $file */
         foreach ($files as $file) {
             $name = $file->getFilename();
             if ($file->isDir()) {

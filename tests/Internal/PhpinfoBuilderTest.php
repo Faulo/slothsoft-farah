@@ -33,7 +33,7 @@ final class PhpinfoBuilderTest extends TestCase {
         
         return '<pre>\n' . htmlentities($data, ENT_XML1 | ENT_DISALLOWED, 'UTF-8') . '</pre>';
     }
-
+    
     private static function normalizeOpcacheStatistics(string $phpInfo): string {
         $statisticNames = [
             'Cache hits',
@@ -53,7 +53,7 @@ final class PhpinfoBuilderTest extends TestCase {
             '/^(%s) =&gt; .*$/m',
             implode('|', array_map('preg_quote', $statisticNames))
         );
-
+        
         return preg_replace_callback(
             '/^Zend OPcache\R.*?^Manual restarts =&gt; [^\r\n]*$/ms',
             static function (array $matches) use ($pattern): string {
@@ -101,13 +101,13 @@ final class PhpinfoBuilderTest extends TestCase {
         );
         $server->setSitemap(FarahUrl::createFromReference('farah://slothsoft@phpinfo-test/sitemap'));
         $server->start();
-
+        
         try {
             [$source, $headers] = $this->request($server->uri . $path);
-
+            
             $this->assertSame("$mimeType; charset=UTF-8", $headers['content-type']);
             $this->assertStringContainsString(sprintf('filename="%s"', $fileName), $headers['content-disposition']);
-
+            
             $document = new DOMDocument();
             if ($isHTML) {
                 $this->assertStringStartsWith('<!DOCTYPE html>', $source);
@@ -120,13 +120,13 @@ final class PhpinfoBuilderTest extends TestCase {
                 $this->assertSame(DOMHelper::NS_HTML, $document->documentElement->namespaceURI);
                 $title = DOMHelper::loadXPath($document)->evaluate('string(//html:title)');
             }
-
+            
             $this->assertThat($title, new IsEqual(sprintf('PHP %s - phpinfo()', PHP_VERSION)), "Failed to retrieve <title> from $path:" . PHP_EOL . $source);
         } finally {
             $server->quit();
         }
     }
-
+    
     public function responseProvider(): iterable {
         yield 'asset XML' => [
             '/slothsoft@farah/phpinfo%23xml',
@@ -153,15 +153,15 @@ final class PhpinfoBuilderTest extends TestCase {
             true
         ];
     }
-
+    
     private function request(string $url): array {
         $source = file_get_contents($url);
         if (! is_string($source)) {
             throw new RuntimeException("Failed to retrieve $url.");
         }
-
+        
         $headers = [];
-        foreach ($http_response_header ?? [] as $header) {
+        foreach ($http_response_header as $header) {
             if (($separator = strpos($header, ':')) !== false) {
                 $headers[strtolower(substr($header, 0, $separator))] = trim(substr($header, $separator + 1));
             }

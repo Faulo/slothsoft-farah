@@ -33,7 +33,7 @@ final class FileWriterStreamBuilder implements FileWriterInterface, StreamBuilde
         $this->fileName = $fileName;
     }
     
-    private ?SplFileInfo $file;
+    private SplFileInfo $file;
     
     public function toFile(): SplFileInfo {
         return $this->file ??= $this->writer->toFile();

@@ -99,6 +99,7 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
         $domain = null;
         while ($dataNodeList = $xpath->query('//sfs:include-pages') and $dataNodeList->length) {
             $domain ??= new Domain($this->document);
+            /** @var DOMElement $dataNode XPath selects include-pages elements. */
             foreach ($dataNodeList as $dataNode) {
                 $url = $domain->lookupAssetUrl($dataNode);
                 $result = Module::resolveToDOMWriter($url);
@@ -115,6 +116,7 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
         
         $this->initDomainElement($domainNode);
         
+        /** @var DOMElement $node XPath selects page and file elements. */
         foreach ($xpath->query('//sfs:page | //sfs:file') as $node) {
             $this->initPageElement($node);
         }
@@ -133,7 +135,9 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
         if ($node->hasAttribute('ext')) {
             $uri = $node->getAttribute('ext');
         } else {
-            $parentUri = $node->parentNode->getAttribute('uri');
+            /** @var DOMElement $parent Sitemap pages and files have element parents. */
+            $parent = $node->parentNode;
+            $parentUri = $parent->getAttribute('uri');
             $uri = match ($node->localName) {
                 Domain::TAG_FILE => $parentUri . $name,
                 default => $parentUri . $name . '/',

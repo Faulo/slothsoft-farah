@@ -18,10 +18,8 @@ final class SendHeaderAndBodyStrategy implements ResponseStrategyInterface {
             $header = new SendHeaderStrategy();
             $header->process($response);
             
-            if ($response->getBody()) {
-                $body = new SendBodyStrategy();
-                $body->process($response);
-            }
+            $body = new SendBodyStrategy();
+            $body->process($response);
         }
     }
 }

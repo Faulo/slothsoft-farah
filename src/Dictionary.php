@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah;
 
+use DOMAttr;
 use DOMDocument;
 use DOMDocumentFragment;
 use DOMElement;
@@ -57,7 +58,7 @@ final class Dictionary {
     private Map $dictionaryDocuments;
     
     private function getDictionaryDocuments(Set $dictionaryUrls, string $language): iterable {
-        /** @var $url FarahUrl */
+        /** @var FarahUrl $url */
         foreach ($dictionaryUrls as $url) {
             $url = FarahUrl::createFromReference($language === '' ? $this->currentLang : $language, $url);
             
@@ -81,7 +82,7 @@ final class Dictionary {
             return null;
         }
         
-        /** @var $dictionaryDocument DOMDocument */
+        /** @var DOMDocument $dictionaryDocument */
         foreach ($this->getDictionaryDocuments($dictionaryUrls, $language) as $dictionaryDocument) {
             $value = $dictionaryDocument->getElementById($key);
             if ($value !== null) {
@@ -106,30 +107,28 @@ final class Dictionary {
             
             $contextNodes = $xpath->evaluate('//*[@sfd:dict]');
             
-            /** @var $contextNode DOMElement */
+            /** @var DOMElement $contextNode */
             foreach ($contextNodes as $contextNode) {
                 $query = trim($contextNode->getAttributeNS(DOMHelper::NS_FARAH_DICTIONARY, 'dict'));
                 $targetNodes = $query === '' ? [
                     ...$contextNode->childNodes
                 ] : $xpath->evaluate($query, $contextNode);
                 
-                /** @var $targetNode DOMNode */
+                /** @var DOMNode $targetNode */
                 foreach ($targetNodes as $targetNode) {
                     if ($translatedNode = $this->lookupKeyInDictionaryDocuments($dictionaryUrls, $targetNode->textContent)) {
                         $count++;
                         
-                        switch ($targetNode->nodeType) {
-                            case XML_ATTRIBUTE_NODE:
-                                $targetNode->value = $translatedNode->textContent;
-                                break;
-                            default:
-                                $fragment = $this->createTranslationReplacement($document, $translatedNode);
-                                
-                                if ($translatedNode->hasAttributeNS(DOMHelper::NS_XML, 'space') and $targetNode->parentNode->nodeType === XML_ELEMENT_NODE) {
-                                    $targetNode->parentNode->setAttributeNS(DOMHelper::NS_XML, 'space', $translatedNode->getAttributeNS(DOMHelper::NS_XML, 'space'));
-                                }
-                                
-                                $targetNode->parentNode->replaceChild($fragment, $targetNode);
+                        if ($targetNode instanceof DOMAttr) {
+                            $targetNode->value = $translatedNode->textContent;
+                        } else {
+                            $fragment = $this->createTranslationReplacement($document, $translatedNode);
+                            
+                            if ($translatedNode->hasAttributeNS(DOMHelper::NS_XML, 'space') and $targetNode->parentNode instanceof DOMElement) {
+                                $targetNode->parentNode->setAttributeNS(DOMHelper::NS_XML, 'space', $translatedNode->getAttributeNS(DOMHelper::NS_XML, 'space'));
+                            }
+                            
+                            $targetNode->parentNode->replaceChild($fragment, $targetNode);
                         }
                     }
                 }
@@ -139,7 +138,7 @@ final class Dictionary {
             
             $targetNodes = $xpath->evaluate('//sfd:lookup');
             
-            /** @var $targetNode DOMElement */
+            /** @var DOMElement $targetNode */
             foreach ($targetNodes as $targetNode) {
                 $key = (string) $targetNode->getAttribute('key');
                 
@@ -171,7 +170,7 @@ final class Dictionary {
                 return $document->createTextNode($translatedNode->textContent);
             case 'fragment':
                 $fragment = $document->createDocumentFragment();
-                /** @var $node DOMNode */
+                /** @var DOMNode $node */
                 foreach ($translatedNode->childNodes as $node) {
                     if ($node->nodeType === XML_ELEMENT_NODE) {
                         $fragment->appendChild($document->importNode($node, true));
@@ -180,7 +179,7 @@ final class Dictionary {
                 return $fragment;
             default:
                 $fragment = $document->createDocumentFragment();
-                /** @var $node DOMNode */
+                /** @var DOMNode $node */
                 foreach ($translatedNode->childNodes as $node) {
                     $fragment->appendChild($document->importNode($node, true));
                 }
@@ -288,16 +287,7 @@ final class Dictionary {
     private function calcAcceptLanguage(): void {
         $this->currentLang = self::getSupportedLanguages()[0] ?? null;
         
-        $langReqs = [];
-        if (isset($_REQUEST)) {
-            $langReqs[] = $_REQUEST;
-        }
-        if (isset($_COOKIE)) {
-            $langReqs[] = $_COOKIE;
-        }
-        if (isset($_SERVER)) {
-            $langReqs[] = $_SERVER;
-        }
+        $langReqs = [$_REQUEST, $_COOKIE, $_SERVER];
         foreach ($langReqs as $req) {
             if (isset($req[self::KEY_REQUEST_LANG]) and $this->acceptLanguage($req[self::KEY_REQUEST_LANG])) {
                 break;

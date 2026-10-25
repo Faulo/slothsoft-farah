@@ -349,7 +349,7 @@ final class HTTPResponse {
     public function setStatus($code, $message = ''): void {
         if (isset(self::$httpStatusCodes[$code])) {
             $this->status = $code;
-            if ($code >= self::STATUS_MULTIPLE_CHOICES or $code === self::STATUS_NO_CONTENT or $code === self::STATUS_NOT_MODIFIED) {
+            if ($code >= self::STATUS_MULTIPLE_CHOICES or $code === self::STATUS_NO_CONTENT) {
                 $this->includeBody = false;
             }
             if ($code >= self::STATUS_BAD_REQUEST) {
@@ -488,15 +488,8 @@ final class HTTPResponse {
     }
     
     public function getDocumentElement(DOMDocument $targetDoc): ?DOMNode {
-        $ret = null;
-        if ($doc = $this->getDocument()) {
-            if ($doc->documentElement) {
-                if ($node = $targetDoc->importNode($doc->documentElement, true)) {
-                    $ret = $node;
-                }
-            }
-        }
-        return $ret;
+        $doc = $this->getDocument();
+        return $doc->documentElement ? $targetDoc->importNode($doc->documentElement, true) : null;
     }
     
     public function setExceptionContext(ExceptionContext $exception): void {
@@ -598,7 +591,8 @@ final class HTTPResponse {
     }
     
     public function setContentEncoding(string $contentEncoding): void {
-        if (strlen($contentEncoding) and $contentEncodingList = explode(',', $contentEncoding)) {
+        if (strlen($contentEncoding)) {
+            $contentEncodingList = explode(',', $contentEncoding);
             foreach ($contentEncodingList as $contentEncoding) {
                 $contentEncoding = trim($contentEncoding);
                 if (in_array($contentEncoding, $this->supportedContentEncodings)) {

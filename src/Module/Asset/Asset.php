@@ -37,6 +37,7 @@ final class Asset implements AssetInterface {
     
     private ExecutableContainer $executables;
     
+    /** @var Vector<AssetInterface>|null */
     private ?Vector $assetChildren;
     
     public function __construct(ManifestInterface $ownerManifest, LeanElement $manifestElement, FarahUrlPath $urlPath, AssetStrategies $strategies) {
@@ -66,7 +67,9 @@ final class Asset implements AssetInterface {
     
     public function getAssetChildren(): iterable {
         if ($this->assetChildren === null) {
-            $this->assetChildren = new Vector();
+            /** @var Vector<AssetInterface> $children */
+            $children = new Vector();
+            $this->assetChildren = $children;
             /** @var string $childPath */
             foreach ($this->strategies->pathResolver->loadChildren($this) as $childPath) {
                 $childAsset = $this->traverseTo($childPath);
