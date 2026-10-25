@@ -34,7 +34,7 @@ abstract class MessageFactory {
     }
     
     public static function createServerResponse(int $statusCode, array $headers, ?StreamInterface $stream = null, bool $isBufferable = true): ResponseInterface {
-        return $isBufferable 
+        return $isBufferable
             ? new Response($statusCode, $headers, $stream)
             : (new StreamingResponse($statusCode, $headers, $stream))->withHeader('X-Accel-Buffering', 'no');
     }

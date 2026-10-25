@@ -24,7 +24,7 @@ use WeakMap;
 final class ExceptionContext implements DOMWriterInterface {
     
     private static ?WeakMap $contexts = null;
-
+    
     public static function append(Throwable $exception, array $data = []): self {
         $contexts = self::$contexts ??= new WeakMap();
         if (isset($contexts[$exception])) {

@@ -36,9 +36,9 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
     private ?AssetInterface $asset = null;
     
     private ?DOMDocument $document = null;
-
+    
     private string $domainName;
-
+    
     private string $domainScheme = WebScheme::HTTP;
     
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
@@ -67,7 +67,7 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
                 if (! $this->document->documentElement) {
                     throw new EmptySitemapException((string) $this->asset->createUrl());
                 }
-
+                
                 $this->initDocument();
             }
         } catch (ConfigurationRequiredException $e) {
@@ -85,7 +85,7 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
         $domainNode = $this->document->documentElement;
         $this->domainName = $domainNode->getAttribute('name');
         $xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT);
-
+        
         $this->domainScheme = WebScheme::HTTP;
         try {
             $scheme = Kernel::getCurrentRequest()->getUri()->getScheme();

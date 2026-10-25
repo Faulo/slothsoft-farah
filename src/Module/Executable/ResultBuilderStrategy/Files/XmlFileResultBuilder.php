@@ -26,11 +26,11 @@ use SplFileInfo;
  */
 final class XmlFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterElementFromDocumentTrait;
-
+    
     private const MIME_XHTML = 'application/xhtml+xml';
-
+    
     private string $mimeType;
-
+    
     public function __construct(FarahUrl $url, SplFileInfo $file, string $mimeType = 'application/xml') {
         parent::__construct($url, $file);
         $this->mimeType = $mimeType;
@@ -50,7 +50,7 @@ final class XmlFileResultBuilder extends AbstractFileResultBuilder {
     public function buildResultStrategies(ExecutableInterface $context, FarahUrlStreamIdentifier $type): ResultStrategies {
         $embedIncludes = $this->url->getArguments()->get(Manifest::PARAM_INCLUDES) === Manifest::PARAM_INCLUDES_EMBED;
         $writer = $embedIncludes ? new EmbedIncludesDOMWriter($this, $this->url) : $this;
-
+        
         if ($this->mimeType === self::MIME_XHTML and $type === Executable::resultIsHtml()) {
             $streamBuilder = new HTML5DOMWriterStreamBuilder($writer, $this->file->getFilename());
         } elseif ($embedIncludes) {

@@ -23,7 +23,7 @@ use Slothsoft\Farah\Sites\Domain;
 final class LookupPageStrategy extends RequestStrategyBase {
     
     private ?Domain $domain;
-
+    
     private ?FarahUrlStreamIdentifier $defaultStream;
     
     public function __construct(?Domain $domain = null, ?FarahUrlStreamIdentifier $defaultStream = null) {

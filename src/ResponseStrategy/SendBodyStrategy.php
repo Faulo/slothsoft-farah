@@ -22,7 +22,7 @@ final readonly class SendBodyStrategy implements ResponseStrategyInterface {
     
     private bool $isHttpOutput;
     
-    private  int $chunkSize;
+    private int $chunkSize;
     
     public function __construct(?string $destination = null, ?int $chunkSize = null) {
         $this->destination = $destination ?? self::HTTP_OUTPUT;

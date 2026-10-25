@@ -85,7 +85,7 @@ final class Domain {
         if ($pageNode->ownerDocument !== $this->document) {
             throw new InvalidArgumentException('The current page node must belong to this domain.');
         }
-
+        
         $this->clearCurrentPageNode();
         $pageNode->setAttribute(self::ATTR_CURRENT_PAGE, '1');
     }

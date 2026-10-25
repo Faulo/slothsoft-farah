@@ -132,7 +132,7 @@ final class Kernel {
     
     public function handle(RequestStrategyInterface $requestStrategy, ResponseStrategyInterface $responseStrategy, ServerRequestInterface $request): ResponseInterface {
         self::setCurrentRequest($request);
-
+        
         try {
             $response = $requestStrategy->process($request);
             if (self::getTrackingEnabled()) {

@@ -59,15 +59,15 @@ final class LookupAssetStrategy extends RequestStrategyBase {
         }
         
         $path = urldecode($path);
-
+        
         if (str_starts_with($path, 'farah://')) {
             return $path;
         }
-
+        
         if (preg_match('~^/?[^/]+@[^/]+(?:/|$)~', $path)) {
             return 'farah://' . ltrim($path, '/');
         }
-
+        
         return '/' . ltrim($path, '/');
     }
 }
