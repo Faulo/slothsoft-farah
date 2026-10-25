@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Removed the unused `$eventInit` constructor parameter from deprecated `HTTPEvent`.
+
 ### Fixed
 
 - Deprecated `HTTPCommand::getMime()` and `getEncoding()` now declare their existing `null` return value explicitly.

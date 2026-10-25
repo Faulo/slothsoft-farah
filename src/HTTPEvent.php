@@ -21,7 +21,7 @@ final class HTTPEvent {
     
     public $timeStamp;
     
-    public function __construct($type, array $eventInit = []) {
+    public function __construct($type) {
         $this->type = $type;
         $this->timeStamp = time();
     }
