@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Deprecated `HTTPCommand::getMime()` and `getEncoding()` now declare their existing `null` return value explicitly.
 - `FarahUrl::createFromComponents()` enforces its documented component types with native unions, rejecting invalid types even when assertions are disabled. Optional path, arguments, and stream identifier components continue to accept `null`.
 - Daemon clients and servers process PHP 8 socket objects and stop reading when a peer disconnects.
 - Legacy session keys can be generated without request metadata, and tracking page labels are converted to strings under strict typing.

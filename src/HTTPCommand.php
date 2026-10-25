@@ -21,11 +21,11 @@ final class HTTPCommand {
         $this->exec = new InterExec($command);
     }
     
-    public function getMime(): ?string {
+    public function getMime(): null {
         return null;
     }
     
-    public function getEncoding(): ?string {
+    public function getEncoding(): null {
         return null;
     }
     
