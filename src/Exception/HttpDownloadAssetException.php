@@ -7,7 +7,7 @@ use RuntimeException;
 use Slothsoft\Farah\Module\Executable\ExecutableStrategies;
 
 /**
- * Exception type for HTTP download failures while resolving Farah assets.
+ * Exception type to force an HTTP download response for an asset.
  *
  * @author Daniel Schulz
  * @since 2018-06-27

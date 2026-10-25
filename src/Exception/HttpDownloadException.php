@@ -7,7 +7,7 @@ use RuntimeException;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
 /**
- * Exception type for HTTP download failures while resolving Farah results.
+ * Exception type to force an HTTP download response.
  *
  * @author Daniel Schulz
  * @since 2018-06-27

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<assets xmlns="http://schema.slothsoft.net/farah/module" version="1.1">
+    <resource name="layout" type="application/xslt+xml" />
+    <fragment name="page" parameter-filter="Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\AllowAllParameterFilter">
+        <use-template ref="/layout" />
+        <use-document name="listing" ref="/archive" />
+    </fragment>
+    <custom-asset name="archive" executable-builder="Slothsoft\Farah\RequestStrategy\DownloadArchiveBuilder" parameter-filter="Slothsoft\Farah\Module\Asset\ParameterFilterStrategy\AllowAllParameterFilter" />
+</assets>

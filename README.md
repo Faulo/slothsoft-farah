@@ -80,6 +80,31 @@ Ranges are read lazily with bounded reads. Seekable sources use native absolute,
 
 Unsatisfiable single ranges return 416 with `Content-Range: bytes */size`. Malformed or unsupported ranges, valid multiple ranges, ranges on empty or unknown-size representations, and ranges on other methods are ignored. Conditional requests take precedence over ranges, and `If-Range` must match the selected representation. The internal range stream is forward-only and read-only; its PSR-7 size is `null` if the exact range length exceeds the integer limit.
 
+## Forcing an HTTP Response During Asset Resolution
+
+The `Slothsoft\Farah\Exception\HttpDownload*` exceptions intentionally interrupt normal rendering. They let an asset embedded in a page select the complete HTTP response, for example when an archive listing serves a file instead of rendering its surrounding page.
+
+Choose the exception according to the payload already available:
+
+| Exception                         | Payload                | Handling                                                                                                                                                   |
+|-----------------------------------|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `HttpDownloadAssetException`      | `ExecutableStrategies` | `Asset` builds the default result. When thrown from a result builder, `Executable` invokes the supplied replacement result builder for the current stream. |
+| `HttpDownloadExecutableException` | `ResultStrategies`     | `Executable` creates a result for the current stream. Its historical `getExecutable()` accessor returns these result strategies.                           |
+| `HttpDownloadException`           | `ResultInterface`      | The request strategy sends the supplied result directly.                                                                                                   |
+
+For example, an `ExecutableBuilderStrategyInterface` implementation can select a local file like this:
+
+```php
+$builder = new FileInfoResultBuilder($file);
+throw new HttpDownloadAssetException(new ExecutableStrategies($builder));
+```
+
+Throw strategy-carrying exceptions from builder hooks: `HttpDownloadAssetException` is handled during executable or result building, and `HttpDownloadExecutableException` during result building. `HttpDownloadException` must reach the request strategy while it is resolving the result or preparing its stream; it cannot replace a response after body transmission has started.
+
+All three constructors default to a forced attachment response. Pass `true` as the second argument to display the selected result inline. Both modes bypass the enclosing page transformation and retain the selected result's filename, media type, and content. These signals represent successful response selection; unrelated exceptions continue to propagate as failures.
+
+The executable examples live in `tests/RequestStrategy/DownloadArchiveBuilder.php` and `HttpDownloadResponseTest.php`, using the local manifest, layout, and binary payload under `test-files/http-downloads/`. They cover ordinary listing rendering, attachment and inline responses, result-builder variants, direct results, and HEAD requests.
+
 ## Historical / Deprecated
 
 These components are included for historical reasons only. Do not use them for new code.
