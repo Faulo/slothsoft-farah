@@ -672,16 +672,18 @@ final class HTTPResponse {
                     }
                     break;
                 case self::BODY_FILE:
-                    $start = (int) $this->rangeStart;
+                    /** @var int|float $start */
+                    $start = $this->rangeStart;
                     $end = $this->rangeEnd;
                     $length = $end - $start;
                     
                     if ($handle = fopen($this->body, 'rb')) {
-                        if ($start < PHP_INT_MAX) {
-                            fseek($handle, $start);
+                        $limit = PHP_INT_MAX;
+                        if ($start < $limit) {
+                            fseek($handle, (int) $start);
                         } else {
-                            fseek($handle, PHP_INT_MAX);
-                            $start -= PHP_INT_MAX;
+                            fseek($handle, $limit);
+                            $start -= $limit;
                             while ($start > 0) {
                                 fread($handle, min(self::$httpConfig['seek-size'], $start));
                                 $start -= self::$httpConfig['seek-size'];
