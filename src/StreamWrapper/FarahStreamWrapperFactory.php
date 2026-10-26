@@ -31,7 +31,7 @@ final class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
         return new Psr7StreamWrapper($stream);
     }
     
-    public function statUrl(string $url, int $flags): array|bool {
+    public function statUrl(string $url, int $flags): array|false {
         try {
             $url = FarahUrl::createFromReference($url);
         } catch (IncompleteUrlException) {
@@ -40,13 +40,14 @@ final class FarahStreamWrapperFactory implements StreamWrapperFactoryInterface {
         
         try {
             return Module::resolveToResult($url)->lookupFileStatistics();
-        } catch (HttpDownloadException) {
-            return true;
+        } catch (HttpDownloadException $e) {
+            return $e->getResult()->lookupFileStatistics();
         } catch (HttpStatusException $e) {
-            return $e->getCode() < 400;
+            return $e->getCode() < 400
+                ? []
+                : false;
         } catch (EmptyTransformationException|AssetPathNotFoundException|ModuleNotFoundException) {
             return false;
         }
     }
 }
-

@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\IncompleteUrlException;
 use Slothsoft\Farah\Exception\ModuleNotFoundException;
+use Slothsoft\Farah\Module\Module;
 
 /**
  * FarahStreamWrapperFactoryTest
@@ -20,6 +21,67 @@ class FarahStreamWrapperFactoryTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FarahStreamWrapperFactory::class), "Failed to load class 'Slothsoft\Farah\StreamWrapper\FarahStreamWrapperFactory'!");
+    }
+    
+    /**
+     * @dataProvider downloadProvider
+     * @runInSeparateProcess
+     */
+    public function testStatUrlReturnsTheSelectedDownloadFileStatistics(string $stage, string $action): void {
+        Module::registerWithXmlManifestAndDefaultAssets('test@http-downloads', dirname(__DIR__, 2) . '/test-files/http-downloads');
+        $url = 'farah://test@http-downloads/archive?stage=' . $stage . '&action=' . $action;
+        $statistics = (new FarahStreamWrapperFactory())->statUrl($url, 0);
+        $this->assertIsArray($statistics);
+        $this->assertSame(10, $statistics['size']);
+        $this->assertSame(0100000, $statistics['mode'] & 0170000);
+        
+        clearstatcache(true, $url);
+        $nativeStatistics = stat($url);
+        $this->assertIsArray($nativeStatistics);
+        $this->assertSame(10, $nativeStatistics['size']);
+        $this->assertTrue(file_exists($url));
+        $this->assertSame(10, filesize($url));
+    }
+    
+    public function downloadProvider(): iterable {
+        foreach (['asset', 'asset-from-result', 'result', 'direct'] as $stage) {
+            foreach (['download', 'show'] as $action) {
+                yield "$stage / $action" => [$stage, $action];
+            }
+        }
+    }
+    
+    /**
+     * @dataProvider statusProvider
+     * @runInSeparateProcess
+     */
+    public function testStatUrlMapsHttpStatusesToExistenceWithoutMetadata(int $status): void {
+        Module::registerWithXmlManifestAndDefaultAssets('test@http-stat', dirname(__DIR__, 2) . '/test-files/http-stat');
+        $url = 'farah://test@http-stat/status?status=' . $status;
+        $exists = $status < 400;
+        $this->assertSame($exists ? [] : false, (new FarahStreamWrapperFactory())->statUrl($url, 0));
+        
+        clearstatcache(true, $url);
+        $this->assertSame($exists, file_exists($url));
+        if ($exists) {
+            $statistics = stat($url);
+            $this->assertIsArray($statistics);
+            $this->assertSame(0, $statistics['size']);
+            $this->assertSame(0, $statistics['mode']);
+            $this->assertSame(0, filesize($url));
+            $this->assertFalse(is_file($url));
+            $this->assertFalse(is_dir($url));
+        }
+    }
+    
+    public function statusProvider(): iterable {
+        yield 'no content' => [204];
+        yield 'redirect' => [302];
+        yield 'not modified' => [304];
+        yield 'last non-error code' => [399];
+        yield 'first error code' => [400];
+        yield 'not found' => [404];
+        yield 'server error' => [500];
     }
     
     /**
