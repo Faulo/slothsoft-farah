@@ -96,7 +96,7 @@ final class SetBenchmark extends TestCase {
     private function testForeachWithSpread(FarahUrl ...$urls): float {
         $start = hrtime(true);
         foreach ($urls as $url) {
-            $url->hash();
+            $_ = $url->hash();
         }
         return hrtime(true) - $start;
     }
@@ -104,7 +104,7 @@ final class SetBenchmark extends TestCase {
     private function testForeachWithIterable(iterable $urls): float {
         $start = hrtime(true);
         foreach ($urls as $url) {
-            $url->hash();
+            $_ = $url->hash();
         }
         return hrtime(true) - $start;
     }
