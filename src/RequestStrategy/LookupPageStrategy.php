@@ -87,12 +87,14 @@ final class LookupPageStrategy extends RequestStrategyBase {
                 case '.':
                     break;
                 case '..':
-                    $contextNode = $contextNode->parentNode;
+                    $parent = $contextNode->parentNode;
+                    if ($parent instanceof DOMElement) {
+                        $contextNode = $parent;
+                    }
                     break;
                 default:
-                    /** @var DOMElement $node */
                     foreach ($contextNode->childNodes as $node) {
-                        if ($node->nodeType !== XML_ELEMENT_NODE) {
+                        if (! ($node instanceof DOMElement)) {
                             continue;
                         }
                         

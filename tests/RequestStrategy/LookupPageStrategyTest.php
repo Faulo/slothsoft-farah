@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\RequestStrategy;
 
 use DOMDocument;
+use DOMException;
 use Exception;
 use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\Constraint\ArrayHasKey;
@@ -11,6 +12,8 @@ use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Exception\HttpStatusException;
+use Slothsoft\Farah\Exception\PageNotFoundException;
+use Slothsoft\Farah\Exception\PageRedirectionException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
@@ -106,7 +109,7 @@ final class LookupPageStrategyTest extends TestCase {
             'farah://slothsoft@schema.slothsoft.net/pages/schema/home?schema=farah://slothsoft@schema/schema/historical-games-night'
         ];
     }
-
+    
     /**
      * @throws Exception
      */
@@ -114,15 +117,15 @@ final class LookupPageStrategyTest extends TestCase {
         TestUtils::changeWorkingDirectoryToComposerRoot();
         $document = DOMHelper::loadDocument(self::SITEMAP);
         $domain = new Domain($document);
-
+        
         $_SERVER['REQUEST_URI'] = '/';
-
+        
         $requestStrategy = new LookupPageStrategy($domain, Executable::resultIsHtml());
         $actual = $requestStrategy->createUrl(MessageFactory::createServerRequest());
-
+        
         $this->assertThat($actual, new IsEqual(FarahUrl::createFromReference('farah://slothsoft@schema.slothsoft.net/pages/index#html')));
     }
-
+    
     /**
      * @throws Exception
      */
@@ -131,15 +134,15 @@ final class LookupPageStrategyTest extends TestCase {
         $document = DOMHelper::loadDocument(self::SITEMAP);
         $document->documentElement->setAttribute(Domain::ATTR_REFERENCE, 'pages/index#xml');
         $domain = new Domain($document);
-
+        
         $_SERVER['REQUEST_URI'] = '/';
-
+        
         $requestStrategy = new LookupPageStrategy($domain, Executable::resultIsHtml());
         $actual = $requestStrategy->createUrl(MessageFactory::createServerRequest());
-
+        
         $this->assertThat($actual, new IsEqual(FarahUrl::createFromReference('farah://slothsoft@schema.slothsoft.net/pages/index#xml')));
     }
-
+    
     /**
      *
      * @runInSeparateProcess
@@ -148,7 +151,7 @@ final class LookupPageStrategyTest extends TestCase {
     public function test_process_appliesHTMLOnlyToPageLookup(): void {
         TestUtils::changeWorkingDirectoryToComposerRoot();
         Module::registerWithXmlManifestAndDefaultAssets(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), 'test-files/test-module');
-
+        
         $document = new DOMDocument();
         /** @noinspection HttpUrlsUsage */
         $document->loadXML(<<<'XML'
@@ -156,19 +159,19 @@ final class LookupPageStrategyTest extends TestCase {
 XML
         );
         $domain = new Domain($document);
-
+        
         $assetUrl = FarahUrl::createFromReference('farah://slothsoft@test-module/tests/linking');
         $this->assertSame('application/xhtml+xml', Module::resolveToResult($assetUrl)->lookupMimeType());
-
+        
         $_SERVER['REQUEST_URI'] = '/';
         $requestStrategy = new LookupPageStrategy($domain, Executable::resultIsHtml());
         $response = $requestStrategy->process(MessageFactory::createServerRequest());
-
+        
         $this->assertSame('text/html; charset=UTF-8', $response->getHeaderLine('content-type'));
         $this->assertStringContainsString('filename="transformation.html"', $response->getHeaderLine('content-disposition'));
         $this->assertStringStartsWith('<!DOCTYPE html>', (string) $response->getBody());
     }
-
+    
     /**
      * @dataProvider physicalHtmlPageProvider
      * @runInSeparateProcess
@@ -177,7 +180,7 @@ XML
     public function test_process_honorsStreamForPhysicalHtmlPage(string $assetName, string $stream, string $expectedMimeType): void {
         TestUtils::changeWorkingDirectoryToComposerRoot();
         Module::registerWithXmlManifestAndDefaultAssets(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), 'test-files/test-module');
-
+        
         $document = new DOMDocument();
         /** @noinspection HttpUrlsUsage */
         $document->loadXML(<<<XML
@@ -187,7 +190,7 @@ XML
         $requestStrategy = new LookupPageStrategy(new Domain($document), FarahUrlStreamIdentifier::createFromString($stream));
         $response = $requestStrategy->process(new ServerRequest('GET', 'http://localhost/'));
         $body = (string) $response->getBody();
-
+        
         $this->assertSame("$expectedMimeType; charset=UTF-8", $response->getHeaderLine('content-type'));
         if ($stream === Executable::RESULT_IS_HTML) {
             $this->assertStringStartsWith('<!DOCTYPE html>', $body);
@@ -201,7 +204,7 @@ XML
             $this->assertMatchesRegularExpression('~<br\s*/>~', $body);
         }
     }
-
+    
     public function physicalHtmlPageProvider(): iterable {
         yield '.html + #html' => [
             'page-html',
@@ -224,7 +227,7 @@ XML
             'application/xhtml+xml'
         ];
     }
-
+    
     /**
      * @runInSeparateProcess
      * @throws Exception
@@ -232,7 +235,7 @@ XML
     public function test_process_preservesExplicitStreamForPhysicalHtmlPage(): void {
         TestUtils::changeWorkingDirectoryToComposerRoot();
         Module::registerWithXmlManifestAndDefaultAssets(FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test-module'), 'test-files/test-module');
-
+        
         $document = new DOMDocument();
         /** @noinspection HttpUrlsUsage */
         $document->loadXML(<<<'XML'
@@ -241,7 +244,7 @@ XML
         );
         $response = (new LookupPageStrategy(new Domain($document), Executable::resultIsHtml()))->process(new ServerRequest('GET', 'http://localhost/'));
         $body = (string) $response->getBody();
-
+        
         $this->assertSame('application/xhtml+xml; charset=UTF-8', $response->getHeaderLine('content-type'));
         $this->assertStringStartsWith('<?xml', $body);
         $this->assertStringContainsString('xmlns="http://www.w3.org/1999/xhtml"', $body);
@@ -343,5 +346,76 @@ XML
             '/Schema/historical-Games-night/',
             '/schema/historical-games-night/'
         ];
+    }
+    
+    private function createTraversalStrategy(): LookupPageStrategy {
+        $document = new DOMDocument();
+        /** @noinspection HttpUrlsUsage */
+        $document->loadXML(<<<'XML'
+<domain xmlns="http://schema.slothsoft.net/farah/sitemap" name="localhost" vendor="test" module="traversal" uri="/" version="1.1">
+    Text between elements.
+    <!-- Comments are not pages. -->
+    <?example ignored?>
+    <![CDATA[Neither is CDATA.]]>
+    <page name="child" uri="/child/">
+        <page name="grandchild" uri="/child/grandchild/" />
+        <page name="up" uri="/child/up/" redirect=".." />
+        <page name="home" uri="/child/home/" redirect="../.." />
+    </page>
+</domain>
+XML
+        );
+        return new LookupPageStrategy(new Domain($document));
+    }
+    
+    /**
+     * @dataProvider parentPathProvider
+     * @runInSeparateProcess
+     */
+    public function testParentNavigationRedirectsToTheCanonicalUri(string $path, string $target): void {
+        try {
+            $this->createTraversalStrategy()->createUrl(new ServerRequest('GET', 'http://localhost' . $path));
+            $this->fail('Expected a canonical redirect.');
+        } catch (HttpStatusException $e) {
+            $this->assertSame(308, $e->getCode());
+            $this->assertSame($target, $e->getAdditionalHeaders()['location']);
+        }
+    }
+    
+    public function parentPathProvider(): iterable {
+        yield 'parent of root' => ['/..', '/'];
+        yield 'repeated parents above root' => ['/../../', '/'];
+        yield 'child back to root' => ['/child/..', '/'];
+        yield 'child past root' => ['/child/../../', '/'];
+        yield 'descend after clamping' => ['/../../child/', '/child/'];
+        yield 'nested child back to parent' => ['/child/grandchild/../', '/child/'];
+        yield 'relative parent redirect' => ['/child/up/', '/child/'];
+        yield 'relative root redirect' => ['/child/home/', '/'];
+    }
+    
+    public function testTraversalSkipsNonElementChildren(): void {
+        $strategy = $this->createTraversalStrategy();
+        $this->assertSame('/', $strategy->lookupPageNode('/')->getAttribute(Domain::ATTR_URI));
+        $node = $strategy->lookupPageNode('/child/');
+        $this->assertSame('child', $node->getAttribute(Domain::ATTR_NAME));
+        $this->assertSame('/child/grandchild/', $strategy->lookupPageNode('/child/grandchild/')->getAttribute(Domain::ATTR_URI));
+    }
+    
+    public function testMissingPageAfterClampingRemainsNotFound(): void {
+        $this->expectException(PageNotFoundException::class);
+        $this->createTraversalStrategy()->lookupPageNode('/../../missing/');
+    }
+    
+    /** @throws DOMException */
+    public function testDetachedContextWithoutAParentStaysPut(): void {
+        $document = new DOMDocument();
+        $context = $document->createElement('page');
+        $context->setAttribute(Domain::ATTR_URI, '/detached/');
+        try {
+            $this->createTraversalStrategy()->lookupPageNode('..', $context);
+            $this->fail('Expected the detached context canonical URI.');
+        } catch (PageRedirectionException $e) {
+            $this->assertSame('/detached/', $e->getTargetPath());
+        }
     }
 }

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Sitemap parent traversal stays at the root for paths such as `/..`, redirects to the canonical URI, and safely skips non-element child nodes.
 - Forced HTTP download responses now use the standard `attachment` disposition, and result builders can force a response with `HttpDownloadExecutableException`.
 - HTTP range responses now parse and resolve byte counts exactly above `PHP_INT_MAX`, stream single ranges without copying the whole source, and honor conditional requests before slicing. Valid multiple ranges are served as full responses.
 - Deprecated `HTTPCommand::getMime()` and `getEncoding()` now declare their existing `null` return value explicitly.
