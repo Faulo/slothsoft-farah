@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.29.7] - 2026-10-26
+
 ### Changed
 
 - Removed the unused `$eventInit` constructor parameter from deprecated `HTTPEvent`.
+- Updated minimum dependencies to `guzzlehttp/psr7` 2.13.2, `masterminds/html5` 2.12.0, and `slothsoft/core` 1.15.0.
 
 ### Fixed
 
@@ -18,10 +21,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sitemap parent traversal stays at the root for paths such as `/..`, redirects to the canonical URI, and safely skips non-element child nodes.
 - Forced HTTP download responses now use the standard `attachment` disposition, and result builders can force a response with `HttpDownloadExecutableException`.
 - HTTP range responses now parse and resolve byte counts exactly above `PHP_INT_MAX`, stream single ranges without copying the whole source, and honor conditional requests before slicing. Valid multiple ranges are served as full responses.
+- Deprecated `HTTPResponse` can seek to file range starts above `PHP_INT_MAX` again.
 - Deprecated `HTTPCommand::getMime()` and `getEncoding()` now declare their existing `null` return value explicitly.
 - `FarahUrl::createFromComponents()` enforces its documented component types with native unions, rejecting invalid types even when assertions are disabled. Optional path, arguments, and stream identifier components continue to accept `null`.
 - Daemon clients and servers process PHP 8 socket objects and stop reading when a peer disconnects.
 - Legacy session keys can be generated without request metadata, and tracking page labels are converted to strings under strict typing.
+
+## [1.29.6] - 2026-10-24
+
+### Fixed
+
 - Non-bufferable HTTP responses now preserve their streaming designation, send `X-Accel-Buffering: no`, and flush the active PHP output buffer when supported, followed by the SAPI, after each chunk. Other destinations use `fflush()` on their output stream after each chunk. Existing output buffers remain registered. Bufferable responses do not explicitly flush their destination.
 
 ## [1.29.5] - 2026-09-10
@@ -1327,7 +1336,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial stable release of the manifest-driven Farah asset, transformation, response, stream, sitemap, and CLI APIs.
 
-[Unreleased]: https://github.com/Faulo/slothsoft-farah/compare/1.29.4...HEAD
+[Unreleased]: https://github.com/Faulo/slothsoft-farah/compare/1.29.7...HEAD
+[1.29.7]: https://github.com/Faulo/slothsoft-farah/compare/1.29.6...1.29.7
+[1.29.6]: https://github.com/Faulo/slothsoft-farah/compare/1.29.5...1.29.6
+[1.29.5]: https://github.com/Faulo/slothsoft-farah/compare/1.29.4...1.29.5
 [1.29.4]: https://github.com/Faulo/slothsoft-farah/compare/1.29.3...1.29.4
 [1.29.3]: https://github.com/Faulo/slothsoft-farah/compare/1.29.2...1.29.3
 [1.29.2]: https://github.com/Faulo/slothsoft-farah/compare/1.29.1...1.29.2
