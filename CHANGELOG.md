@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Require `slothsoft/core` 1.15.3 or newer for corrected sanitizer and stream-filter contracts and the July API contract fixes.
+
 ## [1.29.7] - 2026-10-26
 
 ### Changed

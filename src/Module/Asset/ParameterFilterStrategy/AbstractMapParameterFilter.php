@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
 
+use Slothsoft\Core\IO\Sanitizer\SanitizerInterface;
+
 /**
  * Parameter filter strategy for abstract map asset parameters.
  *
@@ -11,8 +13,12 @@ namespace Slothsoft\Farah\Module\Asset\ParameterFilterStrategy;
  */
 abstract class AbstractMapParameterFilter implements ParameterFilterStrategyInterface {
     
+    /**
+     * @return array<string, SanitizerInterface>
+     */
     abstract protected function createValueSanitizers(): array;
     
+    /** @var array<string, SanitizerInterface> */
     private array $map;
     
     public function __construct() {
