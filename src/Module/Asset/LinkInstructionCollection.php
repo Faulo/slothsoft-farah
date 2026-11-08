@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Asset;
 
 use Ds\Set;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 /**
  * Collection of link instructions emitted while building executable results.
@@ -13,14 +14,19 @@ use Ds\Set;
  */
 final class LinkInstructionCollection {
     
+    /** @var Set<FarahUrl> */
     public Set $stylesheetUrls;
     
+    /** @var Set<FarahUrl> */
     public Set $scriptUrls;
     
+    /** @var Set<FarahUrl> */
     public Set $moduleUrls;
     
+    /** @var Set<FarahUrl> */
     public Set $contentUrls;
     
+    /** @var Set<FarahUrl> */
     public Set $dictionaryUrls;
     
     public function __construct() {

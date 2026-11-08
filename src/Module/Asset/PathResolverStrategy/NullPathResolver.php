@@ -14,6 +14,9 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 final class NullPathResolver implements PathResolverStrategyInterface {
     use ResolvePathFromManifestTrait;
     
+    /**
+     * @return iterable<string>
+     */
     public function loadChildren(AssetInterface $context): iterable {
         return [];
     }

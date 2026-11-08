@@ -21,7 +21,7 @@ final class TransformationDOMWriterByUrlsTest extends TestCase {
         $this->assertTrue(class_exists(TransformationDOMWriterByUrls::class), "Failed to load class 'Slothsoft\Farah\Module\DOMWriter\TransformationDOMWriterByUrls'!");
     }
     
-    public function test_toDocument() {
+    public function test_toDocument(): void {
         $source = FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo');
         $template = FarahUrl::createFromReference('farah://slothsoft@farah/xsl/html');
         
@@ -32,7 +32,7 @@ final class TransformationDOMWriterByUrlsTest extends TestCase {
         $this->assertThat($actual, new IsInstanceOf(DOMDocument::class));
     }
     
-    public function test_toElement() {
+    public function test_toElement(): void {
         $source = FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo');
         $template = FarahUrl::createFromReference('farah://slothsoft@farah/xsl/html');
         
@@ -43,7 +43,7 @@ final class TransformationDOMWriterByUrlsTest extends TestCase {
         $this->assertThat($actual, new IsInstanceOf(DOMElement::class));
     }
     
-    public function test_emptyTransformationException() {
+    public function test_emptyTransformationException(): void {
         $source = FarahUrl::createFromReference('farah://slothsoft@farah/phpinfo');
         $template = FarahUrl::createFromReference('farah://slothsoft@farah/xsl/module');
         

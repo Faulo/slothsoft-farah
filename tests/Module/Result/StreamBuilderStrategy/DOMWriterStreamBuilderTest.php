@@ -116,6 +116,9 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $this->assertThat($actual, new IsIdentical("$name.$extension"));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2: string}>
+     */
     public function namespaceExamples(): iterable {
         yield 'xml' => [
             '<xml>test content</xml>',

@@ -95,6 +95,9 @@ final class RangeStreamTest extends TestCase {
         $stream->getContents();
     }
     
+    /**
+     * @return iterable<array{0: bool, 1: string}>
+     */
     public function failedReadProvider(): iterable {
         yield [true, 'Unexpected end'];
         yield [false, 'no read progress'];

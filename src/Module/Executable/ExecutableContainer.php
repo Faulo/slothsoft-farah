@@ -14,6 +14,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
  */
 final class ExecutableContainer {
     
+    /** @var Map<FarahUrlArguments, ExecutableInterface> */
     private Map $map;
     
     public function __construct() {

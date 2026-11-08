@@ -33,6 +33,9 @@ class SchemaLocatorTest extends TestCase {
         self::assertThat($actual, new IsEqual($expected));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string|null}>
+     */
     public static function provideXmlWithSchema(): iterable {
         yield 'nothing' => [
             '<data/>',

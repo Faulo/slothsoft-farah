@@ -53,6 +53,9 @@ final class DOMNodeListBenchmark extends TestCase {
         return range(1, $source->length);
     }
     
+    /**
+     * @return iterable<array{0: string, 1?: string|null}>
+     */
     public function searchProvider(): iterable {
         yield 'all elements' => [
             '*'
@@ -219,6 +222,9 @@ final class DOMNodeListBenchmark extends TestCase {
         $this->assertThat($result->length, new IsEqual($expected));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: bool, 2: int}>
+     */
     public function isLiveProvider(): iterable {
         yield 'getElementsByTagName, as-is' => [
             'getElementsByTagName',

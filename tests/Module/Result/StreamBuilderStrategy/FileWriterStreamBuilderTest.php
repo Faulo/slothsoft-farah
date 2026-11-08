@@ -124,7 +124,7 @@ class FileWriterStreamBuilderTest extends TestCase {
         $this->assertThat($sut->buildStreamCharset($context), new IsIdentical('UTF-8'));
     }
     
-    public function test_buildStreamFileStatistics() {
+    public function test_buildStreamFileStatistics(): void {
         $content = 'test content';
         $name = 'test';
         

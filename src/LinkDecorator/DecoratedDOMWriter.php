@@ -6,6 +6,7 @@ namespace Slothsoft\Farah\LinkDecorator;
 use DOMDocument;
 use DOMElement;
 use Ds\Set;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 
 /**
@@ -18,14 +19,24 @@ final class DecoratedDOMWriter implements DOMWriterInterface {
     
     private DOMWriterInterface $source;
     
+    /** @var Set<FarahUrl> */
     private Set $stylesheets;
     
+    /** @var Set<FarahUrl> */
     private Set $scripts;
     
+    /** @var Set<FarahUrl> */
     private Set $modules;
     
+    /** @var Set<FarahUrl> */
     private Set $contents;
     
+    /**
+     * @param Set<FarahUrl> $stylesheets
+     * @param Set<FarahUrl> $scripts
+     * @param Set<FarahUrl> $modules
+     * @param Set<FarahUrl> $contents
+     */
     public function __construct(DOMWriterInterface $source, Set $stylesheets, Set $scripts, Set $modules, Set $contents) {
         $this->source = $source;
         $this->stylesheets = $stylesheets;

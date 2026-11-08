@@ -10,6 +10,9 @@ use Slothsoft\Farah\Module\Module;
 
 class StreamTest extends TestCase {
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function someFarahAssets(): iterable {
         yield 'farah://slothsoft@farah/' => [
             'farah://slothsoft@farah/',

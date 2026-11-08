@@ -14,6 +14,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
  */
 final class ResultContainer {
     
+    /** @var Map<FarahUrlStreamIdentifier, ResultInterface> */
     private Map $map;
     
     public function __construct() {

@@ -20,12 +20,16 @@ use Throwable;
  * @since 2025-09-22
  */
 final class FromSubManifestPathResolver implements PathResolverStrategyInterface {
+    /** @var Map<AssetInterface, array<string, LeanElement>> */
     private Map $assets;
     
     public function __construct() {
         $this->assets = new Map();
     }
     
+    /**
+     * @return array<string, LeanElement>
+     */
     private function loadSubManifest(AssetInterface $context): array {
         if ($this->assets->hasKey($context)) {
             return $this->assets->get($context);
@@ -95,6 +99,9 @@ final class FromSubManifestPathResolver implements PathResolverStrategyInterface
         return $children;
     }
     
+    /**
+     * @return iterable<string>
+     */
     public function loadChildren(AssetInterface $context): iterable {
         $children = $this->loadSubManifest($context);
         

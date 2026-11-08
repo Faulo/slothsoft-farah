@@ -35,6 +35,9 @@ final class LinkingTest extends TestCase {
         $this->assertThat($actual, new DOMNodeEqualTo($expected));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2: string}>
+     */
     public function exampleProvider(): iterable {
         yield 'only one link' => [
             DOMHelper::NS_HTML,
@@ -79,7 +82,7 @@ EOT
         
         $dom = new DOMHelper();
         $expected = $dom->parse(
-            /** @lang TEXT */
+        /** @lang TEXT */
             <<<EOT
 <html:template xmlns:html="http://www.w3.org/1999/xhtml" data-url="farah://slothsoft@test-module/data?includes=embed" xml:base="farah://slothsoft@test-module/data">
     <data />
@@ -89,17 +92,17 @@ EOT
         
         $this->assertThat($actual, new DOMNodeEqualTo($expected));
     }
-
+    
     /**
      *
      * @runInSeparateProcess
      */
     public function test_canSerializeLinkedModulesAsHTML5(): void {
         $result = Module::resolveToResult(FarahUrl::createFromReference('farah://slothsoft@test-module/tests/linking#html'));
-
+        
         $this->assertSame('text/html', $result->lookupMimeType());
         $this->assertSame('transformation.html', $result->lookupFileName());
-
+        
         $html = $result->lookupStringWriter()->toString();
         $modulePath = sprintf('/%s/%s', 'slothsoft@test-module', 'test');
         $expectedScript = '<' . sprintf('script src="%s" type="module" async="async"></script>', $modulePath);

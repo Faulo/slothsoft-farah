@@ -8,6 +8,9 @@ use Slothsoft\Farah\Module\Manifest\Manifest;
 
 trait LoadChildrenFromManifestTrait {
     
+    /**
+     * @return iterable<string>
+     */
     public function loadChildren(AssetInterface $context): iterable {
         foreach ($context->getManifestElement()->getChildren() as $element) {
             yield $element->getAttribute(Manifest::ATTR_NAME);

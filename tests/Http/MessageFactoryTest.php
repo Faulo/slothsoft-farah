@@ -23,7 +23,7 @@ class MessageFactoryTest extends AbstractTestCase {
         $this->assertFalse($response->hasHeader('X-Accel-Buffering'));
     }
     
-    public function testCreateServerRequest() {
+    public function testCreateServerRequest(): void {
         $_SERVER['REQUEST_URI'] = 'farah://slothsoft@farah/?a=b';
         $pageRequest = MessageFactory::createServerRequest();
         $this->assertEquals('a=b', $pageRequest->getUri()

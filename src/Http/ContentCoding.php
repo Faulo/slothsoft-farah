@@ -27,6 +27,9 @@ final class ContentCoding {
         return $instance;
     }
     
+    /**
+     * @return Map<string, ConfigurableCoding>
+     */
     private static function initStatic(): Map {
         static $codings;
         if ($codings === null) {
@@ -55,8 +58,10 @@ final class ContentCoding {
         self::getCoding($name)->clearEncodingFilter();
     }
     
+    /**
+     * @return iterable<string, ConfigurableCoding>
+     */
     public static function getEncodings(): iterable {
-        /** @var ConfigurableCoding $coding * */
         foreach (self::initStatic() as $name => $coding) {
             if ($coding->hasEncodingFilter()) {
                 yield $name => $coding;
@@ -72,8 +77,10 @@ final class ContentCoding {
         self::getCoding($name)->clearDecodingFilter();
     }
     
+    /**
+     * @return iterable<string, ConfigurableCoding>
+     */
     public static function getDecodings(): iterable {
-        /** @var ConfigurableCoding $coding * */
         foreach (self::initStatic() as $name => $coding) {
             if ($coding->hasDecodingFilter()) {
                 yield $name => $coding;

@@ -13,7 +13,7 @@ use RuntimeException;
  */
 final class PageRedirectionException extends RuntimeException {
     
-    private $targetPath;
+    private string $targetPath;
     
     public function __construct(string $targetPath) {
         parent::__construct();

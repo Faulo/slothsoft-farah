@@ -11,11 +11,14 @@ use Traversable;
 /**
  * Container for manifests keyed by Farah URL authority.
  *
+ * @implements IteratorAggregate<FarahUrlAuthority, ManifestInterface>
+ *
  * @author Daniel Schulz
  * @since 2018-05-27
  */
 final class ManifestContainer implements IteratorAggregate {
     
+    /** @var Map<FarahUrlAuthority, ManifestInterface> */
     private Map $map;
     
     public function __construct() {
@@ -38,6 +41,9 @@ final class ManifestContainer implements IteratorAggregate {
         $this->map->clear();
     }
     
+    /**
+     * @return Traversable<FarahUrlAuthority, ManifestInterface>
+     */
     public function getIterator(): Traversable {
         return $this->map->getIterator();
     }

@@ -95,6 +95,9 @@ class FromFilesystemPathResolverTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<array{0: string, 1?: string|null}>
+     */
     public function pathProvider(): iterable {
         yield 'valid directory' => [
             'farah://slothsoft@farah/js'

@@ -33,7 +33,7 @@ class EmbedIncludesDOMWriterTest extends TestCase {
      * @runInSeparateProcess
      * @dataProvider exampleProvider
      */
-    public function test_toDocument(string $inputXML, string $expectedXML) {
+    public function test_toDocument(string $inputXML, string $expectedXML): void {
         $delegate = function () use ($inputXML): DOMDocument {
             $document = new DOMDocument();
             $document->loadXML($inputXML);
@@ -55,7 +55,7 @@ class EmbedIncludesDOMWriterTest extends TestCase {
      * @runInSeparateProcess
      * @dataProvider exampleProvider
      */
-    public function test_toElement(string $inputXML, string $expectedXML) {
+    public function test_toElement(string $inputXML, string $expectedXML): void {
         $delegate = function () use ($inputXML): DOMDocument {
             $document = new DOMDocument();
             $document->loadXML($inputXML);
@@ -72,6 +72,9 @@ class EmbedIncludesDOMWriterTest extends TestCase {
         $this->assertThat($sut->toElement($document), new DOMNodeEqualTo($document->documentElement));
     }
     
+    /**
+     * @return iterable<string, array{string, string}>
+     */
     public function exampleProvider(): iterable {
         yield 'skip includes without href' => [
             <<<EOT

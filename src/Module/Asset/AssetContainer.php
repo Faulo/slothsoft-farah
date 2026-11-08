@@ -14,6 +14,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrlPath;
  */
 final class AssetContainer {
     
+    /** @var Map<FarahUrlPath, AssetInterface> */
     private Map $map;
     
     public function __construct() {

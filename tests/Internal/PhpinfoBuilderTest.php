@@ -127,6 +127,9 @@ final class PhpinfoBuilderTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2: string, 3: bool}>
+     */
     public function responseProvider(): iterable {
         yield 'asset XML' => [
             '/slothsoft@farah/phpinfo%23xml',

@@ -53,6 +53,9 @@ final class MiscTransformationsTest extends TestCase {
         $this->assertThat($input, new DOMNodeEqualTo($expected));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2: string, 3: string}>
+     */
     public function translateDocumentViaDictionaryProvider(): iterable {
         yield 'translate document' => [
             'farah://slothsoft@test-dictionary/documents/test',
@@ -93,6 +96,9 @@ final class MiscTransformationsTest extends TestCase {
         $this->assertThat($actual, new DOMNodeEqualTo($expected));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2: string}>
+     */
     public function autoTranslateProvider(): iterable {
         yield 'translate document' => [
             'farah://slothsoft@test-dictionary/translations/test',

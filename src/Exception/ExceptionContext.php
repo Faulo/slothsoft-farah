@@ -23,6 +23,7 @@ use WeakMap;
  */
 final class ExceptionContext implements DOMWriterInterface {
     
+    /** @var WeakMap<Throwable, self>|null */
     private static ?WeakMap $contexts = null;
     
     public static function append(Throwable $exception, array $data = []): self {

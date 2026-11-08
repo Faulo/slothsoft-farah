@@ -97,6 +97,9 @@ EOT, $arguments);
         $this->assertThat($actual, new IsTrue());
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function provideTestBlobs(): iterable {
         yield 'url' => [
             '/slothsoft@farah/'

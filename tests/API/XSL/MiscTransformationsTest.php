@@ -14,6 +14,9 @@ use Slothsoft\FarahTesting\TestUtils;
 
 class MiscTransformationsTest extends TestCase {
     
+    /**
+     * @return array<array{0: string, 1: string, 2: string}>
+     */
     public function exampleProvider(): array {
         return [
             'farah://slothsoft@farah/xsl/graph' => [

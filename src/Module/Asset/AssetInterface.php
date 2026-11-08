@@ -32,6 +32,7 @@ interface AssetInterface {
     
     /**
      * Get all child assets.
+     * @return iterable<AssetInterface>
      */
     public function getAssetChildren(): iterable;
     

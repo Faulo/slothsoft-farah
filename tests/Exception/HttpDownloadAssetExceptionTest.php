@@ -17,6 +17,9 @@ final class HttpDownloadAssetExceptionTest extends TestCase {
         $this->assertSame($inline ?? false, $exception->isInline());
     }
     
+    /**
+     * @return iterable<array{0: bool|null}>
+     */
     public function dispositionProvider(): iterable {
         yield 'attachment by default' => [null];
         yield 'explicit attachment' => [false];

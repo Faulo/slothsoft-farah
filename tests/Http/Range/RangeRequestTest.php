@@ -31,6 +31,9 @@ final class RangeRequestTest extends TestCase {
         $this->assertNull(RangeRequest::parse($header));
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function invalidProvider(): iterable {
         foreach (['items=0-1', 'bytes=', 'bytes=,,,', 'bytes=-', 'bytes=2-1', 'bytes=1-2,x', 'bytes=+1-2', 'bytes=1.0-2', "bytes=0-1\n", 'bytes=0 - 1'] as $value) {
             yield [$value];
@@ -43,6 +46,9 @@ final class RangeRequestTest extends TestCase {
         new ByteRange(new ByteCount($start), new ByteCount($end), new ByteCount($size));
     }
     
+    /**
+     * @return iterable<array{0: int, 1: int, 2: int}>
+     */
     public function invalidRangeProvider(): iterable {
         yield [2, 1, 10];
         yield [0, 10, 10];

@@ -65,6 +65,9 @@ final class Asset implements AssetInterface {
         return $this->strategies->pathResolver->resolvePath($this, $name);
     }
     
+    /**
+     * @return iterable<AssetInterface>
+     */
     public function getAssetChildren(): iterable {
         if ($this->assetChildren === null) {
             /** @var Vector<AssetInterface> $children */
@@ -119,20 +122,36 @@ final class Asset implements AssetInterface {
         }
     }
     
+    /**
+     * @param FarahUrlArguments|string|null $args
+     * @param FarahUrlStreamIdentifier|string|null $fragment
+     */
     public function createCacheFile(string $fileName, $args = null, $fragment = null): SplFileInfo {
         return $this->ownerManifest->createCacheFile($fileName, $this->getUrlPath(), $args, $fragment);
     }
     
+    /**
+     * @param FarahUrlArguments|string|null $args
+     * @param FarahUrlStreamIdentifier|string|null $fragment
+     */
     public function createDataFile(string $fileName, $args = null, $fragment = null): SplFileInfo {
         return $this->ownerManifest->createDataFile($fileName, $this->getUrlPath(), $args, $fragment);
     }
     
+    /**
+     * @param FarahUrlArguments|string|null $args
+     * @param FarahUrlStreamIdentifier|string|null $fragment
+     */
     public function createUrl($args = null, $fragment = null): FarahUrl {
         return $this->ownerManifest->createUrl($this->getUrlPath(), $args, $fragment);
     }
     
     private const URL_PREFERS_GLOBAL_PARAMS = false;
     
+    /**
+     * @param FarahUrlArguments|string|null $args
+     * @param FarahUrlStreamIdentifier|string|null $fragment
+     */
     public function createRealUrl($args = null, $fragment = null): FarahUrl {
         if (! $this->manifestElement->hasAttribute(Manifest::ATTR_REFERENCE)) {
             return $this->createUrl($args, $fragment);

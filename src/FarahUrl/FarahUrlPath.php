@@ -20,6 +20,9 @@ final class FarahUrlPath implements Hashable {
         return self::create([]);
     }
     
+    /**
+     * @param string[] $segments
+     */
     public static function createFromSegments(array $segments): self {
         return self::create($segments);
     }
@@ -32,6 +35,9 @@ final class FarahUrlPath implements Hashable {
         }
     }
     
+    /**
+     * @param string[] $segments
+     */
     private static function create(array $segments): self {
         static $cache = [];
         $id = self::SEPARATOR . implode(self::SEPARATOR, $segments);
@@ -41,6 +47,9 @@ final class FarahUrlPath implements Hashable {
         return $cache[$id];
     }
     
+    /**
+     * @return list<string>
+     */
     private static function normalize(string $path): array {
         $segments = [];
         if ($path !== '') {
@@ -66,8 +75,12 @@ final class FarahUrlPath implements Hashable {
     
     private string $id;
     
+    /** @var string[] */
     private array $segments;
     
+    /**
+     * @param string[] $segments
+     */
     private function __construct(string $id, array $segments) {
         $this->id = $id;
         $this->segments = $segments;
@@ -83,6 +96,9 @@ final class FarahUrlPath implements Hashable {
         return $this->segments[count($this->segments) - 1];
     }
     
+    /**
+     * @return string[]
+     */
     public function getSegments(): array {
         return $this->segments;
     }

@@ -22,6 +22,9 @@ class FarahUrlTest extends TestCase {
         FarahUrl::createFromReference($ref);
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function malformedUrlProvider(): iterable {
         $urls = [];
         $urls[] = 'farah:///slothsoft@farah';
@@ -44,6 +47,9 @@ class FarahUrlTest extends TestCase {
         FarahUrl::createFromReference($ref);
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function incompleteUrlProvider(): iterable {
         $urls = [];
         $urls[] = '//slothsoft@farah';
@@ -66,6 +72,9 @@ class FarahUrlTest extends TestCase {
         FarahUrl::createFromReference($ref);
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function notFarahUrlProvider(): iterable {
         $urls = [];
         $urls[] = 'http://slothsoft@farah';
@@ -88,6 +97,9 @@ class FarahUrlTest extends TestCase {
         $this->assertSame(FarahUrl::createFromReference($expected), $url);
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function absoluteUrlProvider(): iterable {
         $urls = [];
         $urls['farah://slothsoft@farah'] = 'farah://slothsoft@farah/';
@@ -124,6 +136,9 @@ class FarahUrlTest extends TestCase {
         $this->assertSame(FarahUrl::createFromReference($expected), $url);
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function relativeUrlProvider(): iterable {
         $urls = [];
         $urls['farah://slothsoft@farah/assets'] = 'farah://slothsoft@farah/assets';
@@ -280,6 +295,9 @@ class FarahUrlTest extends TestCase {
         $this->assertSame($expected, $url->withAdditionalQueryArguments($args));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2: string}>
+     */
     public function withAdditionalQueryArgumentsProvider(): iterable {
         yield 'no query stays' => [
             'farah://slothsoft@farah/?a=b',
@@ -325,6 +343,9 @@ class FarahUrlTest extends TestCase {
         $this->assertSame($expected, $url->withAdditionalQueryArguments($args, $overwriteExisting));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2: string, 3: bool}>
+     */
     public function withAdditionalQueryArguments_overwriteExistingProvider(): iterable {
         yield 'add query overwrites' => [
             'farah://slothsoft@farah/?a=b',
@@ -376,6 +397,9 @@ class FarahUrlTest extends TestCase {
         $this->assertThat($actual, new IsEqual($expected));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function fragmentProvider(): iterable {
         yield 'no fragment is empty string' => [
             'farah://slothsoft@farah/?a=b',

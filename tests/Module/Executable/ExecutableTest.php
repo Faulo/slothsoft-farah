@@ -33,6 +33,9 @@ class ExecutableTest extends TestCase {
         $this->assertThat($left, $isIdentical ? new IsIdentical($right) : new LogicalNot(new IsIdentical($right)));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2?: bool}>
+     */
     public function sameResultProvider(): iterable {
         yield 'manifest #xml' => [
             '/',
@@ -92,6 +95,9 @@ class ExecutableTest extends TestCase {
         $this->assertThat($left, new IsIdentical($right));
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function xmlProvider(): iterable {
         yield '/' => [
             '/'

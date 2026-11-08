@@ -23,7 +23,7 @@ class SvgDecoratorTest extends TestCase {
      *
      * @dataProvider provideLinkedStylesheets
      */
-    public function test_linkStylesheets(string $input, string $url, string $expected) {
+    public function test_linkStylesheets(string $input, string $url, string $expected): void {
         $inputDocument = new DOMDocument();
         $inputDocument->loadXML($input);
         
@@ -38,6 +38,9 @@ class SvgDecoratorTest extends TestCase {
         $this->assertThat($inputDocument, new DOMNodeEqualTo($expectedDocument));
     }
     
+    /**
+     * @return iterable<string, array{string, string, string}>
+     */
     public function provideLinkedStylesheets(): iterable {
         yield 'data' => [
             <<<EOT
@@ -77,7 +80,7 @@ EOT
      *
      * @dataProvider provideLinkedScripts
      */
-    public function test_linkScripts(string $input, string $url, string $expected) {
+    public function test_linkScripts(string $input, string $url, string $expected): void {
         $inputDocument = new DOMDocument();
         $inputDocument->loadXML($input);
         
@@ -92,6 +95,9 @@ EOT
         $this->assertThat($inputDocument, new DOMNodeEqualTo($expectedDocument));
     }
     
+    /**
+     * @return iterable<string, array{string, string, string}>
+     */
     public function provideLinkedScripts(): iterable {
         yield 'data' => [
             <<<EOT
@@ -131,7 +137,7 @@ EOT
      *
      * @dataProvider provideLinkedModules
      */
-    public function test_linkModules(string $input, string $url, string $expected) {
+    public function test_linkModules(string $input, string $url, string $expected): void {
         $inputDocument = new DOMDocument();
         $inputDocument->loadXML($input);
         
@@ -146,6 +152,9 @@ EOT
         $this->assertThat($inputDocument, new DOMNodeEqualTo($expectedDocument));
     }
     
+    /**
+     * @return iterable<string, array{string, string, string}>
+     */
     public function provideLinkedModules(): iterable {
         yield 'data' => [
             <<<EOT
@@ -183,7 +192,7 @@ EOT
      *
      * @dataProvider provideLinkedContents
      */
-    public function test_linkContents(string $input, string $url, string $expected) {
+    public function test_linkContents(string $input, string $url, string $expected): void {
         $inputDocument = new DOMDocument();
         $inputDocument->loadXML($input);
         
@@ -198,6 +207,9 @@ EOT
         $this->assertThat($inputDocument, new DOMNodeEqualTo($expectedDocument));
     }
     
+    /**
+     * @return iterable<string, array{string, string, string}>
+     */
     public function provideLinkedContents(): iterable {
         yield 'data' => [
             <<<EOT

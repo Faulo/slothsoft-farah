@@ -21,6 +21,9 @@ final class WebSchemeTest extends TestCase {
         $this->assertSame($expected, WebScheme::normalize($input));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function supportedSchemeProvider(): iterable {
         yield 'HTTP' => [
             'HTTP',

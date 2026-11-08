@@ -33,7 +33,7 @@ final class LookupAssetStrategyTest extends TestCase {
         
         $this->assertEquals($expected, $actual);
     }
-
+    
     /**
      *
      * @dataProvider relativeAssetUrlProvider
@@ -41,23 +41,29 @@ final class LookupAssetStrategyTest extends TestCase {
     public function testLookupRelativeUrl(string $path): void {
         $request = MessageFactory::createCustomRequest('GET', new Uri($path));
         $expected = FarahUrl::createFromReference($path, Module::getBaseUrl());
-
+        
         $sut = new LookupAssetStrategy();
         $actual = $sut->createUrl($request);
-
+        
         $this->assertEquals($expected, $actual);
     }
-
+    
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function relativeAssetUrlProvider(): iterable {
         yield 'root path' => [
             '/'
         ];
-
+        
         yield 'path without authority' => [
             '/phpinfo'
         ];
     }
-
+    
+    /**
+     * @return iterable<array{0: UriInterface, 1: FarahUrl}>
+     */
     public function assetUrlProvider(): iterable {
         yield 'path' => [
             new Uri('/slothsoft@farah/phpinfo'),

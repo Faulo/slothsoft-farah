@@ -134,7 +134,7 @@ final class ParamTest extends TestCase {
      * @dataProvider pageProvider
      * @runInSeparateProcess
      */
-    public function test_lookupTestPage(string $path, string $content) {
+    public function test_lookupTestPage(string $path, string $content): void {
         $dom = new DOMHelper();
         $expected = $dom->parse($content);
         

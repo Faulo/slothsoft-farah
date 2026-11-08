@@ -19,6 +19,7 @@ final class UseInstructionCollection {
     
     public FarahUrl $rootUrl;
     
+    /** @var Set<DOMWriterInterface> */
     public Set $dataWriters;
     
     public ?FarahUrl $templateUrl = null;

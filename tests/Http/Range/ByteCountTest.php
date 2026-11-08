@@ -20,6 +20,9 @@ final class ByteCountTest extends TestCase {
         $this->assertSame((string) $b, (string) (new ByteCount($sum))->subtract($a));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2: string}>
+     */
     public function arithmeticProvider(): iterable {
         yield ['0', '0', '0'];
         yield ['0099', '0001', '100'];
@@ -58,6 +61,9 @@ final class ByteCountTest extends TestCase {
         new ByteCount($value);
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function invalidProvider(): iterable {
         foreach (['', '-1', '+1', '1.0', '1e20', ' 1', "1\n", 'one'] as $value) {
             yield [$value];

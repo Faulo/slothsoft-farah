@@ -8,6 +8,9 @@ use Slothsoft\Farah\Module\Asset\AssetInterface;
 
 interface PathResolverStrategyInterface {
     
+    /**
+     * @return iterable<string>
+     */
     public function loadChildren(AssetInterface $context): iterable;
     
     public function resolvePath(AssetInterface $context, string $name): LeanElement;

@@ -5,6 +5,8 @@ namespace Slothsoft\Farah\Module\Manifest;
 
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
+use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\Module\Asset\Asset;
@@ -179,10 +181,18 @@ final class Manifest implements ManifestInterface {
         return (string) $this->authority;
     }
     
+    /**
+     * @param FarahUrlPath|string|null $path
+     * @param FarahUrlArguments|string|null $args
+     * @param FarahUrlStreamIdentifier|string|null $fragment
+     */
     public function createUrl($path = null, $args = null, $fragment = null): FarahUrl {
         return FarahUrl::createFromComponents($this->authority, $path, $args, $fragment);
     }
     
+    /**
+     * @param FarahUrlPath|string $path
+     */
     public function lookupAsset($path): AssetInterface {
         if (is_string($path)) {
             $path = FarahUrlPath::createFromString($path);
@@ -220,10 +230,20 @@ final class Manifest implements ManifestInterface {
         return new SplFileInfo($this->manifestDirectory . DIRECTORY_SEPARATOR . $fileName);
     }
     
+    /**
+     * @param FarahUrlPath|string|null $path
+     * @param FarahUrlArguments|string|null $args
+     * @param FarahUrlStreamIdentifier|string|null $fragment
+     */
     public function createCacheFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo {
         return $this->ownerKernel->createCachedFile($fileName, $this->createUrl($path, $args, $fragment));
     }
     
+    /**
+     * @param FarahUrlPath|string|null $path
+     * @param FarahUrlArguments|string|null $args
+     * @param FarahUrlStreamIdentifier|string|null $fragment
+     */
     public function createDataFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo {
         return $this->ownerKernel->createDataFile($fileName, $this->createUrl($path, $args, $fragment));
     }
@@ -246,6 +266,9 @@ final class Manifest implements ManifestInterface {
         $this->strategies->assetBuilder->normalizeElement($root);
     }
     
+    /**
+     * @return array<string, string>
+     */
     private function getManifestAttributes(): array {
         return [
             self::ATTR_ID => $this->getId(),

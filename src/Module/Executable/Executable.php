@@ -75,6 +75,9 @@ final class Executable implements ExecutableInterface {
         return $this->linkInstructions;
     }
     
+    /**
+     * @param FarahUrlStreamIdentifier|string $type
+     */
     public function lookupResult($type): ResultInterface {
         if (is_string($type)) {
             $type = FarahUrlStreamIdentifier::createFromString($type);
@@ -115,10 +118,16 @@ final class Executable implements ExecutableInterface {
         return $this->lookupResult(self::resultIsXml());
     }
     
+    /**
+     * @param FarahUrlStreamIdentifier|string|null $fragment
+     */
     public function createUrl($fragment = null): FarahUrl {
         return $this->ownerAsset->createUrl($this->args, $fragment);
     }
     
+    /**
+     * @param FarahUrlStreamIdentifier|string|null $fragment
+     */
     public function createRealUrl($fragment = null): FarahUrl {
         return $this->ownerAsset->createRealUrl($this->args, $fragment);
     }

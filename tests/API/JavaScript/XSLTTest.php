@@ -134,6 +134,9 @@ EOT, $arguments);
         $this->assertThat($actual, new DOMNodeEqualTo($expected));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function provideTransformations(): iterable {
         yield 'html' => [
             'farah://slothsoft@farah/schema',

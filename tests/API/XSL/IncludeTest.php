@@ -33,6 +33,9 @@ final class IncludeTest extends TestCase {
         $this->assertThat($actual, new DOMNodeEqualTo($expected));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function exampleProvider(): iterable {
         yield 'no include' => [
             '/xsl/import',

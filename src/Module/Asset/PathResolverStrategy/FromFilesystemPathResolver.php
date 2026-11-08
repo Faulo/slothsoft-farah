@@ -20,6 +20,9 @@ use SplFileInfo;
  */
 final class FromFilesystemPathResolver implements PathResolverStrategyInterface {
     
+    /**
+     * @return iterable<string>
+     */
     public function loadChildren(AssetInterface $context): iterable {
         $element = $context->getManifestElement();
         $desiredMime = $element->getAttribute(Manifest::ATTR_TYPE, '*/*');

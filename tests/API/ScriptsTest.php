@@ -13,6 +13,9 @@ class ScriptsTest extends TestCase {
         TestUtils::changeWorkingDirectoryToComposerRoot();
     }
     
+    /**
+     * @return array<array{0: string}>
+     */
     public function someFarahAssets(): array {
         return [
             'farah://slothsoft@farah/' => [

@@ -80,6 +80,9 @@ class FarahUrlArgumentsTest extends TestCase {
         $this->assertSame($expected, $query);
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function createFromQueryProvider(): iterable {
         yield 'build query' => [
             'hello=world',

@@ -67,6 +67,9 @@ EOT, $arguments);
         $this->assertThat($actual, new IsEqual($expected));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function provideDocuments(): iterable {
         yield 'phpinfo' => [
             '/slothsoft@farah/phpinfo',
@@ -133,6 +136,9 @@ EOT, $arguments);
         $this->assertThat($actual, new IsEqual("<xml>$content</xml>"));
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function provideTextContent(): iterable {
         yield [
             'hello world'
@@ -227,6 +233,9 @@ EOT, $arguments);
         $this->assertThat($actual, new DOMNodeEqualTo($expected));
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function provideXPathNodes(): iterable {
         yield 'xmlns' => [
             '//html:head'

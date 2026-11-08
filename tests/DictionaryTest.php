@@ -27,6 +27,9 @@ class DictionaryTest extends TestCase {
         $this->assertThat($actual, new IsEqual($expected));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function sanitationProvider(): iterable {
         yield 'empty string' => [
             '',

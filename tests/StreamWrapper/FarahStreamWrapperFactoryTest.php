@@ -43,6 +43,9 @@ class FarahStreamWrapperFactoryTest extends TestCase {
         $this->assertSame(10, filesize($url));
     }
     
+    /**
+     * @return iterable<string, array{string, string}>
+     */
     public function downloadProvider(): iterable {
         foreach (['asset', 'asset-from-result', 'result', 'direct'] as $stage) {
             foreach (['download', 'show'] as $action) {
@@ -74,6 +77,9 @@ class FarahStreamWrapperFactoryTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<string, array{int}>
+     */
     public function statusProvider(): iterable {
         yield 'no content' => [204];
         yield 'redirect' => [302];
@@ -87,8 +93,9 @@ class FarahStreamWrapperFactoryTest extends TestCase {
     /**
      *
      * @dataProvider fileExceptionProvider
+     * @param class-string<\Throwable>|null $exception
      */
-    public function test_file_exists(string $uri, ?string $exception = null) {
+    public function test_file_exists(string $uri, ?string $exception = null): void {
         if ($exception) {
             $this->assertFileDoesNotExist($uri);
         } else {
@@ -99,8 +106,9 @@ class FarahStreamWrapperFactoryTest extends TestCase {
     /**
      *
      * @dataProvider fileExceptionProvider
+     * @param class-string<\Throwable>|null $exception
      */
-    public function test_file_get_contents(string $uri, ?string $exception = null) {
+    public function test_file_get_contents(string $uri, ?string $exception = null): void {
         if ($exception) {
             $this->expectException($exception);
             file_get_contents($uri);
@@ -109,6 +117,9 @@ class FarahStreamWrapperFactoryTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<string, array{0: string, 1?: class-string<\Throwable>}>
+     */
     public function fileExceptionProvider(): iterable {
         yield 'farah://slothsoft@farah/ does exist' => [
             'farah://slothsoft@farah/'
