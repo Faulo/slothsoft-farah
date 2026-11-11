@@ -18,19 +18,20 @@ final class Session {
     
     const GLOBAL_SESSION = null;
     
-    protected $dbName = 'cms';
+    protected string $dbName = 'cms';
     
-    protected $tableName = 'session';
+    protected string $tableName = 'session';
     
-    protected $cookieName = 'session-key';
+    protected string $cookieName = 'session-key';
     
     protected $dbmsTable;
     
-    protected $key;
+    protected string|null $key = null;
     
-    protected $data;
+    /** @var array<array-key, mixed>|null */
+    protected ?array $data = null;
     
-    protected $initialized;
+    protected bool $initialized;
     
     public function __construct() {
         $this->initialized = false;
@@ -82,7 +83,7 @@ final class Session {
         }
     }
     
-    protected function initKey($key = null): void {
+    protected function initKey(string|null $key = null): void {
         if ($key === null) {
             $key = $this->generateKey();
         }
@@ -91,40 +92,40 @@ final class Session {
         $this->setCookie($this->cookieName, $this->key);
     }
     
-    public function getGlobalValue($key, $val = null): mixed {
+    public function getGlobalValue(string $key, mixed $val = null): mixed {
         $this->init();
         return $this->loadData(self::GLOBAL_SESSION, $key, $val);
     }
     
-    public function setGlobalValue($key, $val = null): void {
+    public function setGlobalValue(string $key, mixed $val = null): void {
         $this->init();
         $this->saveData(self::GLOBAL_SESSION, $key, $val);
     }
     
-    public function getDataValue($key, $val = null): mixed {
+    public function getDataValue(string $key, mixed $val = null): mixed {
         $this->init();
         $this->data[$key] = $this->loadData($this->key, $key, $val);
         return $this->data[$key];
     }
     
-    public function setDataValue($key, $val = null): void {
+    public function setDataValue(string $key, mixed $val = null): void {
         $this->init();
         $this->data[$key] = $val;
         $this->saveData($this->key, $key, $val);
     }
     
-    public function setCookie($key, $val = null): void {
+    public function setCookie(string $key, string|null $val = null): void {
         if (! headers_sent()) {
-            setcookie($key, $val, time() + Seconds::MONTH, '/');
+            setcookie($key, $val ?? '', time() + Seconds::MONTH, '/');
         }
         $_COOKIE[$key] = $val;
     }
     
-    public function getCookie($key, $val = null): mixed {
+    public function getCookie(string $key, mixed $val = null): mixed {
         return $_COOKIE[$key] ?? $val;
     }
     
-    protected function loadData($session, $key, $val): mixed {
+    protected function loadData(string|null $session, string $key, mixed $val): mixed {
         $arr = [];
         $arr['session'] = $session;
         $arr['name'] = $this->hash($key);
@@ -132,7 +133,7 @@ final class Session {
         return $res ? $this->decodeData(current($res)) : $val;
     }
     
-    protected function saveData($session, $key, $val): void {
+    protected function saveData(string|null $session, string $key, mixed $val): void {
         $arr = [];
         $arr['session'] = $session;
         $arr['name'] = $this->hash($key);
@@ -164,20 +165,21 @@ final class Session {
         return $ret;
     }
     
-    protected static $hashList = [];
+    /** @var array<array-key, string> */
+    protected static array $hashList = [];
     
-    protected function hash($name): string {
+    protected function hash(string $name): string {
         if (! isset(self::$hashList[$name])) {
             self::$hashList[$name] = sha1($name);
         }
         return self::$hashList[$name];
     }
     
-    protected function encodeData($data): string|false {
+    protected function encodeData(mixed $data): string|false {
         return json_encode($data);
     }
     
-    protected function decodeData($data): mixed {
+    protected function decodeData(string $data): mixed {
         return json_decode($data, true);
     }
 }

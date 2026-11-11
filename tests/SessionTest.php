@@ -14,6 +14,18 @@ use PHPUnit\Framework\TestCase;
 final class SessionTest extends TestCase {
     
     /** @runInSeparateProcess */
+    public function testNullCookieValuePreservesDefaultLookup(): void {
+        $this->assertFalse(headers_sent());
+        $session = new Session();
+        
+        $session->setCookie('farah-test-cookie');
+        
+        $this->assertArrayHasKey('farah-test-cookie', $_COOKIE);
+        $this->assertNull($_COOKIE['farah-test-cookie']);
+        $this->assertSame('fallback', $session->getCookie('farah-test-cookie', 'fallback'));
+    }
+    
+    /** @runInSeparateProcess */
     public function testGenerateKeyWithoutRequestMetadata(): void {
         unset($_SERVER['REQUEST_TIME_FLOAT'], $_SERVER['REMOTE_ADDR']);
         $session = (new \ReflectionClass(Session::class))->newInstanceWithoutConstructor();
