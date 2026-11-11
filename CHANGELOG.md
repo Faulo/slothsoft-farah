@@ -9,7 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Enforce the types documented by the PHPStan cleanup with native PHP declarations; retain PHPDoc for collection element types and array shapes.
+
 - Require `slothsoft/core` 1.15.3 or newer for corrected sanitizer and stream-filter contracts and the July API contract fixes.
+
+### Fixed
+
+- Preserve numeric query parameter names during Farah URL serialization and asset parameter filtering, including names with nested array values.
+- Failed tracking queries throw an explicit exception instead of being treated as empty results or allowing archive processing to advance past unread records.
+- Legacy session cookies accept their default `null` value without passing `null` to PHP's string-only cookie API.
 
 ## [1.29.7] - 2026-10-26
 

@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Tracking;
 
 use Slothsoft\Core\DBMS\Database;
 use Slothsoft\Core\DBMS\Manager;
+use Slothsoft\Core\DBMS\Table;
 use Slothsoft\Farah\HTTPRequest;
 
 /**
@@ -22,15 +23,15 @@ final class Archive {
     
     const PREPARE_DELETE = 4;
     
-    protected $db;
+    protected Database $db;
     
-    protected $tempTable = 'temp';
+    protected Table $tempTable;
     
-    protected $backupTable = 'backup';
+    protected Table $backupTable;
     
-    protected $logTableDefault = '/getPage.php';
+    protected string $logTableDefault = '/getPage.php';
     
-    protected $logTableList = [
+    private const LOG_TABLE_NAMES = [
         '/getCache.php' => 'log_cache',
         '/getData.php' => 'log_data',
         '/getFragment.php' => 'log_fragment',
@@ -43,7 +44,13 @@ final class Archive {
         'LookupRouteStrategy' => 'lookup_route'
     ];
     
-    protected $config = [
+    /** @var array<string, LogTable> */
+    protected array $logTableList = [];
+    
+    /**
+     * @var array{version: int, parseLimit: int, defaultColumn: array<string, mixed>, logColumns: array<string, array<string, mixed>>}
+     */
+    protected array $config = [
         'version' => 12,
         'parseLimit' => 1000,
         'defaultColumn' => [
@@ -195,12 +202,11 @@ final class Archive {
         }
         unset($column);
         
-        $this->tempTable = $this->db->getTable($this->tempTable);
-        $this->backupTable = $this->db->getTable($this->backupTable);
-        foreach ($this->logTableList as &$table) {
-            $table = new LogTable($this, $this->db->getTable($table));
+        $this->tempTable = $this->db->getTable('temp');
+        $this->backupTable = $this->db->getTable('backup');
+        foreach (self::LOG_TABLE_NAMES as $uri => $tableName) {
+            $this->logTableList[$uri] = new LogTable($this, $this->db->getTable($tableName));
         }
-        unset($table);
     }
     
     public function install(): void {
@@ -227,11 +233,17 @@ final class Archive {
         }
     }
     
+    /**
+     * @return array{version: int, parseLimit: int, defaultColumn: array<string, mixed>, logColumns: array<string, array<string, mixed>>}
+     */
     public function getConfig(): array {
         return $this->config;
     }
     
-    public function insertTemp($time, array $data, $id = null): mixed {
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function insertTemp(float $time, array $data, int|string|null $id = null): mixed {
         if ($id === null) {
             $ret = $this->tempTable->insert([
                 'time' => $time,
@@ -250,25 +262,37 @@ final class Archive {
         return $ret;
     }
     
+    /**
+     * @param array<mixed> $idList
+     */
     public function updateOutdated(array $idList): void {
         $this->tempTable->update([
             'version' => $this->config['version']
         ], $idList);
     }
     
+    /**
+     * @return array<mixed>
+     */
     public function getOutdated(): array {
-        return $this->tempTable->select('id', sprintf('version < %d LIMIT %d', $this->config['version'], $this->config['parseLimit']));
+        return Query::select($this->tempTable, 'id', sprintf('version < %d LIMIT %d', $this->config['version'], $this->config['parseLimit']));
     }
     
+    /**
+     * @return array<mixed>
+     */
     public function getCurrent(): array {
-        return $this->tempTable->select('id', sprintf('version = %d LIMIT %d', $this->config['version'], $this->config['parseLimit']));
+        return Query::select($this->tempTable, 'id', sprintf('version = %d LIMIT %d', $this->config['version'], $this->config['parseLimit']));
     }
     
+    /**
+     * @return array<string, LogTable>
+     */
     public function getLogTableList(): array {
         return $this->logTableList;
     }
     
-    public function getLogTableByURI($uri): LogTable {
+    public function getLogTableByURI(string $uri): LogTable {
         $ret = $this->logTableList[$this->logTableDefault];
         foreach ($this->logTableList as $test => $table) {
             if (str_starts_with($uri, $test)) {
@@ -279,7 +303,7 @@ final class Archive {
         return $ret;
     }
     
-    public function getLogTableByStrategy($strategy): LogTable {
+    public function getLogTableByStrategy(string $strategy): LogTable {
         return $this->logTableList[$strategy];
     }
     
@@ -314,7 +338,7 @@ final class Archive {
     public function backup(): void {
         $ret = 0;
         while ($idList = $this->getCurrent()) {
-            foreach ($this->tempTable->select(true, [
+            foreach (Query::select($this->tempTable, true, [
                 'id' => $idList
             ]) as $row) {
                 $this->backupTable->insert($row, $row);
@@ -335,7 +359,7 @@ final class Archive {
         // return;
         $ret = 0;
         while ($idList = $this->getOutdated()) {
-            $rowList = $this->tempTable->select([
+            $rowList = Query::select($this->tempTable, [
                 'id',
                 'data'
             ], [
@@ -376,6 +400,9 @@ final class Archive {
         return $ret;
     }
     
+    /**
+     * @param array<mixed> $data
+     */
     protected function prepareData(array &$data): int {
         $ret = self::PREPARE_OK;
         
@@ -425,7 +452,7 @@ final class Archive {
         $tableName = 'access_log';
         $dbmsTable = Manager::getTable($dbName, $tableName);
         
-        for ($i = 0; $rowList = $dbmsTable->select(true, sprintf('1 LIMIT %d, %d', $i, $step)); $i += $step) {
+        for ($i = 0; $rowList = Query::select($dbmsTable, true, sprintf('1 LIMIT %d, %d', $i, $step)); $i += $step) {
             foreach ($rowList as $row) {
                 $id = (int) array_shift($row);
                 $time = (float) $row['REQUEST_TIME_FLOAT'];

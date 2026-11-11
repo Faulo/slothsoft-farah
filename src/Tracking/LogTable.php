@@ -37,9 +37,9 @@ final class LogTable {
      * ];
      * //
      */
-    protected $archive;
+    protected Archive $archive;
     
-    protected $dbmsTable;
+    protected Table $dbmsTable;
     
     /**
      * @var array<string, array<string, mixed>>
@@ -50,10 +50,7 @@ final class LogTable {
         $this->archive = $archive;
         $this->dbmsTable = $dbmsTable;
         $config = $this->archive->getConfig();
-        $columnConfig = $config['logColumns'];
-        assert(is_array($columnConfig));
-        /** @var array<string, array<string, mixed>> $columnConfig */
-        $this->columnConfig = $columnConfig;
+        $this->columnConfig = $config['logColumns'];
     }
     
     public function install(): void {
@@ -79,7 +76,10 @@ final class LogTable {
         return $this->dbmsTable->getName();
     }
     
-    public function insert($id, $json, array $data): mixed {
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function insert(int|string $id, string|false $json, array $data): mixed {
         $sql = [];
         $sql['id'] = $id;
         $sql['data'] = $json;
@@ -89,24 +89,35 @@ final class LogTable {
         return $this->dbmsTable->insert($sql, $sql);
     }
     
-    public function delete($id): mixed {
+    public function delete(int|string $id): mixed {
         return $this->dbmsTable->delete($id);
     }
     
-    public function selectGroup($column, array $filter, $sql): array {
+    /**
+     * @param array<string, mixed> $filter
+     * @return array<mixed>
+     */
+    public function selectGroup(string $column, array $filter, string $sql): array {
         if (isset($filter[$column])) {
             unset($filter[$column]);
         }
-        return $this->dbmsTable->select(sprintf('DISTINCT %s', $column), $filter, sprintf('%s ORDER BY %s', $sql, $column));
+        return Query::select($this->dbmsTable, sprintf('DISTINCT %s', $column), $filter, sprintf('%s ORDER BY %s', $sql, $column));
     }
     
-    public function selectCount(array $filter, $sql): mixed {
-        $res = $this->dbmsTable->select('COUNT(*)', $filter, $sql);
+    /**
+     * @param array<string, mixed> $filter
+     */
+    public function selectCount(array $filter, string $sql): mixed {
+        $res = Query::select($this->dbmsTable, 'COUNT(*)', $filter, $sql);
         return reset($res);
     }
     
-    public function select(array $filter, $sql, $page, $limit): array {
-        return $this->dbmsTable->select(array_keys($this->columnConfig), $filter, sprintf('%s ORDER BY id DESC LIMIT %d, %d', $sql, $page * $limit, $limit));
+    /**
+     * @param array<string, mixed> $filter
+     * @return array<mixed>
+     */
+    public function select(array $filter, string $sql, int $page, int $limit): array {
+        return Query::select($this->dbmsTable, array_keys($this->columnConfig), $filter, sprintf('%s ORDER BY id DESC LIMIT %d, %d', $sql, $page * $limit, $limit));
     }
     
     public function fixIndex(): void {
@@ -123,7 +134,7 @@ final class LogTable {
     
     public function fixRollback(Table $tempTable): int {
         $ret = 0;
-        $rowList = $this->dbmsTable->select();
+        $rowList = Query::select($this->dbmsTable);
         foreach ($rowList as $row) {
             $sql = [
                 'data' => $row['data'],

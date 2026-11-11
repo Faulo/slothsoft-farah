@@ -33,8 +33,6 @@ final class View {
         
         $config = $this->archive->getConfig();
         $logColumns = $config['logColumns'];
-        assert(is_array($logColumns));
-        /** @var array<string, array<string, mixed>> $logColumns */
         foreach ($logColumns as $key => $column) {
             if ($column['groupable']) {
                 $this->groupList[$key] = '';
@@ -81,8 +79,6 @@ final class View {
         
         $config = $this->archive->getConfig();
         $logColumns = $config['logColumns'];
-        assert(is_array($logColumns));
-        /** @var array<string, array<string, mixed>> $logColumns */
         $table = $this->archive->getLogTableByURI($this->logURI);
         
         $groupFilter = [];
