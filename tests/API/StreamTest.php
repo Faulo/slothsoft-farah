@@ -43,7 +43,9 @@ class StreamTest extends TestCase {
     }
     
     private function getExpectedContent(string $ref, string $type): string {
-        return file_get_contents($ref);
+        $contents = file_get_contents($ref);
+        $this->assertIsString($contents);
+        return $contents;
     }
     
     /**

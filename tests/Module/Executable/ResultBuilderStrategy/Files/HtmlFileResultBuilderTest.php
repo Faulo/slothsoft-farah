@@ -26,7 +26,7 @@ final class HtmlFileResultBuilderTest extends TestCase {
     public function testClassExists(): void {
         $this->assertTrue(class_exists(HtmlFileResultBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files\HtmlFileResultBuilder'!");
     }
-
+    
     public function test_buildResultStrategies_serializesHtmlAsXhtmlForXmlStream(): void {
         $sut = new HtmlFileResultBuilder(
             FarahUrl::createFromReference('farah://slothsoft@test-module/page-html'),
@@ -36,8 +36,10 @@ final class HtmlFileResultBuilderTest extends TestCase {
         $result = $this->createMock(ResultInterface::class);
         $streamBuilder = $sut->buildResultStrategies($context, Executable::resultIsXml())->streamBuilder;
         $body = $streamBuilder->buildStringWriter($result)->toString();
-
-        $this->assertSame(DOMHelper::NS_HTML, $sut->toDocument()->documentElement->namespaceURI);
+        
+        $document = $sut->toDocument();
+        $this->assertInstanceOf(\DOMElement::class, $document->documentElement);
+        $this->assertSame(DOMHelper::NS_HTML, $document->documentElement->namespaceURI);
         $this->assertSame('application/xhtml+xml', $streamBuilder->buildStreamMimeType($result));
         $this->assertStringStartsWith('<?xml', $body);
         $this->assertStringContainsString('xmlns="http://www.w3.org/1999/xhtml"', $body);

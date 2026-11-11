@@ -21,6 +21,7 @@ final class AssetFragmentDOMWriter implements DOMWriterInterface {
     
     private FarahUrl $url;
     
+    /** @var list<DOMWriterInterface> */
     private array $children = [];
     
     public function __construct(FarahUrl $url) {

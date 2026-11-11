@@ -15,9 +15,9 @@ use Slothsoft\Core\InterExec;
  */
 final class HTTPCommand {
     
-    protected $exec;
+    protected InterExec $exec;
     
-    public function __construct($command) {
+    public function __construct(string $command) {
         $this->exec = new InterExec($command);
     }
     
@@ -29,6 +29,9 @@ final class HTTPCommand {
         return null;
     }
     
+    /**
+     * @return array<string, string|string[]>
+     */
     public function getHeaderList(): array {
         return [];
     }
@@ -38,7 +41,8 @@ final class HTTPCommand {
     }
     
     // EventTarget
-    public function addEventListener($type, Closure $listener, $capture = false): void {
+    
+    public function addEventListener(string $type, Closure $listener, bool $capture = false): void {
         $this->exec->on($type, function (InterExec $exec, $data) use ($type, $listener) {
             $eve = new HTTPEvent($type);
             $eve->target = $this;
@@ -47,11 +51,11 @@ final class HTTPCommand {
         });
     }
     
-    public function removeEventListener($type, $listener, $capture = false): void {
+    public function removeEventListener(string $type, Closure $listener, bool $capture = false): void {
         // not implemented
     }
     
-    public function dispatchEvent($event): void {
+    public function dispatchEvent(HTTPEvent $event): void {
         // not implemented
     }
 }

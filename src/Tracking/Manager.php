@@ -16,9 +16,9 @@ use Slothsoft\Core\ServerEnvironment;
  */
 final class Manager {
     
-    protected static $dbName = 'tracking';
+    protected static string $dbName = 'tracking';
     
-    protected static $archive = null;
+    protected static Archive|null $archive = null;
     
     public static function getArchive(): Archive {
         if (! self::$archive) {
@@ -33,6 +33,9 @@ final class Manager {
         return new View($archive);
     }
     
+    /**
+     * @param array<string, mixed> $request
+     */
     public static function track(array $request): void {
         try {
             $archive = self::getArchive();

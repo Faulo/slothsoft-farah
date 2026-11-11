@@ -13,7 +13,10 @@ use Slothsoft\Farah\Sites\Domain;
 
 /** Executable examples of using download exceptions to escape page rendering. */
 final class HttpDownloadResponseTest extends TestCase {
-    /** @noinspection HttpUrlsUsage */
+    /**
+     * @noinspection HttpUrlsUsage
+     * @param array<string, string> $parameters
+     */
     private function request(array $parameters, string $method = 'GET'): ResponseInterface {
         Module::registerWithXmlManifestAndDefaultAssets('test@http-downloads', dirname(__DIR__, 2) . '/test-files/http-downloads');
         $document = new DOMDocument();
@@ -53,6 +56,9 @@ final class HttpDownloadResponseTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2: string}>
+     */
     public function downloadProvider(): iterable {
         foreach (['asset', 'asset-from-result', 'result', 'direct'] as $stage) {
             foreach (['download', 'show'] as $action) {

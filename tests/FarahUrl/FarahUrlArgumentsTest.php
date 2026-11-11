@@ -10,6 +10,8 @@ class FarahUrlArgumentsTest extends TestCase {
     /**
      *
      * @dataProvider createFromValueListProvider
+     * @runInSeparateProcess
+     * @param array<array-key, mixed> $values
      */
     public function test_createFromValueList(array $values, string $expected): void {
         $actual = FarahUrlArguments::createFromValueList($values);
@@ -19,6 +21,8 @@ class FarahUrlArgumentsTest extends TestCase {
     /**
      *
      * @dataProvider createFromValueListProvider
+     * @runInSeparateProcess
+     * @param array<array-key, mixed> $values
      */
     public function test_createFromValueList_usesObjectPool(array $values, string $expected): void {
         $values = FarahUrlArguments::createFromValueList($values);
@@ -26,7 +30,14 @@ class FarahUrlArgumentsTest extends TestCase {
         $this->assertSame($expected, $values);
     }
     
+    /**
+     * @return iterable<array{array<array-key, mixed>, string}>
+     */
     public function createFromValueListProvider(): iterable {
+        yield 'numeric zero name' => [[0 => 'value'], '0=value'];
+        yield 'negative numeric name' => [[-1 => 'value'], '-1=value'];
+        yield 'numeric name with nested list' => [[0 => ['items' => ['a', 'b']]], '0[items][]=a&0[items][]=b'];
+        yield 'leading zero name stays distinct' => [['01' => 'value'], '01=value'];
         yield 'build query' => [
             [
                 'hello' => 'world'

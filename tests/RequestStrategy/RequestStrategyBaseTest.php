@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\RequestStrategy;
 
-use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\ServerRequest;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\StreamingResponse;
 use Slothsoft\Farah\Module\Module;
@@ -59,6 +59,9 @@ final class RequestStrategyBaseTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<array{0: bool, 1: string}>
+     */
     public function bufferabilityProvider(): iterable {
         yield 'streaming GET' => [false, 'GET'];
         yield 'streaming HEAD' => [false, 'HEAD'];

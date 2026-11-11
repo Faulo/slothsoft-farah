@@ -152,7 +152,7 @@ EOT, $arguments);
      *
      * @dataProvider provideXPathLiterals
      */
-    public function test_evaluate_literal(string $query, $expected): void {
+    public function test_evaluate_literal(string $query, int|string|bool $expected): void {
         $arguments = [
             $query
         ];
@@ -170,6 +170,9 @@ EOT, $arguments);
         $this->assertThat($actual, new IsEqual($expected));
     }
     
+    /**
+     * @return iterable<array{string, int|string|bool}>
+     */
     public function provideXPathLiterals(): iterable {
         yield 'xmlns' => [
             'count(//html:head)',

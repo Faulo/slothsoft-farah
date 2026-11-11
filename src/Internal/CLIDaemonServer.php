@@ -18,7 +18,7 @@ final class CLIDaemonServer extends AbstractDaemonServer {
     public function onInitialize(FarahUrlArguments $args): void {
     }
     
-    public function onMessage($message): iterable {
+    public function onMessage(mixed $message): iterable {
         assert(is_array($message));
         $process = new Process($message);
         yield from $this->log($process->getCommandLine());

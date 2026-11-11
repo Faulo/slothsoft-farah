@@ -7,6 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 
 interface ResponseStrategyInterface {
     
-    public function process(ResponseInterface $response);
+    public function process(ResponseInterface $response): void;
 }
 

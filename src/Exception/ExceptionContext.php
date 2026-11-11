@@ -26,6 +26,9 @@ final class ExceptionContext implements DOMWriterInterface {
     /** @var WeakMap<Throwable, self>|null */
     private static ?WeakMap $contexts = null;
     
+    /**
+     * @param array<array-key, mixed> $data
+     */
     public static function append(Throwable $exception, array $data = []): self {
         $contexts = self::$contexts ??= new WeakMap();
         if (isset($contexts[$exception])) {
@@ -38,13 +41,20 @@ final class ExceptionContext implements DOMWriterInterface {
     
     private Throwable $ownerException;
     
+    /** @var array<array-key, mixed> */
     private array $data;
     
+    /**
+     * @param array<array-key, mixed> $data
+     */
     private function __construct(Throwable $ownerException, array $data) {
         $this->ownerException = $ownerException;
         $this->data = $data;
     }
     
+    /**
+     * @param array<array-key, mixed> $data
+     */
     public function addData(array $data): void {
         $this->data += $data;
     }

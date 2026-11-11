@@ -14,19 +14,23 @@ use Closure;
  */
 final class HTTPClosure {
     
-    protected $options = [
+    /** @var array<string, mixed> */
+    protected array $options = [
         'isThreaded' => false,
         'isCachable' => false
     ];
     
-    protected $task;
+    protected Closure $task;
     
+    /**
+     * @param array<string, mixed> $options
+     */
     public function __construct(array $options, Closure $task) {
         $this->options = $options + $this->options;
         $this->task = $task;
     }
     
-    public function run(...$args): mixed {
+    public function run(mixed ...$args): mixed {
         return ($this->task)(...$args);
     }
     

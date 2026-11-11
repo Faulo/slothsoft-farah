@@ -15,29 +15,29 @@ use Slothsoft\Core\ServerEnvironment;
  */
 final class Cache {
     
-    protected $rootDir;
+    protected string $rootDir;
     
-    protected $loadScript = '/getCache.php/';
+    protected string $loadScript = '/getCache.php/';
     
     public function __construct() {
         $this->rootDir = ServerEnvironment::getCacheDirectory();
     }
     
-    public function getPath($uri, $cacheDir = ''): string {
+    public function getPath(string $uri, string $cacheDir = ''): string {
         $path = $this->sanitizeName($uri);
         $ret = $this->rootDir . $cacheDir;
         FileSystem::ensureDirectory($ret);
         return realpath($ret) . DIRECTORY_SEPARATOR . $path;
     }
     
-    public function getURI($uri, $cacheDir = ''): string {
+    public function getURI(string $uri, string $cacheDir = ''): string {
         $ret = $this->getPath($uri, $cacheDir);
         $ret = substr($ret, strlen($this->rootDir));
         $ret = str_replace('\\', '/', $ret);
         return $this->loadScript . $ret;
     }
     
-    public function getFile($path): ?string {
+    public function getFile(string $path): ?string {
         $ret = null;
         if (file_exists($this->rootDir . $path)) {
             $ret = $this->rootDir . $path;
@@ -45,7 +45,11 @@ final class Cache {
         return $ret;
     }
     
-    public function mergeFiles(array $fileList, $targetDir = '', $zipFunction = null): ?string {
+    /**
+     * @param string[] $fileList
+     * @param (callable(string): string)|null $zipFunction
+     */
+    public function mergeFiles(array $fileList, string $targetDir = '', ?callable $zipFunction = null): ?string {
         if (! count($fileList)) {
             return null;
         }
@@ -85,11 +89,14 @@ final class Cache {
         return $cacheURI;
     }
     
+    /**
+     * @param string[] $names
+     */
     protected function createName(array $names): string {
         return md5(implode(PHP_EOL, $names));
     }
     
-    protected function sanitizeName($path): string {
+    protected function sanitizeName(string $path): string {
         return trim(str_replace([
             '/',
             '\\',

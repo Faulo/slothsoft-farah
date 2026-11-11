@@ -31,11 +31,11 @@ abstract class AbstractDaemonServer implements ChunkWriterInterface {
     
     public const STDERR = 2;
     
-    private $port;
+    private int $port;
     
     private $socket;
     
-    private $isRunning;
+    private bool|null $isRunning = null;
     
     public function __construct(int $port) {
         $this->port = $port;
@@ -81,16 +81,25 @@ abstract class AbstractDaemonServer implements ChunkWriterInterface {
         }
     }
     
-    public abstract function onMessage($message): iterable;
+    /**
+     * @return iterable<int, mixed>
+     */
+    public abstract function onMessage(mixed $message): iterable;
     
     public function stop(): void {
         $this->isRunning = false;
     }
     
+    /**
+     * @return iterable<int, string>
+     */
     protected function log(string $message): iterable {
         yield static::STDERR => sprintf('[%s] %s%s', date(DateTimeFormatter::FORMAT_DATETIME), $message, PHP_EOL);
     }
     
+    /**
+     * @return iterable<int, string>
+     */
     protected function respondWith(string $message): iterable {
         yield static::STDOUT => $message;
     }

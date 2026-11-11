@@ -88,6 +88,9 @@ final class SendBodyStrategyTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<array{0: bool}>
+     */
     public function bufferabilityProvider(): iterable {
         yield 'non-bufferable response flushes each chunk' => [false];
         yield 'bufferable response waits for stream closure' => [true];

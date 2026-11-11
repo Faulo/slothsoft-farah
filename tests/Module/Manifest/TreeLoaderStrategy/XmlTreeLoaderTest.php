@@ -30,6 +30,7 @@ final class XmlTreeLoaderTest extends TestCase {
         $this->cachePath = temp_file(__CLASS__);
         
         $loaderFile = (new ReflectionClass(XmlTreeLoader::class))->getFileName();
+        $this->assertIsString($loaderFile);
         $this->context = $this->createMock(ManifestInterface::class);
         $this->context->method('createManifestFile')->with('manifest.xml')->willReturnCallback(
             fn() => new SplFileInfo($this->manifestPath)
@@ -112,6 +113,9 @@ final class XmlTreeLoaderTest extends TestCase {
         $this->assertSame($timestamp, filemtime($this->cachePath));
     }
     
+    /**
+     * @return list<string>
+     */
     private function getChildNames(LeanElement $root): array {
         $names = [];
         foreach ($root->getChildren() as $child) {

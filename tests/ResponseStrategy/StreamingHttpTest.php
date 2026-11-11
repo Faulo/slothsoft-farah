@@ -26,7 +26,9 @@ final class StreamingHttpTest extends TestCase {
             stream_set_timeout($client, 3);
             $prefix = $query === '?unbuffered=1' ? '' : 'prefix:';
             $firstLine = $prefix . 'event:start';
-            $this->assertSame($uppercase ? strtoupper($firstLine) : $firstLine, rtrim(fgets($client)));
+            $line = fgets($client);
+            $this->assertIsString($line);
+            $this->assertSame($uppercase ? strtoupper($firstLine) : $firstLine, rtrim($line));
             $this->assertSame($uppercase ? "DATA:\n" : "data:\n", fgets($client));
             $this->assertSame("\n", fgets($client));
             $this->assertFileDoesNotExist($gate . '/completed');
@@ -53,6 +55,9 @@ final class StreamingHttpTest extends TestCase {
         $this->assertStringNotContainsString('Fatal error', $server->getErrorOutput());
     }
     
+    /**
+     * @return iterable<array{0: string, 1: bool}>
+     */
     public function bufferProvider(): iterable {
         yield 'PHP output_buffering=4096' => ['', false];
         yield 'non-removable flushable buffer' => ['?nonremovable=1', false];
@@ -99,22 +104,34 @@ final class StreamingHttpTest extends TestCase {
             $server->stop(1);
         }
     }
-
+    
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function unsupportedBufferProvider(): iterable {
         yield 'non-flushable handler' => ['?blocked=1'];
         yield 'outer buffer retains flushed inner output' => ['?nested=1'];
     }
-
+    
     private function assertBufferStackPreserved(string $gate): void {
-        $levels = explode(':', file_get_contents($gate . '/buffer-levels'));
+        $contents = file_get_contents($gate . '/buffer-levels');
+        $this->assertIsString($contents);
+        $levels = explode(':', $contents);
         $this->assertCount(2, $levels);
         $this->assertSame($levels[0], $levels[1]);
     }
     
+    /**
+     * @return array{Process, int}
+     */
     private function startServer(string $gate): array {
         $socket = stream_socket_server('tcp://127.0.0.1:0');
         $this->assertIsResource($socket);
-        $port = (int) substr(strrchr(stream_socket_get_name($socket, false), ':'), 1);
+        $address = stream_socket_get_name($socket, false);
+        $this->assertIsString($address);
+        $separator = strrpos($address, ':');
+        $this->assertNotFalse($separator);
+        $port = (int) substr($address, $separator + 1);
         fclose($socket);
         $root = dirname(__DIR__, 2);
         $server = new Process([

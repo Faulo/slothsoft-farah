@@ -19,6 +19,7 @@ final class MapResultBuilder implements ResultBuilderStrategyInterface {
     
     private StreamBuilderStrategyInterface $defaultStream;
     
+    /** @var Map<FarahUrlStreamIdentifier, StreamBuilderStrategyInterface> */
     private Map $streams;
     
     public function __construct(StreamBuilderStrategyInterface $proxy) {

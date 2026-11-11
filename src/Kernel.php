@@ -42,7 +42,7 @@ final class Kernel {
         return $field;
     }
     
-    public static function setCurrentSitemap($asset): void {
+    public static function setCurrentSitemap(AssetInterface|FarahUrl|string|null $asset): void {
         self::currentSitemap()->setValue($asset);
     }
     
@@ -66,7 +66,7 @@ final class Kernel {
         return $field;
     }
     
-    public static function setCurrentPage($url): void {
+    public static function setCurrentPage(FarahUrl|string|null $url): void {
         self::currentPage()->setValue($url);
     }
     
@@ -126,6 +126,9 @@ final class Kernel {
         self::trackingExceptionUris()->setValue($uriList);
     }
     
+    /**
+     * @return list<string>
+     */
     public static function getTrackingExceptionUris(): array {
         return self::trackingExceptionUris()->getValue();
     }

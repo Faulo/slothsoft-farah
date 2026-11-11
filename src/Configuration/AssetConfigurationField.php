@@ -22,7 +22,7 @@ final class AssetConfigurationField extends ConfigurationField {
         return $value instanceof AssetInterface ? $value : $this->loadValue($value);
     }
     
-    private function loadValue($newValue): AssetInterface {
+    private function loadValue(mixed $newValue): AssetInterface {
         if (is_string($newValue)) {
             $newValue = FarahUrl::createFromReference($newValue);
         }

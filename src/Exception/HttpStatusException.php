@@ -14,17 +14,27 @@ use Throwable;
  */
 final class HttpStatusException extends RuntimeException {
     
-    private $headers;
+    /** @var array<string, string|string[]> */
+    private array $headers;
     
+    /**
+     * @param array<string, string|string[]> $headers
+     */
     public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null, array $headers = []) {
         parent::__construct($message, $code, $previous);
         $this->setAdditionalHeaders($headers);
     }
     
+    /**
+     * @param array<string, string|string[]> $headers
+     */
     public function setAdditionalHeaders(array $headers): void {
         $this->headers = $headers;
     }
     
+    /**
+     * @return array<string, string|string[]>
+     */
     public function getAdditionalHeaders(): array {
         return $this->headers;
     }

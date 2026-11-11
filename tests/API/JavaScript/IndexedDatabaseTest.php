@@ -120,6 +120,7 @@ EOT, $arguments);
     /**
      *
      * @dataProvider provideTestObjects
+     * @param array<string, mixed> $obj
      */
     public function test_putObjectAsync(array $obj): void {
         $arguments = [
@@ -160,6 +161,7 @@ EOT, $arguments);
     /**
      *
      * @dataProvider provideTestObjects
+     * @param array<string, mixed> $obj
      */
     public function test_getObjectCursorAsync(array $obj): void {
         $arguments = [
@@ -200,6 +202,7 @@ EOT, $arguments);
     /**
      *
      * @dataProvider provideTestObjects
+     * @param array<string, mixed> $obj
      */
     public function test_deleteObjectAsync(array $obj): void {
         $arguments = [
@@ -239,6 +242,9 @@ EOT, $arguments);
         $this->assertThat($actual, new IsEqual(null));
     }
     
+    /**
+     * @return iterable<array{0: array<string, mixed>}>
+     */
     public function provideTestObjects(): iterable {
         yield 'object' => [
             [

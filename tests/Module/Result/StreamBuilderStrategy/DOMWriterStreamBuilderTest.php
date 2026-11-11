@@ -197,7 +197,9 @@ class DOMWriterStreamBuilderTest extends TestCase {
         $sut = $this->createSuT($content, $name);
         $context = $this->createMock(ResultInterface::class);
         
-        $this->assertThat($sut->buildStreamHash($context), new IsIdentical(md5($this->document->saveXML())));
+        $xml = $this->document->saveXML();
+        $this->assertIsString($xml);
+        $this->assertThat($sut->buildStreamHash($context), new IsIdentical(md5($xml)));
     }
     
     public function test_buildStringWriter(): void {

@@ -54,6 +54,7 @@ final class ParamTest extends TestCase {
         $document = new DOMDocument();
         $document->loadXML(self::requestPage('/request', 'https'));
         
+        $this->assertInstanceOf(DOMElement::class, $document->documentElement);
         $this->assertSame('https://localhost/request', $document->documentElement->getAttribute('href'));
     }
     
@@ -71,12 +72,17 @@ final class ParamTest extends TestCase {
         $document->loadXML((string) $response->getBody());
         $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_SLOTHSOFT);
         
-        foreach ($xpath->query('//*[@url]') as $node) {
+        $urlNodes = $xpath->query('//*[@url]');
+        $this->assertNotFalse($urlNodes);
+        foreach ($urlNodes as $node) {
             $this->assertInstanceOf(DOMElement::class, $node);
             $this->assertStringStartsWith("$scheme://", $node->getAttribute('url'));
         }
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function webSchemeProvider(): iterable {
         yield 'HTTP' => [
             'http'
@@ -97,9 +103,11 @@ final class ParamTest extends TestCase {
         $document = Module::resolveToDOMWriter($url)->toDocument();
         $xpath = new DOMXPath($document);
         $locations = $xpath->query('//*[local-name() = "loc"]');
+        $this->assertNotFalse($locations);
         
         $this->assertGreaterThan(0, $locations->length);
         foreach ($locations as $location) {
+            $this->assertInstanceOf(\DOMNode::class, $location);
             $this->assertStringStartsWith("$scheme://", $location->textContent);
         }
     }
@@ -120,6 +128,7 @@ final class ParamTest extends TestCase {
             $document->loadXML((string) $response->getBody());
             $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_SLOTHSOFT);
             $currentNodes = $xpath->query('//*[@current]');
+            $this->assertNotFalse($currentNodes);
             
             $this->assertCount(1, $currentNodes);
             $currentNode = $currentNodes->item(0);
@@ -148,6 +157,9 @@ final class ParamTest extends TestCase {
         $this->assertThat($actual, new DOMNodeEqualTo($expected));
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function pageProvider(): iterable {
         yield '/' => [
             '/',

@@ -46,6 +46,7 @@ class EmbedIncludesDOMWriterTest extends TestCase {
         
         $document = new DOMDocument();
         $document->loadXML($expectedXML);
+        $this->assertInstanceOf(\DOMElement::class, $document->documentElement);
         
         $this->assertThat($sut->toDocument(), new DOMNodeEqualTo($document));
     }
@@ -68,6 +69,7 @@ class EmbedIncludesDOMWriterTest extends TestCase {
         
         $document = new DOMDocument();
         $document->loadXML($expectedXML);
+        $this->assertInstanceOf(\DOMElement::class, $document->documentElement);
         
         $this->assertThat($sut->toElement($document), new DOMNodeEqualTo($document->documentElement));
     }

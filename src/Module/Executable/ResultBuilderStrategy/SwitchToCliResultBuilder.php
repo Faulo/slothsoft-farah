@@ -20,9 +20,9 @@ use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamWriterStreamBuilde
  */
 final class SwitchToCliResultBuilder implements ResultBuilderStrategyInterface {
     
-    private $resultBuilder;
+    private ResultBuilderStrategyInterface $resultBuilder;
     
-    private $fileName;
+    private string $fileName;
     
     public function __construct(ResultBuilderStrategyInterface $resultBuilder, string $fileName) {
         $this->resultBuilder = $resultBuilder;

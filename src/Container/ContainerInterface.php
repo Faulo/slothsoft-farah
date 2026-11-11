@@ -5,10 +5,10 @@ namespace Slothsoft\Farah\Container;
 
 interface ContainerInterface {
     
-    public function put($id, $entry): void;
+    public function put(mixed $id, object $entry): void;
     
-    public function get($id): object;
+    public function get(mixed $id): object;
     
-    public function has($id): bool;
+    public function has(mixed $id): bool;
 }
 

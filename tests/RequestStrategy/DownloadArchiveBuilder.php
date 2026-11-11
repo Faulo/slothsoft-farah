@@ -76,7 +76,14 @@ final class DownloadArchiveBuilder implements ExecutableBuilderStrategyInterface
         // Keep binary bytes canonical in a text fixture; decode to a managed local file.
         $file = temp_dir(__CLASS__) . DIRECTORY_SEPARATOR . 'archive.bin';
         $encoded = file_get_contents(dirname(__DIR__, 2) . '/test-files/http-downloads/payload.base64');
-        file_put_contents($file, base64_decode($encoded, true));
+        if ($encoded === false) {
+            throw new \RuntimeException('Failed to read the download fixture.');
+        }
+        $payload = base64_decode($encoded, true);
+        if ($payload === false) {
+            throw new \RuntimeException('Invalid base64 in the download fixture.');
+        }
+        file_put_contents($file, $payload);
         return new FileInfoResultBuilder(new SplFileInfo($file));
     }
 }

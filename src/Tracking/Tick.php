@@ -14,7 +14,7 @@ use Slothsoft\Core\ServerEnvironment;
  */
 final class Tick {
     
-    protected static $logTick;
+    protected static self|null $logTick = null;
     
     public static function log(): void {
         if (! self::$logTick) {
@@ -23,19 +23,21 @@ final class Tick {
         self::$logTick->append();
     }
     
-    protected $functionList;
+    /** @var array<string, int> */
+    protected array $functionList;
     
-    protected $functionFile;
+    protected string $functionFile;
     
-    protected $lastFunction;
+    protected null $lastFunction = null;
     
-    protected $timelineList;
+    /** @var list<string> */
+    protected array $timelineList;
     
-    protected $timelineFile;
+    protected string $timelineFile;
     
-    protected $lastTimeline;
+    protected null $lastTimeline = null;
     
-    protected $lastTime;
+    protected int $lastTime;
     
     protected function __construct() {
         $this->create();

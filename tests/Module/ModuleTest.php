@@ -11,8 +11,8 @@ use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\Kernel;
-use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\AssetBuilderStrategy\AssetBuilderStrategyInterface;
+use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
 use Slothsoft\Farah\Module\Manifest\ManifestStrategies;
 use Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy\TreeLoaderStrategyInterface;
@@ -78,6 +78,7 @@ final class ModuleTest extends TestCase {
     public function test_clearAllCachedAssets_phpinfoPrintsServer(): void {
         $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets';
         $expected = file_get_contents('farah://slothsoft@farah/phpinfo');
+        $this->assertIsString($expected);
         $this->assertStringContainsString('test_clearAllCachedAssets', $expected);
     }
     
@@ -88,10 +89,12 @@ final class ModuleTest extends TestCase {
     public function test_clearAllCachedAssets_isNecessary(): void {
         $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets expected';
         $expected = file_get_contents('farah://slothsoft@farah/phpinfo');
+        $this->assertIsString($expected);
         $this->assertStringContainsString('test_clearAllCachedAssets expected', $expected);
         
         $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets actual';
         $actual = file_get_contents('farah://slothsoft@farah/phpinfo');
+        $this->assertIsString($actual);
         $this->assertStringContainsString('test_clearAllCachedAssets expected', $actual);
     }
     
@@ -102,12 +105,14 @@ final class ModuleTest extends TestCase {
     public function test_clearAllCachedAssets_works(): void {
         $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets expected';
         $expected = file_get_contents('farah://slothsoft@farah/phpinfo');
+        $this->assertIsString($expected);
         $this->assertStringContainsString('test_clearAllCachedAssets expected', $expected);
         
         Module::clearAllCachedAssets();
         
         $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets actual';
         $actual = file_get_contents('farah://slothsoft@farah/phpinfo');
+        $this->assertIsString($actual);
         $this->assertStringContainsString('test_clearAllCachedAssets actual', $actual);
     }
     
@@ -154,6 +159,7 @@ final class ModuleTest extends TestCase {
         Module::resolveToAsset($url);
         
         $absoluteDirectory = realpath($relativeDirectory);
+        $this->assertIsString($absoluteDirectory);
         chdir(temp_dir(__CLASS__));
         Module::registerWithXmlManifestAndDefaultAssets($authority, $absoluteDirectory);
         
@@ -177,6 +183,9 @@ final class ModuleTest extends TestCase {
         $this->assertEquals('application/xml', $mime);
     }
     
+    /**
+     * @return iterable<array{string}>
+     */
     public function modulePathProvider(): iterable {
         yield 'main module' => [
             '/'
@@ -219,6 +228,9 @@ final class ModuleTest extends TestCase {
         $this->assertEquals('application/xml', $mime);
     }
     
+    /**
+     * @return iterable<array{string}>
+     */
     public function importPathProvider(): iterable {
         $hierarchy = [
             'import' => [
@@ -275,6 +287,9 @@ final class ModuleTest extends TestCase {
         $this->assertEquals($value, $element->getAttribute($attribute));
     }
     
+    /**
+     * @return iterable<array{string, string, string}>
+     */
     public function importAttributeProvider(): iterable {
         yield 'module name' => [
             '/',
@@ -348,6 +363,7 @@ final class ModuleTest extends TestCase {
      * @runInSeparateProcess
      * @dataProvider importContentProvider
      * @depends      testCanLoadImportModule
+     * @param array<string, array<string, string>> $elements
      */
     public function testModuleDoesImportInfo(string $path, array $elements, string $manifestDirectory): void {
         $manifest = $this->loadTestModule($manifestDirectory);
@@ -368,6 +384,9 @@ final class ModuleTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<array{string, array<string, array<string, string>>}>
+     */
     public function importContentProvider(): iterable {
         return [
             '/import' => [
@@ -552,6 +571,9 @@ final class ModuleTest extends TestCase {
         $this->assertFileEquals((string) $expectedUrl, (string) $actualUrl);
     }
     
+    /**
+     * @return iterable<array{string, string}>
+     */
     public function importUrlProvider(): iterable {
         return [
             '/result-use-manifest' => [

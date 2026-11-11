@@ -11,6 +11,8 @@ use Traversable;
 /**
  * Immutable value object for Farah URL query arguments.
  *
+ * @implements IteratorAggregate<array-key, mixed>
+ *
  * @author Daniel Schulz
  * @since 2018-03-01
  */
@@ -37,10 +39,14 @@ final class FarahUrlArguments implements IteratorAggregate, Hashable {
         return self::createFromValueList($valueList);
     }
     
+    /**
+     * @param array<array-key, mixed> $valueList
+     * @return iterable<string>
+     */
     private static function createFromValueListInternal(array $valueList, string $rootKey = ''): iterable {
         ksort($valueList);
         foreach ($valueList as $key => $value) {
-            $key = is_string($key) ? rawurlencode($key) : '';
+            $key = is_string($key) || $rootKey === '' ? rawurlencode((string) $key) : '';
             $key = $rootKey === '' ? $key : sprintf('%s[%s]', $rootKey, $key);
             if (is_array($value)) {
                 if (empty($value)) {
@@ -55,6 +61,9 @@ final class FarahUrlArguments implements IteratorAggregate, Hashable {
         }
     }
     
+    /**
+     * @param array<array-key, mixed> $valueList
+     */
     public static function createFromValueList(array $valueList): FarahUrlArguments {
         $query = [
             ...self::createFromValueListInternal($valueList)
@@ -63,6 +72,9 @@ final class FarahUrlArguments implements IteratorAggregate, Hashable {
         return self::create($id, $valueList);
     }
     
+    /**
+     * @param array<array-key, mixed> $valueList
+     */
     private static function create(string $id, array $valueList): FarahUrlArguments {
         static $cache = [];
         if (! isset($cache[$id])) {
@@ -73,8 +85,12 @@ final class FarahUrlArguments implements IteratorAggregate, Hashable {
     
     private string $id;
     
+    /** @var array<array-key, mixed> */
     private array $data;
     
+    /**
+     * @param array<array-key, mixed> $data
+     */
     private function __construct(string $id, array $data) {
         $this->id = $id;
         $this->data = $data;
@@ -84,11 +100,11 @@ final class FarahUrlArguments implements IteratorAggregate, Hashable {
         return $this->id;
     }
     
-    public function get(string $key, $default = null): mixed {
+    public function get(string $key, mixed $default = null): mixed {
         return $this->data[$key] ?? $default;
     }
     
-    public function set(string $key, $val): void {
+    public function set(string $key, mixed $val): void {
         $this->data[$key] = $val;
     }
     
@@ -100,14 +116,23 @@ final class FarahUrlArguments implements IteratorAggregate, Hashable {
         unset($this->data[$key]);
     }
     
+    /**
+     * @return array<array-key, mixed>
+     */
     public function getValueList(): array {
         return $this->data;
     }
     
+    /**
+     * @return list<array-key>
+     */
     public function getNameList(): array {
         return array_keys($this->data);
     }
     
+    /**
+     * @return Traversable<array-key, mixed>
+     */
     public function getIterator(): Traversable {
         return new ArrayIterator($this->data);
     }
@@ -116,7 +141,7 @@ final class FarahUrlArguments implements IteratorAggregate, Hashable {
         return $this->id === '';
     }
     
-    public function withArgument(string $key, $val): FarahUrlArguments {
+    public function withArgument(string $key, mixed $val): FarahUrlArguments {
         if (isset($this->data[$key]) and $this->data[$key] === $val) {
             return $this;
         } else {

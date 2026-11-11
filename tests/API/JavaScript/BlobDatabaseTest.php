@@ -109,6 +109,7 @@ EOT, $arguments);
     /**
      *
      * @dataProvider provideTestObjects
+     * @param array<string, mixed> $obj
      */
     public function test_insertBlob(array $obj): void {
         $arguments = [
@@ -134,6 +135,9 @@ EOT, $arguments);
         $this->assertThat($actual, new IsEqual(true));
     }
     
+    /**
+     * @return iterable<array{0: array<string, mixed>}>
+     */
     public function provideTestObjects(): iterable {
         yield 'object' => [
             [

@@ -30,6 +30,7 @@ final class FromManifestExecutableBuilderTest extends TestCase {
         FileSystem::removeDir(ServerEnvironment::getCacheDirectory(), true);
         
         $xml = file_get_contents($url);
+        $this->assertIsString($xml);
         
         $doc = new DOMDocument();
         
@@ -51,6 +52,9 @@ final class FromManifestExecutableBuilderTest extends TestCase {
         $this->assertGreaterThan(0, $result->length);
     }
     
+    /**
+     * @return array<string, array{string, string}>
+     */
     public static function provideURLsAndQuery(): array {
         return [
             "No parameter should load manifest-info" => [

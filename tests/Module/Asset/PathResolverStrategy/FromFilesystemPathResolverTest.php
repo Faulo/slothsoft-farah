@@ -33,6 +33,7 @@ class FromFilesystemPathResolverTest extends TestCase {
     /**
      *
      * @dataProvider loadChildrenProvider
+     * @param list<string> $expected
      */
     public function test_loadChildren(?string $mimeType, array $expected): void {
         $root = LeanElement::createOneFromArray(Manifest::TAG_RESOURCE_DIRECTORY, [
@@ -49,6 +50,9 @@ class FromFilesystemPathResolverTest extends TestCase {
         $this->assertThat($actual, new IsEqual($expected));
     }
     
+    /**
+     * @return iterable<array{string|null, list<string>}>
+     */
     public function loadChildrenProvider(): iterable {
         yield 'no type loads all files' => [
             null,
@@ -84,6 +88,7 @@ class FromFilesystemPathResolverTest extends TestCase {
     /**
      *
      * @dataProvider pathProvider
+     * @param class-string<\Throwable>|null $exception
      */
     public function test_resolvePath(string $url, ?string $exception = null): void {
         if ($exception) {
@@ -96,7 +101,7 @@ class FromFilesystemPathResolverTest extends TestCase {
     }
     
     /**
-     * @return iterable<array{0: string, 1?: string|null}>
+     * @return iterable<array{0: string, 1?: class-string<\Throwable>|null}>
      */
     public function pathProvider(): iterable {
         yield 'valid directory' => [

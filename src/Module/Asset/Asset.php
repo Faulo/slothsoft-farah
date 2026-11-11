@@ -204,6 +204,9 @@ final class Asset implements AssetInterface {
         return FarahUrlArguments::createFromValueList($data);
     }
     
+    /**
+     * @return iterable<array-key, mixed>
+     */
     public function getSuppliedParameters(): iterable {
         return $this->strategies->parameterSupplier->supplyParameters($this);
     }
@@ -213,7 +216,7 @@ final class Asset implements AssetInterface {
         $hasChanged = false;
         $filter = $this->strategies->parameterFilter;
         foreach ($valueList as $name => $value) {
-            if (! $filter->isAllowedName($name)) {
+            if (! $filter->isAllowedName((string) $name)) {
                 unset($valueList[$name]);
                 $hasChanged = true;
             }

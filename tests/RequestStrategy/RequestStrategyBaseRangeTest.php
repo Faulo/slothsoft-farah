@@ -9,8 +9,8 @@ use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Slothsoft\Core\IO\Writable\StreamWriterInterface;
 use Slothsoft\Core\IO\Writable\FilteredStreamWriterInterface;
+use Slothsoft\Core\IO\Writable\StreamWriterInterface;
 use Slothsoft\Farah\Http\ContentCoding;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Result\StreamBuilderStrategy\StreamBuilderStrategyInterface;
@@ -40,6 +40,9 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         $this->assertRepresentation($response, $status, $contentRange, $expected);
     }
     
+    /**
+     * @return iterable<array{0: string|null, 1: int, 2: string|null, 3: string}>
+     */
     public function singleRangeProvider(): iterable {
         yield 'no range' => [null, 200, null, self::CONTENT];
         yield 'first byte' => ['bytes=0-0', 206, 'bytes 0-0/10', '0'];
@@ -75,6 +78,9 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         $this->assertNotSame(self::CONTENT, (string) $response->getBody());
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function unsatisfiableRangeProvider(): iterable {
         yield 'start equals size' => ['bytes=10-'];
         yield 'start beyond size' => ['bytes=11-15'];
@@ -101,6 +107,9 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function malformedRangeProvider(): iterable {
         yield 'empty set' => ['bytes='];
         yield 'both endpoints absent' => ['bytes=-'];
@@ -127,6 +136,9 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         $this->assertSame(in_array($method, ['HEAD', 'OPTIONS'], true) ? '' : self::CONTENT, (string) $response->getBody());
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function ignoredRangeProvider(): iterable {
         yield 'unknown range unit' => ['GET', 'items=2-5'];
         yield 'HEAD ignores satisfiable range' => ['HEAD', 'bytes=2-5'];
@@ -144,6 +156,9 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         $this->assertRepresentation($response, $matches ? 206 : 200, $matches ? 'bytes 2-5/10' : null, $matches ? '2345' : self::CONTENT);
     }
     
+    /**
+     * @return iterable<array{0: string, 1: bool}>
+     */
     public function ifRangeProvider(): iterable {
         yield 'matching strong ETag' => ['"range-entity"', true];
         yield 'different ETag' => ['"old-entity"', false];
@@ -157,6 +172,7 @@ final class RequestStrategyBaseRangeTest extends TestCase {
      * Preconditions must be evaluated before attempting to slice the body.
      * @dataProvider conditionalRangeProvider
      * @runInSeparateProcess
+     * @param array<string, string> $headers
      */
     public function testNotModifiedTakesPrecedenceOverRange(array $headers, string $range): void {
         $response = $this->request($headers + ['Range' => $range]);
@@ -165,6 +181,9 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         $this->assertSame('', (string) $response->getBody());
     }
     
+    /**
+     * @return iterable<array{0: array<string, string>, 1: string}>
+     */
     public function conditionalRangeProvider(): iterable {
         yield 'ETag with valid range' => [['If-None-Match' => '"range-entity"'], 'bytes=2-5'];
         yield 'weak ETag with valid range' => [['If-None-Match' => 'W/"range-entity"'], 'bytes=2-5'];
@@ -197,8 +216,10 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         } else {
             $type = $response->getHeaderLine('Content-Type');
             $this->assertMatchesRegularExpression('/^multipart\/byteranges;\s*boundary=(?:"[^"]+"|[^;\s]+)$/i', $type);
-            preg_match('/boundary=(?:"([^"]+)"|([^;\s]+))/i', $type, $matches);
+            $matched = preg_match('/boundary=(?:"([^"]+)"|([^;\s]+))/i', $type, $matches);
+            $this->assertSame(1, $matched);
             $boundary = $matches[1] !== '' ? $matches[1] : $matches[2];
+            $this->assertNotSame('', $boundary);
             $this->assertStringEndsWith("--$boundary--", rtrim($body, "\r\n"));
             $parts = explode("--$boundary", $body);
             $this->assertSame('', trim(array_shift($parts), "\r\n"));
@@ -211,6 +232,7 @@ final class RequestStrategyBaseRangeTest extends TestCase {
                 $fields = explode("\r\n\r\n", substr($part, 2, -2), 2);
                 $this->assertCount(2, $fields);
                 $this->assertSame(1, preg_match('/(?:^|\r\n)Content-Range:\s*(bytes \d+-\d+\/10)(?:\r\n|$)/i', $fields[0], $match));
+                $this->assertArrayHasKey(1, $match);
                 $this->assertArrayHasKey($match[1], $expected);
                 $this->assertArrayNotHasKey($match[1], $actual);
                 $actual[$match[1]] = $fields[1];
@@ -225,6 +247,9 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function multipleRangeProvider(): iterable {
         yield 'two disjoint ranges' => ['bytes=0-1,8-9'];
         yield 'optional list whitespace' => ['bytes=0-1, 8-9'];
@@ -273,6 +298,9 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function emptyRangeProvider(): iterable {
         yield 'bounded' => ['bytes=0-0'];
         yield 'open ended' => ['bytes=0-'];
@@ -303,6 +331,9 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         $this->assertRepresentation($response, 206, $contentRange, $expected);
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2: string, 3: string}>
+     */
     public function largeEntityProvider(): iterable {
         yield 'size above PHP_INT_MAX with small endpoints' => [self::HUGE_SIZE, 'bytes=2-5', 'bytes 2-5/' . self::HUGE_SIZE, '2345'];
         yield 'size at 64 bit integer limit plus one' => ['9223372036854775808', 'bytes=2-5', 'bytes 2-5/9223372036854775808', '2345'];
@@ -392,6 +423,9 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         $this->assertSame($expected, (string) $response->getBody());
     }
     
+    /**
+     * @return iterable<array{0: bool, 1: string|null, 2: int, 3?: string}>
+     */
     public function encodedRangeProvider(): iterable {
         yield 'native encoded size' => [false, null, 206];
         yield 'unknown encoded size must not use raw statistics' => [true, null, 206];
@@ -400,6 +434,9 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         yield 'encoded unsatisfiable range has a plain error body' => [false, null, 416, 'bytes=999-'];
     }
     
+    /**
+     * @param array<string, string> $headers
+     */
     private function request(array $headers, string $method = 'GET', ?StreamInterface $stream = null, ?string $size = '10', bool $bufferable = true, string $mime = 'application/octet-stream'): ResponseInterface {
         $stream ??= Utils::streamFor(self::CONTENT);
         $writer = $this->createMock(StreamWriterInterface::class);

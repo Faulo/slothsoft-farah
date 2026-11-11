@@ -13,15 +13,15 @@ namespace Slothsoft\Farah;
 final class HTTPEvent {
     
     // implements https://dom.spec.whatwg.org/#interface-event
-    public $type;
+    public string $type;
     
-    public $target;
+    public object|null $target = null;
     
-    public $data;
+    public mixed $data = null;
     
-    public $timeStamp;
+    public int $timeStamp;
     
-    public function __construct($type) {
+    public function __construct(string $type) {
         $this->type = $type;
         $this->timeStamp = time();
     }

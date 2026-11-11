@@ -22,13 +22,16 @@ final class DaemonClient {
         return new DaemonClient($port);
     }
     
-    private $port;
+    private int $port;
     
     public function __construct(int $port) {
         $this->port = $port;
     }
     
-    public function call($message): iterable {
+    /**
+     * @return iterable<mixed>
+     */
+    public function call(mixed $message): iterable {
         $message = json_encode($message);
         $socket = socket_create(AbstractDaemonServer::DAEMON_DOMAIN, AbstractDaemonServer::DAEMON_TYPE, AbstractDaemonServer::DAEMON_PROTOCOL);
         socket_connect($socket, AbstractDaemonServer::DAEMON_ADDRESS, $this->port);

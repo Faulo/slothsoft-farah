@@ -19,6 +19,7 @@ class FarahUrlPathTest extends TestCase {
     /**
      *
      * @dataProvider pathSegmentProvider
+     * @param list<string> $segments
      */
     public function test_createFromSegments(FarahUrlPath $expected, array $segments): void {
         $actual = FarahUrlPath::createFromSegments($segments);
@@ -29,6 +30,7 @@ class FarahUrlPathTest extends TestCase {
     /**
      *
      * @dataProvider pathSegmentProvider
+     * @param list<string> $expected
      */
     public function test_getSegments(FarahUrlPath $path, array $expected): void {
         $actual = $path->getSegments();
@@ -36,6 +38,9 @@ class FarahUrlPathTest extends TestCase {
         $this->assertEquals($expected, $actual);
     }
     
+    /**
+     * @return iterable<array{FarahUrlPath, list<string>}>
+     */
     public function pathSegmentProvider(): iterable {
         yield 'empty is empty' => [
             FarahUrlPath::createEmpty(),

@@ -73,6 +73,9 @@ final class LookupPageStrategyTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function urlProvider(): iterable {
         yield 'domain' => [
             '/',
@@ -132,6 +135,7 @@ final class LookupPageStrategyTest extends TestCase {
     public function test_createUrl_preservesExplicitStream(): void {
         TestUtils::changeWorkingDirectoryToComposerRoot();
         $document = DOMHelper::loadDocument(self::SITEMAP);
+        $this->assertInstanceOf(\DOMElement::class, $document->documentElement);
         $document->documentElement->setAttribute(Domain::ATTR_REFERENCE, 'pages/index#xml');
         $domain = new Domain($document);
         
@@ -205,6 +209,9 @@ XML
         }
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2: string}>
+     */
     public function physicalHtmlPageProvider(): iterable {
         yield '.html + #html' => [
             'page-html',
@@ -272,6 +279,9 @@ XML
         $this->assertSame(200, $response->getStatusCode());
     }
     
+    /**
+     * @return iterable<array{0: string}>
+     */
     public function webSchemeProvider(): iterable {
         yield 'HTTP' => [
             'http'
@@ -326,6 +336,9 @@ XML
         }
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function redirectProvider(): iterable {
         yield 'redirect-root' => [
             '/sitemap/redirect-root',
@@ -382,6 +395,9 @@ XML
         }
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string}>
+     */
     public function parentPathProvider(): iterable {
         yield 'parent of root' => ['/..', '/'];
         yield 'repeated parents above root' => ['/../../', '/'];

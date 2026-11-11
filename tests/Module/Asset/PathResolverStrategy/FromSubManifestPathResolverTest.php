@@ -43,6 +43,7 @@ final class FromSubManifestPathResolverTest extends TestCase {
             Manifest::ATTR_REALPATH => $manifestDirectory
         ]);
         $loaderFile = (new ReflectionClass(FromSubManifestPathResolver::class))->getFileName();
+        $this->assertIsString($loaderFile);
         
         $manifest = $this->createMock(ManifestInterface::class);
         $manifest->method('createManifestFile')->with(self::DIRECTORY . DIRECTORY_SEPARATOR . 'manifest.xml')->willReturnCallback(

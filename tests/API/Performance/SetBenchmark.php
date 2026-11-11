@@ -43,6 +43,11 @@ final class SetBenchmark extends TestCase {
         $this->assertThat($unionMs, new LessThan($spreadMs), sprintf('Expected union-merge (%.2f ms) to be faster than spread-merge (%.2f ms).', $unionMs, $spreadMs));
     }
     
+    /**
+     * @template TValue of int
+     * @param int[] $target
+     * @param Set<TValue> $source
+     */
     private function testWithSpread(array $target, Set $source): float {
         $target = new Set($target);
         
@@ -51,6 +56,11 @@ final class SetBenchmark extends TestCase {
         return hrtime(true) - $start;
     }
     
+    /**
+     * @template TValue of int
+     * @param int[] $target
+     * @param Set<TValue> $source
+     */
     private function testWithForeach(array $target, Set $source): float {
         $target = new Set($target);
         
@@ -61,6 +71,11 @@ final class SetBenchmark extends TestCase {
         return hrtime(true) - $start;
     }
     
+    /**
+     * @template TValue of int
+     * @param int[] $target
+     * @param Set<TValue> $source
+     */
     private function testWithUnion(array $target, Set $source): float {
         $target = new Set($target);
         
@@ -101,6 +116,9 @@ final class SetBenchmark extends TestCase {
         return hrtime(true) - $start;
     }
     
+    /**
+     * @param iterable<FarahUrl> $urls
+     */
     private function testForeachWithIterable(iterable $urls): float {
         $start = hrtime(true);
         foreach ($urls as $url) {

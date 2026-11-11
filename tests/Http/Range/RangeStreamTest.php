@@ -3,11 +3,10 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\Http\Range;
 
-use RuntimeException;
-
 use GuzzleHttp\Psr7\FnStream;
 use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Slothsoft\Farah\RequestStrategy\RangeEntityStream;
 
 final class RangeStreamTest extends TestCase {
@@ -132,7 +131,10 @@ final class RangeStreamTest extends TestCase {
         fclose($resource);
     }
     
-    /** @dataProvider unsupportedOperationProvider */
+    /**
+     * @dataProvider unsupportedOperationProvider
+     * @param list<int|string> $arguments
+     */
     public function testRangeIsReadOnlyAndForwardOnly(string $method, array $arguments): void {
         $stream = new RangeStream(Utils::streamFor('0123'), $this->range(1, 2, 4));
         $this->assertFalse($stream->isWritable());
@@ -141,6 +143,9 @@ final class RangeStreamTest extends TestCase {
         $stream->$method(...$arguments);
     }
     
+    /**
+     * @return iterable<array{string, list<int|string>}>
+     */
     public function unsupportedOperationProvider(): iterable {
         yield ['seek', [0]];
         yield ['rewind', []];

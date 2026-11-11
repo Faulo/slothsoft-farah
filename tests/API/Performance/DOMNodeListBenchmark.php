@@ -21,6 +21,10 @@ final class DOMNodeListBenchmark extends TestCase {
     
     private const ITERATIONS = 500;
     
+    /**
+     * @param DOMNodeList<\DOMNode|\DOMNameSpaceNode> $source
+     * @return array<int, \DOMNode|\DOMNameSpaceNode>
+     */
     private static function foreach_DOMNodeList(DOMNodeList $source): array {
         $result = [];
         foreach ($source as $node) {
@@ -29,26 +33,46 @@ final class DOMNodeListBenchmark extends TestCase {
         return $result;
     }
     
+    /**
+     * @param DOMNodeList<\DOMNode|\DOMNameSpaceNode> $source
+     * @return array<int, \DOMNode|\DOMNameSpaceNode>
+     */
     private static function iterator_to_array_DOMNodeList(DOMNodeList $source): array {
         return iterator_to_array($source);
     }
     
+    /**
+     * @param DOMNodeList<\DOMNode|\DOMNameSpaceNode> $source
+     * @return array<int, \DOMNode|\DOMNameSpaceNode|null>
+     */
     private static function generator_DOMNodeList(DOMNodeList $source): array {
         return iterator_to_array(self::yield_items($source));
     }
     
+    /**
+     * @param DOMNodeList<\DOMNode|\DOMNameSpaceNode> $source
+     * @return iterable<\DOMNode|\DOMNameSpaceNode|null>
+     */
     private static function yield_items(DOMNodeList $source): iterable {
         for ($i = 0, $j = $source->length; $i < $j; $i++) {
             yield $source->item($i);
         }
     }
     
+    /**
+     * @param DOMNodeList<\DOMNode|\DOMNameSpaceNode> $source
+     * @return array<int, \DOMNode|\DOMNameSpaceNode>
+     */
     private static function spread_DOMNodeList(DOMNodeList $source): array {
         return [
             ...$source
         ];
     }
     
+    /**
+     * @param DOMNodeList<\DOMNode|\DOMNameSpaceNode> $source
+     * @return list<int>
+     */
     private static function stub_DOMNodeList(DOMNodeList $source): array {
         return range(1, $source->length);
     }

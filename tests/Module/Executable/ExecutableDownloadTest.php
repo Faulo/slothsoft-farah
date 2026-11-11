@@ -60,6 +60,9 @@ final class ExecutableDownloadTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<array{0: string, 1: string, 2: bool}>
+     */
     public function downloadProvider(): iterable {
         foreach (['asset', 'result', 'direct'] as $stage) {
             foreach (['', 'xml'] as $stream) {

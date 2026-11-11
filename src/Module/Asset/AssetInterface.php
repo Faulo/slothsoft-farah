@@ -101,6 +101,7 @@ interface AssetInterface {
     
     /**
      * Get the parameters supplied by this asset's ParameterSupplierStrategy.
+     * @return iterable<array-key, mixed>
      */
     public function getSuppliedParameters(): iterable;
 }

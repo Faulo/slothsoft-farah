@@ -20,7 +20,7 @@ final class AbstractDaemonServerTest extends TestCase {
             public function onInitialize(FarahUrlArguments $args): void {
             }
             
-            public function onMessage($message): iterable {
+            public function onMessage(mixed $message): iterable {
                 $this->stop();
                 yield static::STDOUT => $message;
             }

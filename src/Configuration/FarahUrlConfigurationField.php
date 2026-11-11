@@ -20,7 +20,7 @@ final class FarahUrlConfigurationField extends ConfigurationField {
         return $value instanceof FarahUrl ? $value : $this->loadValue($value);
     }
     
-    private function loadValue($newValue): FarahUrl {
+    private function loadValue(mixed $newValue): FarahUrl {
         if (is_string($newValue)) {
             $newValue = FarahUrl::createFromReference($newValue);
         }

@@ -8,6 +8,7 @@ use Ds\Set;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Dictionary;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 /**
  * DOM writer variant for dictionary translation of Farah documents.
@@ -22,8 +23,12 @@ final class TranslationDOMWriter2 implements DOMWriterInterface {
     
     private Dictionary $dict;
     
+    /** @var Set<FarahUrl> */
     private Set $dictionaries;
     
+    /**
+     * @param Set<FarahUrl> $dictionaryUrls
+     */
     public function __construct(DOMWriterInterface $source, Dictionary $dict, Set $dictionaryUrls) {
         $this->source = $source;
         $this->dict = $dict;

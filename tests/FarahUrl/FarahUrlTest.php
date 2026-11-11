@@ -174,8 +174,6 @@ class FarahUrlTest extends TestCase {
         }
     }
     
-    /**
-     */
     public function testFileModifiedTime(): void {
         TestUtils::changeWorkingDirectoryToComposerRoot();
         $assetsPath = realpath('assets/xsl/module.xsl');
@@ -194,13 +192,16 @@ class FarahUrlTest extends TestCase {
      *
      * @dataProvider componentProvider
      */
-    public function testCreateFromComponents(string $expectedUrl, $authority, $path, $args, $fragment): void {
+    public function testCreateFromComponents(string $expectedUrl, FarahUrlAuthority|string $authority, FarahUrlPath|string|null $path, FarahUrlArguments|string|null $args, FarahUrlStreamIdentifier|string|null $fragment): void {
         $expectedUrl = FarahUrl::createFromReference($expectedUrl);
         $actualUrl = FarahUrl::createFromComponents($authority, $path, $args, $fragment);
         
         $this->assertSame($expectedUrl, $actualUrl);
     }
     
+    /**
+     * @return iterable<array{string, FarahUrlAuthority|string, FarahUrlPath|string|null, FarahUrlArguments|string|null, FarahUrlStreamIdentifier|string|null}>
+     */
     public function componentProvider(): iterable {
         yield 'all strings' => [
             'farah://slothsoft@farah/some/path?hello=world#xml',

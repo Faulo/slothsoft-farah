@@ -49,16 +49,21 @@ final class Dictionary {
         return preg_replace('~[^\p{L}\p{Pc}\p{Mn}\p{Mc}_0-9.\-\x{00B7}]+~u', '', preg_replace('~^[^\p{L}_]*~u', '', $key));
     }
     
+    /** @var Set<FarahUrl> */
     private Set $dictionaryUrls;
     
     public function registerDictionary(FarahUrl $url): void {
         $this->dictionaryUrls[] = $url;
     }
     
+    /** @var Map<FarahUrl, DOMDocument> */
     private Map $dictionaryDocuments;
     
+    /**
+     * @param Set<FarahUrl> $dictionaryUrls
+     * @return iterable<DOMDocument>
+     */
     private function getDictionaryDocuments(Set $dictionaryUrls, string $language): iterable {
-        /** @var FarahUrl $url */
         foreach ($dictionaryUrls as $url) {
             $url = FarahUrl::createFromReference($language === '' ? $this->currentLang : $language, $url);
             
@@ -75,6 +80,9 @@ final class Dictionary {
         }
     }
     
+    /**
+     * @param Set<FarahUrl> $dictionaryUrls
+     */
     private function lookupKeyInDictionaryDocuments(Set $dictionaryUrls, string $key, string $language = ''): ?DOMElement {
         $key = self::xsltSanitizeKey($key);
         
@@ -82,7 +90,6 @@ final class Dictionary {
             return null;
         }
         
-        /** @var DOMDocument $dictionaryDocument */
         foreach ($this->getDictionaryDocuments($dictionaryUrls, $language) as $dictionaryDocument) {
             $value = $dictionaryDocument->getElementById($key);
             if ($value !== null) {
@@ -93,6 +100,9 @@ final class Dictionary {
         return null;
     }
     
+    /**
+     * @param Set<FarahUrl> $dictionaryUrls
+     */
     public function translateDocumentViaDictionary(DOMDocument $document, Set $dictionaryUrls): int {
         if (! $this->currentLang) {
             return 0;
@@ -200,12 +210,18 @@ final class Dictionary {
         self::getInstance()->calcAcceptLanguage();
     }
     
+    /**
+     * @return list<string>
+     */
     public static function getSupportedLanguages(): array {
         return self::supportedLanguages()->getValue();
     }
     
     const BCP47_PREGMATCH = '/(?<language>[a-z]{2,3})(?:-(?<extlang>aao|abh|abv|acm|acq|acw|acx|acy|adf|ads|aeb|aec|aed|aen|afb|afg|ajp|apc|apd|arb|arq|ars|ary|arz|ase|asf|asp|asq|asw|auz|avl|ayh|ayl|ayn|ayp|bbz|bfi|bfk|bjn|bog|bqn|bqy|btj|bve|bvl|bvu|bzs|cdo|cds|cjy|cmn|coa|cpx|csc|csd|cse|csf|csg|csl|csn|csq|csr|czh|czo|doq|dse|dsl|dup|ecs|esl|esn|eso|eth|fcs|fse|fsl|fss|gan|gds|gom|gse|gsg|gsm|gss|gus|hab|haf|hak|hds|hji|hks|hos|hps|hsh|hsl|hsn|icl|ils|inl|ins|ise|isg|isr|jak|jax|jcs|jhs|jls|jos|jsl|jus|kgi|knn|kvb|kvk|kvr|kxd|lbs|lce|lcf|liw|lls|lsg|lsl|lso|lsp|lst|lsy|ltg|lvs|lzh|max|mdl|meo|mfa|mfb|mfs|min|mnp|mqg|mre|msd|msi|msr|mui|mzc|mzg|mzy|nan|nbs|ncs|nsi|nsl|nsp|nsr|nzs|okl|orn|ors|pel|pga|pks|prl|prz|psc|psd|pse|psg|psl|pso|psp|psr|pys|rms|rsi|rsl|sdl|sfb|sfs|sgg|sgx|shu|slf|sls|sqk|sqs|ssh|ssp|ssr|svk|swc|swh|swl|syy|tmw|tse|tsm|tsq|tss|tsy|tza|ugn|ugy|ukl|uks|urk|uzn|uzs|vgt|vkk|vkt|vsi|vsl|vsv|wuu|xki|xml|xmm|xms|yds|ysl|yue|zib|zlm|zmi|zsl|zsm))?(?:-(?<script>afak|aghb|ahom|arab|armi|armn|avst|bali|bamu|bass|batk|beng|blis|bopo|brah|brai|bugi|buhd|cakm|cans|cari|cham|cher|cirt|copt|cprt|cyrl|cyrs|deva|dsrt|dupl|egyd|egyh|egyp|elba|ethi|geok|geor|glag|goth|gran|grek|gujr|guru|hang|hani|hano|hans|hant|hatr|hebr|hira|hluw|hmng|hrkt|hung|inds|ital|java|jpan|jurc|kali|kana|khar|khmr|khoj|knda|kore|kpel|kthi|lana|laoo|latf|latg|latn|lepc|limb|lina|linb|lisu|loma|lyci|lydi|mahj|mand|mani|maya|mend|merc|mero|mlym|modi|mong|moon|mroo|mtei|mult|mymr|narb|nbat|nkgb|nkoo|nshu|ogam|olck|orkh|orya|osma|palm|pauc|perm|phag|phli|phlp|phlv|phnx|plrd|prti|rjng|roro|runr|samr|sara|sarb|saur|sgnw|shaw|shrd|sidd|sind|sinh|sora|sund|sylo|syrc|syre|syrj|syrn|tagb|takr|tale|talu|taml|tang|tavt|telu|teng|tfng|tglg|thaa|thai|tibt|tirh|ugar|vaii|visp|wara|wole|xpeo|xsux|yiii|zinh|zmth|zsym|zxxx|zyyy|zzzz))?(?:-(?<region>ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bl|bm|bn|bo|bq|br|bs|bt|bu|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cp|cr|cs|cu|cv|cw|cx|cy|cz|dd|de|dg|dj|dk|dm|do|dz|ea|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|fx|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|ic|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mf|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nt|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|ta|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|yd|ye|yt|yu|za|zm|zr|zw|001|002|003|005|009|011|013|014|015|017|018|019|021|029|030|034|035|039|053|054|057|061|142|143|145|150|151|154|155|419))?(?:-(?<variant>1606nict|1694acad|1901|1959acad|1994|1996|alalc97|aluku|arevela|arevmda|baku1926|barla|bauddha|biscayan|biske|bohoric|boont|dajnko|ekavsk|emodeng|fonipa|fonupa|fonxsamp|hepburn|heploc|hognorsk|ijekavsk|itihasa|jauer|jyutping|kkcor|kscor|laukika|lipaw|luna1918|metelko|monoton|ndyuka|nedis|njiva|nulik|osojs|pamaka|petr1708|pinyin|polyton|puter|rigik|rozaj|rumgr|scotland|scouse|solba|sotav|surmiran|sursilv|sutsilv|tarask|uccor|ucrcor|ulster|unifon|vaidika|valencia|vallader|wadegile))?/';
     
+    /**
+     * @return list<array<array-key, string>>
+     */
     public static function parseAcceptLanguageHeader(string $language): array {
         $match = [];
         return preg_match_all(self::BCP47_PREGMATCH, strtolower($language), $match, PREG_SET_ORDER) ? $match : [];
@@ -253,6 +269,7 @@ final class Dictionary {
     
     protected array $langDocs = [];
     
+    /** @var array<string, DOMXPath> */
     protected array $langPaths = [];
     
     /* static functions */
@@ -264,12 +281,12 @@ final class Dictionary {
         return $instance;
     }
     
-    public static function lookup($word, $namespace = null, $language = null): string {
+    public static function lookup(DOMNode|string $word, string|null $namespace = null, string|null $language = null): string {
         $dict = self::getInstance();
         return $dict->lookupText($word, $namespace, $language);
     }
     
-    public static function createLink($uri, $lang = null): string {
+    public static function createLink(string $uri, string|null $lang = null): string {
         return $uri . '?' . self::KEY_SET_LANG . '=' . $lang;
     }
     
@@ -295,7 +312,7 @@ final class Dictionary {
         }
     }
     
-    private $isSettingUp = false;
+    private bool $isSettingUp = false;
     
     /* public functions */
     public function translateDoc(DOMDocument $doc, FarahUrl $context): int {
@@ -347,7 +364,7 @@ final class Dictionary {
         return $ret ? $ret + $this->translateDoc($doc, $context) : 0;
     }
     
-    public function translateNode(DOMXPath $xpath, DOMElement $node, $expr, $namespace = null, $language = null): int {
+    public function translateNode(DOMXPath $xpath, DOMElement $node, string $expr, string|null $namespace = null, string|null $language = null): int {
         $ret = 0;
         $res = $xpath->evaluate($expr, $node);
         $nodeList = [];
@@ -377,7 +394,7 @@ final class Dictionary {
         return $ret;
     }
     
-    public function acceptLanguage($acceptLang): bool {
+    public function acceptLanguage(string $acceptLang): bool {
         $acceptArr = explode(',', $acceptLang);
         foreach ($acceptArr as $lang) {
             $lang = explode(';', $lang);
@@ -393,13 +410,13 @@ final class Dictionary {
         return false;
     }
     
-    public function setLang($lang): ?string {
+    public function setLang(string|null $lang): ?string {
         $ret = $this->currentLang;
         $this->currentLang = $lang;
         return $ret;
     }
     
-    public function setNS($ns): string {
+    public function setNS(string $ns): string {
         $ret = $this->currentNS;
         $this->currentNS = $ns;
         return $ret;
@@ -413,7 +430,7 @@ final class Dictionary {
         return $this->currentNS;
     }
     
-    public function lookupText($originalWord, $namespace = null, $language = null): string {
+    public function lookupText(DOMNode|string $originalWord, string|null $namespace = null, string|null $language = null): string {
         $word = $this->sanitizeWord($originalWord);
         $xpath = $this->getLangPath($namespace, $language);
         if (! $xpath->evaluate(sprintf(self::XPATH_EXISTS, $word))) {
@@ -422,11 +439,11 @@ final class Dictionary {
         return $xpath->evaluate(sprintf(self::XPATH_TEXT, $word));
     }
     
-    public function lookupXML($word, $namespace = null, $language = null): void {
+    public function lookupXML(DOMNode|string $word, string|null $namespace = null, string|null $language = null): void {
         $word = $this->sanitizeWord($word);
     }
     
-    public function lookupFragment($originalWord, $namespace = null, $language = null, ?DOMDocument $ownerDoc = null): DOMDocumentFragment {
+    public function lookupFragment(DOMNode|string $originalWord, string|null $namespace = null, string|null $language = null, ?DOMDocument $ownerDoc = null): DOMDocumentFragment {
         if (! ($originalWord instanceof DOMNode)) {
             $originalWord = (string) $originalWord;
         }
@@ -454,7 +471,7 @@ final class Dictionary {
     }
     
     /* private functions */
-    protected function sanitizeWord($word): string {
+    protected function sanitizeWord(DOMNode|string $word): string {
         if ($word instanceof DOMNode) {
             $word = $word->textContent;
         }
@@ -464,7 +481,7 @@ final class Dictionary {
         ], '', $word));
     }
     
-    protected function getLangPath($namespace = null, $language = null): DOMXPath {
+    protected function getLangPath(string|null $namespace = null, string|null $language = null): DOMXPath {
         if ($namespace === null) {
             $namespace = '';
         } else {
@@ -486,6 +503,6 @@ final class Dictionary {
         return $this->langPaths[$key];
     }
     
-    protected function addWord(DOMDocument $doc, $word, $originalWord = null): void {
+    protected function addWord(DOMDocument $doc, string $word, DOMNode|string|null $originalWord = null): void {
     }
 }

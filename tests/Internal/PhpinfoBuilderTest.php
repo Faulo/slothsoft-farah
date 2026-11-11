@@ -78,6 +78,9 @@ final class PhpinfoBuilderTest extends TestCase {
         }
     }
     
+    /**
+     * @return iterable<array{0: int}>
+     */
     public function countProvider(): iterable {
         yield 'once' => [
             1
@@ -157,6 +160,9 @@ final class PhpinfoBuilderTest extends TestCase {
         ];
     }
     
+    /**
+     * @return array{string, array<string, string>}
+     */
     private function request(string $url): array {
         $source = file_get_contents($url);
         if (! is_string($source)) {
