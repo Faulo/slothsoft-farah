@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\ResponseStrategy;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Slothsoft\Core\IO\FileInfo;
 use Symfony\Component\Process\Process;
 
 final class StreamingHttpTest extends TestCase {
@@ -114,8 +115,7 @@ final class StreamingHttpTest extends TestCase {
     }
     
     private function assertBufferStackPreserved(string $gate): void {
-        $contents = file_get_contents($gate . '/buffer-levels');
-        $this->assertIsString($contents);
+        $contents = FileInfo::readContents($gate . '/buffer-levels');
         $levels = explode(':', $contents);
         $this->assertCount(2, $levels);
         $this->assertSame($levels[0], $levels[1]);

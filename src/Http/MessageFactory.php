@@ -6,13 +6,16 @@ namespace Slothsoft\Farah\Http;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Stream;
+use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
+use RuntimeException;
 use Slothsoft\Core\IO\HTTPFile;
 use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Throwable;
 
 /**
  * Factory for PSR-7 requests, responses, streams, and Farah-specific request messages.
@@ -44,17 +47,24 @@ abstract class MessageFactory {
     }
     
     public static function createStreamFromContents(string $contents): StreamInterface {
-        $handle = fopen('php://temp', StreamWrapperInterface::MODE_CREATE_READWRITE);
-        fwrite($handle, $contents);
-        rewind($handle);
-        return self::createStreamFromResource($handle);
+        $stream = self::createStreamFromResource(Utils::tryFopen('php://temp', StreamWrapperInterface::MODE_CREATE_READWRITE));
+        try {
+            if ($stream->write($contents) !== strlen($contents)) {
+                throw new RuntimeException('Failed to write complete response contents to temporary stream.');
+            }
+            $stream->rewind();
+            return $stream;
+        } catch (Throwable $e) {
+            $stream->close();
+            throw $e;
+        }
     }
     
     public static function createStreamFromFile(HTTPFile $file): StreamInterface {
-        return self::createStreamFromResource(fopen($file->getPath(), StreamWrapperInterface::MODE_OPEN_READONLY));
+        return self::createStreamFromResource(Utils::tryFopen($file->getPath(), StreamWrapperInterface::MODE_OPEN_READONLY));
     }
     
     public static function createStreamFromUrl(FarahUrl $url): StreamInterface {
-        return self::createStreamFromResource(fopen((string) $url, StreamWrapperInterface::MODE_OPEN_READONLY));
+        return self::createStreamFromResource(Utils::tryFopen((string) $url, StreamWrapperInterface::MODE_OPEN_READONLY));
     }
 }

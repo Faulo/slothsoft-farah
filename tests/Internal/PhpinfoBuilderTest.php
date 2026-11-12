@@ -8,6 +8,7 @@ use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\FarahTesting\FarahServer;
@@ -70,7 +71,7 @@ final class PhpinfoBuilderTest extends TestCase {
      */
     public function test_read(int $count): void {
         for ($i = 0; $i < $count; $i++) {
-            $actual = file_get_contents(self::REFERENCE);
+            $actual = FileInfo::readContents(self::REFERENCE);
             $this->assertThat(
                 self::normalizeOpcacheStatistics($actual),
                 new IsEqual(self::normalizeOpcacheStatistics(self::getPhpInfo()))
@@ -164,6 +165,7 @@ final class PhpinfoBuilderTest extends TestCase {
      * @return array{string, array<string, string>}
      */
     private function request(string $url): array {
+        // Keep the native call here to capture $http_response_header in this scope.
         $source = file_get_contents($url);
         if (! is_string($source)) {
             throw new RuntimeException("Failed to retrieve $url.");

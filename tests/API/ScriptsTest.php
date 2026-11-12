@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\API;
 
 use PHPUnit\Framework\TestCase;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\FarahTesting\TestUtils;
 use Symfony\Component\Process\Process;
 
@@ -47,6 +48,6 @@ class ScriptsTest extends TestCase {
         
         $this->assertEquals(0, $code, 'Calling composer returned non-zero code! Command:' . PHP_EOL . $process->getCommandLine());
         
-        $this->assertEquals(file_get_contents($url), $result, 'Calling composer produced wrong asset content! Command:' . PHP_EOL . $process->getCommandLine());
+        $this->assertEquals(FileInfo::readContents($url), $result, 'Calling composer produced wrong asset content! Command:' . PHP_EOL . $process->getCommandLine());
     }
 }

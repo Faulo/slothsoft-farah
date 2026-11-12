@@ -7,6 +7,7 @@ use PHPUnit\Framework\Constraint\IsFalse;
 use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Core\IO\Writable\Delegates\ChunkWriterFromChunksDelegate;
 use Slothsoft\Farah\Module\Result\ResultInterface;
@@ -38,9 +39,7 @@ final class ChunkWriterStreamBuilderTest extends TestCase {
         $sut = $this->createSuT($expected, $name);
         $context = $this->createMock(ResultInterface::class);
         
-        $actual = file_get_contents($sut->buildFileWriter($context)
-            ->toFile()
-            ->getRealPath());
+        $actual = FileInfo::readContents($sut->buildFileWriter($context)->toFile());
         
         $this->assertThat($actual, new IsIdentical($expected));
     }

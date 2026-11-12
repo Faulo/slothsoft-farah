@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
 use Slothsoft\Core\FileSystem;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\ServerEnvironment;
 
 /**
@@ -79,7 +80,7 @@ final class Cache {
         if ($renew) {
             $content = '';
             foreach ($fileList as $file) {
-                $content .= file_get_contents($file) . PHP_EOL;
+                $content .= FileInfo::readContents($file) . PHP_EOL;
             }
             if ($zipFunction) {
                 $content = $zipFunction($content);

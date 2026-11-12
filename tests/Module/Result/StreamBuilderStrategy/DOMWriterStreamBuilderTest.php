@@ -7,6 +7,7 @@ use DOMDocument;
 use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\IsTrue;
 use PHPUnit\Framework\TestCase;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
@@ -43,8 +44,7 @@ class DOMWriterStreamBuilderTest extends TestCase {
         
         $actual = $sut->buildFileWriter($context);
         
-        $this->assertThat(file_get_contents($actual->toFile()
-            ->getRealPath()), new IsIdentical($this->document->saveXML()));
+        $this->assertThat(FileInfo::readContents($actual->toFile()), new IsIdentical($this->document->saveXML()));
     }
     
     public function test_buildFileWriter_usesDOMWriter(): void {

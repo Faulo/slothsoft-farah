@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\RequestStrategy;
 
 use DOMDocument;
 use Exception;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
 use Slothsoft\Farah\Exception\HttpDownloadAssetException;
 use Slothsoft\Farah\Exception\HttpDownloadException;
@@ -75,10 +76,7 @@ final class DownloadArchiveBuilder implements ExecutableBuilderStrategyInterface
     private function fileBuilder(): FileInfoResultBuilder {
         // Keep binary bytes canonical in a text fixture; decode to a managed local file.
         $file = temp_dir(__CLASS__) . DIRECTORY_SEPARATOR . 'archive.bin';
-        $encoded = file_get_contents(dirname(__DIR__, 2) . '/test-files/http-downloads/payload.base64');
-        if ($encoded === false) {
-            throw new \RuntimeException('Failed to read the download fixture.');
-        }
+        $encoded = FileInfo::readContents(dirname(__DIR__, 2) . '/test-files/http-downloads/payload.base64');
         $payload = base64_decode($encoded, true);
         if ($payload === false) {
             throw new \RuntimeException('Invalid base64 in the download fixture.');

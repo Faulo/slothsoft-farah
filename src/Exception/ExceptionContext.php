@@ -117,9 +117,9 @@ final class ExceptionContext implements DOMWriterInterface {
     public function toDocument(): DOMDocument {
         $targetDoc = new DOMDocument();
         try {
-            // let's retrieve the error template to make sure it exists
-            assert((bool) @file_get_contents('farah://slothsoft@farah/xsl/error'));
-            $targetDoc->appendChild($targetDoc->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="/slothsoft@farah/xsl/error"'));
+            if (@file_exists('farah://slothsoft@farah/xsl/error')) {
+                $targetDoc->appendChild($targetDoc->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="/slothsoft@farah/xsl/error"'));
+            }
         } catch (Throwable) {
             // we don't really care if it doesn't tho
         }

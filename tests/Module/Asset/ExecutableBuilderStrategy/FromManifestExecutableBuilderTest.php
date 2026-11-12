@@ -9,6 +9,7 @@ use PHPUnit\Framework\Constraint\IsTrue;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\ServerEnvironment;
 
 /**
@@ -29,8 +30,7 @@ final class FromManifestExecutableBuilderTest extends TestCase {
     public function testManifestIsValidXml(string $url): void {
         FileSystem::removeDir(ServerEnvironment::getCacheDirectory(), true);
         
-        $xml = file_get_contents($url);
-        $this->assertIsString($xml);
+        $xml = FileInfo::readContents($url);
         
         $doc = new DOMDocument();
         

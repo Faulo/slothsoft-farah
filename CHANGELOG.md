@@ -11,9 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Enforce the types documented by the PHPStan cleanup with native PHP declarations; retain PHPDoc for collection element types and array shapes.
 
-- Require `slothsoft/core` 1.15.3 or newer for corrected sanitizer and stream-filter contracts and the July API contract fixes.
+- Require `slothsoft/core` 1.16.1 or newer and use `FileInfo::readContents()` for file reads.
 
 ### Fixed
+
+- Error documents check stylesheet availability with `file_exists()` without reading its contents, including when assertions are disabled.
+
+- Required asset file reads, hashes, statistics, and temporary response streams report failures with exceptions; JSON body readers reject an unavailable request body; successful empty files and optional missing-file metadata retain their existing behavior.
 
 - Rebuild manifest caches from XML when cached data is unreadable or invalid, instead of hiding sub-manifest assets behind an empty cached child list.
 

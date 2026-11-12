@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
+use RuntimeException;
+
 use Slothsoft\Core\IO\Writable\Adapter\ChunkWriterFromFileWriter;
 use Slothsoft\Core\IO\Writable\Adapter\DOMWriterFromFileWriter;
 use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromFileWriter;
@@ -51,17 +53,25 @@ final class FileInfoStreamBuilder implements StreamBuilderStrategyInterface, Fil
     
     public function buildStreamFileStatistics(ResultInterface $context): array {
         if ($this->exists()) {
-            $stat = stat((string) $this->file);
-            if ($stat !== false) {
-                return $stat;
+            $stat = @stat((string) $this->file);
+            if ($stat === false) {
+                throw new RuntimeException(sprintf('Failed to read file statistics for "%s".', $this->file));
             }
+            return $stat;
         }
         
         return [];
     }
     
     public function buildStreamHash(ResultInterface $context): string {
-        return $this->exists() ? md5_file((string) $this->file) : '';
+        if (! $this->exists()) {
+            return '';
+        }
+        $hash = @md5_file((string) $this->file);
+        if ($hash === false) {
+            throw new RuntimeException(sprintf('Failed to hash asset file "%s".', $this->file));
+        }
+        return $hash;
     }
     
     public function buildStreamIsBufferable(ResultInterface $context): bool {

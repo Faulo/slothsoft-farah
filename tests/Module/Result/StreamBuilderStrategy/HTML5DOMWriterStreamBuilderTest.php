@@ -5,11 +5,25 @@ namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 
 use DOMDocument;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 
 final class HTML5DOMWriterStreamBuilderTest extends TestCase {
-
+    
+    /** @runInSeparateProcess */
+    public function testTemporaryStreamOpenFailureThrows(): void {
+        $builder = $this->createSuT();
+        $context = $this->createMock(ResultInterface::class);
+        stream_wrapper_unregister('php');
+        try {
+            $this->expectException(RuntimeException::class);
+            $builder->buildStringWriter($context)->toString();
+        } finally {
+            stream_wrapper_restore('php');
+        }
+    }
+    
     private function createSuT(): HTML5DOMWriterStreamBuilder {
         $document = new DOMDocument();
         $document->loadXML(<<<'SOURCE'
@@ -30,16 +44,16 @@ final class HTML5DOMWriterStreamBuilderTest extends TestCase {
 </html:html>
 SOURCE
         );
-
+        
         return new HTML5DOMWriterStreamBuilder(new DOMWriterFromDocumentDelegate(function () use ($document): DOMDocument {
             return $document;
         }), 'page');
     }
-
+    
     public function test_buildStringWriter_serializesHTML5(): void {
         $context = $this->createMock(ResultInterface::class);
         $actual = $this->createSuT()->buildStringWriter($context)->toString();
-
+        
         $this->assertStringStartsWith('<!DOCTYPE html>', $actual);
         $this->assertStringNotContainsString('<?xml', $actual);
         $this->assertStringNotContainsString('html:', $actual);
@@ -60,24 +74,24 @@ SOURCE
         $this->assertStringContainsString('xlink:href="#icon" xlink:title=""', $actual);
         $this->assertStringContainsString('definitionURL="projected"', $actual);
     }
-
+    
     public function test_buildStringWriter_doesNotModifySourceDocument(): void {
         $document = $this->createSuT()->toDocument();
         $before = $document->saveXML();
-
+        
         $context = $this->createMock(ResultInterface::class);
         $sut = new HTML5DOMWriterStreamBuilder(new DOMWriterFromDocumentDelegate(function () use ($document): DOMDocument {
             return $document;
         }));
         $sut->buildStringWriter($context)->toString();
-
+        
         $this->assertSame($before, $document->saveXML());
     }
-
+    
     public function test_buildStreamMetadata_describesHTML(): void {
         $context = $this->createMock(ResultInterface::class);
         $sut = $this->createSuT();
-
+        
         $this->assertSame('text/html', $sut->buildStreamMimeType($context));
         $this->assertSame('UTF-8', $sut->buildStreamCharset($context));
         $this->assertSame('page.html', $sut->buildStreamFileName($context));

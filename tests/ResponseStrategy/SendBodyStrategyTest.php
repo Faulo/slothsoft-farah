@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\ResponseStrategy;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\Writable\Adapter\StreamWriterFromChunkWriter;
 use Slothsoft\Core\IO\Writable\Delegates\ChunkWriterFromChunksDelegate;
 use Slothsoft\Farah\Http\MessageFactory;
@@ -54,7 +55,7 @@ final class SendBodyStrategyTest extends TestCase {
             (new SendBodyStrategy($file))->process($response);
             $this->assertSame($level, ob_get_level());
             $this->assertSame('prefix:', ob_get_contents());
-            $this->assertSame('body', file_get_contents($file));
+            $this->assertSame('body', FileInfo::readContents($file));
         } finally {
             ob_end_clean();
         }

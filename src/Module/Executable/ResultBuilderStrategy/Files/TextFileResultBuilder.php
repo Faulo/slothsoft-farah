@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\Files;
 
 use DOMDocument;
 use DOMElement;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterDocumentFromElementTrait;
 
 /**
@@ -17,8 +18,9 @@ final class TextFileResultBuilder extends AbstractFileResultBuilder {
     use DOMWriterDocumentFromElementTrait;
     
     public function toElement(DOMDocument $targetDoc): DOMElement {
+        $contents = FileInfo::readContents($this->file);
         $element = $targetDoc->createElement('text');
-        $element->appendChild($targetDoc->createCDATASection(file_get_contents((string) $this->file)));
+        $element->appendChild($targetDoc->createCDATASection($contents));
         return $element;
     }
 }

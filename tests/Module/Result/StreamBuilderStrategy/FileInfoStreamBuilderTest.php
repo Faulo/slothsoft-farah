@@ -6,12 +6,14 @@ namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\IsTrue;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\FileInfoFactory;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
+use SplFileInfo;
 
 /**
  * FileInfoStreamBuilderTest
@@ -19,6 +21,39 @@ use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
  * @see FileInfoStreamBuilder
  */
 class FileInfoStreamBuilderTest extends TestCase {
+    
+    public function testMissingOptionalFileKeepsEmptyMetadata(): void {
+        $builder = new FileInfoStreamBuilder(new SplFileInfo(temp_file(__METHOD__)));
+        $context = $this->createMock(ResultInterface::class);
+        $this->assertSame([], $builder->buildStreamFileStatistics($context));
+        $this->assertSame('', $builder->buildStreamHash($context));
+        $this->assertFalse($builder->buildStreamIsBufferable($context));
+    }
+    
+    public function testHashReadFailureThrows(): void {
+        $path = temp_file(__METHOD__);
+        file_put_contents($path, 'data');
+        $file = $this->createMock(SplFileInfo::class);
+        $calls = 0;
+        $file->method('__toString')->willReturnCallback(function () use ($path, &$calls): string {
+            // The file vanishes after the existence check, just before hashing.
+            if (++$calls === 2) {
+                unlink($path);
+                clearstatcache(true, $path);
+            }
+            return $path;
+        });
+        $builder = new FileInfoStreamBuilder($file);
+        try {
+            $this->expectException(RuntimeException::class);
+            $this->expectExceptionMessage('Failed to hash asset file');
+            $builder->buildStreamHash($this->createMock(ResultInterface::class));
+        } finally {
+            if (is_file($path)) {
+                unlink($path);
+            }
+        }
+    }
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FileInfoStreamBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileInfoStreamBuilder'!");

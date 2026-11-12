@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\API;
 
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 
@@ -43,8 +44,7 @@ class StreamTest extends TestCase {
     }
     
     private function getExpectedContent(string $ref, string $type): string {
-        $contents = file_get_contents($ref);
-        $this->assertIsString($contents);
+        $contents = FileInfo::readContents($ref);
         return $contents;
     }
     

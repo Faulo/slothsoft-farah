@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\Manifest\TreeLoaderStrategy;
 
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
@@ -33,16 +34,14 @@ final class XmlTreeLoader implements TreeLoaderStrategyInterface {
         if ($tmpFile->isFile()) {
             if ($tmpFile->getMTime() === $xmlMTime) {
                 try {
-                    $contents = @file_get_contents((string) $tmpFile);
-                    if ($contents !== false) {
-                        $element = @unserialize($contents, [
-                            'allowed_classes' => [
-                                LeanElement::class
-                            ]
-                        ]);
-                        if ($element instanceof LeanElement && $element->getTag()) {
-                            return $element;
-                        }
+                    $contents = FileInfo::readContents($tmpFile);
+                    $element = @unserialize($contents, [
+                        'allowed_classes' => [
+                            LeanElement::class
+                        ]
+                    ]);
+                    if ($element instanceof LeanElement && $element->getTag()) {
+                        return $element;
                     }
                 } catch (Throwable) {
                 }

@@ -7,6 +7,7 @@ use DOMDocument;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\Calendar\Seconds;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\FileInfoFactory;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
@@ -66,7 +67,7 @@ EOT;
         $file = $sut->toFile();
         $expected = $this->writer->toDocument()->saveXML();
         
-        $this->assertThat(file_get_contents((string) $file), new IsEqual($expected));
+        $this->assertThat(FileInfo::readContents((string) $file), new IsEqual($expected));
     }
     
     public function test_toDocument(): void {

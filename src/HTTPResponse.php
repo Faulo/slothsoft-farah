@@ -6,10 +6,12 @@ namespace Slothsoft\Farah;
 use DOMDocument;
 use DOMNode;
 use Exception;
+use RuntimeException;
 use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Core\CascadingDictionary;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\HTTPStream;
 use Slothsoft\Core\IO\Memory;
 use Slothsoft\Core\MimeTypeDictionary;
@@ -255,7 +257,11 @@ final class HTTPResponse {
         $env['RESPONSE_ENCODING'] = $this->contentEncoding;
         $env['RESPONSE_LENGTH'] = $this->bodyLength;
         $env['RESPONSE_LANGUAGE'] = $this->language;
-        $input = file_get_contents('php://input');
+        try {
+            $input = FileInfo::readContents('php://input');
+        } catch (RuntimeException) {
+            $input = '';
+        }
         if (strlen($input) > 0 and strlen($input) < self::$httpConfig['input-size']) {
             $env['RESPONSE_INPUT'] = $input;
         }
@@ -416,7 +422,7 @@ final class HTTPResponse {
                 $this->setDownload(true);
             }
             if ($size < self::$httpConfig['file-size']) {
-                $this->setBody(file_get_contents($filePath));
+                $this->setBody(FileInfo::readContents($filePath));
                 $this->setEtag(self::calcEtag($this->body));
             } else {
                 $this->body = $filePath;

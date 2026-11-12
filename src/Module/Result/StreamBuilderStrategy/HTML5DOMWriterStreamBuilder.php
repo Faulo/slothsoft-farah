@@ -6,9 +6,11 @@ namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 use DOMAttr;
 use DOMDocument;
 use DOMElement;
+use GuzzleHttp\Psr7\Utils;
 use Masterminds\HTML5\Elements;
 use Masterminds\HTML5\Serializer\OutputRules;
 use Masterminds\HTML5\Serializer\Traverser;
+use RuntimeException;
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Core\IO\Writable\Delegates\StringWriterFromStringDelegate;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
@@ -40,7 +42,16 @@ final class HTML5DOMWriterStreamBuilder implements StreamBuilderStrategyInterfac
     }
     
     private function serialize(DOMDocument $document): string {
-        $stream = fopen('php://temp', 'w+b');
+        $stream = Utils::tryFopen('php://temp', 'w+b');
+        try {
+            return $this->serializeToStream($document, $stream);
+        } finally {
+            fclose($stream);
+        }
+    }
+    
+    /** @param resource $stream */
+    private function serializeToStream(DOMDocument $document, $stream): string {
         // Project names during Masterminds' traversal to avoid allocating a second DOM for large pages.
         $rules = new class($stream) extends OutputRules {
             
@@ -48,7 +59,7 @@ final class HTML5DOMWriterStreamBuilder implements StreamBuilderStrategyInterfac
                 // Namespace declarations are XML syntax, not HTML attributes.
             }
             
-            protected function attrs($ele): self {
+            protected function attrs(mixed $ele): self {
                 if (! $ele->hasAttributes()) {
                     return $this;
                 }
@@ -124,7 +135,9 @@ final class HTML5DOMWriterStreamBuilder implements StreamBuilderStrategyInterfac
         $traverser->walk();
         $rules->unsetTraverser();
         $html = stream_get_contents($stream, -1, 0);
-        fclose($stream);
+        if ($html === false) {
+            throw new RuntimeException('Failed to read serialized HTML from temporary stream.');
+        }
         return $html;
     }
     

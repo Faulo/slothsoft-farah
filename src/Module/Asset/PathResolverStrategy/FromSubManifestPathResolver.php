@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Module\Asset\PathResolverStrategy;
 
 use Ds\Map;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\FileNotFoundException;
@@ -54,22 +55,20 @@ final class FromSubManifestPathResolver implements PathResolverStrategyInterface
         if ($tmpFile->isFile()) {
             if ($tmpFile->getMTime() === $xmlMTime) {
                 try {
-                    $contents = @file_get_contents((string) $tmpFile);
-                    if ($contents !== false) {
-                        $subManifest = @unserialize($contents, [
-                            'allowed_classes' => [
-                                LeanElement::class
-                            ]
-                        ]);
-                        if ($subManifest instanceof LeanElement && $subManifest->getTag()) {
-                            $children = [];
-                            foreach ($subManifest->getChildren() as $child) {
-                                $name = $child->getAttribute(Manifest::ATTR_NAME);
-                                $children[$name] = $child;
-                            }
-                            $this->assets->put($context, $children);
-                            return $children;
+                    $contents = FileInfo::readContents($tmpFile);
+                    $subManifest = @unserialize($contents, [
+                        'allowed_classes' => [
+                            LeanElement::class
+                        ]
+                    ]);
+                    if ($subManifest instanceof LeanElement && $subManifest->getTag()) {
+                        $children = [];
+                        foreach ($subManifest->getChildren() as $child) {
+                            $name = $child->getAttribute(Manifest::ATTR_NAME);
+                            $children[$name] = $child;
                         }
+                        $this->assets->put($context, $children);
+                        return $children;
                     }
                 } catch (Throwable) {
                 }

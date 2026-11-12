@@ -6,6 +6,7 @@ namespace Slothsoft\Farah\Module;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\FileSystem;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\ServerEnvironment;
 use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
@@ -77,8 +78,7 @@ final class ModuleTest extends TestCase {
      */
     public function test_clearAllCachedAssets_phpinfoPrintsServer(): void {
         $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets';
-        $expected = file_get_contents('farah://slothsoft@farah/phpinfo');
-        $this->assertIsString($expected);
+        $expected = FileInfo::readContents('farah://slothsoft@farah/phpinfo');
         $this->assertStringContainsString('test_clearAllCachedAssets', $expected);
     }
     
@@ -88,13 +88,11 @@ final class ModuleTest extends TestCase {
      */
     public function test_clearAllCachedAssets_isNecessary(): void {
         $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets expected';
-        $expected = file_get_contents('farah://slothsoft@farah/phpinfo');
-        $this->assertIsString($expected);
+        $expected = FileInfo::readContents('farah://slothsoft@farah/phpinfo');
         $this->assertStringContainsString('test_clearAllCachedAssets expected', $expected);
         
         $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets actual';
-        $actual = file_get_contents('farah://slothsoft@farah/phpinfo');
-        $this->assertIsString($actual);
+        $actual = FileInfo::readContents('farah://slothsoft@farah/phpinfo');
         $this->assertStringContainsString('test_clearAllCachedAssets expected', $actual);
     }
     
@@ -104,15 +102,13 @@ final class ModuleTest extends TestCase {
      */
     public function test_clearAllCachedAssets_works(): void {
         $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets expected';
-        $expected = file_get_contents('farah://slothsoft@farah/phpinfo');
-        $this->assertIsString($expected);
+        $expected = FileInfo::readContents('farah://slothsoft@farah/phpinfo');
         $this->assertStringContainsString('test_clearAllCachedAssets expected', $expected);
         
         Module::clearAllCachedAssets();
         
         $_SERVER['TEST_VARIABLE'] = 'test_clearAllCachedAssets actual';
-        $actual = file_get_contents('farah://slothsoft@farah/phpinfo');
-        $this->assertIsString($actual);
+        $actual = FileInfo::readContents('farah://slothsoft@farah/phpinfo');
         $this->assertStringContainsString('test_clearAllCachedAssets actual', $actual);
     }
     

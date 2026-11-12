@@ -6,7 +6,9 @@ namespace Slothsoft\Farah;
 use BadMethodCallException;
 use DOMDocument;
 use DOMElement;
+use RuntimeException;
 use Slothsoft\Core\Calendar\DateTimeFormatter;
+use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Farah\Http\WebScheme;
 
@@ -173,20 +175,28 @@ final class HTTPRequest implements DOMWriterInterface {
     
     // deprecated, use getBody(), should return $this->input
     public function getInput(): false|string {
-        return file_get_contents('php://input');
+        return $this->getBody();
     }
     
     // deprecated, use getBodyJSON()
     public function getInputJSON(): mixed {
-        return json_decode($this->getInput(), true);
+        return $this->getBodyJSON();
     }
     
     public function getBody(): false|string {
-        return file_get_contents('php://input');
+        try {
+            return FileInfo::readContents('php://input');
+        } catch (RuntimeException) {
+            return false;
+        }
     }
     
     public function getBodyJSON(): mixed {
-        return json_decode($this->getBody(), true);
+        $body = $this->getBody();
+        if ($body === false) {
+            throw new RuntimeException('Unable to read request body.');
+        }
+        return json_decode($body, true);
     }
     
     public function setAllHeaders(array $headerList): void {

@@ -6,6 +6,7 @@ namespace Slothsoft\Farah\Module\Result\StreamBuilderStrategy;
 use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\IsTrue;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\FileInfo;
 use Slothsoft\Core\IO\FileInfoFactory;
@@ -13,6 +14,7 @@ use Slothsoft\Core\IO\Writable\FileWriterInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
+use SplFileInfo;
 
 /**
  * FileWriterStreamBuilderTest
@@ -20,6 +22,23 @@ use Slothsoft\FarahTesting\Constraints\DOMNodeEqualTo;
  * @see FileWriterStreamBuilder
  */
 class FileWriterStreamBuilderTest extends TestCase {
+    
+    /** @return iterable<string, array{string}> */
+    public static function metadataOperations(): iterable {
+        yield 'statistics' => ['buildStreamFileStatistics'];
+        yield 'hash' => ['buildStreamHash'];
+    }
+    
+    /** @dataProvider metadataOperations */
+    public function testRequiredMissingFileThrows(string $operation): void {
+        $writer = $this->createMock(FileWriterInterface::class);
+        $file = temp_file(__METHOD__);
+        $writer->method('toFile')->willReturn(new SplFileInfo($file));
+        $builder = new FileWriterStreamBuilder($writer, 'missing.txt');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage($file);
+        $builder->$operation($this->createMock(ResultInterface::class));
+    }
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FileWriterStreamBuilder::class), "Failed to load class 'Slothsoft\Farah\Module\Result\StreamBuilderStrategy\FileWriterStreamBuilder'!");
