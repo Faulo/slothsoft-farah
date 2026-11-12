@@ -5,7 +5,9 @@ namespace Slothsoft\Farah\LinkDecorator;
 
 use DOMDocument;
 use DOMElement;
+use InvalidArgumentException;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\Exception\MalformedDocumentException;
 use Slothsoft\Farah\Exception\NamespaceNotSupportedException;
 
 /**
@@ -17,14 +19,22 @@ use Slothsoft\Farah\Exception\NamespaceNotSupportedException;
 final class DecoratorFactory {
     
     public static function createForDocument(DOMDocument $targetDocument): LinkDecoratorInterface {
-        $decorator = self::createForNamespace((string) $targetDocument->documentElement->namespaceURI);
+        $root = $targetDocument->documentElement;
+        if ($root === null) {
+            throw new MalformedDocumentException($targetDocument->documentURI ?? '');
+        }
+        $decorator = self::createForNamespace((string) $root->namespaceURI);
         $decorator->setTarget($targetDocument);
         return $decorator;
     }
     
     public static function createForElement(DOMElement $node): LinkDecoratorInterface {
+        $document = $node->ownerDocument;
+        if ($document === null) {
+            throw new InvalidArgumentException('Link decorator elements must belong to a document.');
+        }
         $decorator = self::createForNamespace((string) $node->namespaceURI);
-        $decorator->setTarget($node->ownerDocument);
+        $decorator->setTarget($document);
         return $decorator;
     }
     

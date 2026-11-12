@@ -5,12 +5,14 @@ namespace Slothsoft\Farah\Internal;
 
 use DOMDocument;
 use DOMElement;
+use LogicException;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\Decorators\DOMWriterMemoryCache;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
 use Slothsoft\Farah\Exception\EmptySitemapException;
+use Slothsoft\Farah\Exception\MalformedDocumentException;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Http\WebScheme;
@@ -49,42 +51,41 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
     }
     
     public function toDocument(): DOMDocument {
-        $this->loadDocument();
-        return $this->document;
+        return $this->loadDocument();
     }
     
-    private function loadDocument(): void {
+    private function loadDocument(): DOMDocument {
         try {
             $asset = Kernel::getCurrentSitemap();
-            
-            if ($this->asset !== $asset) {
-                $this->asset = $asset;
-                $this->document = $this->asset->lookupExecutable()
-                    ->lookupXmlResult()
-                    ->lookupDOMWriter()
-                    ->toDocument();
-                
-                if (! $this->document->documentElement) {
-                    throw new EmptySitemapException((string) $this->asset->createUrl());
-                }
-                
-                $this->initDocument();
+            if ($this->asset === $asset && $this->document !== null) {
+                return $this->document;
             }
+            $document = $asset->lookupExecutable()
+                ->lookupXmlResult()
+                ->lookupDOMWriter()
+                ->toDocument();
+            $root = $document->documentElement;
+            if ($root === null) {
+                throw new EmptySitemapException((string) $asset->createUrl());
+            }
+            $this->initDocument($document, $root);
+            $this->asset = $asset;
         } catch (ConfigurationRequiredException $e) {
-            $this->document = new DOMDocument();
-            $node = $this->document->createElementNS(DOMHelper::NS_FARAH_SITES, 'domain');
+            $document = new DOMDocument();
+            $node = $document->createElementNS(DOMHelper::NS_FARAH_SITES, 'domain');
             $node->setAttribute('name', 'localhost');
             $node->setAttribute('version', '1.1');
             $node->setAttribute('title', $e->getMessage());
-            $this->document->appendChild($node);
-            $this->initDocument();
+            $document->appendChild($node);
+            $this->initDocument($document, $node);
+            $this->asset = null;
         }
+        return $this->document = $document;
     }
     
-    private function initDocument(): void {
-        $domainNode = $this->document->documentElement;
+    private function initDocument(DOMDocument $document, DOMElement $domainNode): void {
         $this->domainName = $domainNode->getAttribute('name');
-        $xpath = DOMHelper::loadXPath($this->document, DOMHelper::XPATH_SLOTHSOFT);
+        $xpath = DOMHelper::loadXPath($document, DOMHelper::XPATH_SLOTHSOFT);
         
         $this->domainScheme = WebScheme::HTTP;
         try {
@@ -98,26 +99,37 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
         // preload all include-pages elements
         $domain = null;
         while ($dataNodeList = $xpath->query('//sfs:include-pages') and $dataNodeList->length) {
-            $domain ??= new Domain($this->document);
-            /** @var DOMElement $dataNode XPath selects include-pages elements. */
+            $domain ??= new Domain($document);
             foreach ($dataNodeList as $dataNode) {
+                if (! $dataNode instanceof DOMElement) {
+                    throw new LogicException('Expected a sitemap include element.');
+                }
                 $url = $domain->lookupAssetUrl($dataNode);
                 $result = Module::resolveToDOMWriter($url);
-                $node = $result->toElement($this->document);
-                $fragment = $this->document->createDocumentFragment();
+                $node = $result->toElement($document);
+                $fragment = $document->createDocumentFragment();
                 foreach ([
                              ...$node->childNodes
                          ] as $node) {
                     $fragment->appendChild($node);
                 }
-                $dataNode->parentNode->replaceChild($fragment, $dataNode);
+                $parent = $dataNode->parentNode;
+                if ($parent !== null) {
+                    $parent->replaceChild($fragment, $dataNode);
+                }
             }
         }
         
         $this->initDomainElement($domainNode);
         
-        /** @var DOMElement $node XPath selects page and file elements. */
-        foreach ($xpath->query('//sfs:page | //sfs:file') as $node) {
+        $nodes = $xpath->query('//sfs:page | //sfs:file');
+        if ($nodes === false) {
+            throw new LogicException('Failed to query sitemap pages.');
+        }
+        foreach ($nodes as $node) {
+            if (! $node instanceof DOMElement) {
+                throw new LogicException('Expected a sitemap element.');
+            }
             $this->initPageElement($node);
         }
     }
@@ -135,8 +147,10 @@ final class SitemapBuilder implements ExecutableBuilderStrategyInterface, DOMWri
         if ($node->hasAttribute('ext')) {
             $uri = $node->getAttribute('ext');
         } else {
-            /** @var DOMElement $parent Sitemap pages and files have element parents. */
             $parent = $node->parentNode;
+            if (! $parent instanceof DOMElement) {
+                throw new MalformedDocumentException($node->baseURI ?? '');
+            }
             $parentUri = $parent->getAttribute('uri');
             $uri = match ($node->localName) {
                 Domain::TAG_FILE => $parentUri . $name,

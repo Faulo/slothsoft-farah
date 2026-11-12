@@ -6,6 +6,7 @@ namespace Slothsoft\Farah\LinkDecorator;
 use DOMDocument;
 use DOMElement;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\Exception\MalformedDocumentException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 
@@ -24,9 +25,12 @@ final class FarahDecorator implements LinkDecoratorInterface {
     private DOMElement $rootNode;
     
     public function setTarget(DOMDocument $document): void {
+        $root = $document->documentElement;
+        if ($root === null) {
+            throw new MalformedDocumentException($document->documentURI ?? '');
+        }
         $this->targetDocument = $document;
-        
-        $this->rootNode = $document->documentElement;
+        $this->rootNode = $root;
     }
     
     public function linkStylesheets(FarahUrl ...$stylesheets): void {

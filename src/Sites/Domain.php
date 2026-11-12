@@ -8,6 +8,7 @@ use DOMElement;
 use DOMXPath;
 use InvalidArgumentException;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\Exception\EmptySitemapException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
@@ -73,7 +74,7 @@ final class Domain {
     }
     
     public function getDomainNode(): DOMElement {
-        return $this->document->documentElement;
+        return $this->document->documentElement ?? throw new EmptySitemapException($this->document->documentURI ?? '');
     }
     
     public function getCurrentPageNode(): ?DOMElement {

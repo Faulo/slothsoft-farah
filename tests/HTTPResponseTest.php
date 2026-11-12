@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah;
 
+use DOMDocument;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -33,6 +34,19 @@ final class HTTPResponseTest extends TestCase {
      *
      * @test
      */
+    /** @runInSeparateProcess */
+    public function testEmptyDocumentWithTimingEnabledRemainsSupported(): void {
+        HTTPResponse::setHttpConfig(['doc-timestamp' => true]);
+        $response = new HTTPResponse();
+        ob_start();
+        try {
+            $response->setDocument(new DOMDocument());
+        } finally {
+            ob_end_clean();
+        }
+        $this->assertStringStartsWith('<?xml', $response->getBody());
+    }
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(HTTPResponse::class), "Failed to load class 'Slothsoft\Farah\HTTPResponse'!");
     }

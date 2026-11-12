@@ -8,6 +8,7 @@ use DOMElement;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\Exception\EmptySitemapException;
 
 /**
  * DomainTest
@@ -21,6 +22,16 @@ final class DomainTest extends TestCase {
      *
      * @test
      */
+    public function testMissingRootThrows(): void {
+        $document = new DOMDocument();
+        $document->loadXML('<domain/>');
+        $domain = new Domain($document);
+        $root = $domain->getDomainNode();
+        $document->removeChild($root);
+        $this->expectException(EmptySitemapException::class);
+        $domain->getDomainNode();
+    }
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(Domain::class), "Failed to load class 'Slothsoft\Farah\Sites\Domain'!");
     }

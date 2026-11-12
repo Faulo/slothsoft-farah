@@ -6,6 +6,7 @@ namespace Slothsoft\Farah\LinkDecorator;
 use DOMDocument;
 use DOMElement;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\Farah\Exception\MalformedDocumentException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
@@ -26,9 +27,12 @@ final class SvgDecorator implements LinkDecoratorInterface {
     private bool $useProcessingInstruction = false;
     
     public function setTarget(DOMDocument $document): void {
+        $root = $document->getElementsByTagNameNS(DOMHelper::NS_SVG, 'defs')->item(0) ?? $document->documentElement;
+        if ($root === null) {
+            throw new MalformedDocumentException($document->documentURI ?? '');
+        }
         $this->targetDocument = $document;
-        
-        $this->rootNode = $document->getElementsByTagNameNS(DOMHelper::NS_SVG, 'defs')->item(0) ?? $document->documentElement;
+        $this->rootNode = $root;
     }
     
     public function linkStylesheets(FarahUrl ...$stylesheets): void {

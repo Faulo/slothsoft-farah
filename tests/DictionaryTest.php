@@ -3,8 +3,10 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah;
 
+use DOMDocument;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 /**
  * DictionaryTest
@@ -12,6 +14,15 @@ use PHPUnit\Framework\TestCase;
  * @see Dictionary
  */
 class DictionaryTest extends TestCase {
+    
+    /** @runInSeparateProcess */
+    public function testEmptyDocumentRemainsEmpty(): void {
+        $dictionary = Dictionary::getInstance();
+        $dictionary->setLang('en');
+        $document = new DOMDocument();
+        $this->assertSame(0, $dictionary->translateDoc($document, FarahUrl::createFromReference('farah://test@test')));
+        $this->assertNull($document->documentElement);
+    }
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(Dictionary::class), "Failed to load class 'Slothsoft\Farah\Dictionary'!");

@@ -42,6 +42,10 @@ final class EmbedIncludesDOMWriter implements DOMWriterInterface {
     }
     
     public static function embedIncludes(DOMDocument $document, FarahUrl $base): void {
+        $root = $document->documentElement;
+        if ($root === null) {
+            return;
+        }
         $urls = new Set();
         $urls->add($base);
         
@@ -60,10 +64,10 @@ final class EmbedIncludesDOMWriter implements DOMWriterInterface {
                     
                     $includedNode = Module::resolveToDOMWriter($url)->toElement($document);
                     while ($node = $includedNode->firstChild) {
-                        $includeNode->parentNode->insertBefore($node, $includeNode);
+                        $root->insertBefore($node, $includeNode);
                     }
                 }
-                $includeNode->parentNode->removeChild($includeNode);
+                $root->removeChild($includeNode);
             }
         } while (count($includeNodes));
     }

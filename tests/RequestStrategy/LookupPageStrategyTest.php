@@ -18,6 +18,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
 use Slothsoft\Farah\Http\MessageFactory;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\Executable\Executable;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Sites\Domain;
@@ -29,6 +30,13 @@ use Slothsoft\FarahTesting\TestUtils;
  * @see LookupPageStrategy
  */
 final class LookupPageStrategyTest extends TestCase {
+    
+    /** @runInSeparateProcess */
+    public function testDirectLookupInitializesDefaultDomain(): void {
+        Kernel::clearCurrentSitemap();
+        $root = (new LookupPageStrategy())->lookupPageNode('/');
+        $this->assertSame('localhost', $root->getAttribute('name'));
+    }
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(LookupPageStrategy::class), "Failed to load class 'Slothsoft\Farah\RequestStrategy\LookupPageStrategy'!");

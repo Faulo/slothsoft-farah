@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Module\DOMWriter;
 
 use DOMDocument;
-use DOMImplementation;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\Traits\DOMWriterElementFromDocumentTrait;
@@ -33,10 +32,8 @@ final class AssetFragmentDOMWriter implements DOMWriterInterface {
     }
     
     public function toDocument(): DOMDocument {
-        $implementation = new DOMImplementation();
-        
-        $targetDoc = $implementation->createDocument(DOMHelper::NS_FARAH_MODULE, 'sfm:fragment-info');
-        $node = $targetDoc->documentElement;
+        $targetDoc = new DOMDocument();
+        $node = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, 'sfm:fragment-info');
         
         $id = (string) $this->url;
         $targetDoc->documentURI = $id;
@@ -52,7 +49,7 @@ final class AssetFragmentDOMWriter implements DOMWriterInterface {
         
         foreach ($this->url->getArguments()->getValueList() as $key => $value) {
             $child = $targetDoc->createElementNS(DOMHelper::NS_FARAH_MODULE, 'sfm:param');
-            $child->setAttribute('name', $key);
+            $child->setAttribute('name', (string) $key);
             if (is_string($value)) {
                 $child->setAttribute('value', $value);
             }

@@ -8,6 +8,7 @@ use Generator;
 use Masterminds\HTML5;
 use Slothsoft\Core\IO\Writable\Delegates\ChunkWriterFromChunksDelegate;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
+use Slothsoft\Farah\Exception\MalformedDocumentException;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
@@ -42,8 +43,9 @@ final class PhpinfoBuilder implements ExecutableBuilderStrategyInterface {
             default => new DOMWriterResultBuilder(
                 new DOMWriterFromDocumentDelegate(function (): DOMDocument {
                     $document = (new HTML5())->loadHTML(self::getContent());
-                    foreach ($document->documentElement->attributes as $attr) {
-                        $document->documentElement->removeAttributeNode($attr);
+                    $root = $document->documentElement ?? throw new MalformedDocumentException('phpinfo');
+                    foreach ([...$root->attributes] as $attr) {
+                        $root->removeAttributeNode($attr);
                     }
                     return $document;
                 }), 'phpinfo'),

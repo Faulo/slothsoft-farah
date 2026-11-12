@@ -547,7 +547,10 @@ final class HTTPResponse {
         if (self::$httpConfig['doc-timestamp']) {
             printf(self::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576);
             $this->setEtag(self::calcEtag($doc->saveXML()), false);
-            $doc->documentElement->insertBefore($doc->createComment(PHP_EOL . sprintf(self::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576) . PHP_EOL), $doc->documentElement->firstChild);
+            $root = $doc->documentElement;
+            if ($root !== null) {
+                $root->insertBefore($doc->createComment(PHP_EOL . sprintf(self::ERR_REQRES, get_execution_time(), memory_get_peak_usage() / 1048576) . PHP_EOL), $root->firstChild);
+            }
             $this->setBody(trim($doc->saveXML()));
         } else {
             $this->setBody(trim($doc->saveXML()));

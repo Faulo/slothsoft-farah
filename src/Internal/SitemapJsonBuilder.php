@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Internal;
 
 use DOMElement;
+use LogicException;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\DOMWriterInterface;
 use Slothsoft\Core\IO\Writable\StringWriterInterface;
@@ -27,8 +28,14 @@ final class SitemapJsonBuilder implements StringWriterInterface {
         $xpath = DOMHelper::loadXPath($document, 0);
         
         $data = [];
-        /** @var DOMElement $node XPath selects elements with a uri attribute. */
-        foreach ($xpath->query('//*[@uri]') as $node) {
+        $nodes = $xpath->query('//*[@uri]');
+        if ($nodes === false) {
+            throw new LogicException('Failed to query sitemap URIs.');
+        }
+        foreach ($nodes as $node) {
+            if (! $node instanceof DOMElement) {
+                throw new LogicException('Expected a sitemap element.');
+            }
             $data[] = $node->getAttribute('uri');
         }
         

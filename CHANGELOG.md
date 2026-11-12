@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- DOM consumers report missing required roots explicitly, preserve supported empty documents, and retry sitemap loads after failures instead of caching incomplete results.
+
 - Error documents check stylesheet availability with `file_exists()` without reading its contents, including when assertions are disabled.
 
 - Required asset file reads, hashes, statistics, and temporary response streams report failures with exceptions; JSON body readers reject an unavailable request body; successful empty files and optional missing-file metadata retain their existing behavior.

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Internal;
 
 use DOMDocument;
+use DOMElement;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -117,11 +118,15 @@ final class PhpinfoBuilderTest extends TestCase {
                 $this->assertStringStartsWith('<!DOCTYPE html>', $source);
                 $this->assertStringNotContainsString('<?xml', $source);
                 $this->assertTrue($document->loadHTML($source), "Failed to parse HTML response from $path:" . PHP_EOL . $source);
-                $title = $document->getElementsByTagName('title')->item(0)->textContent;
+                $titleNode = $document->getElementsByTagName('title')->item(0);
+                $this->assertInstanceOf(DOMElement::class, $titleNode);
+                $title = $titleNode->textContent;
             } else {
                 $this->assertStringStartsWith('<?xml', $source);
                 $this->assertTrue($document->loadXML($source), "Failed to parse XHTML response from $path:" . PHP_EOL . $source);
-                $this->assertSame(DOMHelper::NS_HTML, $document->documentElement->namespaceURI);
+                $root = $document->documentElement;
+                $this->assertInstanceOf(DOMElement::class, $root);
+                $this->assertSame(DOMHelper::NS_HTML, $root->namespaceURI);
                 $title = DOMHelper::loadXPath($document)->evaluate('string(//html:title)');
             }
             

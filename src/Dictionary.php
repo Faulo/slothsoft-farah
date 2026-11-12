@@ -127,19 +127,22 @@ final class Dictionary {
                 /** @var DOMNode $targetNode */
                 foreach ($targetNodes as $targetNode) {
                     if ($translatedNode = $this->lookupKeyInDictionaryDocuments($dictionaryUrls, $targetNode->textContent)) {
-                        $count++;
-                        
                         if ($targetNode instanceof DOMAttr) {
                             $targetNode->value = $translatedNode->textContent;
                         } else {
+                            $parent = $targetNode->parentNode;
+                            if ($parent === null) {
+                                continue;
+                            }
                             $fragment = $this->createTranslationReplacement($document, $translatedNode);
                             
-                            if ($translatedNode->hasAttributeNS(DOMHelper::NS_XML, 'space') and $targetNode->parentNode instanceof DOMElement) {
-                                $targetNode->parentNode->setAttributeNS(DOMHelper::NS_XML, 'space', $translatedNode->getAttributeNS(DOMHelper::NS_XML, 'space'));
+                            if ($translatedNode->hasAttributeNS(DOMHelper::NS_XML, 'space') and $parent instanceof DOMElement) {
+                                $parent->setAttributeNS(DOMHelper::NS_XML, 'space', $translatedNode->getAttributeNS(DOMHelper::NS_XML, 'space'));
                             }
                             
-                            $targetNode->parentNode->replaceChild($fragment, $targetNode);
+                            $parent->replaceChild($fragment, $targetNode);
                         }
+                        $count++;
                     }
                 }
                 
@@ -150,17 +153,21 @@ final class Dictionary {
             
             /** @var DOMElement $targetNode */
             foreach ($targetNodes as $targetNode) {
+                $parent = $targetNode->parentNode;
+                if ($parent === null) {
+                    continue;
+                }
                 $key = (string) $targetNode->getAttribute('key');
                 
                 if ($translatedNode = $this->lookupKeyInDictionaryDocuments($dictionaryUrls, $key)) {
                     $count++;
                     $fragment = $this->createTranslationReplacement($document, $translatedNode);
-                    $targetNode->parentNode->replaceChild($fragment, $targetNode);
+                    $parent->replaceChild($fragment, $targetNode);
                 } else {
-                    while ($targetNode->hasChildNodes()) {
-                        $targetNode->parentNode->insertBefore($targetNode->firstChild, $targetNode);
+                    while ($child = $targetNode->firstChild) {
+                        $parent->insertBefore($child, $targetNode);
                     }
-                    $targetNode->parentNode->removeChild($targetNode);
+                    $parent->removeChild($targetNode);
                 }
             }
             
@@ -168,7 +175,7 @@ final class Dictionary {
         } while ($count > 0);
         
         if ($translationsCount > 0) {
-            $document->documentElement->setAttributeNS(DOMHelper::NS_XML, 'lang', $this->currentLang);
+            $document->documentElement?->setAttributeNS(DOMHelper::NS_XML, 'lang', $this->currentLang);
         }
         
         return $translationsCount;
@@ -356,7 +363,7 @@ final class Dictionary {
             $ret += $this->translateNode($xpath, $node, $attr, $namespace, $language);
         }
         if ($lang = $this->getLang()) {
-            $doc->documentElement->setAttribute('xml:lang', $lang);
+            $doc->documentElement?->setAttribute('xml:lang', $lang);
         }
         
         $this->isSettingUp = false;

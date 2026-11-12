@@ -24,6 +24,13 @@ class EmbedIncludesDOMWriterTest extends TestCase {
         Module::registerWithXmlManifestAndDefaultAssets($this->base->getAssetAuthority(), __DIR__ . '/../../../test-files/test-module');
     }
     
+    /** @runInSeparateProcess */
+    public function testEmptyDocumentRemainsEmpty(): void {
+        $document = new DOMDocument();
+        EmbedIncludesDOMWriter::embedIncludes($document, $this->base);
+        $this->assertNull($document->documentElement);
+    }
+    
     public function testClassExists(): void {
         $this->assertTrue(class_exists(EmbedIncludesDOMWriter::class), "Failed to load class 'Slothsoft\Farah\Module\DOMWriter\FileInfoDOMWriter'!");
     }

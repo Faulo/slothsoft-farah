@@ -62,7 +62,7 @@ final class LookupPageStrategy extends RequestStrategyBase {
         $this->domain->setCurrentPageNode($pageNode);
         
         if (! $pageNode->hasAttribute(Domain::ATTR_REFERENCE)) {
-            throw new HttpStatusException("The URL $uri does not contain an asset.\n{$pageNode->ownerDocument->saveXML($pageNode)}", StatusCode::STATUS_NOT_IMPLEMENTED);
+            throw new HttpStatusException("The URL $uri does not contain an asset.\n{$this->domain->getDocument()->saveXML($pageNode)}", StatusCode::STATUS_NOT_IMPLEMENTED);
         }
         
         $url = $this->domain->lookupAssetUrl($pageNode, $args);
@@ -78,6 +78,7 @@ final class LookupPageStrategy extends RequestStrategyBase {
         }
         
         if ($contextNode === null or $path[0] === '/') {
+            $this->domain ??= Domain::createWithDefaultSitemap();
             $contextNode = $this->domain->getDomainNode();
         }
         
