@@ -19,6 +19,8 @@ final class XmlTreeLoaderTest extends TestCase {
     
     private string $cachePath;
     
+    private ?SplFileInfo $cacheFile = null;
+    
     private ManifestInterface $context;
     
     /**
@@ -41,7 +43,7 @@ final class XmlTreeLoaderTest extends TestCase {
                 $this->assertNull($path);
                 $this->assertSame(realpath($this->manifestPath), $arguments->get('path'));
                 $this->assertSame(hash_file('sha256', $loaderFile), $arguments->get('loader'));
-                return new SplFileInfo($this->cachePath);
+                return $this->cacheFile ?? new SplFileInfo($this->cachePath);
             }
         );
     }
@@ -96,6 +98,50 @@ final class XmlTreeLoaderTest extends TestCase {
         $this->assertSame([
             'cached'
         ], $this->getChildNames($loader->loadTree($this->context)));
+    }
+    
+    /** @return iterable<string, array{string}> */
+    public static function provideInvalidCacheContents(): iterable {
+        yield 'truncated serialization' => ['O:'];
+        yield 'empty file' => [''];
+        yield 'serialized null' => ['N;'];
+        yield 'serialized false' => ['b:0;'];
+        yield 'serialized array' => ['a:0:{}'];
+        yield 'unexpected object' => ['O:8:"stdClass":0:{}'];
+    }
+    
+    /** @dataProvider provideInvalidCacheContents */
+    public function testRebuildsInvalidCache(string $contents): void {
+        $timestamp = time() - 3600;
+        $this->writeManifest('recovered', $timestamp);
+        file_put_contents($this->cachePath, $contents);
+        touch($this->cachePath, $timestamp);
+        clearstatcache(true, $this->cachePath);
+        $this->assertRecoveredManifest($timestamp);
+    }
+    
+    public function testRebuildsWhenCacheReadFailsAfterMetadataCheck(): void {
+        $timestamp = time() - 3600;
+        $this->writeManifest('recovered', $timestamp);
+        clearstatcache(true, $this->cachePath);
+        // Simulate a cache disappearing between the metadata check and the read.
+        $cacheFile = $this->getMockBuilder(SplFileInfo::class)
+            ->setConstructorArgs([$this->cachePath])
+            ->onlyMethods(['isFile', 'getMTime'])
+            ->getMock();
+        $cacheFile->method('isFile')->willReturn(true);
+        $cacheFile->method('getMTime')->willReturn($timestamp);
+        $this->cacheFile = $cacheFile;
+        $this->assertRecoveredManifest($timestamp);
+    }
+    
+    private function assertRecoveredManifest(int $timestamp): void {
+        $loader = new XmlTreeLoader();
+        $root = $loader->loadTree($this->context);
+        $this->assertSame(['recovered'], $this->getChildNames($root));
+        $this->assertCacheTimestamp($timestamp);
+        $this->writeManifest('not-cached', $timestamp);
+        $this->assertSame(['recovered'], $this->getChildNames((new XmlTreeLoader())->loadTree($this->context)));
     }
     
     private function writeManifest(string $childName, int $timestamp): void {

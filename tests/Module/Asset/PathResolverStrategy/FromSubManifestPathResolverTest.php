@@ -23,6 +23,8 @@ final class FromSubManifestPathResolverTest extends TestCase {
     
     private string $cachePath;
     
+    private ?SplFileInfo $cacheFile = null;
+    
     private AssetInterface $context;
     
     /**
@@ -55,7 +57,7 @@ final class FromSubManifestPathResolverTest extends TestCase {
                 $this->assertSame(self::DIRECTORY, $path);
                 $this->assertSame(realpath($this->manifestPath), $arguments->get('path'));
                 $this->assertSame(hash_file('sha256', $loaderFile), $arguments->get('loader'));
-                return new SplFileInfo($this->cachePath);
+                return $this->cacheFile ?? new SplFileInfo($this->cachePath);
             }
         );
         
@@ -99,6 +101,62 @@ final class FromSubManifestPathResolverTest extends TestCase {
             0,
             -60
         ];
+    }
+    
+    /** @return iterable<string, array{string}> */
+    public static function provideInvalidCacheContents(): iterable {
+        yield 'truncated serialization' => ['O:'];
+        yield 'empty file' => [''];
+        yield 'serialized null' => ['N;'];
+        yield 'serialized false' => ['b:0;'];
+        yield 'serialized array' => ['a:0:{}'];
+        yield 'unexpected object' => ['O:8:"stdClass":0:{}'];
+    }
+    
+    /** @dataProvider provideInvalidCacheContents */
+    public function testRebuildsInvalidCache(string $contents): void {
+        $timestamp = time() - 3600;
+        $this->writeManifest('recovered', $timestamp);
+        file_put_contents($this->cachePath, $contents);
+        touch($this->cachePath, $timestamp);
+        clearstatcache(true, $this->cachePath);
+        $this->assertRecoveredManifest($timestamp);
+    }
+    
+    public function testRebuildsWhenCacheReadFailsAfterMetadataCheck(): void {
+        $timestamp = time() - 3600;
+        $this->writeManifest('recovered', $timestamp);
+        clearstatcache(true, $this->cachePath);
+        // Simulate a cache disappearing between the metadata check and the read.
+        $cacheFile = $this->getMockBuilder(SplFileInfo::class)
+            ->setConstructorArgs([$this->cachePath])
+            ->onlyMethods(['isFile', 'getMTime'])
+            ->getMock();
+        $cacheFile->method('isFile')->willReturn(true);
+        $cacheFile->method('getMTime')->willReturn($timestamp);
+        $this->cacheFile = $cacheFile;
+        $this->assertRecoveredManifest($timestamp);
+    }
+    
+    private function assertRecoveredManifest(int $timestamp): void {
+        $resolver = new FromSubManifestPathResolver();
+        $this->assertSame(['recovered'], iterator_to_array($resolver->loadChildren($this->context)));
+        $child = $resolver->resolvePath($this->context, 'recovered');
+        $this->assertSame('fragment', $child->getTag());
+        $this->assertSame('recovered', $child->getAttribute(Manifest::ATTR_NAME));
+        $this->assertCacheTimestamp($timestamp);
+        $this->writeManifest('not-cached', $timestamp);
+        $this->assertSame(['recovered'], iterator_to_array((new FromSubManifestPathResolver())->loadChildren($this->context)));
+    }
+    
+    public function testReusesValidEmptyCache(): void {
+        $timestamp = time() - 3600;
+        file_put_contents($this->manifestPath, '<assets/>');
+        touch($this->manifestPath, $timestamp);
+        clearstatcache(true, $this->manifestPath);
+        $this->assertSame([], iterator_to_array((new FromSubManifestPathResolver())->loadChildren($this->context)));
+        $this->writeManifest('not-cached', $timestamp);
+        $this->assertSame([], iterator_to_array((new FromSubManifestPathResolver())->loadChildren($this->context)));
     }
     
     private function writeManifest(string $childName, int $timestamp): void {

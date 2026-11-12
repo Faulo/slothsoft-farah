@@ -33,13 +33,16 @@ final class XmlTreeLoader implements TreeLoaderStrategyInterface {
         if ($tmpFile->isFile()) {
             if ($tmpFile->getMTime() === $xmlMTime) {
                 try {
-                    $element = unserialize(file_get_contents((string) $tmpFile), [
-                        'allowed_classes' => [
-                            LeanElement::class
-                        ]
-                    ]);
-                    if ($element and $element->getTag()) {
-                        return $element;
+                    $contents = @file_get_contents((string) $tmpFile);
+                    if ($contents !== false) {
+                        $element = @unserialize($contents, [
+                            'allowed_classes' => [
+                                LeanElement::class
+                            ]
+                        ]);
+                        if ($element instanceof LeanElement && $element->getTag()) {
+                            return $element;
+                        }
                     }
                 } catch (Throwable) {
                 }

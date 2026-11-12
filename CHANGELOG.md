@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Rebuild manifest caches from XML when cached data is unreadable or invalid, instead of hiding sub-manifest assets behind an empty cached child list.
+
 - Preserve numeric query parameter names during Farah URL serialization and asset parameter filtering, including names with nested array values.
 - Failed tracking queries throw an explicit exception instead of being treated as empty results or allowing archive processing to advance past unread records.
 - Legacy session cookies accept their default `null` value without passing `null` to PHP's string-only cookie API.
