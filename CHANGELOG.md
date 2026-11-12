@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Configurable content and transfer codings throw `LogicException` when their required encoding or decoding filter is absent or has been cleared.
+
 - Daemon socket setup and I/O failures report exceptions, JSON encoding failures are explicit, partial writes are completed, and acquired sockets are closed on failure or abandoned iteration.
 
 - DOM consumers report missing required roots explicitly, preserve supported empty documents, and retry sitemap loads after failures instead of caching incomplete results.

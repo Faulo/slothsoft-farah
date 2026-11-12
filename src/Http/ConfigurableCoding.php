@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\Http;
 
+use LogicException;
 use Psr\Http\Message\StreamInterface;
 use Slothsoft\Core\IO\Writable\FilteredStreamWriterInterface;
 
@@ -41,7 +42,8 @@ final class ConfigurableCoding implements CodingInterface {
     }
     
     public function encodeStream(StreamInterface $stream): StreamInterface {
-        return $this->encodingWriter->toFilteredStream($stream);
+        $writer = $this->encodingWriter ?? throw new LogicException(sprintf('No encoding filter is configured for "%s".', $this->httpName));
+        return $writer->toFilteredStream($stream);
     }
     
     public function setDecodingFilter(FilteredStreamWriterInterface $decodingWriter): void {
@@ -57,7 +59,8 @@ final class ConfigurableCoding implements CodingInterface {
     }
     
     public function decodeStream(StreamInterface $stream): StreamInterface {
-        return $this->decodingWriter->toFilteredStream($stream);
+        $writer = $this->decodingWriter ?? throw new LogicException(sprintf('No decoding filter is configured for "%s".', $this->httpName));
+        return $writer->toFilteredStream($stream);
     }
 }
 
