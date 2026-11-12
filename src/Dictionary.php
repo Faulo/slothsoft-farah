@@ -26,11 +26,15 @@ final class Dictionary {
     
     public static function xsltCurrentLanguage(): string {
         $dict = self::getInstance();
-        return $dict->getLang();
+        return $dict->getLang() ?? '';
     }
     
     public static function xsltLookupText(string $word, string $module = '', string $language = ''): string {
         $dict = self::getInstance();
+        $language = $dict->resolveLanguage($language);
+        if ($language === null) {
+            return $word;
+        }
         
         if ($node = $dict->lookupKeyInDictionaryDocuments($dict->dictionaryUrls, $word, $language)) {
             return $node->textContent;
@@ -39,7 +43,7 @@ final class Dictionary {
         $previousModule = $dict->currentModule;
         try {
             $dict->currentModule = Module::getBaseUrl();
-            return $dict->lookupText($word, $module === '' ? null : $module, $language === '' ? null : $language);
+            return $dict->lookupText($word, $module === '' ? null : $module, $language);
         } finally {
             $dict->currentModule = $previousModule;
         }
@@ -64,8 +68,12 @@ final class Dictionary {
      * @return iterable<DOMDocument>
      */
     private function getDictionaryDocuments(Set $dictionaryUrls, string $language): iterable {
+        $language = $this->resolveLanguage($language);
+        if ($language === null) {
+            return;
+        }
         foreach ($dictionaryUrls as $url) {
-            $url = FarahUrl::createFromReference($language === '' ? $this->currentLang : $language, $url);
+            $url = FarahUrl::createFromReference($language, $url);
             
             if ($this->dictionaryDocuments->hasKey($url)) {
                 yield $this->dictionaryDocuments->get($url);
@@ -438,6 +446,10 @@ final class Dictionary {
     }
     
     public function lookupText(DOMNode|string $originalWord, string|null $namespace = null, string|null $language = null): string {
+        $language = $this->resolveLanguage($language);
+        if ($language === null) {
+            return $originalWord instanceof DOMNode ? $originalWord->textContent : $originalWord;
+        }
         $word = $this->sanitizeWord($originalWord);
         $xpath = $this->getLangPath($namespace, $language);
         if (! $xpath->evaluate(sprintf(self::XPATH_EXISTS, $word))) {
@@ -454,18 +466,23 @@ final class Dictionary {
         if (! ($originalWord instanceof DOMNode)) {
             $originalWord = (string) $originalWord;
         }
-        $word = $this->sanitizeWord($originalWord);
-        $xpath = $this->getLangPath($namespace, $language);
-        if (! $xpath->evaluate(sprintf(self::XPATH_EXISTS, $word))) {
-            $this->addWord($xpath->document, $word, $originalWord);
+        $language = $this->resolveLanguage($language);
+        $xpath = null;
+        if ($language !== null) {
+            $word = $this->sanitizeWord($originalWord);
+            $xpath = $this->getLangPath($namespace, $language);
+            if (! $xpath->evaluate(sprintf(self::XPATH_EXISTS, $word))) {
+                $this->addWord($xpath->document, $word, $originalWord);
+            }
+            $ownerDoc ??= $xpath->document;
         }
-        if ($ownerDoc === null) {
-            $ownerDoc = $xpath->document;
-        }
+        $ownerDoc ??= ($originalWord instanceof DOMNode ? $originalWord->ownerDocument : null) ?? new DOMDocument();
         $ret = $ownerDoc->createDocumentFragment();
-        $res = $xpath->evaluate(sprintf(self::XPATH_FRAGMENT, $word));
-        foreach ($res as $node) {
-            $ret->appendChild($node->ownerDocument === $ownerDoc ? $node->cloneNode(true) : $ownerDoc->importNode($node, true));
+        if ($xpath !== null) {
+            $res = $xpath->evaluate(sprintf(self::XPATH_FRAGMENT, $word));
+            foreach ($res as $node) {
+                $ret->appendChild($node->ownerDocument === $ownerDoc ? $node->cloneNode(true) : $ownerDoc->importNode($node, true));
+            }
         }
         if (! $ret->hasChildNodes()) {
             if ($originalWord instanceof DOMNode) {
@@ -478,6 +495,13 @@ final class Dictionary {
     }
     
     /* private functions */
+    private function resolveLanguage(?string $language): ?string {
+        if ($language === null || $language === '') {
+            $language = $this->currentLang;
+        }
+        return $language === '' ? null : $language;
+    }
+    
     protected function sanitizeWord(DOMNode|string $word): string {
         if ($word instanceof DOMNode) {
             $word = $word->textContent;

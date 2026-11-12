@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Dictionary lookups preserve original text and markup when no language is selected, expose an empty XSLT language string, and continue to honor explicit language overrides.
+
 - Configurable content and transfer codings throw `LogicException` when their required encoding or decoding filter is absent or has been cleared.
 
 - Daemon socket setup and I/O failures report exceptions, JSON encoding failures are explicit, partial writes are completed, and acquired sockets are closed on failure or abandoned iteration.

@@ -4,9 +4,11 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah;
 
 use DOMDocument;
+use DOMElement;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
+use Slothsoft\Farah\Module\Module;
 
 /**
  * DictionaryTest
@@ -22,6 +24,67 @@ class DictionaryTest extends TestCase {
         $document = new DOMDocument();
         $this->assertSame(0, $dictionary->translateDoc($document, FarahUrl::createFromReference('farah://test@test')));
         $this->assertNull($document->documentElement);
+    }
+    
+    /** @runInSeparateProcess */
+    public function testNoLanguageHasEmptyXsltValue(): void {
+        Dictionary::setSupportedLanguages();
+        $this->assertNull(Dictionary::getInstance()->getLang());
+        $this->assertSame('', Dictionary::xsltCurrentLanguage());
+    }
+    
+    /** @runInSeparateProcess */
+    public function testNoLanguagePreservesTextWithoutLoadingDictionaries(): void {
+        Dictionary::setSupportedLanguages();
+        $dictionary = Dictionary::getInstance();
+        $dictionary->registerDictionary(FarahUrl::createFromReference('farah://missing@dictionary/dictionary'));
+        $original = '  "Original" & <content>  ';
+        $this->assertSame($original, Dictionary::xsltLookupText($original));
+        $this->assertSame($original, $dictionary->lookupText($original));
+        $this->assertSame($original, $dictionary->lookupFragment($original)->textContent);
+    }
+    
+    /** @runInSeparateProcess */
+    public function testNoLanguagePreservesOriginalFragmentInTargetDocument(): void {
+        Dictionary::setSupportedLanguages();
+        $source = new DOMDocument();
+        $source->loadXML('<span title="keep">original <b>markup</b></span>');
+        $root = $source->documentElement;
+        $this->assertInstanceOf(DOMElement::class, $root);
+        $target = new DOMDocument();
+        $fragment = Dictionary::getInstance()->lookupFragment($root, ownerDoc: $target);
+        $this->assertSame($target, $fragment->ownerDocument);
+        $this->assertSame($source->saveXML($root), $target->saveXML($fragment));
+        $this->assertSame($root, $source->documentElement);
+    }
+    
+    /** @return iterable<string, array{bool, string}> */
+    public static function languageSelection(): iterable {
+        yield 'selected language' => [true, ''];
+        yield 'explicit language without selection' => [false, 'en'];
+    }
+    
+    /**
+     * @runInSeparateProcess
+     * @dataProvider languageSelection
+     */
+    public function testRegisteredDictionaryLookupWithLanguage(bool $selected, string $override): void {
+        Module::registerWithXmlManifestAndDefaultAssets('slothsoft@test-dictionary', __DIR__ . '/../test-files/test-dictionary');
+        Dictionary::setSupportedLanguages(...($selected ? ['en'] : []));
+        $dictionary = Dictionary::getInstance();
+        $dictionary->registerDictionary(FarahUrl::createFromReference('farah://slothsoft@test-dictionary/dictionary'));
+        $this->assertSame('hello world!', Dictionary::xsltLookupText('input', language: $override));
+        $this->assertSame($selected ? 'en' : null, $dictionary->getLang());
+    }
+    
+    /** @runInSeparateProcess */
+    public function testLegacyLookupsHonorExplicitLanguageWithoutSelection(): void {
+        Module::registerWithXmlManifestAndDefaultAssets('slothsoft@test-module', __DIR__ . '/../test-files/test-module');
+        Dictionary::setSupportedLanguages();
+        $dictionary = Dictionary::getInstance();
+        $this->assertSame('translation-of-test', $dictionary->lookupText('test', 'slothsoft@test-module', 'en-us'));
+        $this->assertSame('translation-of-test', $dictionary->lookupFragment('test', 'slothsoft@test-module', 'en-us')->textContent);
+        $this->assertNull($dictionary->getLang());
     }
     
     public function testClassExists(): void {
