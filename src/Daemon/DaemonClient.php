@@ -32,13 +32,14 @@ final class DaemonClient {
      * @return iterable<mixed>
      */
     public function call(mixed $message): iterable {
-        $message = json_encode($message);
-        $socket = socket_create(AbstractDaemonServer::DAEMON_DOMAIN, AbstractDaemonServer::DAEMON_TYPE, AbstractDaemonServer::DAEMON_PROTOCOL);
-        socket_connect($socket, AbstractDaemonServer::DAEMON_ADDRESS, $this->port);
-        socket_write($socket, $message);
-        
+        $message = json_encode($message, JSON_THROW_ON_ERROR);
+        $socket = SocketIO::create(AbstractDaemonServer::DAEMON_DOMAIN, AbstractDaemonServer::DAEMON_TYPE, AbstractDaemonServer::DAEMON_PROTOCOL);
         try {
-            while (($data = socket_read($socket, 65535)) !== false && $data !== '') {
+            if (! @socket_connect($socket, AbstractDaemonServer::DAEMON_ADDRESS, $this->port)) {
+                throw SocketIO::failure(sprintf('connect to daemon at %s:%d', AbstractDaemonServer::DAEMON_ADDRESS, $this->port), $socket);
+            }
+            SocketIO::write($socket, $message);
+            while (($data = SocketIO::read($socket)) !== '') {
                 if ($data === "\0") {
                     break;
                 }

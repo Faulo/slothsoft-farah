@@ -5,9 +5,12 @@ namespace Slothsoft\Farah\Daemon;
 
 use BadMethodCallException;
 use Generator;
+use LogicException;
+use RuntimeException;
 use Slothsoft\Core\Calendar\DateTimeFormatter;
 use Slothsoft\Core\IO\Writable\ChunkWriterInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrlArguments;
+use Socket;
 use Throwable;
 
 /**
@@ -33,7 +36,7 @@ abstract class AbstractDaemonServer implements ChunkWriterInterface {
     
     private int $port;
     
-    private $socket;
+    private ?Socket $socket = null;
     
     private bool|null $isRunning = null;
     
@@ -41,27 +44,61 @@ abstract class AbstractDaemonServer implements ChunkWriterInterface {
         $this->port = $port;
     }
     
+    public function __destruct() {
+        $this->closeSocket();
+    }
+    
+    private function closeSocket(): void {
+        if ($this->socket !== null) {
+            socket_close($this->socket);
+            $this->socket = null;
+        }
+    }
+    
     public function init(FarahUrlArguments $args): void {
-        $this->socket = socket_create(static::DAEMON_DOMAIN, static::DAEMON_TYPE, static::DAEMON_PROTOCOL);
-        socket_bind($this->socket, static::DAEMON_ADDRESS, $this->port);
-        socket_listen($this->socket);
-        socket_set_nonblock($this->socket);
-        $this->onInitialize($args);
+        $this->closeSocket();
+        $socket = SocketIO::create(static::DAEMON_DOMAIN, static::DAEMON_TYPE, static::DAEMON_PROTOCOL);
+        try {
+            if (! @socket_bind($socket, static::DAEMON_ADDRESS, $this->port)) {
+                throw SocketIO::failure(sprintf('bind daemon at %s:%d', static::DAEMON_ADDRESS, $this->port), $socket);
+            }
+            if (! @socket_listen($socket)) {
+                throw SocketIO::failure('listen on daemon socket', $socket);
+            }
+            if (! @socket_set_nonblock($socket)) {
+                throw SocketIO::failure('set daemon socket nonblocking', $socket);
+            }
+            $this->socket = $socket;
+            $this->onInitialize($args);
+        } catch (Throwable $e) {
+            $this->socket = null;
+            socket_close($socket);
+            throw $e;
+        }
     }
     
     public abstract function onInitialize(FarahUrlArguments $args): void;
     
     public function toChunks(): Generator {
+        $socket = $this->socket ?? throw new LogicException('Initialize the daemon before accepting messages.');
         $this->isRunning = true;
         while ($this->isRunning) {
-            if (($client = socket_accept($this->socket)) !== false) {
-                while (($data = socket_read($client, 65535)) !== false && $data !== '') {
+            $client = @socket_accept($socket);
+            if ($client === false) {
+                if (in_array(socket_last_error($socket), [SOCKET_EWOULDBLOCK, SOCKET_EINTR], true)) {
+                    continue;
+                }
+                throw SocketIO::failure('accept daemon connection', $socket);
+            }
+            try {
+                $data = SocketIO::read($client);
+                if ($data !== '') {
                     try {
                         $data = json_decode($data, true);
                         foreach ($this->onMessage($data) as $type => $response) {
                             switch ($type) {
                                 case static::STDOUT:
-                                    socket_write($client, json_encode($response));
+                                    SocketIO::write($client, json_encode($response, JSON_THROW_ON_ERROR));
                                     break;
                                 case static::STDERR:
                                     yield $response;
@@ -73,9 +110,11 @@ abstract class AbstractDaemonServer implements ChunkWriterInterface {
                     } catch (Throwable $e) {
                         yield $e->getMessage() . PHP_EOL;
                     }
-                    socket_write($client, "\0");
-                    break;
+                    SocketIO::write($client, "\0");
                 }
+            } catch (RuntimeException $e) {
+                yield $e->getMessage() . PHP_EOL;
+            } finally {
                 socket_close($client);
             }
         }
