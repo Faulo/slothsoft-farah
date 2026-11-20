@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah;
 
+use ArrayObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -27,6 +28,17 @@ final class HTTPRequestTest extends TestCase {
         $this->assertSame('', $request->getInput());
         $this->assertNull($request->getBodyJSON());
         $this->assertNull($request->getInputJSON());
+    }
+    
+    public function testLegacyInputCanUseArrayAccess(): void {
+        $request = new HTTPRequest();
+        $input = new ArrayObject();
+        $request->input = $input;
+        $request->setInputValue(1, ['nested' => 'value']);
+        
+        $this->assertTrue($request->hasInputValue(1));
+        $this->assertSame(['nested' => 'value'], $request->getInputValue(1));
+        $this->assertSame($input, $request->input);
     }
     
     /** @runInSeparateProcess */
@@ -71,5 +83,19 @@ final class HTTPRequestTest extends TestCase {
         $request->setPath('/page');
         
         $this->assertSame('https://localhost/page', $request->getURL());
+    }
+    
+    /** @runInSeparateProcess */
+    public function testProtocolRecognitionIsBoolean(): void {
+        $request = new HTTPRequest();
+        $this->assertTrue($request->protocolRecognised);
+        
+        $request->init(['SERVER_PROTOCOL' => 'HTTP/2.0']);
+        $this->assertTrue($request->protocolRecognised);
+        $this->assertSame(2, $request->protocolMajorVersion);
+        $this->assertSame(0, $request->protocolMinorVersion);
+        
+        $request->init(['SERVER_PROTOCOL' => 'invalid']);
+        $this->assertFalse($request->protocolRecognised);
     }
 }

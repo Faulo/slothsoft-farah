@@ -25,6 +25,7 @@ final class HTTPRequest implements DOMWriterInterface {
         return defined('SERVER_NAME') ? constant('SERVER_NAME') : 'localhost';
     }
     
+    /** @param array<array-key, mixed> $env */
     public static function prepareEnvironment(array &$env): void {
         $lang = null;
         if (isset($env['HTTP_ACCEPT_LANGUAGE'])) {
@@ -90,47 +91,47 @@ final class HTTPRequest implements DOMWriterInterface {
     
     const PROTOCOL_HTTP = 'HTTP';
     
-    public $dict;
+    public mixed $dict = null;
     
-    public $method;
+    public mixed $method = null;
     
-    public $schema;
+    public mixed $schema = null;
     
-    public $protocolName;
+    public mixed $protocolName = null;
     
-    public $protocolRecognised;
+    public bool $protocolRecognised = true;
     
-    public $protocolMajorVersion;
+    public mixed $protocolMajorVersion = null;
     
-    public $protocolMinorVersion;
+    public mixed $protocolMinorVersion = null;
     
-    public $time;
+    public mixed $time = null;
     
     public float $timeFloat;
     
-    public $clientIp;
+    public mixed $clientIp = null;
     
-    public $clientAgent;
+    public mixed $clientAgent = null;
     
-    public $clientHost;
+    public mixed $clientHost = null;
     
-    public $input;
+    public mixed $input = null;
     
-    public $mode;
+    public mixed $mode = null;
     
-    public $path = '/';
+    public mixed $path = '/';
     
-    protected $headerList;
+    /** @var array<string, mixed> */
+    protected array $headerList = [];
     
     public function __construct() {
-        $this->headerList = [];
         $this->input = [];
-        $this->protocolRecognised = true;
         $this->protocolName = self::PROTOCOL_HTTP;
         $this->protocolMajorVersion = 1;
         $this->protocolMinorVersion = 0;
     }
     
+    /** @param array<array-key, mixed> $env */
     public function init(array $env): void {
         $this->method = $env['REQUEST_METHOD'] ?? self::METHOD_GET;
         $scheme = strtolower((string) ($env['REQUEST_SCHEME'] ?? ''));
@@ -142,8 +143,9 @@ final class HTTPRequest implements DOMWriterInterface {
         $protocol = $env['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
         $protocol = trim($protocol);
         $match = [];
-        $this->protocolRecognised = preg_match('/^(\w+)\/(\d+)\.(\d+)$/', $protocol, $match);
-        if ($this->protocolRecognised) {
+        $protocolRecognised = preg_match('/^(\w+)\/(\d+)\.(\d+)$/', $protocol, $match) === 1;
+        $this->protocolRecognised = $protocolRecognised;
+        if ($protocolRecognised) {
             $this->protocolName = $match[1];
             $this->protocolMajorVersion = (int) $match[2];
             $this->protocolMinorVersion = (int) $match[3];
@@ -157,18 +159,19 @@ final class HTTPRequest implements DOMWriterInterface {
         $this->dict = Dictionary::getInstance();
     }
     
-    public function hasInputValue($key): bool {
+    public function hasInputValue(mixed $key): bool {
         return isset($this->input[$key]);
     }
     
-    public function getInputValue($key, $val = null): mixed {
+    public function getInputValue(mixed $key, mixed $val = null): mixed {
         return $this->input[$key] ?? $val;
     }
     
-    public function setInputValue($key, $val = null): void {
+    public function setInputValue(mixed $key, mixed $val = null): void {
         $this->input[$key] = $val;
     }
     
+    /** @param array<array-key, mixed> $input */
     public function setInput(array $input): void {
         $this->input = $input;
     }
@@ -199,6 +202,7 @@ final class HTTPRequest implements DOMWriterInterface {
         return json_decode($body, true);
     }
     
+    /** @param array<string, mixed> $headerList */
     public function setAllHeaders(array $headerList): void {
         foreach ($headerList as $key => $val) {
             $this->headerList[strtolower($key)] = $val;
@@ -209,11 +213,11 @@ final class HTTPRequest implements DOMWriterInterface {
         return $this->headerList[$key] ?? $default;
     }
     
-    public function setMode($mode): void {
+    public function setMode(mixed $mode): void {
         $this->mode = $mode;
     }
     
-    public function setPath($path): void {
+    public function setPath(mixed $path): void {
         $this->path = $path;
     }
     
