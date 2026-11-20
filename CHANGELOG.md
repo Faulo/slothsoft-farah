@@ -7,13 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.29.8] - 2026-11-20
+
 ### Changed
 
 - Enforce the types documented by the PHPStan cleanup with native PHP declarations; retain PHPDoc for collection element types and array shapes.
 
-- Require `slothsoft/core` 1.16.1 or newer and use `FileInfo::readContents()` for file reads.
+- Require `slothsoft/core` 1.16.2 or newer. Use Core's file size and change-time helpers for legacy responses and `FileInfo::readContents()` for file reads.
 
 ### Fixed
+
+- Dictionary key sanitization follows the XML `xml:id` character rules for the first and subsequent characters and discards malformed UTF-8 bytes.
+
+- Legacy `HTTPRequest::$protocolRecognised` reports a boolean after parsing the server protocol.
+
+- Legacy file responses use native integer offsets and a single seek for large byte ranges. Range ends past the file size are clipped, and starts outside the file return 416.
+
+- `lookupFileSize()` returns an integer for representable stream sizes. Custom streams can supply an exact decimal size in result statistics.
 
 - Dictionary lookups preserve original text and markup when no language is selected, expose an empty XSLT language string, and continue to honor explicit language overrides.
 
@@ -26,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Error documents check stylesheet availability with `file_exists()` without reading its contents, including when assertions are disabled.
 
 - Required asset file reads, hashes, statistics, and temporary response streams report failures with exceptions; JSON body readers reject an unavailable request body; successful empty files and optional missing-file metadata retain their existing behavior.
+
+- Legacy responses report XML serialization and gzip failures explicitly, and sitemap JSON encoding reports invalid input.
 
 - Rebuild manifest caches from XML when cached data is unreadable or invalid, instead of hiding sub-manifest assets behind an empty cached child list.
 
@@ -1362,7 +1374,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial stable release of the manifest-driven Farah asset, transformation, response, stream, sitemap, and CLI APIs.
 
-[Unreleased]: https://github.com/Faulo/slothsoft-farah/compare/1.29.7...HEAD
+[Unreleased]: https://github.com/Faulo/slothsoft-farah/compare/1.29.8...HEAD
+[1.29.8]: https://github.com/Faulo/slothsoft-farah/compare/1.29.7...1.29.8
 [1.29.7]: https://github.com/Faulo/slothsoft-farah/compare/1.29.6...1.29.7
 [1.29.6]: https://github.com/Faulo/slothsoft-farah/compare/1.29.5...1.29.6
 [1.29.5]: https://github.com/Faulo/slothsoft-farah/compare/1.29.4...1.29.5
