@@ -29,19 +29,21 @@ abstract class MessageFactory {
         return ServerRequest::fromGlobals();
     }
     
-    public static function createCustomRequest(string $method, UriInterface $uri, $body = null): ServerRequestInterface {
+    public static function createCustomRequest(string $method, UriInterface $uri, mixed $body = null): ServerRequestInterface {
         $serverRequest = new ServerRequest($method, $uri, [], $body, $_SERVER['SERVER_PROTOCOL'], $_SERVER);
         $params = [];
         parse_str($uri->getQuery(), $params);
         return $serverRequest->withQueryParams($params);
     }
     
+    /** @param array<string, mixed> $headers */
     public static function createServerResponse(int $statusCode, array $headers, ?StreamInterface $stream = null, bool $isBufferable = true): ResponseInterface {
         return $isBufferable
             ? new Response($statusCode, $headers, $stream)
             : (new StreamingResponse($statusCode, $headers, $stream))->withHeader('X-Accel-Buffering', 'no');
     }
     
+    /** @param resource $resource */
     public static function createStreamFromResource($resource): StreamInterface {
         return new Stream($resource);
     }

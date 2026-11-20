@@ -44,6 +44,7 @@ use Slothsoft\Farah\Module\Asset\PathResolverStrategy\NullPathResolver;
 use Slothsoft\Farah\Module\Asset\PathResolverStrategy\PathResolverStrategyInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use TypeError;
 use UnexpectedValueException;
 
 /**
@@ -274,6 +275,7 @@ final class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
         }
     }
     
+    /** @var array<string, object> */
     private static array $services = [];
     
     public function buildAssetStrategies(ManifestInterface $ownerManifest, LeanElement $element): AssetStrategies {
@@ -297,41 +299,25 @@ final class DefaultAssetBuilder implements AssetBuilderStrategyInterface {
             throw new UnexpectedValueException(sprintf('Missing "%s" attribute on element: %s', Manifest::ATTR_INSTRUCTION, serialize($element)));
         }
         
-        return new AssetStrategies($this->newExecutableBuilder($element->getAttribute(Manifest::ATTR_EXECUTABLE_BUILDER)), $this->newPathResolver($element->getAttribute(Manifest::ATTR_PATH_RESOLVER)), $this->newParameterFilter($element->getAttribute(Manifest::ATTR_PARAMETER_FILTER)), $this->newParameterSupplier($element->getAttribute(Manifest::ATTR_PARAMETER_SUPPLIER)), $this->newInstruction($element->getAttribute(Manifest::ATTR_INSTRUCTION)));
+        return new AssetStrategies(
+            $this->getService($element->getAttribute(Manifest::ATTR_EXECUTABLE_BUILDER), ExecutableBuilderStrategyInterface::class),
+            $this->getService($element->getAttribute(Manifest::ATTR_PATH_RESOLVER), PathResolverStrategyInterface::class),
+            $this->getService($element->getAttribute(Manifest::ATTR_PARAMETER_FILTER), ParameterFilterStrategyInterface::class),
+            $this->getService($element->getAttribute(Manifest::ATTR_PARAMETER_SUPPLIER), ParameterSupplierStrategyInterface::class),
+            $this->getService($element->getAttribute(Manifest::ATTR_INSTRUCTION), InstructionStrategyInterface::class)
+        );
     }
     
-    private function newExecutableBuilder(string $className): ExecutableBuilderStrategyInterface {
-        if (! isset(self::$services[$className])) {
-            self::$services[$className] = new $className();
+    /**
+     * @template T of object
+     * @param class-string<T> $expectedType
+     * @return T
+     */
+    private function getService(string $className, string $expectedType): object {
+        $service = self::$services[$className] ??= new $className();
+        if (! $service instanceof $expectedType) {
+            throw new TypeError(sprintf('Asset strategy "%s" must implement %s.', $className, $expectedType));
         }
-        return self::$services[$className];
-    }
-    
-    private function newPathResolver(string $className): PathResolverStrategyInterface {
-        if (! isset(self::$services[$className])) {
-            self::$services[$className] = new $className();
-        }
-        return self::$services[$className];
-    }
-    
-    private function newParameterFilter(string $className): ParameterFilterStrategyInterface {
-        if (! isset(self::$services[$className])) {
-            self::$services[$className] = new $className();
-        }
-        return self::$services[$className];
-    }
-    
-    private function newParameterSupplier(string $className): ParameterSupplierStrategyInterface {
-        if (! isset(self::$services[$className])) {
-            self::$services[$className] = new $className();
-        }
-        return self::$services[$className];
-    }
-    
-    private function newInstruction(string $className): InstructionStrategyInterface {
-        if (! isset(self::$services[$className])) {
-            self::$services[$className] = new $className();
-        }
-        return self::$services[$className];
+        return $service;
     }
 }

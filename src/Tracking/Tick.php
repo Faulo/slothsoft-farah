@@ -74,6 +74,9 @@ final class Tick {
         $time = get_execution_time();
         $backtraceList = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
         $backtrace = array_pop($backtraceList);
+        if ($backtrace === null) {
+            return;
+        }
         $func = isset($backtrace['class'], $backtrace['type']) ? $backtrace['class'] . $backtrace['type'] . $backtrace['function'] : $backtrace['function'];
         $this->timelineList[] = sprintf('%6dms (+%4dms) & %5dMB to get to %s', $time, $time - $this->lastTime, memory_get_peak_usage() / 1048576, $func);
         $this->lastTime = $time;

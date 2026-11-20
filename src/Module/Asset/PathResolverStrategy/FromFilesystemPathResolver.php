@@ -43,7 +43,7 @@ final class FromFilesystemPathResolver implements PathResolverStrategyInterface 
                     }
                 } else {
                     if ($fileExtension === $desiredExtension) {
-                        yield substr($name, 0, strrpos($name, '.'));
+                        yield substr($name, 0, -strlen($fileExtension) - 1);
                     }
                 }
             }

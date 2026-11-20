@@ -59,10 +59,10 @@ final class PhpinfoBuilderTest extends TestCase {
         return preg_replace_callback(
             '/^Zend OPcache\R.*?^Manual restarts =&gt; [^\r\n]*$/ms',
             static function (array $matches) use ($pattern): string {
-                return preg_replace($pattern, '$1 =&gt; [runtime value]', $matches[0]);
+                return preg_replace($pattern, '$1 =&gt; [runtime value]', $matches[0]) ?? throw new \RuntimeException(preg_last_error_msg());
             },
             $phpInfo
-        );
+        ) ?? throw new \RuntimeException(preg_last_error_msg());
     }
     
     /**

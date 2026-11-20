@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\StreamWrapper;
 
-use Error;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\LogicalNot;
 use PHPUnit\Framework\TestCase;
@@ -117,6 +116,12 @@ class FarahStreamWrapperFactoryTest extends TestCase {
         }
     }
     
+    public function testMalformedUrlCannotBeOpened(): void {
+        $url = 'farah://slothsoft@';
+        $this->assertFileDoesNotExist($url);
+        $this->assertFalse(@file_get_contents($url));
+    }
+    
     /**
      * @return iterable<string, array{0: string, 1?: class-string<\Throwable>}>
      */
@@ -137,11 +142,6 @@ class FarahStreamWrapperFactoryTest extends TestCase {
         yield 'farah://slothsoft@farah-missing does not exist' => [
             'farah://slothsoft@farah-missing',
             ModuleNotFoundException::class
-        ];
-        
-        yield 'farah://slothsoft@ does not exist' => [
-            'farah://slothsoft@',
-            Error::class
         ];
         
         yield 'farah://slothsoft-missing does not exist' => [

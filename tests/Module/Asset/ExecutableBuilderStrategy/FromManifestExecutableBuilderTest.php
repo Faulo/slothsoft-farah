@@ -46,8 +46,8 @@ final class FromManifestExecutableBuilderTest extends TestCase {
         
         $xpath = DOMHelper::loadXPath(DOMHelper::loadDocument($url));
         
-        /** @var DOMNodeList $result */
         $result = $xpath->evaluate($query);
+        $this->assertInstanceOf(DOMNodeList::class, $result);
         
         $this->assertGreaterThan(0, $result->length);
     }

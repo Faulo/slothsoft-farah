@@ -232,10 +232,10 @@ final class RequestStrategyBaseRangeTest extends TestCase {
                 $fields = explode("\r\n\r\n", substr($part, 2, -2), 2);
                 $this->assertCount(2, $fields);
                 $this->assertSame(1, preg_match('/(?:^|\r\n)Content-Range:\s*(bytes \d+-\d+\/10)(?:\r\n|$)/i', $fields[0], $match));
-                $this->assertArrayHasKey(1, $match);
-                $this->assertArrayHasKey($match[1], $expected);
-                $this->assertArrayNotHasKey($match[1], $actual);
-                $actual[$match[1]] = $fields[1];
+                $contentRange = $match[1] ?? self::fail('Multipart response is missing a Content-Range value.');
+                $this->assertArrayHasKey($contentRange, $expected);
+                $this->assertArrayNotHasKey($contentRange, $actual);
+                $actual[$contentRange] = $fields[1];
             }
             $this->assertNotEmpty($actual);
             foreach ($actual as $contentRange => $content) {

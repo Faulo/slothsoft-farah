@@ -5,6 +5,7 @@ namespace Slothsoft\Farah\Tracking;
 
 use DOMDocument;
 use DOMDocumentFragment;
+use LogicException;
 use Slothsoft\Farah\HTTPRequest;
 
 /**
@@ -16,17 +17,19 @@ use Slothsoft\Farah\HTTPRequest;
  */
 final class View {
     
-    protected $archive = null;
+    protected Archive $archive;
     
-    protected $groupList = [];
+    /** @var array<array-key, string> */
+    protected array $groupList = [];
     
-    protected $searchList = [];
+    /** @var array<array-key, string> */
+    protected array $searchList = [];
     
-    protected $logURI = null;
+    protected ?string $logURI = null;
     
-    protected $pageNo = null;
+    protected ?int $pageNo = null;
     
-    protected $pageLimit = 500;
+    protected int $pageLimit = 500;
     
     public function __construct(Archive $archive) {
         $this->archive = $archive;
@@ -75,6 +78,9 @@ final class View {
     }
     
     public function asNode(DOMDocument $dataDoc): DOMDocumentFragment {
+        if ($this->logURI === null || $this->pageNo === null) {
+            throw new LogicException('Parse the tracking request before rendering the view.');
+        }
         $retFragment = $dataDoc->createDocumentFragment();
         
         $config = $this->archive->getConfig();
@@ -139,7 +145,8 @@ final class View {
                 $query['group'][$key] = $row;
                 
                 $node = $dataDoc->createElement('group');
-                $node->appendChild($dataDoc->createTextNode(implode(' ', preg_split('/[\/\-]/', $row, 2))));
+                $parts = preg_split('/[\/\-]/', $row, 2);
+                $node->appendChild($dataDoc->createTextNode($parts === false ? $row : implode(' ', $parts)));
                 $node->setAttribute('uri', './?' . http_build_query($query));
                 if ($val === $row) {
                     $node->setAttribute('active', 'active');

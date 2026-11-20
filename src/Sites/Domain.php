@@ -105,6 +105,7 @@ final class Domain {
         return (new LookupPageStrategy($this))->lookupPageNode($path, $contextNode);
     }
     
+    /** @param array<array-key, mixed> $args */
     public function lookupAssetUrl(DOMElement $dataNode, array $args = []): FarahUrl {
         $vendorName = $this->findVendorName($dataNode);
         $moduleName = $this->findModuleName($dataNode);
@@ -122,6 +123,7 @@ final class Domain {
         return $this->xpath->evaluate('string(ancestor-or-self::*[@vendor][1]/@vendor)', $node);
     }
     
+    /** @return array<array-key, string> */
     private function findParameters(DOMElement $node): array {
         $ret = [];
         foreach ($this->xpath->evaluate('ancestor-or-self::*/sfm:param', $node) as $paramNode) {

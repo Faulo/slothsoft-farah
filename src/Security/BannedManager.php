@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Slothsoft\Farah\Security;
 
+use RuntimeException;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Core\Configuration\ConfigurationRequiredException;
 use Slothsoft\Core\Configuration\FileConfigurationField;
@@ -67,16 +68,23 @@ final class BannedManager {
         ]));
     }
     
-    private $bannedList;
+    /** @var array<int, string>|null */
+    private ?array $bannedList = null;
     
+    /** @return array<int, string> */
     private function getBannedList(): array {
         if ($this->bannedList === null) {
             $logFile = self::getIpFile();
-            $this->bannedList = file_exists($logFile) ? file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : [];
+            $list = file_exists($logFile) ? @file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : [];
+            if ($list === false) {
+                throw new RuntimeException(sprintf('Failed to read the ban list "%s".', $logFile));
+            }
+            $this->bannedList = $list;
         }
         return $this->bannedList;
     }
     
+    /** @param array<int, string> $list */
     private function setBannedList(array $list): void {
         $this->bannedList = $list;
         $logFile = self::getIpFile();

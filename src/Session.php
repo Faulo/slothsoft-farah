@@ -6,6 +6,7 @@ namespace Slothsoft\Farah;
 use Exception;
 use Slothsoft\Core\Calendar\Seconds;
 use Slothsoft\Core\DBMS\Manager;
+use Slothsoft\Core\DBMS\Table;
 
 /**
  * Legacy session persistence helper backed by cookies and the slothsoft DBMS layer.
@@ -24,7 +25,7 @@ final class Session {
     
     protected string $cookieName = 'session-key';
     
-    protected $dbmsTable;
+    protected ?Table $dbmsTable = null;
     
     protected string|null $key = null;
     
@@ -37,7 +38,7 @@ final class Session {
         $this->initialized = false;
     }
     
-    protected function install(): void {
+    protected function install(Table $table): void {
         $sqlCols = [
             'id' => 'int NOT NULL AUTO_INCREMENT',
             'session' => 'CHAR(40) CHARACTER SET ascii COLLATE ascii_bin NULL',
@@ -65,7 +66,7 @@ final class Session {
         ];
         $options = [ // 'engine' => 'MyISAM',
         ];
-        $this->dbmsTable->createTable($sqlCols, $sqlKeys, $options);
+        $table->createTable($sqlCols, $sqlKeys, $options);
     }
     
     protected function init(): void {
@@ -75,7 +76,7 @@ final class Session {
                 $this->initKey($this->getCookie($this->cookieName));
                 $this->dbmsTable = Manager::getTable($this->dbName, $this->tableName);
                 if (! $this->dbmsTable->tableExists()) {
-                    $this->install();
+                    $this->install($this->dbmsTable);
                 }
             } catch (Exception) {
                 $this->dbmsTable = null;
