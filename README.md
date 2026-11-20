@@ -74,7 +74,7 @@ These parts are suitable for use in new or maintained Farah code:
 
 ## HTTP Byte Ranges
 
-Request strategies support single bounded, open-ended, and suffix byte ranges on GET requests. Range offsets and representation sizes remain exact even above `PHP_INT_MAX`; result file statistics may supply an exact size as a decimal string when the PSR-7 stream cannot report it as an integer. Sizes describe the selected representation: raw result statistics are never used for compressed content.
+Request strategies support single bounded, open-ended, and suffix byte ranges on GET requests. Local files use native integer sizes and offsets. Virtual streams can supply exact decimal-string sizes in result file statistics when the PSR-7 stream cannot report a size as an integer. Sizes describe the selected representation: raw result statistics are never used for compressed content.
 
 Ranges are read lazily with bounded reads. Seekable sources use native absolute, end-relative, or bounded relative seeks; non-seekable sources discard preceding bytes incrementally. Reading a range never caches the entire source. Unknown-size bufferable representations retain the existing caching fallback to discover their length.
 

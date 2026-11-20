@@ -15,6 +15,7 @@ use Slothsoft\Core\IO\Writable\StreamWriterInterface;
 use Slothsoft\Core\IO\Writable\StringWriterInterface;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlStreamIdentifier;
+use Slothsoft\Farah\Http\Range\ByteCount;
 use Slothsoft\Farah\Module\Executable\ExecutableInterface;
 
 /**
@@ -49,6 +50,7 @@ final class Result implements ResultInterface {
     
     private ?bool $isBufferable = null;
     
+    /** @var array{mtime?: int, size?: int|string, ...<array-key, int>}|null */
     private ?array $fileStat = null;
     
     private ?string $fileName = null;
@@ -164,7 +166,15 @@ final class Result implements ResultInterface {
     }
     
     public function lookupFileSize(): int {
-        return $this->lookupFileStatistics()['size'] ?? 0;
+        $size = $this->lookupFileStatistics()['size'] ?? 0;
+        if (is_int($size)) {
+            return $size;
+        }
+        try {
+            return (new ByteCount($size))->toInt();
+        } catch (\OverflowException) {
+            return 0;
+        }
     }
 }
 
