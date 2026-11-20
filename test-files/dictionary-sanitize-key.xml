@@ -12,4 +12,6 @@
     <key input="0.-A" sanitized="A" />
     <key input="0.-_" sanitized="_" />
     <key input="A·B" sanitized="A·B" />
+    <key input="0-.·&#x0301;_A0-.·&#x0301;" sanitized="_A0-.·&#x0301;" />
+    <key input=":first:second" sanitized="firstsecond" />
 </test>

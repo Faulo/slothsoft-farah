@@ -5,7 +5,6 @@ namespace Slothsoft\Farah;
 
 use DOMDocument;
 use DOMElement;
-use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
@@ -98,7 +97,23 @@ class DictionaryTest extends TestCase {
     public function test_xsltSanitizeKey(string $input, string $expected): void {
         $actual = Dictionary::xsltSanitizeKey($input);
         
-        $this->assertThat($actual, new IsEqual($expected));
+        $this->assertSame($expected, $actual);
+        $this->assertSame($actual, Dictionary::xsltSanitizeKey($actual));
+    }
+    
+    /** @runInSeparateProcess */
+    public function testSanitizeKeyDiscardsMalformedUtf8WithoutSubstitution(): void {
+        $substitute = mb_substitute_character();
+        try {
+            mb_substitute_character(ord('Z'));
+            $sanitized = Dictionary::xsltSanitizeKey("\xFF0A\x80B.1\xC3");
+            $this->assertSame('AB.1', $sanitized);
+            $this->assertSame($sanitized, Dictionary::xsltSanitizeKey($sanitized));
+            $this->assertSame('', Dictionary::xsltSanitizeKey("\xFF0\x80"));
+            $this->assertSame(ord('Z'), mb_substitute_character());
+        } finally {
+            mb_substitute_character($substitute);
+        }
     }
     
     /**
@@ -148,6 +163,31 @@ class DictionaryTest extends TestCase {
         yield 'middle dot' => [
             'A·B',
             'A·B'
+        ];
+        
+        yield 'name characters only after the start' => [
+            "0-.·\u{0301}\u{203F}_A0-.·\u{0301}\u{203F}",
+            "_A0-.·\u{0301}\u{203F}"
+        ];
+        
+        yield 'colon is excluded even after the start' => [
+            ':first:second',
+            'firstsecond'
+        ];
+        
+        yield 'XML name start characters outside the old letter category' => [
+            "\u{200C}\u{2070}A",
+            "\u{200C}\u{2070}A"
+        ];
+        
+        yield 'supplementary range ends at U+EFFFF' => [
+            "\u{F0000}\u{10000}A\u{EFFFF}\u{F0000}",
+            "\u{10000}A\u{EFFFF}"
+        ];
+        
+        yield 'name characters without a valid start are discarded' => [
+            "0-.·\u{0301}\u{203F}: ",
+            ''
         ];
     }
 }

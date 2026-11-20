@@ -11,6 +11,7 @@ use DOMNode;
 use DOMXPath;
 use Ds\Map;
 use Ds\Set;
+use RuntimeException;
 use Slothsoft\Core\Configuration\ConfigurationField;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
@@ -23,6 +24,12 @@ use Slothsoft\Farah\Module\Module;
  * @since 2018-02-21
  */
 final class Dictionary {
+    
+    // XML 1.0 NameStartChar and NameChar, excluding the namespace colon for xml:id.
+    private const ID_START_CHARACTERS = 'A-Z_a-z\x{C0}-\x{D6}\x{D8}-\x{F6}\x{F8}-\x{2FF}\x{370}-\x{37D}\x{37F}-\x{1FFF}'
+    . '\x{200C}-\x{200D}\x{2070}-\x{218F}\x{2C00}-\x{2FEF}\x{3001}-\x{D7FF}\x{F900}-\x{FDCF}\x{FDF0}-\x{FFFD}\x{10000}-\x{EFFFF}';
+    
+    private const ID_CHARACTERS = self::ID_START_CHARACTERS . '0-9.\x{B7}\x{300}-\x{36F}\x{203F}-\x{2040}-';
     
     public static function xsltCurrentLanguage(): string {
         $dict = self::getInstance();
@@ -49,8 +56,23 @@ final class Dictionary {
         }
     }
     
+    /** Idempotently converts text into an XML dictionary lookup key. */
     public static function xsltSanitizeKey(string $key): string {
-        return preg_replace('~[^\p{L}\p{Pc}\p{Mn}\p{Mc}_0-9.\-\x{00B7}]+~u', '', preg_replace('~^[^\p{L}_]*~u', '', $key));
+        if (! mb_check_encoding($key, 'UTF-8')) {
+            $substitute = mb_substitute_character();
+            try {
+                mb_substitute_character('none');
+                $key = mb_scrub($key, 'UTF-8');
+            } finally {
+                mb_substitute_character($substitute);
+            }
+        }
+        
+        $sanitized = preg_replace('~\A[^' . self::ID_START_CHARACTERS . ']+|[^' . self::ID_CHARACTERS . ']+~u', '', $key);
+        if ($sanitized === null) {
+            throw new RuntimeException('Failed to sanitize the dictionary key: ' . preg_last_error_msg());
+        }
+        return $sanitized;
     }
     
     /** @var Set<FarahUrl> */
@@ -281,8 +303,6 @@ final class Dictionary {
     protected string $currentNS = 'core';
     
     protected string $langDocPath = 'vendor/slothsoft/%s/lang.%s.xml';
-    
-    protected array $langDocs = [];
     
     /** @var array<string, DOMXPath> */
     protected array $langPaths = [];
