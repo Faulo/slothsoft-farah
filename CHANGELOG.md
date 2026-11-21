@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.30.0] - 2026-11-21
+
+### Removed
+
+- Remove Farah's historical work scheduler and its optional dependencies. [Cron tracks the replacement and migration](https://github.com/Faulo/slothsoft-cron/issues/1).
+
 ## [1.29.8] - 2026-11-20
 
 ### Changed
@@ -823,11 +829,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Deprecated pthreads code was moved to its own source tree.
+- Deprecated threading code was moved to its own source tree.
 
 ### Fixed
 
-- Pthreads namespaces, templates, and build paths were corrected.
+- Threading namespaces, templates, and build paths were corrected.
 
 ## [1.18.2] - 2025-09-17
 
@@ -993,7 +999,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Pthreads polyfill and sockets requirements for the PHP 7.2 build.
+- Threading polyfill and sockets requirements for the PHP 7.2 build.
 
 ## [1.5.3] - 2025-07-04
 
@@ -1005,7 +1011,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- The PHP 7.2 maintenance line uses the pthreads polyfill correctly.
+- The PHP 7.2 maintenance line uses the threading polyfill correctly.
 
 ## [1.14.3] - 2025-07-04
 
@@ -1078,7 +1084,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Pthreads testing was removed from the main test matrix.
+- Threading tests were removed from the main test matrix.
 
 ### Fixed
 
@@ -1374,7 +1380,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial stable release of the manifest-driven Farah asset, transformation, response, stream, sitemap, and CLI APIs.
 
-[Unreleased]: https://github.com/Faulo/slothsoft-farah/compare/1.29.8...HEAD
+[Unreleased]: https://github.com/Faulo/slothsoft-farah/compare/1.30.0...HEAD
+[1.30.0]: https://github.com/Faulo/slothsoft-farah/compare/1.29.8...1.30.0
 [1.29.8]: https://github.com/Faulo/slothsoft-farah/compare/1.29.7...1.29.8
 [1.29.7]: https://github.com/Faulo/slothsoft-farah/compare/1.29.6...1.29.7
 [1.29.6]: https://github.com/Faulo/slothsoft-farah/compare/1.29.5...1.29.6

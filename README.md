@@ -22,6 +22,8 @@ Bug fixes are allowed in every area of the package, including deprecated and his
 
 Adding dependencies is acceptable when the dependency is justified by the change and remains compatible with this package's supported PHP versions.
 
+Farah 1.30 removes its historical work scheduler. [Cron tracks the replacement and downstream migration](https://github.com/Faulo/slothsoft-cron/issues/1). Applications using the historical classes should stay on an earlier Farah release until they can migrate to Cron's work API.
+
 ## Current / Supported Areas
 
 These parts are suitable for use in new or maintained Farah code:
@@ -124,9 +126,6 @@ These components are included for historical reasons only. Do not use them for n
 - `Slothsoft\Farah\HTTPClosure`, `HTTPCommand`, `HTTPEvent`, `HTTPRequest`, and `HTTPResponse`
     - Legacy root-level HTTP classes predating the current PSR-7 request/response flow.
     - Prefer `Slothsoft\Farah\Http`, `Slothsoft\Farah\RequestStrategy`, `Slothsoft\Farah\ResponseStrategy`, and PSR-7 message interfaces for new code.
-- `Slothsoft\Farah\PThreads` in `src-pthreads/`
-    - Deprecated pthreads integration retained for old consumers.
-    - New code should avoid `ext-pthreads` and use maintained process, queue, or async infrastructure instead.
 - The `/sites` asset in `assets/manifest.xml`
     - Deprecated alias for `/current-sitemap`.
 

@@ -39,14 +39,11 @@
         "symfony/polyfill-php83": "^1.30"
     },
     "suggest": {
-        "krakjoe/pthreads-polyfill": "^1.1",
-        "ext-ds": "*",
-        "ext-pthreads": "*"
+        "ext-ds": "*"
     },
     "autoload": {
         "psr-4": {
-            "Slothsoft\\Farah\\": "src",
-            "Slothsoft\\Farah\\PThreads\\": "src-pthreads"
+            "Slothsoft\\Farah\\": "src"
         },
         "files": [
             "src/bootstrap.php"
@@ -64,7 +61,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "1.29.x-dev"
+            "dev-main": "1.30.x-dev"
         }
     },
     "homepage": "https://faulo.github.io/slothsoft-farah/",
