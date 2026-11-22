@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.30.1] - 2026-11-22
+
 ### Changed
 
 - File and virtual stream sizes and resolved byte ranges use native PHP integers. Custom stream builders must supply an integer `size` or omit it. HTTP `Range` headers can still contain numbers larger than `PHP_INT_MAX`.
@@ -1384,7 +1386,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial stable release of the manifest-driven Farah asset, transformation, response, stream, sitemap, and CLI APIs.
 
-[Unreleased]: https://github.com/Faulo/slothsoft-farah/compare/1.30.0...HEAD
+[Unreleased]: https://github.com/Faulo/slothsoft-farah/compare/1.30.1...HEAD
+[1.30.1]: https://github.com/Faulo/slothsoft-farah/compare/1.30.0...1.30.1
 [1.30.0]: https://github.com/Faulo/slothsoft-farah/compare/1.29.8...1.30.0
 [1.29.8]: https://github.com/Faulo/slothsoft-farah/compare/1.29.7...1.29.8
 [1.29.7]: https://github.com/Faulo/slothsoft-farah/compare/1.29.6...1.29.7
