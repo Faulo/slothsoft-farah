@@ -12,18 +12,18 @@ final class RangeRequestTest extends TestCase {
         $request = RangeRequest::parse('BYTES= 2-99, 99-, -4, , 0-0, -0');
         $this->assertNotNull($request);
         $this->assertSame(5, $request->getRangeCount());
-        $ranges = $request->resolve(new ByteCount(10));
+        $ranges = $request->resolve(10);
         $this->assertSame(['bytes 2-9/10', 'bytes 6-9/10', 'bytes 0-0/10'], array_map(static fn(ByteRange $range): string => $range->getContentRange(), $ranges));
-        $this->assertSame(['8', '4', '1'], array_map(static fn(ByteRange $range): string => (string) $range->getLength(), $ranges));
-        $this->assertSame([], $request->resolve(new ByteCount(0)));
+        $this->assertSame([8, 4, 1], array_map(static fn(ByteRange $range): int => $range->getLength(), $ranges));
+        $this->assertSame([], $request->resolve(0));
     }
     
-    public function testLargeRangeLengthIsExact(): void {
-        $request = RangeRequest::parse('bytes=1-10000000000000000002');
+    public function testOversizedEndIsClippedAtTheNativeLimit(): void {
+        $request = RangeRequest::parse('bytes=0-' . PHP_INT_MAX . '0');
         $this->assertNotNull($request);
-        $range = $request->resolve(new ByteCount('10000000000000000010'))[0];
-        $this->assertSame('10000000000000000002', (string) $range->getLength());
-        $this->assertSame('bytes 1-10000000000000000002/10000000000000000010', $range->getContentRange());
+        $range = $request->resolve(PHP_INT_MAX)[0];
+        $this->assertSame(PHP_INT_MAX, $range->getLength());
+        $this->assertSame('bytes 0-' . (PHP_INT_MAX - 1) . '/' . PHP_INT_MAX, $range->getContentRange());
     }
     
     /** @dataProvider invalidProvider */
@@ -43,13 +43,14 @@ final class RangeRequestTest extends TestCase {
     /** @dataProvider invalidRangeProvider */
     public function testResolvedRangeMustFitRepresentation(int $start, int $end, int $size): void {
         $this->expectException(InvalidArgumentException::class);
-        new ByteRange(new ByteCount($start), new ByteCount($end), new ByteCount($size));
+        new ByteRange($start, $end, $size);
     }
     
     /**
      * @return iterable<array{0: int, 1: int, 2: int}>
      */
     public function invalidRangeProvider(): iterable {
+        yield [-1, 1, 10];
         yield [2, 1, 10];
         yield [0, 10, 10];
         yield [0, 0, 0];

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- File and virtual stream sizes and resolved byte ranges use native PHP integers. Custom stream builders must supply an integer `size` or omit it. HTTP `Range` headers can still contain numbers larger than `PHP_INT_MAX`.
+
 ## [1.30.0] - 2026-11-21
 
 ### Removed

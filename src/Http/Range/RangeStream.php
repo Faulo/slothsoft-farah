@@ -4,11 +4,9 @@ declare(strict_types = 1);
 namespace Slothsoft\Farah\Http\Range;
 
 use InvalidArgumentException;
-use OverflowException;
+use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use Throwable;
-
-use Psr\Http\Message\StreamInterface;
 
 /**
  * Lazy, forward-only, read-only view of a resolved range. Owns its source.
@@ -18,14 +16,13 @@ use Psr\Http\Message\StreamInterface;
 final class RangeStream implements StreamInterface {
     private const CHUNK_SIZE = 8192;
     
-    private ByteCount $position;
+    private int $position = 0;
     
     private bool $positioned = false;
     
     private bool $closed = false;
     
     public function __construct(private readonly StreamInterface $source, private readonly ByteRange $range) {
-        $this->position = new ByteCount(0);
     }
     
     public function __toString(): string {
@@ -47,27 +44,16 @@ final class RangeStream implements StreamInterface {
     }
     
     public function getSize(): ?int {
-        if ($this->closed) {
-            return null;
-        }
-        try {
-            return $this->range->getLength()->toInt();
-        } catch (OverflowException) {
-            return null;
-        }
+        return $this->closed ? null : $this->range->getLength();
     }
     
     public function tell(): int {
         $this->assertReadable();
-        try {
-            return $this->position->toInt();
-        } catch (OverflowException $e) {
-            throw new RuntimeException('The range position exceeds PHP_INT_MAX.', 0, $e);
-        }
+        return $this->position;
     }
     
     public function eof(): bool {
-        return $this->closed || $this->position->compare($this->range->getLength()) >= 0;
+        return $this->closed || $this->position >= $this->range->getLength();
     }
     
     public function isSeekable(): bool {
@@ -107,10 +93,9 @@ final class RangeStream implements StreamInterface {
             $this->positionSource();
             $this->positioned = true;
         }
-        $remaining = $this->range->getLength()->subtract($this->position);
-        $length = $this->boundedLength($remaining, min($length, self::CHUNK_SIZE));
-        $data = $this->readSource($length);
-        $this->position = $this->position->add(new ByteCount(strlen($data)));
+        $remaining = $this->range->getLength() - $this->position;
+        $data = $this->readSource(min($remaining, $length, self::CHUNK_SIZE));
+        $this->position += strlen($data);
         return $data;
     }
     
@@ -133,10 +118,6 @@ final class RangeStream implements StreamInterface {
         }
     }
     
-    private function boundedLength(ByteCount $remaining, int $limit): int {
-        return $remaining->compare(new ByteCount($limit)) < 0 ? $remaining->toInt() : $limit;
-    }
-    
     private function readSource(int $length): string {
         $data = $this->source->read($length);
         if ($data === '') {
@@ -152,33 +133,30 @@ final class RangeStream implements StreamInterface {
         $offset = $this->range->start;
         if ($this->source->isSeekable()) {
             try {
-                $this->source->seek($offset->toInt());
+                $this->source->seek($offset);
                 return;
             } catch (RuntimeException) {
                 // A failed seek is not assumed to leave the cursor unchanged.
             }
             try {
-                $this->source->seek(-$this->range->size->subtract($offset)->toInt(), SEEK_END);
+                $this->source->seek($offset - $this->range->size, SEEK_END);
                 return;
             } catch (RuntimeException) {
                 // A near-end range can usually be positioned with one native seek.
             }
             $this->source->seek(0);
             try {
-                while (! $offset->isZero()) {
-                    $step = $this->boundedLength($offset, PHP_INT_MAX);
-                    $this->source->seek($step, SEEK_CUR);
-                    $offset = $offset->subtract(new ByteCount($step));
+                if ($offset > 0) {
+                    $this->source->seek($offset, SEEK_CUR);
                 }
                 return;
             } catch (RuntimeException) {
                 $this->source->seek(0);
-                $offset = $this->range->start;
             }
         }
-        while (! $offset->isZero()) {
-            $data = $this->readSource($this->boundedLength($offset, self::CHUNK_SIZE));
-            $offset = $offset->subtract(new ByteCount(strlen($data)));
+        while ($offset > 0) {
+            $data = $this->readSource(min($offset, self::CHUNK_SIZE));
+            $offset -= strlen($data);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Slothsoft\Farah\Http\Range;
  * @internal
  */
 final readonly class RangeRequest {
-    /** @param list<array{?ByteCount, ?ByteCount}> $ranges */
+    /** @param list<array{?string, ?string}> $ranges */
     private function __construct(private array $ranges) {
     }
     
@@ -27,9 +27,9 @@ final readonly class RangeRequest {
             if (! preg_match('/\A([0-9]*)-([0-9]*)\z/', $member, $parts) || ($parts[1] === '' && $parts[2] === '')) {
                 return null;
             }
-            $start = $parts[1] === '' ? null : new ByteCount($parts[1]);
-            $end = $parts[2] === '' ? null : new ByteCount($parts[2]);
-            if ($start !== null && $end !== null && $start->compare($end) > 0) {
+            $start = $parts[1] === '' ? null : (ltrim($parts[1], '0') ?: '0');
+            $end = $parts[2] === '' ? null : (ltrim($parts[2], '0') ?: '0');
+            if ($start !== null && $end !== null && self::compareDecimals($start, $end) > 0) {
                 return null;
             }
             $ranges[] = [$start, $end];
@@ -42,29 +42,34 @@ final readonly class RangeRequest {
     }
     
     /** @return list<ByteRange> Satisfiable ranges in request order. */
-    public function resolve(ByteCount $size): array {
-        if ($size->isZero()) {
+    public function resolve(int $size): array {
+        if ($size <= 0) {
             return [];
         }
-        $last = $size->subtract(new ByteCount(1));
+        $last = $size - 1;
+        $sizeDigits = (string) $size;
         $resolved = [];
         foreach ($this->ranges as [$start, $end]) {
             if ($start === null) {
-                if ($end === null || $end->isZero()) {
+                if ($end === null || $end === '0') {
                     continue;
                 }
-                $start = $end->compare($size) >= 0 ? new ByteCount(0) : $size->subtract($end);
-                $end = $last;
+                $firstByte = self::compareDecimals($end, $sizeDigits) >= 0 ? 0 : $size - (int) $end;
+                $lastByte = $last;
             } else {
-                if ($start->compare($size) >= 0) {
+                if (self::compareDecimals($start, $sizeDigits) >= 0) {
                     continue;
                 }
-                if ($end === null || $end->compare($last) > 0) {
-                    $end = $last;
-                }
+                $firstByte = (int) $start;
+                $lastByte = $end === null || self::compareDecimals($end, $sizeDigits) >= 0 ? $last : (int) $end;
             }
-            $resolved[] = new ByteRange($start, $end, $size);
+            $resolved[] = new ByteRange($firstByte, $lastByte, $size);
         }
         return $resolved;
+    }
+    
+    private static function compareDecimals(string $left, string $right): int {
+        // Header values can exceed PHP_INT_MAX. Compare their digits before casting.
+        return (strlen($left) <=> strlen($right)) ?: strcmp($left, $right);
     }
 }

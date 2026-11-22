@@ -76,11 +76,11 @@ These parts are suitable for use in new or maintained Farah code:
 
 ## HTTP Byte Ranges
 
-Request strategies support single bounded, open-ended, and suffix byte ranges on GET requests. Local files use native integer sizes and offsets. Virtual streams can supply exact decimal-string sizes in result file statistics when the PSR-7 stream cannot report a size as an integer. Sizes describe the selected representation: raw result statistics are never used for compressed content.
+Request strategies support single bounded, open-ended, and suffix byte ranges on GET requests. Local files and virtual streams use native integer sizes and offsets. An uncompressed stream whose PSR-7 size is unknown can supply a nonnegative integer `size` in its result file statistics. For compressed content, the size describes the compressed representation.
 
-Ranges are read lazily with bounded reads. Seekable sources use native absolute, end-relative, or bounded relative seeks; non-seekable sources discard preceding bytes incrementally. Reading a range never caches the entire source. Unknown-size bufferable representations retain the existing caching fallback to discover their length.
+Ranges are read lazily with bounded reads. Seekable sources use native absolute, end-relative, or relative seeks. Non-seekable sources discard preceding bytes incrementally. Reading a range never caches the entire source. Unknown-size bufferable representations retain the existing caching fallback to discover their length.
 
-Unsatisfiable single ranges return 416 with `Content-Range: bytes */size`. Malformed or unsupported ranges, valid multiple ranges, ranges on empty or unknown-size representations, and ranges on other methods are ignored. Conditional requests take precedence over ranges, and `If-Range` must match the selected representation. The internal range stream is forward-only and read-only; its PSR-7 size is `null` if the exact range length exceeds the integer limit.
+Unsatisfiable single ranges return 416 with `Content-Range: bytes */size`. Range header values can exceed `PHP_INT_MAX` and are checked against the representation size before conversion. Malformed or unsupported ranges, valid multiple ranges, ranges on empty or unknown-size representations, and ranges on other methods are ignored. Conditional requests take precedence over ranges, and `If-Range` must match the selected representation. The internal range stream is forward-only and read-only.
 
 ## Forcing an HTTP Response During Asset Resolution
 

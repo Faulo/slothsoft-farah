@@ -40,9 +40,8 @@ interface ResultInterface {
     
     /**
      * Determine all available statistics of this result, as a call to stat() would.
-     * File-backed results report integer sizes. Custom stream builders may provide exact decimal strings for virtual sizes.
      *
-     * @return array{mtime?: int, size?: int|string, ...<array-key, int>}
+     * @return array{mtime?: int, size?: int, ...<array-key, int>}
      */
     public function lookupFileStatistics(): array;
     
@@ -52,7 +51,7 @@ interface ResultInterface {
     public function lookupFileChangeTime(): int;
     
     /**
-     * Look up the size of this result, or 0 if it cannot be determined as a native integer.
+     * Look up the size of this result, or 0 if it is unavailable or negative.
      */
     public function lookupFileSize(): int;
     

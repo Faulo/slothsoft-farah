@@ -41,9 +41,8 @@ interface StreamBuilderStrategyInterface {
     
     /**
      * Determine all available stats of this resource, as a call to stat() would.
-     * File-backed streams report integer sizes. Custom builders may provide exact decimal strings for virtual sizes.
      *
-     * @return array{mtime?: int, size?: int|string, ...<array-key, int>}
+     * @return array{mtime?: int, size?: int, ...<array-key, int>}
      */
     public function buildStreamFileStatistics(ResultInterface $context): array;
     

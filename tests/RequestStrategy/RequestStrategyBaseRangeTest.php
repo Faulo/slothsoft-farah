@@ -28,8 +28,7 @@ final class RequestStrategyBaseRangeTest extends TestCase {
     
     private const MODIFIED = 1_700_000_000;
     
-    // These are decimal strings, never PHP_INT_MAX + 1 (which produces a float).
-    private const HUGE_SIZE = '10000000000000000010';
+    private const LARGE_SIZE = PHP_INT_MAX - PHP_INT_MAX % 10;
     
     /**
      * @dataProvider singleRangeProvider
@@ -258,7 +257,7 @@ final class RequestStrategyBaseRangeTest extends TestCase {
     
     /** @runInSeparateProcess */
     public function testRangeOffsetsCountBytes(): void {
-        $response = $this->request(['Range' => 'bytes=0-1'], 'GET', Utils::streamFor("\0\xffabc"), '5');
+        $response = $this->request(['Range' => 'bytes=0-1'], 'GET', Utils::streamFor("\0\xffabc"), 5);
         $this->assertRepresentation($response, 206, 'bytes 0-1/5', "\0\xff");
     }
     
@@ -289,7 +288,7 @@ final class RequestStrategyBaseRangeTest extends TestCase {
      * @runInSeparateProcess
      */
     public function testRangesOnEmptyEntity(string $range): void {
-        $response = $this->request(['Range' => $range], 'GET', Utils::streamFor(''), '0');
+        $response = $this->request(['Range' => $range], 'GET', Utils::streamFor(''), 0);
         $this->assertContains($response->getStatusCode(), [200, 416]);
         if ($response->getStatusCode() === 200) {
             $this->assertRepresentation($response, 200, null, '');
@@ -307,47 +306,59 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         yield 'suffix' => ['bytes=-1'];
     }
     
-    /** @runInSeparateProcess */
-    public function testUnknownSizeCanIgnoreRange(): void {
-        $stream = FnStream::decorate(Utils::streamFor(self::CONTENT), ['getSize' => static fn(): ?int => null]);
-        $response = $this->request(['Range' => 'bytes=2-5'], 'GET', $stream, null, false);
+    /**
+     * @dataProvider unknownSizeProvider
+     * @runInSeparateProcess
+     */
+    public function testUnknownSizeCanIgnoreRange(?int $streamSize, ?int $statSize): void {
+        $stream = FnStream::decorate(Utils::streamFor(self::CONTENT), ['getSize' => static fn(): ?int => $streamSize]);
+        $response = $this->request(['Range' => 'bytes=2-5'], 'GET', $stream, $statSize, false);
         $this->assertSame(200, $response->getStatusCode());
         $this->assertFalse($response->hasHeader('Content-Range'));
         $this->assertFalse($response->hasHeader('Content-Length'));
         $this->assertSame(self::CONTENT, (string) $response->getBody());
     }
     
+    /** @return iterable<array{?int, ?int}> */
+    public function unknownSizeProvider(): iterable {
+        yield 'unavailable' => [null, null];
+        yield 'negative stream size' => [-1, null];
+        yield 'negative size in statistics' => [null, -1];
+    }
+    
     /**
-     * PSR-7 getSize() remains int|null. The exact size is supplied through the
-     * result's file statistics, so these tests expose the missing size plumbing
-     * as well as overflow in parsing/slicing. No nonconforming stream is used.
      * @dataProvider largeEntityProvider
      * @runInSeparateProcess
      */
-    public function testLargeEntityRange(string $size, string $range, string $contentRange, string $expected): void {
-        $stream = new RangeEntityStream($size);
-        $this->assertNull($stream->getSize());
-        $response = $this->request(['Range' => $range], 'GET', $stream, $size, false);
+    public function testLargeEntityRange(string $range, string $contentRange, string $expected): void {
+        $stream = new RangeEntityStream(self::LARGE_SIZE);
+        $response = $this->request(['Range' => $range], 'GET', $stream, null, false);
+        $this->assertSame(0, $stream->getBytesRead());
         $this->assertRepresentation($response, 206, $contentRange, $expected);
+        $this->assertSame(strlen($expected), $stream->getBytesRead());
     }
     
     /**
-     * @return iterable<array{0: string, 1: string, 2: string, 3: string}>
+     * @return iterable<array{string, string, string}>
      */
     public function largeEntityProvider(): iterable {
-        yield 'size above PHP_INT_MAX with small endpoints' => [self::HUGE_SIZE, 'bytes=2-5', 'bytes 2-5/' . self::HUGE_SIZE, '2345'];
-        yield 'size at 64 bit integer limit plus one' => ['9223372036854775808', 'bytes=2-5', 'bytes 2-5/9223372036854775808', '2345'];
-        yield 'start and end above PHP_INT_MAX' => [self::HUGE_SIZE, 'bytes=10000000000000000002-10000000000000000005', 'bytes 10000000000000000002-10000000000000000005/' . self::HUGE_SIZE, '2345'];
-        yield 'open range starting above PHP_INT_MAX' => [self::HUGE_SIZE, 'bytes=10000000000000000005-', 'bytes 10000000000000000005-10000000000000000009/' . self::HUGE_SIZE, '56789'];
-        yield 'suffix of entity larger than PHP_INT_MAX' => [self::HUGE_SIZE, 'bytes=-4', 'bytes 10000000000000000006-10000000000000000009/' . self::HUGE_SIZE, '6789'];
-        yield 'oversized end clipped to oversized size' => [self::HUGE_SIZE, 'bytes=10000000000000000008-9999999999999999999999999999999', 'bytes 10000000000000000008-10000000000000000009/' . self::HUGE_SIZE, '89'];
+        $size = self::LARGE_SIZE;
+        $start = $size - 8;
+        $end = $size - 5;
+        $last = $size - 1;
+        $suffixStart = $size - 4;
+        yield 'small endpoints' => ['bytes=2-5', "bytes 2-5/$size", '2345'];
+        yield 'large endpoints' => ["bytes=$start-$end", "bytes $start-$end/$size", '2345'];
+        yield 'large open-ended start' => ["bytes=$start-", "bytes $start-$last/$size", '23456789'];
+        yield 'suffix' => ['bytes=-4', "bytes $suffixStart-$last/$size", '6789'];
+        yield 'oversized end clipped to large size' => ["bytes=$start-" . PHP_INT_MAX . '0', "bytes $start-$last/$size", '23456789'];
     }
     
     /** @runInSeparateProcess */
-    public function testHeadRetainsExactOversizedEntityLength(): void {
-        $response = $this->request([], 'HEAD', new RangeEntityStream(self::HUGE_SIZE), self::HUGE_SIZE, false);
+    public function testHeadRetainsExactLargeEntityLength(): void {
+        $response = $this->request([], 'HEAD', new RangeEntityStream(PHP_INT_MAX), null, false);
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame(self::HUGE_SIZE, $response->getHeaderLine('Content-Length'));
+        $this->assertSame((string) PHP_INT_MAX, $response->getHeaderLine('Content-Length'));
         $this->assertSame('', (string) $response->getBody());
     }
     
@@ -363,8 +374,8 @@ final class RequestStrategyBaseRangeTest extends TestCase {
     
     /** @runInSeparateProcess */
     public function testNotModifiedDoesNotReadOrSeekSource(): void {
-        $stream = new RangeEntityStream(self::HUGE_SIZE, 0);
-        $response = $this->request(['If-None-Match' => '"range-entity"', 'Range' => 'bytes=2-5'], 'GET', $stream, self::HUGE_SIZE);
+        $stream = new RangeEntityStream(self::LARGE_SIZE, 0);
+        $response = $this->request(['If-None-Match' => '"range-entity"', 'Range' => 'bytes=2-5'], 'GET', $stream);
         $this->assertSame(304, $response->getStatusCode());
         $this->assertSame(0, $stream->getBytesRead());
         $this->assertFalse($response->hasHeader('Content-Length'));
@@ -372,11 +383,12 @@ final class RequestStrategyBaseRangeTest extends TestCase {
     }
     
     /** @runInSeparateProcess */
-    public function testHugeBufferableRangeIsLazyWhenSizeIsInStatistics(): void {
-        $stream = new RangeEntityStream(self::HUGE_SIZE, 4);
-        $response = $this->request(['Range' => 'bytes=2-5'], 'GET', $stream, self::HUGE_SIZE);
+    public function testLargeBufferableRangeIsLazyWhenSizeIsInStatistics(): void {
+        $stream = new RangeEntityStream(self::LARGE_SIZE, 4);
+        $unknownSizeStream = FnStream::decorate($stream, ['getSize' => static fn(): ?int => null]);
+        $response = $this->request(['Range' => 'bytes=2-5'], 'GET', $unknownSizeStream, self::LARGE_SIZE);
         $this->assertSame(0, $stream->getBytesRead());
-        $this->assertRepresentation($response, 206, 'bytes 2-5/' . self::HUGE_SIZE, '2345');
+        $this->assertRepresentation($response, 206, 'bytes 2-5/' . self::LARGE_SIZE, '2345');
         $this->assertSame(4, $stream->getBytesRead());
     }
     
@@ -405,7 +417,7 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         if ($ifRange !== null) {
             $headers['If-Range'] = $ifRange;
         }
-        $response = $this->request($headers, 'GET', null, self::HUGE_SIZE, true, 'text/plain');
+        $response = $this->request($headers, 'GET', null, self::LARGE_SIZE, true, 'text/plain');
         $this->assertSame($status, $response->getStatusCode());
         if ($status === 416) {
             $this->assertFalse($response->hasHeader('Content-Encoding'));
@@ -437,7 +449,7 @@ final class RequestStrategyBaseRangeTest extends TestCase {
     /**
      * @param array<string, string> $headers
      */
-    private function request(array $headers, string $method = 'GET', ?StreamInterface $stream = null, ?string $size = '10', bool $bufferable = true, string $mime = 'application/octet-stream'): ResponseInterface {
+    private function request(array $headers, string $method = 'GET', ?StreamInterface $stream = null, ?int $size = 10, bool $bufferable = true, string $mime = 'application/octet-stream'): ResponseInterface {
         $stream ??= Utils::streamFor(self::CONTENT);
         $writer = $this->createMock(StreamWriterInterface::class);
         $writer->method('toStream')->willReturn($stream);
@@ -450,7 +462,7 @@ final class RequestStrategyBaseRangeTest extends TestCase {
         $builder->method('buildStreamIsBufferable')->willReturn($bufferable);
         $statistics = ['mtime' => self::MODIFIED];
         if ($size !== null) {
-            $statistics['size'] = strlen($size) < strlen((string) PHP_INT_MAX) ? (int) $size : $size;
+            $statistics['size'] = $size;
         }
         $builder->method('buildStreamFileStatistics')->willReturn($statistics);
         RangeResponseBuilder::$streamBuilder = $builder;

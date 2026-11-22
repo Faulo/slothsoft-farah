@@ -18,7 +18,6 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\CodingInterface;
 use Slothsoft\Farah\Http\ContentCoding;
 use Slothsoft\Farah\Http\MessageFactory;
-use Slothsoft\Farah\Http\Range\ByteCount;
 use Slothsoft\Farah\Http\Range\RangeRequest;
 use Slothsoft\Farah\Http\Range\RangeStream;
 use Slothsoft\Farah\Http\StatusCode;
@@ -123,20 +122,15 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
                 
                 $this->evaluatePreconditions($headers);
                 
-                $bodySize = $body->getSize();
-                $bodyLength = $bodySize === null ? null : new ByteCount($bodySize);
+                $bodyLength = self::validateBodyLength($body->getSize());
                 if ($bodyLength === null && ! $isEncoded) {
                     $statistics = $result->lookupFileStatistics();
-                    $size = $statistics['size'] ?? null;
-                    if ((is_int($size) || is_string($size)) && preg_match('/\A[0-9]+\z/', (string) $size)) {
-                        $bodyLength = new ByteCount($size);
-                    }
+                    $bodyLength = self::validateBodyLength($statistics['size'] ?? null);
                 }
                 
                 if ($bodyLength === null and $isBufferable) {
                     $body = StreamHelper::cacheStream($body);
-                    $bodySize = $body->getSize();
-                    $bodyLength = $bodySize === null ? null : new ByteCount($bodySize);
+                    $bodyLength = self::validateBodyLength($body->getSize());
                 }
                 
                 if ($bodyLength === null) {
@@ -149,7 +143,7 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
                     }
                 } else {
                     $headers['accept-ranges'] = 'bytes';
-                    if ($request->getMethod() === HTTPRequest::METHOD_GET && ! $bodyLength->isZero() && $request->hasHeader('range') && $this->matchesIfRange($headers)) {
+                    if ($request->getMethod() === HTTPRequest::METHOD_GET && $bodyLength > 0 && $request->hasHeader('range') && $this->matchesIfRange($headers)) {
                         $rangeRequest = RangeRequest::parse($request->getHeaderLine('range'));
                         // Multiple ranges are deliberately served as the full representation.
                         if ($rangeRequest !== null && $rangeRequest->getRangeCount() === 1) {
@@ -188,6 +182,10 @@ abstract class RequestStrategyBase implements RequestStrategyInterface {
         }
         
         return MessageFactory::createServerResponse($statusCode, $headers, $body, $isBufferable);
+    }
+    
+    private static function validateBodyLength(mixed $size): ?int {
+        return is_int($size) && $size >= 0 ? $size : null;
     }
     
     /** @param array<string, string> $headers */
